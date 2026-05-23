@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Générateur Fiche Acheteur · Expertimo</title>
+<style>
+:root {
+  --primary: #1a3a5c; --accent: #c9a84c; --light: #f4f6f9; --border: #cdd5e0;
+  --text: #1e2a38; --muted: #6b7a8d; --danger: #c0392b; --success: #27ae60;
+  --radius: 6px; --shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; background: #e8ecf1; color: var(--text); }
+header { background: var(--primary); color: #fff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+header h1 { font-size: 18px; font-weight: 700; }
+header p { font-size: 12px; opacity: .8; }
+.container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+
+/* Steps */
+.step { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 20px; overflow: hidden; }
+.step-header { background: var(--primary); color: #fff; padding: 12px 18px; font-weight: 700; font-size: 14px; letter-spacing: .5px; display: flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; }
+.step-header .badge { background: var(--accent); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; flex-shrink: 0; }
+.step-header .check { margin-left: auto; font-size: 16px; display: none; }
+.step-header.done .check { display: inline; }
+.step-body { padding: 20px; }
+
+/* Import area */
+.import-grid { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: center; }
+.import-sep { text-align: center; font-weight: 700; color: var(--muted); font-size: 16px; }
+.import-file-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 20px; text-align: center; transition: border-color .2s; }
+.import-file-zone:hover { border-color: var(--primary); }
+.import-file-zone input[type=file] { display: block; width: 100%; margin-top: 8px; font-size: 13px; }
+.import-file-zone p { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.import-paste-zone { display: flex; flex-direction: column; gap: 8px; }
+.import-paste-zone textarea { resize: vertical; min-height: 80px; width: 100%; padding: 8px; border: 1.5px solid var(--border); border-radius: var(--radius); font-size: 12px; font-family: monospace; }
+.summary-box { background: #f0f7ff; border: 1px solid #b8cfe8; border-radius: var(--radius); padding: 12px 16px; margin-top: 14px; font-size: 13px; display: none; }
+
+/* Form */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+.form-group { margin-bottom: 10px; }
+.form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 3px; }
+input[type=text], input[type=number], input[type=url], select, textarea {
+  width: 100%; padding: 8px 10px; border: 1.5px solid var(--border); border-radius: var(--radius);
+  font-size: 13px; font-family: inherit; color: var(--text); background: #fafcff; transition: border-color .2s;
+}
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); background: #fff; }
+textarea { resize: vertical; min-height: 60px; }
+.section-title { font-size: 12px; font-weight: 700; color: var(--primary); border-bottom: 2px solid var(--accent); padding-bottom: 5px; margin: 18px 0 12px; text-transform: uppercase; letter-spacing: .5px; }
+.hint { font-size: 11px; color: var(--muted); margin-top: 3px; }
+.computed { background: #f0f7ff !important; color: var(--primary); font-weight: 600; }
+
+/* Buttons */
+.btn { padding: 9px 18px; border: none; border-radius: var(--radius); cursor: pointer; font-size: 13px; font-weight: 600; transition: opacity .2s; display: inline-flex; align-items: center; gap: 6px; }
+.btn:hover { opacity: .85; }
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+.btn-success { background: var(--success); color: #fff; }
+.btn-lg { padding: 13px 28px; font-size: 15px; }
+
+/* DVF table */
+.dvf-table { width: 100%; border-collapse: collapse; }
+.dvf-table th { background: var(--primary); color: #fff; padding: 7px 8px; font-size: 11px; text-align: left; font-weight: 600; }
+.dvf-table td { padding: 4px 6px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.dvf-table td input { border: 1px solid var(--border); padding: 5px 7px; border-radius: 4px; font-size: 12px; width: 100%; background: #fafcff; }
+.dvf-table tr:nth-child(even) td { background: #f8fafc; }
+.dvf-table tr:nth-child(even) td input { background: #f8fafc; }
+
+/* Template zone */
+.template-zone { background: #f8f6f0; border: 2px solid var(--accent); border-radius: var(--radius); padding: 18px; margin-bottom: 16px; }
+.template-zone p { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.template-zone input[type=file] { font-size: 13px; }
+#template-status { margin-top: 8px; font-size: 12px; font-weight: 600; color: var(--success); }
+.action-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+/* Score inputs */
+.score-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.score-item label { text-align: center; display: block; font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+.score-item input { text-align: center; font-size: 18px; font-weight: 700; color: var(--primary); }
+
+/* Photo row */
+.photo-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.photo-item { display: flex; flex-direction: column; gap: 5px; }
+.photo-item label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; }
+.photo-item img { width: 100%; height: 90px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border); display: none; }
+.photo-item img.loaded { display: block; }
+
+/* Credit preview */
+#credit-preview { margin-top: 8px; font-size: 12px; color: var(--muted); background: #f8f6f0; padding: 10px 12px; border-radius: var(--radius); display: none; line-height: 1.8; }
+
+/* Diagnostics form */
+.diag-form-grid { display: grid; grid-template-columns: 145px 140px 1fr; gap: 6px; align-items: center; padding: 6px 0; border-top: 1px solid var(--border); }
+.diag-form-grid:first-of-type { border-top: none; }
+.diag-form-head { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; }
+.diag-form-label { font-size: 13px; font-weight: 600; color: var(--text); }
+
+@media(max-width: 700px) {
+  .import-grid { grid-template-columns: 1fr; }
+  .import-sep { display: none; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .score-grid { grid-template-columns: 1fr 1fr; }
+  .photo-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Générateur Fiche Acheteur</h1>
+    <p>Expertimo · Olivier Loison · Essonne 91</p>
+  </div>
+  <div style="font-size:12px;opacity:.7;text-align:right">Import JSON → Ajuster → Générer FINAL.html</div>
+</header>
+
+<div class="container">
+
+<!-- ══════════ ÉTAPE 1 : IMPORT JSON ══════════ -->
+<div class="step" id="step1-card">
+  <div class="step-header done" onclick="toggleStep('step1-body')">
+    <span class="badge">1</span>
+    Import du JSON (fiche RDV)
+    <span class="check">✅</span>
+  </div>
+  <div class="step-body" id="step1-body">
+    <div class="import-grid">
+      <div class="import-file-zone">
+        <p><strong>📂 Fichier JSON</strong><br>Exporté depuis la fiche RDV (bouton ⬇ JSON)</p>
+        <input type="file" id="json-input" accept=".json">
+      </div>
+      <div class="import-sep">ou</div>
+      <div class="import-paste-zone">
+        <label style="font-weight:700;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;">Coller le JSON ici</label>
+        <textarea id="json-paste" placeholder='{"adresse":"5 rue...","prix_vente":260000,"dpe_dpe":"D",...}'></textarea>
+        <button class="btn btn-outline" onclick="loadFromPaste()">⬆ Charger ce JSON</button>
+      </div>
+    </div>
+    <div class="summary-box" id="json-summary"></div>
+  </div>
+</div>
+
+<!-- ══════════ ÉTAPE 2 : FORMULAIRE ══════════ -->
+<div class="step" id="step2-card" style="display:none">
+  <div class="step-header" onclick="toggleStep('step2-body')">
+    <span class="badge">2</span>
+    Ajustement des données
+    <span class="check">✅</span>
+  </div>
+  <div class="step-body" id="step2-body">
+
+    <!-- Identité -->
+    <div class="section-title">Identité du bien</div>
+    <div class="grid-3">
+      <div class="form-group">
+        <label>Référence mandat</label>
+        <input type="text" id="f-ref" placeholder="ex91-lg001">
+      </div>
+      <div class="form-group">
+        <label>Type de bien</label>
+        <select id="f-type">
+          <option value="appart">Appartement</option>
+          <option value="maison">Maison</option>
+          <option value="terrain">Terrain</option>
+          <option value="autre">Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Étage / niveau</label>
+        <input type="text" id="f-etage" placeholder="2ème et dernier étage">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Adresse complète</label>
+      <input type="text" id="f-adresse" placeholder="5 Rue de l'Arpajonnais, Longjumeau 91160" oninput="updateSlugPreview()">
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Quartier / sous-secteur</label>
+        <input type="text" id="f-quartier" placeholder="Longjumeau , centre ville">
+      </div>
+      <div class="form-group">
+        <label>Année de construction</label>
+        <input type="number" id="f-annee-construction" placeholder="2003">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Description affichée (sous-titre — ligne hsub)</label>
+      <input type="text" id="f-description" placeholder="Appartement 3 pièces de 76,87 m² · 2ème et dernier étage · DPE D">
+    </div>
+    <div class="grid-4">
+      <div class="form-group">
+        <label>Surface hab. (m²)</label>
+        <input type="number" id="f-surface" placeholder="76.87" step="0.01" oninput="calcPrixM2()">
+      </div>
+      <div class="form-group">
+        <label>Nb pièces</label>
+        <input type="number" id="f-pieces" placeholder="3">
+      </div>
+      <div class="form-group">
+        <label>DPE (lettre)</label>
+        <select id="f-dpe">
+          <option value="">— non renseigné —</option>
+          <option>A</option><option>B</option><option>C</option>
+          <option>D</option><option>E</option><option>F</option><option>G</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Surface Carrez (m²)</label>
+        <input type="number" id="f-surface-carrez" placeholder="70.11" step="0.01">
+      </div>
+    </div>
+
+    <!-- Historique du bien -->
+    <div class="section-title">Historique du bien (timeline)</div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Construction — description</label>
+        <input type="text" id="f-hist-constr-desc" placeholder="Immeuble résidentiel récent, bonne qualité de construction">
+      </div>
+      <div class="form-group">
+        <label>Événement 1 — date · label</label>
+        <input type="text" id="f-hist-evt1-date" placeholder="2015 · RÉNOVATION">
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Événement 1 — description</label>
+        <input type="text" id="f-hist-evt1-desc" placeholder="Rénovation complète : sols, murs, cuisine, salle de bains...">
+      </div>
+      <div class="form-group">
+        <label>Événement 2 — date · label (optionnel)</label>
+        <input type="text" id="f-hist-evt2-date" placeholder="">
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Événement 2 — description (optionnel)</label>
+        <input type="text" id="f-hist-evt2-desc" placeholder="">
+      </div>
+      <div class="form-group">
+        <label>Année de mise en vente</label>
+        <input type="text" id="f-hist-vente-date" value="2025" placeholder="2025">
+      </div>
+    </div>
+    <p class="hint" style="margin-bottom:4px">Laisser vide les événements non utilisés — ils ne seront pas affichés dans le FINAL</p>
+
+    <!-- Prix & marché -->
+    <div class="section-title">Prix &amp; Marché</div>
+    <div class="grid-4">
+      <div class="form-group">
+        <label>Prix de vente (€)</label>
+        <input type="number" id="f-prix" placeholder="260000" oninput="calcPrixM2(); calcCredit();">
+      </div>
+      <div class="form-group">
+        <label>Prix/m² (auto-calculé)</label>
+        <input type="number" id="f-prixm2" class="computed" readonly placeholder="Auto">
+      </div>
+      <div class="form-group">
+        <label>Médiane secteur (€/m²)</label>
+        <input type="number" id="f-mediane" placeholder="3020">
+      </div>
+      <div class="form-group">
+        <label>Loyer estimé (€/mois)</label>
+        <input type="number" id="f-loyer" placeholder="1300">
+      </div>
+    </div>
+    <div class="grid-4">
+      <div class="form-group">
+        <label>Tension locative</label>
+        <input type="text" id="f-tension" value="Très forte" placeholder="Très forte">
+      </div>
+      <div class="form-group">
+        <label>Délai vente moyen</label>
+        <input type="text" id="f-delai" value="21 jours" placeholder="21 jours">
+      </div>
+      <div class="form-group">
+        <label>Charges copro (€/mois)</label>
+        <input type="number" id="f-charges-copro" placeholder="253">
+      </div>
+      <div class="form-group">
+        <label>Taxe foncière (€/an)</label>
+        <input type="number" id="f-taxe-fonciere" placeholder="1682">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Détail des charges (contexte chatbot IA)</label>
+      <input type="text" id="f-charges-detail" placeholder="Eau froide, nettoyage parties communes, ascenseur…">
+      <p class="hint">Renseigné automatiquement si présent dans le JSON · utilisé dans le prompt système du chatbot</p>
+    </div>
+    <div class="grid-3">
+      <div class="form-group">
+        <label>Fourchette prix basse (€)</label>
+        <input type="number" id="f-fourchette-basse" placeholder="156000">
+      </div>
+      <div class="form-group">
+        <label>Fourchette prix milieu (€)</label>
+        <input type="number" id="f-fourchette-milieu" placeholder="221000">
+      </div>
+      <div class="form-group">
+        <label>Fourchette prix haute (€)</label>
+        <input type="number" id="f-fourchette-haute" placeholder="286000">
+      </div>
+    </div>
+
+    <!-- Scores -->
+    <div class="section-title">Scores (0 – 10)</div>
+    <div class="score-grid">
+      <div class="score-item">
+        <label>Score global</label>
+        <input type="number" id="f-score" min="0" max="10" step="0.1" value="9.3">
+      </div>
+      <div class="score-item">
+        <label>Prestations</label>
+        <input type="number" id="f-score-prestations" min="0" max="10" step="1" value="10">
+      </div>
+      <div class="score-item">
+        <label>Secteur</label>
+        <input type="number" id="f-score-secteur" min="0" max="10" step="1" value="9">
+      </div>
+      <div class="score-item">
+        <label>Qualité-prix</label>
+        <input type="number" id="f-score-qp" min="0" max="10" step="1" value="8">
+      </div>
+      <div class="score-item">
+        <label>État général</label>
+        <input type="number" id="f-score-etat" min="0" max="10" step="1" value="10">
+      </div>
+    </div>
+
+    <!-- Points forts / vigilances -->
+    <div class="section-title">Points forts &amp; vigilances</div>
+    <div class="grid-2">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">✅ Points forts (3 max)</div>
+        <div class="form-group"><input type="text" id="f-fort1" placeholder="Point fort 1"></div>
+        <div class="form-group"><input type="text" id="f-fort2" placeholder="Point fort 2"></div>
+        <div class="form-group"><input type="text" id="f-fort3" placeholder="Point fort 3"></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">⚠️ Vigilances (3 max)</div>
+        <div class="form-group"><input type="text" id="f-vig1" placeholder="Vigilance 1"></div>
+        <div class="form-group"><input type="text" id="f-vig2" placeholder="Vigilance 2"></div>
+        <div class="form-group"><input type="text" id="f-vig3" placeholder="Vigilance 3"></div>
+      </div>
+    </div>
+
+    <!-- Photos -->
+    <div class="section-title">Photos (URLs ou base64)</div>
+    <div class="photo-row">
+      <div class="photo-item">
+        <label>Photo principale (grande)</label>
+        <img id="prev-photo1" alt="Photo 1">
+        <input type="text" id="f-photo1" placeholder="https://... ou data:image/..." oninput="previewPhoto(1)">
+      </div>
+      <div class="photo-item">
+        <label>Photo 2</label>
+        <img id="prev-photo2" alt="Photo 2">
+        <input type="text" id="f-photo2" placeholder="https://..." oninput="previewPhoto(2)">
+      </div>
+      <div class="photo-item">
+        <label>Photo 3</label>
+        <img id="prev-photo3" alt="Photo 3">
+        <input type="text" id="f-photo3" placeholder="https://..." oninput="previewPhoto(3)">
+      </div>
+    </div>
+
+    <!-- DVF -->
+    <div class="section-title">Transactions DVF — 6 lignes éditables</div>
+    <div style="overflow-x:auto">
+      <table class="dvf-table">
+        <thead>
+          <tr>
+            <th style="width:120px">Date</th>
+            <th>Adresse</th>
+            <th style="width:90px">Surface (m²)</th>
+            <th style="width:110px">Prix (€)</th>
+            <th style="width:100px">€/m² (auto)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><input type="text" id="dvf-date-1" placeholder="Mai 2025"></td><td><input type="text" id="dvf-adresse-1" placeholder="Longjumeau"></td><td><input type="number" id="dvf-surface-1" placeholder="92" oninput="calcDVFm2(1)"></td><td><input type="number" id="dvf-prix-1" placeholder="245000" oninput="calcDVFm2(1)"></td><td><input type="number" id="dvf-prixm2-1" placeholder="2663"></td></tr>
+          <tr><td><input type="text" id="dvf-date-2" placeholder="Avril 2025"></td><td><input type="text" id="dvf-adresse-2"></td><td><input type="number" id="dvf-surface-2" oninput="calcDVFm2(2)"></td><td><input type="number" id="dvf-prix-2" oninput="calcDVFm2(2)"></td><td><input type="number" id="dvf-prixm2-2"></td></tr>
+          <tr><td><input type="text" id="dvf-date-3" placeholder="Octobre 2024"></td><td><input type="text" id="dvf-adresse-3"></td><td><input type="number" id="dvf-surface-3" oninput="calcDVFm2(3)"></td><td><input type="number" id="dvf-prix-3" oninput="calcDVFm2(3)"></td><td><input type="number" id="dvf-prixm2-3"></td></tr>
+          <tr><td><input type="text" id="dvf-date-4"></td><td><input type="text" id="dvf-adresse-4"></td><td><input type="number" id="dvf-surface-4" oninput="calcDVFm2(4)"></td><td><input type="number" id="dvf-prix-4" oninput="calcDVFm2(4)"></td><td><input type="number" id="dvf-prixm2-4"></td></tr>
+          <tr><td><input type="text" id="dvf-date-5"></td><td><input type="text" id="dvf-adresse-5"></td><td><input type="number" id="dvf-surface-5" oninput="calcDVFm2(5)"></td><td><input type="number" id="dvf-prix-5" oninput="calcDVFm2(5)"></td><td><input type="number" id="dvf-prixm2-5"></td></tr>
+          <tr><td><input type="text" id="dvf-date-6"></td><td><input type="text" id="dvf-adresse-6"></td><td><input type="number" id="dvf-surface-6" oninput="calcDVFm2(6)"></td><td><input type="number" id="dvf-prix-6" oninput="calcDVFm2(6)"></td><td><input type="number" id="dvf-prixm2-6"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:6px">Laisser vide pour ne pas inclure la ligne · €/m² calculé auto depuis prix ÷ surface</p>
+
+    <!-- Simulation crédit -->
+    <div class="section-title">Simulation crédit (paramètres pour l'onglet Mon Budget)</div>
+    <div class="grid-4">
+      <div class="form-group">
+        <label>Durée (ans)</label>
+        <input type="number" id="f-credit-duree" value="20" min="5" max="30" oninput="calcCredit()">
+      </div>
+      <div class="form-group">
+        <label>Apport (%)</label>
+        <input type="number" id="f-credit-apport" value="10" min="0" max="100" step="5" oninput="calcCredit()">
+      </div>
+      <div class="form-group">
+        <label>Taux haut (%)</label>
+        <input type="number" id="f-credit-taux-haut" value="5.00" step="0.1" oninput="calcCredit()">
+      </div>
+      <div class="form-group">
+        <label>Taux moyen (%)</label>
+        <input type="number" id="f-credit-taux-moyen" value="3.40" step="0.1" oninput="calcCredit()">
+      </div>
+    </div>
+    <div class="grid-4">
+      <div class="form-group">
+        <label>Taux bas (%)</label>
+        <input type="number" id="f-credit-taux-bas" value="2.50" step="0.1" oninput="calcCredit()">
+      </div>
+    </div>
+    <div id="credit-preview"></div>
+
+    <!-- Diagnostics réglementaires -->
+    <div class="section-title">Diagnostics réglementaires</div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
+      <div class="diag-form-grid" style="background:var(--primary);padding:8px 6px;border-top:none;">
+        <div class="diag-form-head" style="color:#fff;">Diagnostic</div>
+        <div class="diag-form-head" style="color:#fff;">Statut</div>
+        <div class="diag-form-head" style="color:#fff;">Résultat affiché dans la fiche</div>
+      </div>
+      <div style="padding:0 6px;">
+        <div class="diag-form-grid">
+          <div class="diag-form-label">🧱 Amiante</div>
+          <select id="f-diag-amiante-status">
+            <option value="favorable">Favorable</option>
+            <option value="attention">Attention</option>
+            <option value="defavorable">Défavorable</option>
+            <option value="non-soumis" selected>Non soumis</option>
+          </select>
+          <input type="text" id="f-diag-amiante-result" value="Non soumis — bâtiment après 1997">
+        </div>
+        <div class="diag-form-grid">
+          <div class="diag-form-label">🔬 Plomb (CREP)</div>
+          <select id="f-diag-plomb-status">
+            <option value="favorable" selected>Favorable</option>
+            <option value="attention">Attention</option>
+            <option value="defavorable">Défavorable</option>
+            <option value="non-soumis">Non soumis</option>
+          </select>
+          <input type="text" id="f-diag-plomb-result" value="Absence de plomb détectée">
+        </div>
+        <div class="diag-form-grid">
+          <div class="diag-form-label">🪲 Termites</div>
+          <select id="f-diag-termites-status">
+            <option value="favorable" selected>Favorable</option>
+            <option value="attention">Attention</option>
+            <option value="defavorable">Défavorable</option>
+            <option value="non-soumis">Non soumis</option>
+          </select>
+          <input type="text" id="f-diag-termites-result" value="Absence de termites constatée">
+        </div>
+        <div class="diag-form-grid">
+          <div class="diag-form-label">⚡ Électricité</div>
+          <select id="f-diag-electricite-status">
+            <option value="favorable" selected>Favorable</option>
+            <option value="attention">Attention</option>
+            <option value="defavorable">Défavorable</option>
+            <option value="non-soumis">Non soumis</option>
+          </select>
+          <input type="text" id="f-diag-electricite-result" value="Installation intérieure sans anomalie">
+        </div>
+        <div class="diag-form-grid">
+          <div class="diag-form-label">🔥 Gaz</div>
+          <select id="f-diag-gaz-status">
+            <option value="favorable" selected>Favorable</option>
+            <option value="attention">Attention</option>
+            <option value="defavorable">Défavorable</option>
+            <option value="non-soumis">Non soumis</option>
+          </select>
+          <input type="text" id="f-diag-gaz-result" value="Installation sans anomalie">
+        </div>
+        <div class="diag-form-grid">
+          <div class="diag-form-label">💧 Assainissement</div>
+          <select id="f-diag-assain-status">
+            <option value="favorable" selected>Favorable</option>
+            <option value="attention">Attention</option>
+            <option value="defavorable">Défavorable</option>
+            <option value="non-soumis">Non soumis</option>
+          </select>
+          <input type="text" id="f-diag-assain-result" value="Raccordement au réseau collectif conforme">
+        </div>
+      </div>
+    </div>
+    <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
+
+  </div>
+</div>
+
+<!-- ══════════ ÉTAPE 3 : GÉNÉRATION ══════════ -->
+<div class="step" id="step3-card" style="display:none">
+  <div class="step-header" onclick="toggleStep('step3-body')">
+    <span class="badge">3</span>
+    Génération du FINAL.html
+    <span class="check">✅</span>
+  </div>
+  <div class="step-body" id="step3-body">
+    <div class="template-zone">
+      <p>Charger le fichier <strong>template-fiche-interactive-acquereur-FINAL.html</strong> (ou tout autre FINAL.html servant de template)</p>
+      <input type="file" id="template-input" accept=".html,.htm">
+      <div id="template-status"></div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-success btn-lg" onclick="generate()">⬇ Générer &amp; télécharger</button>
+      <button class="btn btn-outline btn-lg" onclick="previewOutput()">👁 Aperçu (nouvel onglet)</button>
+    </div>
+    <p class="hint" style="margin-top:12px">Fichier généré : <code id="slug-preview">adresse-FINAL.html</code></p>
+  </div>
+</div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+var jsonData = null;
+var templateHTML = null;
+
+// ═══════════════════════════════════════
+// STEP 1 — JSON LOADING
+// ═══════════════════════════════════════
+
+// File input — the most reliable approach: addEventListener, not onclick
+document.getElementById('json-input').addEventListener('change', function() {
+  var file = this.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      jsonData = JSON.parse(ev.target.result);
+      onJSONLoaded();
+    } catch(err) {
+      alert('JSON invalide :\n' + err.message);
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+});
+
+function loadFromPaste() {
+  var txt = (document.getElementById('json-paste').value || '').trim();
+  if (!txt) { alert('Collez un JSON dans la zone de texte.'); return; }
+  try {
+    jsonData = JSON.parse(txt);
+    onJSONLoaded();
+  } catch(err) {
+    alert('JSON invalide :\n' + err.message);
+  }
+}
+
+function onJSONLoaded() {
+  showSummary();
+  fillForm();
+  document.getElementById('step2-card').style.display = '';
+  document.getElementById('step3-card').style.display = '';
+  setTimeout(function() {
+    document.getElementById('step2-card').scrollIntoView({ behavior: 'smooth' });
+  }, 80);
+}
+
+function showSummary() {
+  var d = jsonData;
+  var proprio = ((d.proprio_prenom || '') + ' ' + (d.proprio_nom || '')).trim() || '(proprio non renseigné)';
+  var prix = d.prix_vente ? fmtNum(d.prix_vente) + ' €' : '—';
+  var dvfN = (d._dvf_transactions || []).length;
+  var s = document.getElementById('json-summary');
+  s.innerHTML = '<strong>✅ JSON chargé</strong> &nbsp;·&nbsp; ' + esc(proprio)
+    + ' &nbsp;·&nbsp; <strong>' + esc(d.adresse || '?') + '</strong>'
+    + ' &nbsp;·&nbsp; ' + esc(d.type || '') + ' · ' + prix + ' · DPE ' + esc(d.dpe_dpe || '?')
+    + (dvfN ? ' &nbsp;·&nbsp; ' + dvfN + ' transactions DVF' : '');
+  s.style.display = 'block';
+}
+
+// ═══════════════════════════════════════
+// STEP 2 — FORM FILLING
+// ═══════════════════════════════════════
+function fillForm() {
+  var d = jsonData;
+
+  // Identité
+  setV('f-ref', d.ref_mandat || d.ref || '');
+  setV('f-type', d.type || 'appart');
+  setV('f-etage', d.etage || '');
+  setV('f-adresse', d.adresse || '');
+  setV('f-quartier', d.quartier || '');
+  setV('f-annee-construction', d.annee_construction || d.annee_construction_m || '');
+  setV('f-surface', d.surface_hab || '');
+  setV('f-surface-carrez', d.surface_carrez || '');
+  setV('f-pieces', d.nb_pieces || '');
+  setV('f-dpe', d.dpe_dpe || '');          // pas de valeur par défaut si absent du JSON
+  setV('f-description', buildDesc(d));
+
+  // Prix
+  setV('f-prix', d.prix_vente || '');
+  setV('f-loyer', d.loyer || d.loyer_estime || '');
+  setV('f-charges-copro', d.charges_copro || '');
+  setV('f-charges-detail', d.charges_detail || '');
+  setV('f-taxe-fonciere', d.taxe_fonciere || '');
+  setV('f-mediane', d._dvf_median ? Math.round(d._dvf_median) : '');
+  calcPrixM2();
+
+  // Fourchette
+  var surf = parseFloat(d.surface_hab) || 0;
+  if (d._dvf_fourchette_basse && surf) {
+    var fb = Math.round(d._dvf_fourchette_basse * surf);
+    var fh = Math.round((d._dvf_fourchette_haute || d._dvf_fourchette_basse) * surf);
+    setV('f-fourchette-basse', fb);
+    setV('f-fourchette-haute', fh);
+    setV('f-fourchette-milieu', Math.round((fb + fh) / 2));
+  } else if (d.prix_vente) {
+    var p = parseFloat(d.prix_vente);
+    setV('f-fourchette-basse', Math.round(p * 0.9));
+    setV('f-fourchette-milieu', Math.round(p));
+    setV('f-fourchette-haute', Math.round(p * 1.1));
+  }
+
+  // Points forts (split by newline or '·' or 'à')
+  var pts = splitMulti(d.plus_bien || '', ['\n', '·']);
+  setV('f-fort1', pts[0] || '');
+  setV('f-fort2', pts[1] || '');
+  setV('f-fort3', pts[2] || '');
+
+  // Vigilances
+  var vigs = splitMulti(d.vigilances_texte || '', ['\n', '·']);
+  setV('f-vig1', vigs[0] || '');
+  setV('f-vig2', vigs[1] || '');
+  setV('f-vig3', vigs[2] || '');
+
+  // Photos (from photos array or dataUrl field)
+  var photos = d.photos || [];
+  function photoSrc(ph) {
+    if (!ph) return '';
+    if (typeof ph === 'string') return ph;
+    return ph.dataUrl || ph.src || ph.url || '';
+  }
+  setV('f-photo1', photoSrc(photos[0]));
+  setV('f-photo2', photoSrc(photos[1]));
+  setV('f-photo3', photoSrc(photos[2]));
+  previewPhoto(1); previewPhoto(2); previewPhoto(3);
+
+  // DVF
+  fillDVF(d._dvf_transactions || []);
+
+  // Credit
+  calcCredit();
+  updateSlugPreview();
+}
+
+function buildDesc(d) {
+  var type = d.type === 'appart' ? 'Appartement' : (d.type === 'maison' ? 'Maison' : 'Bien');
+  var pieces = d.nb_pieces ? d.nb_pieces + ' pièce' + (parseInt(d.nb_pieces) > 1 ? 's' : '') : '';
+  var surface = d.surface_hab ? 'de ' + parseFloat(d.surface_hab).toLocaleString('fr-FR') + ' m²' : '';
+  var etage = d.etage ? '· ' + d.etage : '';
+  var dpe = d.dpe_dpe ? '· DPE ' + d.dpe_dpe : '';
+  return [type, pieces, surface, etage, dpe].filter(Boolean).join(' ');
+}
+
+function splitMulti(str, seps) {
+  var parts = [str];
+  seps.forEach(function(sep) {
+    var next = [];
+    parts.forEach(function(p) { p.split(sep).forEach(function(x) { next.push(x); }); });
+    parts = next;
+  });
+  return parts.map(function(s) { return s.trim(); }).filter(Boolean);
+}
+
+function fillDVF(transactions) {
+  for (var i = 1; i <= 6; i++) {
+    setV('dvf-date-' + i, '');
+    setV('dvf-adresse-' + i, '');
+    setV('dvf-surface-' + i, '');
+    setV('dvf-prix-' + i, '');
+    setV('dvf-prixm2-' + i, '');
+  }
+  var count = Math.min(6, (transactions || []).length);
+  for (var j = 0; j < count; j++) {
+    var t = transactions[j];
+    var row = j + 1;
+    var date = t.date_mutation ? fmtDVFDate(t.date_mutation) : (t.date || '');
+    var adr = t.adresse_nom_voie || t.nom_commune || t.adresse || '';
+    var surf = t.surface_reelle_bati ? Math.round(t.surface_reelle_bati) : (t.surface || '');
+    var prix = t.valeur_fonciere ? Math.round(t.valeur_fonciere) : (t.prix || '');
+    var pm2 = t.prixm2 || (surf && prix ? Math.round(prix / surf) : '');
+    setV('dvf-date-' + row, date);
+    setV('dvf-adresse-' + row, adr);
+    setV('dvf-surface-' + row, surf);
+    setV('dvf-prix-' + row, prix);
+    setV('dvf-prixm2-' + row, pm2);
+  }
+}
+
+// ═══════════════════════════════════════
+// FORM HELPERS
+// ═══════════════════════════════════════
+function calcPrixM2() {
+  var prix = parseFloat(getV('f-prix')) || 0;
+  var surf = parseFloat(getV('f-surface')) || 0;
+  if (prix && surf) setV('f-prixm2', Math.round(prix / surf));
+  updateSlugPreview();
+}
+
+function calcDVFm2(row) {
+  var surf = parseFloat(getV('dvf-surface-' + row)) || 0;
+  var prix = parseFloat(getV('dvf-prix-' + row)) || 0;
+  if (surf && prix) setV('dvf-prixm2-' + row, Math.round(prix / surf));
+}
+
+function calcCredit() {
+  var prix = parseFloat(getV('f-prix')) || 0;
+  var el = document.getElementById('credit-preview');
+  if (!prix || !el) { if (el) el.style.display = 'none'; return; }
+  var duree = parseInt(getV('f-credit-duree')) || 20;
+  var apportPct = parseFloat(getV('f-credit-apport')) || 10;
+  var t1 = parseFloat(getV('f-credit-taux-haut')) || 5.0;
+  var t2 = parseFloat(getV('f-credit-taux-moyen')) || 3.4;
+  var t3 = parseFloat(getV('f-credit-taux-bas')) || 2.5;
+  var total = prix * 1.075;
+  var apportE = total * apportPct / 100;
+  var capital = total - apportE;
+  function m(cap, taux, an) {
+    var r = taux / 100 / 12, n = an * 12;
+    return r === 0 ? cap / n : cap * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+  }
+  function row(taux, mens) {
+    var cout = Math.round(mens * duree * 12 - capital);
+    return taux.toFixed(2) + '% &rarr; <strong>' + fmtNum(Math.round(mens)) + ' €/mois</strong> · coût crédit : ' + fmtNum(cout) + ' €';
+  }
+  el.style.display = 'block';
+  el.innerHTML = '<strong>Capital emprunté : ' + fmtNum(Math.round(capital)) + ' € sur ' + duree + ' ans (apport ' + apportPct + '%)</strong><br>'
+    + row(t1, m(capital, t1, duree)) + '<br>'
+    + row(t2, m(capital, t2, duree)) + '<br>'
+    + row(t3, m(capital, t3, duree));
+}
+
+function updateSlugPreview() {
+  var slug = slugify(getV('f-adresse') || 'adresse');
+  document.getElementById('slug-preview').textContent = slug + '-FINAL.html';
+}
+
+function previewPhoto(n) {
+  var src = getV('f-photo' + n);
+  var img = document.getElementById('prev-photo' + n);
+  if (!img) return;
+  if (src) {
+    img.src = src;
+    img.className = 'loaded';
+  } else {
+    img.className = '';
+    img.src = '';
+  }
+}
+
+// ═══════════════════════════════════════
+// STEP 3 — TEMPLATE LOADING
+// ═══════════════════════════════════════
+document.getElementById('template-input').addEventListener('change', function() {
+  var file = this.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    templateHTML = ev.target.result;
+    document.getElementById('template-status').textContent =
+      '✅ Template chargé : ' + file.name + ' (' + Math.round(file.size / 1024) + ' ko)';
+  };
+  reader.readAsText(file, 'UTF-8');
+});
+
+// ═══════════════════════════════════════
+// GENERATION
+// ═══════════════════════════════════════
+function getFormData() {
+  return {
+    ref:           getV('f-ref') || 'ref-mandat',
+    type:          getV('f-type') || 'appart',
+    etage:         getV('f-etage'),
+    adresse:       getV('f-adresse'),
+    quartier:      getV('f-quartier'),
+    annee:         getV('f-annee-construction'),
+    description:   getV('f-description'),
+    surface:       parseFloat(getV('f-surface')) || 0,
+    surfCarrez:    parseFloat(getV('f-surface-carrez')) || 0,
+    pieces:        getV('f-pieces'),
+    dpe:           getV('f-dpe'),
+    prix:          parseFloat(getV('f-prix')) || 0,
+    prixm2:        parseFloat(getV('f-prixm2')) || 0,
+    mediane:       parseFloat(getV('f-mediane')) || 0,
+    tension:       getV('f-tension') || 'Très forte',
+    delai:         getV('f-delai') || '—',
+    loyer:         parseFloat(getV('f-loyer')) || 0,
+    chargesCopro:  parseFloat(getV('f-charges-copro')) || 0,
+    chargesDetail: getV('f-charges-detail'),
+    taxeFonciere:  parseFloat(getV('f-taxe-fonciere')) || 0,
+    score:         getV('f-score') || '9',
+    scorePrest:    getV('f-score-prestations') || '8',
+    scoreSecteur:  getV('f-score-secteur') || '8',
+    scoreQP:       getV('f-score-qp') || '8',
+    scoreEtat:     getV('f-score-etat') || '8',
+    fort1:         getV('f-fort1'), fort2: getV('f-fort2'), fort3: getV('f-fort3'),
+    vig1:          getV('f-vig1'),  vig2:  getV('f-vig2'),  vig3:  getV('f-vig3'),
+    photo1:        getV('f-photo1'), photo2: getV('f-photo2'), photo3: getV('f-photo3'),
+    dvf:           getDVFRows(),
+    fourchetBasse: parseFloat(getV('f-fourchette-basse')) || 0,
+    fourchetHaute: parseFloat(getV('f-fourchette-haute')) || 0,
+    creditDuree:   parseInt(getV('f-credit-duree')) || 20,
+    creditApport:  parseFloat(getV('f-credit-apport')) || 10,
+    creditHaut:    parseFloat(getV('f-credit-taux-haut')) || 5.0,
+    creditMoyen:   parseFloat(getV('f-credit-taux-moyen')) || 3.4,
+    creditBas:     parseFloat(getV('f-credit-taux-bas')) || 2.5,
+    histConstrDesc:  getV('f-hist-constr-desc'),
+    histEvt1Date:    getV('f-hist-evt1-date'),
+    histEvt1Desc:    getV('f-hist-evt1-desc'),
+    histEvt2Date:    getV('f-hist-evt2-date'),
+    histEvt2Desc:    getV('f-hist-evt2-desc'),
+    histVenteDate:   getV('f-hist-vente-date') || '2025',
+    diags: [
+      { icon: '🧱', name: 'Amiante',        status: getV('f-diag-amiante-status'),     result: getV('f-diag-amiante-result') },
+      { icon: '🔬', name: 'Plomb (CREP)',   status: getV('f-diag-plomb-status'),       result: getV('f-diag-plomb-result') },
+      { icon: '🪲', name: 'Termites',       status: getV('f-diag-termites-status'),    result: getV('f-diag-termites-result') },
+      { icon: '⚡', name: 'Électricité',    status: getV('f-diag-electricite-status'), result: getV('f-diag-electricite-result') },
+      { icon: '🔥', name: 'Gaz',            status: getV('f-diag-gaz-status'),         result: getV('f-diag-gaz-result') },
+      { icon: '💧', name: 'Assainissement', status: getV('f-diag-assain-status'),      result: getV('f-diag-assain-result') }
+    ]
+  };
+}
+
+function getDVFRows() {
+  var rows = [];
+  for (var i = 1; i <= 6; i++) {
+    var date  = getV('dvf-date-' + i);
+    var adr   = getV('dvf-adresse-' + i);
+    var surf  = getV('dvf-surface-' + i);
+    var prix  = getV('dvf-prix-' + i);
+    var pm2   = getV('dvf-prixm2-' + i);
+    if (date || adr || prix) {
+      rows.push({ date: date, adresse: adr, surface: surf, prix: parseFloat(prix) || 0, prixm2: parseFloat(pm2) || 0 });
+    }
+  }
+  return rows;
+}
+
+function generate() {
+  if (!templateHTML) { alert('Charger d\'abord le template FINAL.html (étape 3).'); return; }
+  var d = getFormData();
+  if (!d.adresse) { alert('L\'adresse est obligatoire (étape 2).'); return; }
+  try {
+    var out = injectData(templateHTML, d);
+    downloadHTML(out, slugify(d.adresse) + '-FINAL.html');
+  } catch(err) {
+    alert('Erreur génération :\n' + err.message);
+    console.error(err);
+  }
+}
+
+function previewOutput() {
+  if (!templateHTML) { alert('Charger d\'abord le template FINAL.html (étape 3).'); return; }
+  var d = getFormData();
+  try {
+    var out = injectData(templateHTML, d);
+    var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
+    window.open(URL.createObjectURL(blob), '_blank');
+  } catch(err) {
+    alert('Erreur aperçu :\n' + err.message);
+    console.error(err);
+  }
+}
+
+// ═══════════════════════════════════════
+// INJECTION ENGINE
+// ═══════════════════════════════════════
+function injectData(html, d) {
+  var prixFmt = fmtNum(d.prix);                         // "260 000" — used for JS string matching
+  var chargesCopro = Math.round(d.chargesCopro);
+  var chargesAnnuelles = chargesCopro * 12 + Math.round(d.taxeFonciere);
+
+  // ── PHASE 1 : JS string replacements BEFORE DOM parsing ──
+  // Replace hardcoded strings that live inside <script> blocks.
+  // srep() uses split/join — safe with special characters.
+
+  // ── _sp_ chatbot variables (AI assistant context) ──
+  // replaceSp() uses regex so it works regardless of the current template values.
+  html = replaceSp(html, '_sp_adresse',  d.adresse);
+  html = replaceSp(html, '_sp_prix',     prixFmt);
+  html = replaceSp(html, '_sp_surface',  d.surface ? String(d.surface).replace('.', ',') : '');
+  html = replaceSp(html, '_sp_etage',    d.etage || '');
+  html = replaceSp(html, '_sp_dpe',      d.dpe || '');
+  html = replaceSp(html, '_sp_charges',  chargesCopro > 0 ? String(chargesCopro) : '0');
+  html = replaceSp(html, '_sp_detail',   d.chargesDetail || '');
+  html = replaceSp(html, '_sp_tf',       d.taxeFonciere > 0 ? String(Math.round(d.taxeFonciere)) : '0');
+  html = replaceSp(html, '_sp_pf1',      d.fort1 || '');
+  html = replaceSp(html, '_sp_pf2',      d.fort2 || '');
+  html = replaceSp(html, '_sp_pf3',      d.fort3 || '');
+  html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
+  html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
+  html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
+  // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
+
+  // Address (the template may have it as literal string in JS)
+  html = srep(html, "5 Rue de l'Arpajonnais", d.adresse);
+
+  // Reference
+  html = srep(html, 'ex91-lg001', d.ref);
+
+  // Price string in JS parseFloat calls: parseFloat("260 000"...)
+  html = srep(html, '"260 000"', '"' + prixFmt + '"');
+  html = srep(html, "'260 000'", "'" + prixFmt + "'");
+
+  // Charges in calcBudget: parseFloat("253")
+  if (chargesCopro > 0) {
+    html = srep(html, 'parseFloat("253")', 'parseFloat("' + chargesCopro + '")');
+  }
+
+  // ── PHASE 2 : DOM manipulation ──
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+
+  function q(sel)  { return doc.querySelector(sel); }
+  function qa(sel) { return doc.querySelectorAll(sel); }
+  function id(i)   { return doc.getElementById(i); }
+  function setText(sel, txt) { var e = q(sel); if (e) e.textContent = txt; }
+
+  // ── Document ──
+  doc.title = d.adresse + ' · Espace Acheteur Privé · Expertimo';
+
+  // ── Header ──
+  var badge = q('.hbadge');
+  if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo · Réf. ' + d.ref;
+
+  var htitle = q('.htitle');
+  if (htitle) htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;">' + esc(d.quartier) + '</span>';
+
+  var hsub = q('.hsub');
+  if (hsub) hsub.textContent = d.description;
+
+  var pamount = q('.pamount');
+  if (pamount) pamount.textContent = prixFmt + ' €';
+
+  if (d.dpe) setText('#h-dpe', d.dpe);
+  setText('#h-score', d.score.toString().replace('.', ',') + '/10');
+
+  // ── Tab : Le Bien ──
+  var piecesLabel = d.pieces ? d.pieces + ' pièce' + (parseInt(d.pieces) > 1 ? 's' : '') : '';
+  var stitle = q('.stitle');
+  if (stitle) stitle.textContent = d.adresse + (piecesLabel ? ' · ' + piecesLabel : '') + (d.etage ? ' · ' + d.etage : '');
+
+  var ssub = q('.ssub');
+  if (ssub) ssub.textContent = d.description;
+
+  // Gallery images
+  var imgs = qa('.gallery img');
+  if (imgs[0] && d.photo1) { imgs[0].src = d.photo1; imgs[0].alt = d.adresse + ' - Vue principale'; }
+  if (imgs[1] && d.photo2) { imgs[1].src = d.photo2; imgs[1].alt = d.adresse; }
+  if (imgs[2] && d.photo3) { imgs[2].src = d.photo3; imgs[2].alt = d.adresse; }
+  var galleryEl = q('.gallery');
+  if (galleryEl && galleryEl.nextElementSibling) {
+    var nPh = [d.photo1, d.photo2, d.photo3].filter(Boolean).length;
+    galleryEl.nextElementSibling.textContent = "📷 Cliquez sur une photo pour l’agrandir · " + nPh + " photos disponibles";
+  }
+
+  // Score box
+  var scoreNum = q('.score-num');
+  if (scoreNum) scoreNum.textContent = d.score.toString().replace('.', ',');
+  var scoreDesc = q('.score-box > p');
+  if (scoreDesc) scoreDesc.textContent = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePos(d.prixm2, d.mediane) + '.';
+
+  var slines = qa('.sline');
+  if (slines.length >= 4) {
+    updSline(slines[0], d.scorePrest);
+    updSline(slines[1], d.scoreSecteur);
+    updSline(slines[2], d.scoreQP);
+    updSline(slines[3], d.scoreEtat);
+  }
+
+  // Points forts & vigilances
+  // Template may not have the pts-grid block — insert it if absent, then populate.
+  if (!id('pts-grid-section')) {
+    // Inject CSS
+    var ptsCss = doc.createElement('style');
+    ptsCss.textContent = '.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}'
+      + '.pb{border-radius:12px;padding:15px;}'
+      + '.pb.green{background:#f0f7f3;border:1px solid #c3dece;}'
+      + '.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}'
+      + '.pb h4{font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}'
+      + '.pb.green h4{color:#2d6a4f;}'
+      + '.pb.amber h4{color:#8a6820;}'
+      + '.pb ul{list-style:none;}'
+      + '.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}';
+    if (doc.head) doc.head.appendChild(ptsCss);
+    // Insert HTML block before .score-box
+    var scoreBox = q('.score-box');
+    if (scoreBox) {
+      var ptsDiv = doc.createElement('div');
+      ptsDiv.className = 'pts-grid';
+      ptsDiv.id = 'pts-grid-section';
+      ptsDiv.innerHTML = '<div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>—</li></ul></div>'
+        + '<div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>—</li></ul></div>';
+      scoreBox.parentNode.insertBefore(ptsDiv, scoreBox);
+    }
+  }
+  var ptsGreen = id('pf-list') || q('.pb.green ul');
+  if (ptsGreen) {
+    var forts = [d.fort1, d.fort2, d.fort3].filter(Boolean);
+    if (forts.length) ptsGreen.innerHTML = forts.map(function(f) { return '<li>' + esc(f) + '</li>'; }).join('');
+  }
+  var ptsAmber = id('vg-list') || q('.pb.amber ul');
+  if (ptsAmber) {
+    var vigs = [d.vig1, d.vig2, d.vig3].filter(Boolean);
+    if (vigs.length) ptsAmber.innerHTML = vigs.map(function(v) { return '<li>' + esc(v) + '</li>'; }).join('');
+  }
+
+  // ── Tab : Analyse ──
+  var kpis = qa('.kpi');
+  if (kpis[0] && d.prixm2) kpis[0].querySelector('.kv').textContent = fmtNum(d.prixm2) + ' €';
+  if (kpis[1] && d.mediane) kpis[1].querySelector('.kv').textContent = fmtNum(d.mediane) + ' €';
+  if (kpis[2]) kpis[2].querySelector('.kv').textContent = d.tension;
+  if (kpis[3]) kpis[3].querySelector('.kv').textContent = d.delai;
+
+  // DVF table
+  var dvfTbody = q('.dvft tbody');
+  if (dvfTbody && d.dvf.length) {
+    dvfTbody.innerHTML = d.dvf.map(function(r) {
+      return '<tr class="dvf-row" data-date="' + esc(r.date) + '">'
+        + '<td>' + esc(r.date || '—') + '</td>'
+        + '<td>' + esc(r.adresse || '—') + '</td>'
+        + '<td class="mono">' + (r.surface || '—') + ' m²</td>'
+        + '<td class="mono">' + (r.prix ? fmtNum(r.prix) + ' €' : '—') + '</td>'
+        + '<td class="mono">' + (r.prixm2 ? fmtNum(r.prixm2) + ' €' : '—') + '</td>'
+        + '</tr>';
+    }).join('');
+  }
+
+  // DPE alert
+  if (d.dpe) {
+    var dpeTitle = id('dpe-alert-title');
+    if (dpeTitle) dpeTitle.textContent = '📋 DPE ' + d.dpe;
+    var dpeTxt = id('dpe-alert-txt');
+    if (dpeTxt) dpeTxt.textContent = dpeDesc(d.dpe);
+  }
+
+  // Loibox — surface mention
+  var loibox = q('.loibox p');
+  if (loibox && d.surface > 0) {
+    var vol = Math.round(d.surface * 2.80);
+    var sc = d.surfCarrez || d.surface;
+    loibox.innerHTML = sc.toLocaleString('fr-FR') + ' m² × ~2,80 m ≈ <strong>' + vol + ' m³</strong> → conforme au seuil légal de 20 m³. À confirmer par géomètre.';
+  }
+
+  // Loyer info
+  var loyerInfo = id('renta-loyer-info');
+  if (loyerInfo && d.loyer) loyerInfo.textContent = 'Bien libre. Loyer estimé : ' + fmtNum(d.loyer) + ' € nu. Simulez votre rentabilité ci-dessous.';
+
+  // Sliders — critical: sets initial values so template's calc() runs correctly on load
+  var pSlider = id('prix');
+  if (pSlider) {
+    var pMin = d.fourchetBasse || Math.round(d.prix * 0.6);
+    var pMax = d.fourchetHaute || Math.round(d.prix * 1.1);
+    pSlider.setAttribute('min', pMin);
+    pSlider.setAttribute('max', pMax);
+    pSlider.setAttribute('value', d.prix);
+    var vPrix = id('v-prix');
+    if (vPrix) vPrix.textContent = prixFmt + ' €';
+  }
+  var lSlider = id('loyer');
+  if (lSlider) {
+    lSlider.setAttribute('value', d.loyer || 1300);
+    var vLoyer = id('v-loyer');
+    if (vLoyer) vLoyer.textContent = (d.loyer || 1300) + ' €';
+  }
+  var cSlider = id('charges');
+  if (cSlider) {
+    cSlider.setAttribute('max', Math.max(chargesAnnuelles * 2, 9436));
+    cSlider.setAttribute('value', chargesAnnuelles);
+    var vCharges = id('v-charges');
+    if (vCharges) vCharges.textContent = chargesAnnuelles + ' €';
+  }
+
+  // Timeline — full rebuild from form data
+  function tliHtml(label, desc) {
+    return '<div class="tli"><div class="tly">' + esc(label) + '</div><div class="tlt">' + esc(desc) + '</div></div>';
+  }
+  var timeline = id('historique-timeline');
+  if (timeline) {
+    var tlHtml = '';
+    if (d.annee || d.histConstrDesc) {
+      tlHtml += tliHtml((d.annee || '?') + ' · CONSTRUCTION', d.histConstrDesc || '');
+    }
+    if (d.histEvt1Date) tlHtml += tliHtml(d.histEvt1Date, d.histEvt1Desc || '');
+    if (d.histEvt2Date) tlHtml += tliHtml(d.histEvt2Date, d.histEvt2Desc || '');
+    var venteDesc = 'Bien proposé à ' + prixFmt + ' €'
+      + (d.dpe ? ' · DPE ' + d.dpe : '')
+      + ' · Libre à la vente'
+      + (chargesCopro > 0 ? ' · Charges ' + chargesCopro + ' €/mois' : '') + '.';
+    tlHtml += tliHtml((d.histVenteDate || '2025') + ' · MISE EN VENTE', venteDesc);
+    timeline.innerHTML = tlHtml;
+  }
+
+  // Diagnostics grid — full rebuild
+  var diagGrid = q('.diag-grid');
+  if (diagGrid && d.diags && d.diags.length) {
+    var statusToClass = { favorable: 'diag-ok', attention: 'diag-attention', defavorable: 'diag-alerte', 'non-soumis': 'diag-' };
+    diagGrid.innerHTML = d.diags.map(function(diag) {
+      var cls = statusToClass[diag.status] || 'diag-ok';
+      return '<div class="diag-card ' + cls + '">'
+        + '<div class="diag-icon">' + diag.icon + '</div>'
+        + '<div class="diag-name">' + esc(diag.name) + '</div>'
+        + '<div class="diag-result">' + esc(diag.result) + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Documents tab — charges & taxe mentions
+  qa('.dc').forEach(function(dc) {
+    var dcn = dc.querySelector('.dcn');
+    var dcm = dc.querySelector('.dcm');
+    if (!dcn || !dcm) return;
+    var nm = dcn.textContent || '';
+    if (nm.indexOf('Appels de charges') !== -1 && chargesCopro > 0) {
+      dcm.textContent = 'Relevé annuel · ' + chargesCopro + ' €/mois';
+    }
+    if ((nm.indexOf('taxe foncière') !== -1 || nm.indexOf('Taxe foncière') !== -1) && d.taxeFonciere > 0) {
+      dcm.textContent = Math.round(d.taxeFonciere) + ' € / an';
+    }
+  });
+
+  // Offer tab
+  var offerAmt = id('offer-amount');
+  if (offerAmt) offerAmt.setAttribute('value', d.prix);
+  var offerDisp = id('offer-display');
+  if (offerDisp) offerDisp.textContent = prixFmt + ' €';
+  var offerDiff = id('offer-diff');
+  if (offerDiff) offerDiff.textContent = 'Prix affiché : ' + prixFmt + ' €';
+
+  return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+}
+
+// ═══════════════════════════════════════
+// PURE HELPERS
+// ═══════════════════════════════════════
+function srep(str, find, rep) { return str.split(find).join(rep); }
+
+// Replace a _sp_ variable declaration: var _sp_xxx = "old" → var _sp_xxx = "new"
+// Uses regex so the template value doesn't need to be known in advance.
+function replaceSp(html, varName, value) {
+  var safe = (value === null || value === undefined ? '' : String(value))
+    .replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  return html.replace(
+    new RegExp('(var\\s+' + varName + '\\s*=\\s*")[^"]*"'),
+    '$1' + safe + '"'
+  );
+}
+
+function fmtNum(n) {
+  if (n === null || n === undefined || n === '') return '—';
+  var s = Math.round(Number(n)).toString();
+  var r = '';
+  for (var i = 0; i < s.length; i++) {
+    if (i > 0 && (s.length - i) % 3 === 0) r += ' ';
+    r += s[i];
+  }
+  return r;
+}
+
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updSline(sline, score) {
+  if (!sline) return;
+  var strong = sline.querySelector('strong');
+  if (strong) strong.textContent = score + '/10';
+  var fill = sline.querySelector('.sbar-fill');
+  if (fill) fill.style.width = Math.min(100, Math.round(parseFloat(score) / 10 * 100)) + '%';
+}
+
+function pricePos(pm2, med) {
+  if (!med || !pm2) return 'Prix à confirmer';
+  if (pm2 > med * 1.1) return 'Prix au-dessus du marché';
+  if (pm2 < med * 0.9) return 'Prix sous le marché';
+  return 'Prix dans le marché';
+}
+
+function dpeDesc(dpe) {
+  return {
+    A: 'Bien très économe en énergie — consommation < 70 kWh/m².an.',
+    B: 'Bien économe en énergie — consommation 70–110 kWh/m².an.',
+    C: 'Bien bien isolé — consommation 110–180 kWh/m².an.',
+    D: 'Bien classé D — vérifiez les obligations réglementaires en vigueur.',
+    E: 'Bien classé E — interdit à la location dès 2025. Travaux à prévoir.',
+    F: 'Passoire thermique — interdit à la location dès 2023. Décote significative.',
+    G: 'Passoire thermique sévère — interdit à la location. Décote importante.'
+  }[dpe] || 'Vérifiez le DPE et les obligations réglementaires en vigueur.';
+}
+
+function fmtDVFDate(ds) {
+  if (!ds) return '';
+  var p = ds.split('-');
+  if (p.length < 2) return ds;
+  var mois = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  return (mois[parseInt(p[1], 10) - 1] || p[1]) + ' ' + p[0];
+}
+
+function slugify(str) {
+  return (str || 'adresse')
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .substring(0, 60);
+}
+
+function downloadHTML(html, filename) {
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 200);
+}
+
+function getV(id) { var e = document.getElementById(id); return e ? e.value : ''; }
+function setV(id, v) { var e = document.getElementById(id); if (e) e.value = (v == null ? '' : v); }
+
+function toggleStep(bodyId) {
+  var el = document.getElementById(bodyId);
+  if (el) el.style.display = (el.style.display === 'none' ? '' : 'none');
+}
+</script>
+</body>
+</html>
