@@ -1297,11 +1297,18 @@ async function fetchDVF() {
     const url = `https://api.dvf.etalab.gouv.fr/geoapi/mutations?code_postal=${cp}&nature_mutation=Vente&fields=${fields}&per_page=200`;
     let resp;
     try {
-      resp = await fetch(url, { mode: 'cors' });
-    } catch(fetchErr) {
-      throw new Error('⚠️ API DVF inaccessible. Cause probable : la fiche est ouverte en tant que fichier local (file://). Ouvrez-la depuis un serveur web, ou glissez-la sur Chrome/Edge.');
+      resp = await fetch(url);
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    } catch(e1) {
+      // Fallback : API Cerema
+      const url2 = `https://apidf.cerema.fr/dvf_opendata/geomutations/?code_postal=${cp}&nature_mutation=Vente&page_size=200`;
+      try {
+        resp = await fetch(url2);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      } catch(e2) {
+        throw new Error('API DVF inaccessible (' + e2.message + ')');
+      }
     }
-    if (!resp.ok) throw new Error('Erreur API DVF: ' + resp.status);
     const data = await resp.json();
 
     let allItems;
