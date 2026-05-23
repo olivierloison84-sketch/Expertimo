@@ -1294,14 +1294,14 @@ async function fetchDVF() {
     const fields = isTerrain
       ? 'valeur_fonciere,surface_terrain,type_local,adresse_numero,adresse_nom_voie,date_mutation'
       : 'valeur_fonciere,surface_reelle_bati,type_local,adresse_numero,adresse_nom_voie,date_mutation';
-    const url = `https://api.dvf.etalab.gouv.fr/geoapi/mutations?code_postal=${cp}&nature_mutation=Vente&fields=${fields}&per_page=200`;
+    const url = `https://corsproxy.io/?url=https://api.dvf.etalab.gouv.fr/geoapi/mutations?code_postal=${cp}&nature_mutation=Vente&fields=${fields}&per_page=200`;
     let resp;
     try {
       resp = await fetch(url);
       if (!resp.ok) throw new Error('HTTP ' + resp.status);
     } catch(e1) {
-      // Fallback : API Cerema
-      const url2 = `https://apidf.cerema.fr/dvf_opendata/geomutations/?code_postal=${cp}&nature_mutation=Vente&page_size=200`;
+      // Fallback : API Cerema via proxy
+      const url2 = `https://corsproxy.io/?url=https://apidf.cerema.fr/dvf_opendata/geomutations/?code_postal=${cp}&nature_mutation=Vente&page_size=200`;
       try {
         resp = await fetch(url2);
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
