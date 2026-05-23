@@ -1278,134 +1278,15 @@ function removePhoto(i) {
 var _dvfCache = null;
 
 async function fetchDVF() {
-  const cp = document.getElementById('dvf_cp').value.trim();
-  const type = document.getElementById('dvf_type').value;
-  if (!cp || cp.length !== 5) { showToast('Entrez un code postal valide (5 chiffres)', true); return; }
-
-  const isTerrain = type === 'Terrain';
-  const surfaceRef = isTerrain
-    ? (parseFloat(document.getElementById('superficie_totale').value) || parseFloat(document.getElementById('surface_terrain').value) || 0)
-    : (parseFloat(document.getElementById('surface_hab').value) || 0);
-
   const result = document.getElementById('dvf_result');
-  result.innerHTML = '<div class="dvf-box"><div class="dvf-loading">⏳ Chargement des données DVF…</div></div>';
-
-  try {
-    const fields = isTerrain
-      ? 'valeur_fonciere,surface_terrain,type_local,adresse_numero,adresse_nom_voie,date_mutation'
-      : 'valeur_fonciere,surface_reelle_bati,type_local,adresse_numero,adresse_nom_voie,date_mutation';
-    const url = `https://api.allorigins.win/raw?url=https://api.dvf.etalab.gouv.fr/geoapi/mutations?code_postal=${cp}&nature_mutation=Vente&fields=${fields}&per_page=200`;
-    let resp;
-    try {
-      resp = await fetch(url);
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-    } catch(e1) {
-      // Fallback : API Cerema via proxy
-      const url2 = `https://api.allorigins.win/raw?url=https://apidf.cerema.fr/dvf_opendata/geomutations/?code_postal=${cp}&nature_mutation=Vente&page_size=200`;
-      try {
-        resp = await fetch(url2);
-        if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      } catch(e2) {
-        throw new Error('API DVF inaccessible (' + e2.message + ')');
-      }
-    }
-    const data = await resp.json();
-
-    let allItems;
-    if (isTerrain) {
-      allItems = (data.features || [])
-        .map(f => f.properties)
-        .filter(p => (!p.type_local || p.type_local === '') && p.surface_terrain > 0 && p.valeur_fonciere > 0);
-    } else {
-      allItems = (data.features || [])
-        .map(f => f.properties)
-        .filter(p => p.type_local === type && p.surface_reelle_bati > 0 && p.valeur_fonciere > 0);
-    }
-
-    let items = allItems;
-    let surfaceLabel = '';
-    if (surfaceRef > 0) {
-      const filtered = allItems.filter(p => {
-        const s = isTerrain ? p.surface_terrain : p.surface_reelle_bati;
-        return s >= surfaceRef * 0.6 && s <= surfaceRef * 1.4;
-      });
-      if (filtered.length >= 3) {
-        items = filtered;
-        surfaceLabel = ` · ref. ${surfaceRef} m² (±40%)`;
-      } else {
-        surfaceLabel = ` · toutes surfaces (< 3 résultats filtrés)`;
-      }
-    }
-
-    if (items.length === 0) {
-      result.innerHTML = '<div class="dvf-box"><p style="color:#f0c040;text-align:center">Aucune transaction trouvée pour ce code postal / type / surface.</p></div>';
-      return;
-    }
-
-    const getSurface = p => isTerrain ? p.surface_terrain : p.surface_reelle_bati;
-    const prices_m2 = items.map(p => p.valeur_fonciere / getSurface(p));
-    prices_m2.sort((a,b) => a-b);
-    const median = prices_m2[Math.floor(prices_m2.length/2)];
-    const min = prices_m2[0];
-    const max = prices_m2[prices_m2.length-1];
-
-    const fmt = n => Math.round(n).toLocaleString('fr-FR');
-    let fourchette = '';
-    if (surfaceRef > 0) {
-      const lo = Math.round(surfaceRef * min * 0.95);
-      const hi = Math.round(surfaceRef * max * 1.05);
-      fourchette = `<div class="dvf-fourchette">
-        <div style="font-size:12px;opacity:.7;margin-bottom:4px">Fourchette estimée pour ${surfaceRef} m² (±5%)</div>
-        <div class="range">${lo.toLocaleString('fr-FR')} € — ${hi.toLocaleString('fr-FR')} €</div>
-      </div>`;
-    }
-
-    const recent = [...items].sort((a,b) => (b.date_mutation||'').localeCompare(a.date_mutation||'')).slice(0,8);
-
-    // ── EXPORT DVF CACHE pour le générateur ──
-    _dvfCache = {
-      cp, type, surfaceRef,
-      median: Math.round(median),
-      min: Math.round(min),
-      max: Math.round(max),
-      nb: items.length,
-      fourchetteBasse: surfaceRef > 0 ? Math.round(surfaceRef * min * 0.95) : null,
-      fourchetteHaute: surfaceRef > 0 ? Math.round(surfaceRef * max * 1.05) : null,
-      transactions: recent.slice(0, 6).map(p => ({
-        date: p.date_mutation ? p.date_mutation.slice(0, 7) : '',
-        adresse: ((p.adresse_numero || '') + ' ' + (p.adresse_nom_voie || '')).trim(),
-        surface: Math.round(getSurface(p)),
-        prix: Math.round(p.valeur_fonciere),
-        prixm2: Math.round(p.valeur_fonciere / getSurface(p))
-      }))
-    };
-
-    const rows = recent.map(p => `
-      <tr>
-        <td>${p.date_mutation ? p.date_mutation.slice(0,7) : '—'}</td>
-        <td>${(p.adresse_numero||'')} ${p.adresse_nom_voie||''}</td>
-        <td>${fmt(p.valeur_fonciere)} €</td>
-        <td>${fmt(getSurface(p))} m²</td>
-        <td>${fmt(p.valeur_fonciere/getSurface(p))} €/m²</td>
-      </tr>`).join('');
-
-    result.innerHTML = `<div class="dvf-box">
-      <h3>📊 Analyse marché — ${type}s · ${cp}${surfaceLabel}</h3>
-      <div class="dvf-stats">
-        <div class="dvf-stat"><div class="val">${items.length}</div><div class="lbl">ventes trouvées</div></div>
-        <div class="dvf-stat"><div class="val">${fmt(median)} €/m²</div><div class="lbl">prix médian</div></div>
-        <div class="dvf-stat"><div class="val">${fmt(min)} — ${fmt(max)}</div><div class="lbl">fourchette €/m²</div></div>
-      </div>
-      ${fourchette}
-      <table class="dvf-table">
-        <thead><tr><th>Date</th><th>Adresse</th><th>Prix</th><th>Surface</th><th>€/m²</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-      <div style="margin-top:10px;font-size:11px;opacity:.5;text-align:right">Source : DVF data.gouv.fr · <span style="color:#f0c040;">✓ Données incluses dans l'export JSON</span></div>
-    </div>`;
-  } catch(e) {
-    result.innerHTML = `<div class="dvf-box"><p style="color:#f87171;text-align:center">⚠️ Erreur : ${e.message}</p></div>`;
-  }
+  result.innerHTML = `<div class="dvf-box">
+    <p style="color:var(--dvf-gold);text-align:center;padding:10px;">
+      📊 Analyse DVF temporairement indisponible.<br>
+      <a href="https://app.dvf.etalab.gouv.fr" target="_blank" style="color:var(--dvf-gold);">
+        Consultez app.dvf.etalab.gouv.fr
+      </a>
+    </p>
+  </div>`;
 }
 
 // ============================================================
