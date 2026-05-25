@@ -169,11 +169,24 @@ tr:nth-child(even) td { background: #f8fafc; }
 .fw-600 { font-weight: 600; }
 .col-span-2 { grid-column: span 2; }
 .col-span-3 { grid-column: span 3; }
+/* GITHUB BANNER */
+#gh-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1a3a5c;border-bottom:2px solid #c9a84c;padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:12px;}
+#gh-banner label{color:#c9a84c;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+#gh-banner input[type=password]{background:rgba(255,255,255,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:var(--radius);padding:7px 12px;color:#fff;font-size:12px;width:300px;outline:none;transition:border-color .2s;}
+#gh-banner input[type=password]:focus{border-color:#c9a84c;}
+#gh-banner .gh-val-btn{background:#c9a84c;border:none;border-radius:var(--radius);padding:7px 18px;color:#1a3a5c;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+#gh-banner .gh-val-btn:hover{opacity:.85;}
 </style>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
+
+<div id="gh-banner" style="display:none">
+  <label for="gh-token-input">GitHub Personal Access Token</label>
+  <input type="password" id="gh-token-input" placeholder="ghp_…" autocomplete="off">
+  <button class="gh-val-btn" onclick="saveGhToken()">Valider</button>
+</div>
 
 <header>
   <div class="brand">
@@ -188,6 +201,7 @@ tr:nth-child(even) td { background: #f8fafc; }
     <button class="btn btn-outline" onclick="newFiche()">➕ Nouvelle fiche</button>
     <button class="btn btn-primary" onclick="saveFiche()">💾 Sauvegarder</button>
     <button class="btn btn-outline" onclick="exportJSON()">⬇ JSON</button>
+    <button class="btn btn-outline" onclick="saveToGitHub()">☁️ Sauvegarder sur GitHub</button>
     <button class="btn btn-outline" onclick="window.print()">🖨 Imprimer</button>
   </div>
 </header>
@@ -1650,6 +1664,92 @@ function init() {
 }
 
 init();
+
+// ============================================================
+// GITHUB TOKEN BANNER
+// ============================================================
+function saveGhToken() {
+  const k = document.getElementById('gh-token-input').value.trim();
+  if (!k) return;
+  localStorage.setItem('_gh_token', k);
+  document.getElementById('gh-banner').style.display = 'none';
+}
+
+// ============================================================
+// GITHUB PUSH — FICHE RDV
+// ============================================================
+function ghSlug(str) {
+  return (str || 'inconnu').toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'inconnu';
+}
+
+function saveToGitHub() {
+  const token = localStorage.getItem('_gh_token');
+  if (!token) {
+    document.getElementById('gh-banner').style.display = 'flex';
+    showToast('⚠️ Saisissez votre token GitHub dans le bandeau', true);
+    return;
+  }
+  const data     = getFicheData();
+  const nom      = ghSlug(data.proprio_nom);
+  const prenom   = ghSlug(data.proprio_prenom);
+  const date     = new Date().toISOString().slice(0, 10);
+  const filename = nom + '-' + prenom + '-' + date + '.json';
+  const path     = 'fiches-rdv/' + filename;
+  const apiUrl   = 'https://api.github.com/repos/olivierloison84-sketch/Expertimo/contents/' + path;
+  const headers  = {
+    'Authorization': 'token ' + token,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  };
+  const jsonStr = JSON.stringify(data, null, 2);
+  showToast('⏳ Push GitHub en cours…');
+
+  // Récupère le SHA si le fichier existe déjà (nécessaire pour update)
+  fetch(apiUrl, { headers })
+    .then(r => r.ok ? r.json() : null)
+    .then(existing => {
+      const body = {
+        message: 'feat: fiche RDV ' + nom + '-' + prenom + ' (' + date + ')',
+        content: toBase64UTF8(jsonStr),
+        branch: 'main'
+      };
+      if (existing && existing.sha) body.sha = existing.sha;
+      return fetch(apiUrl, { method: 'PUT', headers, body: JSON.stringify(body) });
+    })
+    .then(r => r.json().then(d => ({ ok: r.ok, status: r.status, data: d })))
+    .then(res => {
+      if (res.ok) {
+        const ghUrl = 'https://github.com/olivierloison84-sketch/Expertimo/blob/main/fiches-rdv/' + filename;
+        showToastLink('☁️ Sauvegardé sur GitHub !', ghUrl, filename);
+      } else {
+        showToast('❌ ' + res.status + ' : ' + (res.data.message || 'Erreur GitHub'), true);
+      }
+    })
+    .catch(err => showToast('❌ ' + (err && err.message ? err.message : String(err)), true));
+}
+
+function showToastLink(label, url, linkText) {
+  const t = document.getElementById('toast');
+  t.innerHTML = label + '<br><a href="' + url + '" target="_blank" style="color:#fff;text-decoration:underline;font-size:11px;font-weight:400;">' + linkText + '</a>';
+  t.className = 'toast show';
+  setTimeout(() => { t.className = 'toast'; }, 7000);
+}
+
+function toBase64UTF8(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+// ============================================================
+// GITHUB BANNER INIT
+// ============================================================
+if (localStorage.getItem('_gh_token')) {
+  document.getElementById('gh-banner').style.display = 'none';
+}
+document.getElementById('gh-token-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') saveGhToken();
+});
 </script>
 </body>
 </html>
