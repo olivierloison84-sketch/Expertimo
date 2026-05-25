@@ -103,9 +103,21 @@ textarea { resize: vertical; min-height: 60px; }
   .score-grid { grid-template-columns: 1fr 1fr; }
   .photo-row { grid-template-columns: 1fr; }
 }
+#gh-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:#1a3a5c;border-bottom:2px solid #c9a84c;padding:10px 20px;display:flex;align-items:center;justify-content:center;gap:12px;}
+#gh-banner label{color:#c9a84c;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;}
+#gh-banner input[type=password]{background:rgba(255,255,255,.1);border:1.5px solid rgba(201,168,76,.4);border-radius:var(--radius);padding:7px 12px;color:#fff;font-size:12px;width:300px;outline:none;transition:border-color .2s;}
+#gh-banner input[type=password]:focus{border-color:#c9a84c;}
+#gh-banner .gh-btn{background:#c9a84c;border:none;border-radius:var(--radius);padding:7px 18px;color:#1a3a5c;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;}
+#gh-banner .gh-btn:hover{opacity:.85;}
 </style>
 </head>
 <body>
+
+<div id="gh-banner">
+  <label for="gh-token-input">GitHub Personal Access Token</label>
+  <input type="password" id="gh-token-input" placeholder="ghp_…" autocomplete="off">
+  <button class="gh-btn" onclick="saveGhToken()">Valider</button>
+</div>
 
 <header>
   <div>
@@ -512,6 +524,10 @@ textarea { resize: vertical; min-height: 60px; }
       <button class="btn btn-success btn-lg" onclick="generate()">⬇ Générer &amp; télécharger</button>
       <button class="btn btn-outline btn-lg" onclick="previewOutput()">👁 Aperçu (nouvel onglet)</button>
     </div>
+    <div id="gh-push-area" style="display:none;margin-top:16px;display:none;align-items:center;gap:12px;flex-wrap:wrap;">
+      <button class="btn btn-primary btn-lg" id="gh-push-btn" onclick="pushToGitHub()">📤 Envoyer sur GitHub</button>
+      <span id="gh-push-status" style="font-size:13px;line-height:1.5;"></span>
+    </div>
     <p class="hint" style="margin-top:12px">Fichier généré : <code id="slug-preview">adresse-FINAL.html</code></p>
   </div>
 </div>
@@ -524,6 +540,8 @@ textarea { resize: vertical; min-height: 60px; }
 // ═══════════════════════════════════════
 var jsonData = null;
 var templateHTML = null;
+var _lastGeneratedHTML = null;
+var _lastGeneratedSlug = null;
 
 // ═══════════════════════════════════════
 // STEP 1 — JSON LOADING
@@ -853,7 +871,13 @@ function generate() {
   if (!d.adresse) { alert('L\'adresse est obligatoire (étape 2).'); return; }
   try {
     var out = injectData(templateHTML, d);
-    downloadHTML(out, slugify(d.adresse) + '-FINAL.html');
+    _lastGeneratedHTML = out;
+    _lastGeneratedSlug = slugify(d.adresse);
+    downloadHTML(out, _lastGeneratedSlug + '-FINAL.html');
+    var pushArea = document.getElementById('gh-push-area');
+    pushArea.style.display = 'flex';
+    document.getElementById('gh-push-status').innerHTML = '';
+    document.getElementById('gh-push-btn').disabled = false;
   } catch(err) {
     alert('Erreur génération :\n' + err.message);
     console.error(err);
@@ -1232,6 +1256,91 @@ function toggleStep(bodyId) {
   var el = document.getElementById(bodyId);
   if (el) el.style.display = (el.style.display === 'none' ? '' : 'none');
 }
+
+// ═══════════════════════════════════════
+// GITHUB TOKEN BANNER
+// ═══════════════════════════════════════
+function saveGhToken() {
+  var k = document.getElementById('gh-token-input').value.trim();
+  if (!k) return;
+  localStorage.setItem('_gh_token', k);
+  document.getElementById('gh-banner').style.display = 'none';
+}
+
+// ═══════════════════════════════════════
+// GITHUB PUSH
+// ═══════════════════════════════════════
+function pushToGitHub() {
+  var token = localStorage.getItem('_gh_token');
+  if (!token) {
+    document.getElementById('gh-push-status').textContent = '⚠️ Aucun token GitHub — saisissez-le dans le bandeau en haut.';
+    document.getElementById('gh-banner').style.display = 'flex';
+    return;
+  }
+  if (!_lastGeneratedHTML || !_lastGeneratedSlug) {
+    document.getElementById('gh-push-status').textContent = '⚠️ Générez d\'abord la fiche.';
+    return;
+  }
+  var btn = document.getElementById('gh-push-btn');
+  var status = document.getElementById('gh-push-status');
+  btn.disabled = true;
+  status.textContent = '⏳ Push en cours…';
+
+  var path = 'fiches/' + _lastGeneratedSlug + '-FINAL.html';
+  var apiUrl = 'https://api.github.com/repos/olivierloison84-sketch/Expertimo/contents/' + path;
+  var headers = {
+    'Authorization': 'token ' + token,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  };
+
+  // 1. Récupère le SHA existant si le fichier existe déjà
+  fetch(apiUrl, { headers: headers })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(existing) {
+      var body = {
+        message: 'feat: fiche acquereur ' + _lastGeneratedSlug,
+        content: toBase64UTF8(_lastGeneratedHTML),
+        branch: 'main'
+      };
+      if (existing && existing.sha) body.sha = existing.sha;
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body)
+      });
+    })
+    .then(function(r) {
+      return r.json().then(function(data) { return { ok: r.ok, status: r.status, data: data }; });
+    })
+    .then(function(res) {
+      btn.disabled = false;
+      if (res.ok) {
+        var pageUrl = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/' + _lastGeneratedSlug + '-FINAL.html';
+        status.innerHTML = '✅ En ligne ! <a href="' + pageUrl + '" target="_blank" style="color:var(--primary);font-weight:700;">' + pageUrl + '</a>';
+      } else {
+        status.textContent = '❌ Erreur ' + res.status + ' : ' + (res.data.message || JSON.stringify(res.data));
+      }
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      status.textContent = '❌ ' + (err && err.message ? err.message : String(err));
+    });
+}
+
+function toBase64UTF8(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+// ═══════════════════════════════════════
+// INIT BANNERS
+// ═══════════════════════════════════════
+if (localStorage.getItem('_gh_token')) {
+  document.getElementById('gh-banner').style.display = 'none';
+}
+document.getElementById('gh-token-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') saveGhToken();
+});
 </script>
 </body>
 </html>
