@@ -296,9 +296,21 @@ textarea.field{min-height:95px;resize:vertical;}
   .sval{text-align:left;}
   .ptrack{gap:0;}
 }
+#api-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:#141414;border-bottom:1px solid rgba(184,146,58,.45);padding:11px 20px;display:flex;align-items:center;justify-content:center;gap:12px;font-family:'DM Mono',monospace;}
+#api-banner label{color:rgba(184,146,58,.9);font-size:10px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;}
+#api-banner input[type=password]{background:rgba(255,255,255,.07);border:1px solid rgba(184,146,58,.35);border-radius:6px;padding:6px 12px;color:#fff;font-family:'DM Mono',monospace;font-size:12px;width:300px;outline:none;transition:border-color .2s;}
+#api-banner input[type=password]:focus{border-color:rgba(184,146,58,.8);}
+#api-banner button{background:#b8923a;border:none;border-radius:6px;padding:7px 18px;color:#141414;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:700;cursor:pointer;white-space:nowrap;}
+#api-banner button:hover{background:#d4a956;}
 </style>
 </head>
 <body>
+
+<div id="api-banner">
+  <label for="api-key-input">Clé API Anthropic</label>
+  <input type="password" id="api-key-input" placeholder="sk-ant-api03-…" autocomplete="off">
+  <button onclick="saveApiKey()">Valider</button>
+</div>
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <div class="lbclose">✕</div>
@@ -1141,7 +1153,7 @@ function filterMap(cat, btn) {
 var _aiOpen = false;
 var _aiMessages = [];
 var _aiInit = false;
-const ANTHROPIC_KEY = ''; // Clé à configurer
+function getAnthropicKey(){ return localStorage.getItem('_xp_ak') || ''; }
 var _sp_adresse   = "5 Rue de l'Arpajonnais";
 var _sp_prix      = "260 000";
 var _sp_surface   = "76,87";
@@ -1193,7 +1205,7 @@ function sendAI() {
   _aiMessages.push({role:'user',content:q});
   // Vérification clé API (détecte une clé vide ou non substituée)
   var _openBracket = '[' + '[';
-  if (!ANTHROPIC_KEY || ANTHROPIC_KEY === '' || ANTHROPIC_KEY.indexOf(_openBracket) !== -1) {
+  if (!getAnthropicKey() || getAnthropicKey().indexOf(_openBracket) !== -1) {
     addAIMsg('Assistant non configuré.', 'assistant');
     return;
   }
@@ -1215,13 +1227,13 @@ function sendAI() {
     + " Ne donne jamais de conseil juridique ou financier ferme.";
   var msgs = _aiMessages.filter(function(m,i){return i>1;});
   // Diagnostic logs
-  console.log('Cle API (8 premiers chars):', ANTHROPIC_KEY.substring(0,8));
+  console.log('Cle API (8 premiers chars):', getAnthropicKey().substring(0,8));
   console.log('Body envoye:', JSON.stringify({model:'claude-sonnet-4-5',max_tokens:300,messages:msgs.slice(-2)}));
   fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': ANTHROPIC_KEY,
+      'x-api-key': getAnthropicKey(),
       'anthropic-version': '2023-06-01',
       'anthropic-dangerous-direct-browser-access': 'true'
     },
@@ -1255,7 +1267,20 @@ document.querySelectorAll('.diag-result').forEach(function(el) {
 </script>
 
 <script>
+function saveApiKey(){
+  var k = document.getElementById('api-key-input').value.trim();
+  if (!k) return;
+  localStorage.setItem('_xp_ak', k);
+  document.getElementById('api-banner').style.display = 'none';
+}
+
 document.addEventListener('DOMContentLoaded', function(){
+    if (localStorage.getItem('_xp_ak')) {
+      document.getElementById('api-banner').style.display = 'none';
+    }
+    document.getElementById('api-key-input').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') saveApiKey();
+    });
     ['prix','loyer','apport','taux','duree','charges','travaux'].forEach(function(id){
         var el = document.getElementById(id);
         if (el) el.addEventListener('input', calc);
