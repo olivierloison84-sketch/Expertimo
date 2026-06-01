@@ -431,6 +431,14 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <div id="credit-preview"></div>
 
+    <!-- Clé API Anthropic -->
+    <div class="section-title">Chatbot IA</div>
+    <div class="form-group">
+      <label>🔑 Clé API Anthropic (optionnelle — active le chatbot IA)</label>
+      <input type="password" id="f-apikey" placeholder="sk-ant-…" autocomplete="off">
+      <p class="hint">Cette clé sera embarquée dans la fiche générée et ne sera pas visible par le client.</p>
+    </div>
+
     <!-- Diagnostics réglementaires -->
     <div class="section-title">Diagnostics réglementaires</div>
     <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
@@ -839,6 +847,7 @@ function getFormData() {
     histEvt2Date:    getV('f-hist-evt2-date'),
     histEvt2Desc:    getV('f-hist-evt2-desc'),
     histVenteDate:   getV('f-hist-vente-date') || '2025',
+    apikey:        (document.getElementById('f-apikey').value || '').trim(),
     diags: [
       { icon: '🧱', name: 'Amiante',        status: getV('f-diag-amiante-status'),     result: getV('f-diag-amiante-result') },
       { icon: '🔬', name: 'Plomb (CREP)',   status: getV('f-diag-plomb-status'),       result: getV('f-diag-plomb-result') },
@@ -926,6 +935,14 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
   html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
+
+  // Anthropic API key — embed hardcoded so chatbot works without localStorage prompt
+  if (d.apikey) {
+    html = srep(html,
+      "function getAnthropicKey(){ return localStorage.getItem('_xp_ak') || ''; }",
+      "function getAnthropicKey(){ return '" + d.apikey.replace(/'/g, "\\'") + "' || localStorage.getItem('_xp_ak') || ''; }"
+    );
+  }
 
   // Address (the template may have it as literal string in JS)
   html = srep(html, "5 Rue de l'Arpajonnais", d.adresse);
