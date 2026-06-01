@@ -937,10 +937,12 @@ function injectData(html, d) {
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
 
   // Anthropic API key — embed hardcoded so chatbot works without localStorage prompt
+  // Uses regex (not srep) to be resilient to whitespace/quote variations in the template.
   if (d.apikey) {
-    html = srep(html,
-      "function getAnthropicKey(){ return localStorage.getItem('_xp_ak') || ''; }",
-      "function getAnthropicKey(){ return '" + d.apikey.replace(/'/g, "\\'") + "' || localStorage.getItem('_xp_ak') || ''; }"
+    var safeKey = d.apikey.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    html = html.replace(
+      /function\s+getAnthropicKey\s*\(\s*\)\s*\{[^}]*\}/,
+      "function getAnthropicKey(){ return '" + safeKey + "'; }"
     );
   }
 
@@ -1169,6 +1171,12 @@ function injectData(html, d) {
       dcm.textContent = Math.round(d.taxeFonciere) + ' € / an';
     }
   });
+
+  // API key banner — hide it if key is embedded (client won't need to enter it)
+  if (d.apikey) {
+    var apiBanner = id('api-banner');
+    if (apiBanner) apiBanner.style.display = 'none';
+  }
 
   // Offer tab
   var offerAmt = id('offer-amount');
