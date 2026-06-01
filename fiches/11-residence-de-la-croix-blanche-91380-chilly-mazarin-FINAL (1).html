@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11 Résidence de la Croix Blanche 91380 Chilly Mazarin · Espace Acheteur Privé · Expertimo</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;family=DM+Sans:wght@300;400;500&amp;family=DM+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root{--bg:#f4f1ea;--card:#fff;--ink:#111;--gold:#b8923a;--gold2:#d4a956;--cream:#ede9df;--muted:#888880;--border:#ddd8cc;--vert:#2d6a4f;--rouge:#c0392b;--dark:#141414;}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
+/* HEADER */
+.header{background:linear-gradient(160deg,#0e0e0e 0%,#1a1816 100%);padding:48px 0 40px;min-height:280px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(184,146,58,.12),transparent 70%);top:-200px;right:-80px;border-radius:50%;}
+.header-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:flex-start;gap:48px;position:relative;z-index:2;}
+.hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(184,146,58,.35);border-radius:99px;background:rgba(184,146,58,.08);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.hbadge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.htitle{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.5vw,42px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
+.hsub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.8;max-width:540px;font-weight:300;margin-top:8px;}
+.price-card{background:rgba(255,255,255,.06);border:1px solid rgba(184,146,58,.25);border-radius:20px;padding:32px 36px;min-width:320px;max-width:380px;flex-shrink:0;}
+.plabel{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
+.pamount{font-family:'Cormorant Garamond',serif;font-size:64px;color:var(--gold);font-weight:300;line-height:1;margin-bottom:4px;}
+.pmeta{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08);}
+.hkpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:0;}
+.hkpi{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;}
+.hkpi .hl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
+.hkpi .hv{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:300;line-height:1;}
+/* NAV */
+.nav{position:sticky;top:0;z-index:999;background:rgba(255,255,255,.96);border-bottom:1px solid var(--border);padding:0 28px;display:flex;gap:0;overflow-x:auto;}
+.nav::-webkit-scrollbar{height:0;}
+.nav button{border:none;background:none;padding:17px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;}
+.nav button:hover{color:var(--ink);}
+.nav button.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500;}
+/* CONTAINER */
+.container{max-width:1300px;margin:auto;padding:32px 28px 70px;}
+.tab{display:none;}
+.tab.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+/* PAGE GRID */
+.pg{display:grid;grid-template-columns:1fr 290px;gap:22px;align-items:start;}
+/* CONSEILLER */
+.cons-card{background:var(--dark);border-radius:18px;padding:20px;color:white;position:sticky;top:20px;text-align:center;}
+.cons-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#b8923a,#d4a956);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dark);font-weight:600;margin:0 auto 12px;}
+.cons-name{font-family:'Cormorant Garamond',serif;font-size:18px;color:white;margin-bottom:2px;}
+.cons-role{font-size:12px;color:#7a7264;font-weight:300;margin-bottom:12px;}
+.cons-contact a{justify-content:center;}
+.cons-contact{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.06);}
+.cons-contact a{font-size:11px;color:#c0b8ae;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s;}
+.cons-contact a:hover{color:var(--gold);}
+.btn-rdv{display:block;width:100%;padding:12px;background:var(--gold);color:var(--dark);border:none;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;transition:.2s;margin-bottom:8px;font-weight:500;}
+.btn-rdv:hover{background:var(--gold2);}
+.btn-offre{display:block;width:100%;padding:12px;background:transparent;color:var(--gold);border:1px solid rgba(184,146,58,.4);border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;transition:.2s;}
+.btn-offre:hover{background:rgba(184,146,58,.08);}
+.cons-stars{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);text-align:center;}
+.cons-stars .stars{font-size:13px;margin-bottom:1px;}
+.cons-stars .slbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6a6358;}
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px;box-shadow:0 3px 16px rgba(0,0,0,.04);}
+.card-dark{background:var(--dark);border-radius:18px;padding:24px;margin-bottom:18px;color:white;}
+.stitle{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;margin-bottom:5px;line-height:1.2;}
+.ssub{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:16px;font-weight:300;}
+.lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block;}
+/* KPI GRID */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px;}
+.kpi{background:var(--card);padding:16px;}
+.kpi .kl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+.kpi .kv{font-family:'Cormorant Garamond',serif;font-size:26px;line-height:1;}
+.kpi .kv.g{color:var(--gold);}.kpi .kv.v{color:var(--vert);}.kpi .kv.r{color:var(--rouge);}
+/* SCORE BOX */
+.score-box{background:var(--dark);border-radius:14px;padding:20px;color:white;margin-bottom:16px;}
+.score-num{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,6vw,48px);color:var(--gold);line-height:1;font-weight:300;overflow:hidden;}
+.sline{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;}
+.sline:last-child{border:none;}
+.sline span{color:#9a9286;font-weight:300;}
+.sline strong{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);}
+.sbar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:2px;overflow:hidden;}
+.sbar-fill{height:100%;background:var(--gold);border-radius:2px;}
+/* GALLERY */
+.gallery{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:190px 190px;gap:9px;margin-bottom:18px;}
+.gallery .gm{grid-row:1/3;}
+.gallery img{width:100%;height:100%;object-fit:cover;border-radius:12px;cursor:pointer;transition:transform .3s;}
+.gallery img:hover{transform:scale(1.015);}
+/* POINTS */
+.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}
+.pb{border-radius:12px;padding:15px;}
+.pb.green{background:#f0f7f3;border:1px solid #c3dece;}
+.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}
+.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}
+.pb.green h4{color:var(--vert);}.pb.amber h4{color:#8a6820;}
+.pb ul{list-style:none;}
+.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.05);display:flex;gap:5px;font-weight:300;line-height:1.5;}
+.pb ul li:last-child{border:none;}
+.pb ul li::before{content:'→';font-size:9px;color:var(--muted);flex-shrink:0;margin-top:2px;}
+/* SUB TABS */
+.sub-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto;}
+.sub-tabs::-webkit-scrollbar{height:0;}
+.sub-tabs button{border:none;background:none;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.2s;}
+.sub-tabs button:hover{color:var(--ink);}
+.sub-tabs button.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500;}
+.sub-panel{display:none;}
+.sub-panel.active{display:block;}
+/* SLIDERS */
+.srow{display:grid;grid-template-columns:150px 1fr 100px;align-items:center;gap:11px;margin-bottom:13px;}
+.slbl{font-size:12px;font-weight:300;}
+.slbl small{display:block;font-size:10px;color:var(--muted);margin-top:1px;}
+input[type=range]{-webkit-appearance:none;appearance:none;height:2px;background:var(--border);border-radius:2px;width:100%;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--ink);border:2px solid var(--gold);cursor:pointer;transition:transform .15s;}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+.sval{font-family:'DM Mono',monospace;font-size:12px;text-align:right;font-weight:500;}
+/* RENTA */
+.renta-box{border:2px solid var(--gold);border-radius:14px;padding:20px;margin-bottom:18px;background:linear-gradient(135deg,#fdf8f0,#faf6ee);}
+.renta-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:11px;flex-wrap:wrap;}
+.renta-big{font-family:'Cormorant Garamond',serif;font-size:48px;line-height:1;transition:color .3s;}
+.renta-big.good{color:var(--vert);}.renta-big.ok{color:var(--gold);}.renta-big.bad{color:var(--rouge);}
+.formula{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:rgba(0,0,0,.03);padding:9px 12px;border-radius:7px;line-height:1.9;margin-bottom:10px;}
+.citation{font-size:11px;font-style:italic;color:var(--muted);border-left:2px solid var(--gold);padding-left:10px;line-height:1.8;}
+/* RESULT GRID */
+.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px;}
+.rc{background:var(--card);padding:15px;}
+.rc.dk{background:var(--dark);}
+.rc.dk .rcl{color:var(--gold);}.rc.dk .rcv{color:white;}
+.rcl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.rcv{font-family:'Cormorant Garamond',serif;font-size:20px;}
+.rcs{font-size:9px;color:var(--muted);margin-top:2px;}
+/* ALERTS */
+.alert{border-radius:11px;padding:14px;margin-bottom:11px;}
+.alert.rouge{background:#fde8e6;border:1px solid #e8bfbb;}
+.alert.amber{background:#fdf8f0;border:1px solid #e8d5a3;}
+.alert.vert{background:#f0f7f3;border:1px solid #c3dece;}
+.alert.blue{background:#f0f4ff;border:1px solid #b8c6e8;}
+.alert h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.alert.rouge h4{color:var(--rouge);}.alert.amber h4{color:#8a6820;}.alert.vert h4{color:var(--vert);}.alert.blue h4{color:#4a5fa8;}
+.alert p{font-size:12px;line-height:1.7;font-weight:300;}
+/* DVF TABLE */
+.dvft{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.dvft th{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 8px;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);}
+.dvft td{padding:7px 8px;border-bottom:1px solid var(--border);font-weight:300;}
+.dvft tr.ref td{background:#fdf8f0;}
+.mono{font-family:'DM Mono',monospace;}.txt-vert{color:var(--vert);font-weight:500;}
+/* PROJ TABLE */
+.pt{width:100%;border-collapse:collapse;margin-bottom:14px;}
+.pt th{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 8px;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);}
+.pt td{padding:7px 8px;border-bottom:1px solid var(--border);font-size:12px;font-weight:300;}
+/* TIMELINE */
+.tl{position:relative;padding-left:20px;}
+.tl::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:1px;background:var(--border);}
+.tli{position:relative;margin-bottom:14px;}
+.tli::before{content:'';position:absolute;left:-16px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 0 1px var(--gold);}
+.tly{font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);letter-spacing:.09em;margin-bottom:2px;}
+.tlt{font-size:12px;line-height:1.6;font-weight:300;}
+/* BANK */
+.bi{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:10px;margin-top:11px;}
+.bi.green{background:#f0f7f3;border:1px solid #c3dece;}
+.bi.amber{background:#fdf8f0;border:1px solid #e8d5a3;}
+.bi.red{background:#fde8e6;border:1px solid #e8bfbb;}
+.bd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.bi.green .bd{background:var(--vert);}.bi.amber .bd{background:#c59b45;}.bi.red .bd{background:var(--rouge);}
+/* DPE */
+.dpebar{display:flex;flex-direction:column;gap:3px;}
+.dperow{display:flex;align-items:center;gap:7px;height:22px;}
+.dpeltr{font-family:'DM Mono',monospace;font-size:10px;width:13px;text-align:center;}
+.dperect{height:17px;border-radius:2px;display:flex;align-items:center;padding:0 6px;color:white;font-family:'DM Mono',monospace;font-size:7px;font-weight:500;}
+/* LOI */
+.loibox{background:#f0f4ff;border:1px solid #b8c6e8;border-radius:10px;padding:12px 14px;margin-bottom:11px;}
+.loiref{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#4a5fa8;margin-bottom:4px;}
+.loibox p{font-size:12px;line-height:1.7;font-weight:300;color:#2a3050;}
+/* CSS CHART (no CDN needed) */
+.css-chart{margin:14px 0;}
+.cc-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
+.cc-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);width:35px;text-align:right;flex-shrink:0;}
+.cc-bar-outer{flex:1;height:22px;background:var(--cream);border-radius:4px;overflow:hidden;position:relative;}
+.cc-bar-inner{height:100%;background:var(--gold);border-radius:4px;display:flex;align-items:center;padding:0 8px;transition:width .6s ease;}
+.cc-bar-txt{font-family:'DM Mono',monospace;font-size:10px;color:white;white-space:nowrap;}
+.cc-line-chart{height:140px;position:relative;border-left:1px solid var(--border);border-bottom:1px solid var(--border);margin:14px 0;display:flex;align-items:flex-end;gap:0;padding:0 4px;}
+.cc-line-point{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+.cc-line-bar{width:70%;background:linear-gradient(to top,var(--gold),var(--gold2));border-radius:3px 3px 0 0;transition:height .5s ease;}
+.cc-line-lbl{font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);margin-top:5px;text-align:center;}
+.cc-proj{height:160px;display:flex;align-items:flex-end;gap:6px;padding:4px 0;margin:14px 0;}
+.cc-proj-group{display:flex;gap:2px;align-items:flex-end;flex:1;}
+.cc-proj-bar{width:10px;border-radius:2px 2px 0 0;transition:height .5s;}
+/* PROCESS */
+.ptrack{display:flex;gap:0;overflow-x:auto;padding-bottom:4px;margin-bottom:20px;}
+.ptrack::-webkit-scrollbar{height:0;}
+.pstep{display:flex;flex-direction:column;align-items:center;flex:1;min-width:65px;}
+.picon{width:38px;height:38px;border-radius:50%;background:var(--cream);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:5px;}
+.pstep.done .picon{background:var(--gold);border-color:var(--gold);}
+.pstep.curr .picon{background:var(--dark);border-color:var(--dark);}
+.plbl{font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center;}
+.pstep.curr .plbl{color:var(--gold);}
+.pline{flex:1;height:1px;background:var(--border);margin-top:19px;flex-shrink:0;min-width:8px;}
+.pline.done{background:var(--gold);}
+/* FORM */
+.f2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px;}
+.field{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white;color:var(--ink);transition:.2s;margin-bottom:10px;}
+.field:focus{border-color:var(--gold);}
+textarea.field{min-height:95px;resize:vertical;}
+.btndark{display:block;width:100%;padding:14px;background:var(--dark);color:var(--gold);border:none;border-radius:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;transition:.2s;}
+.btndark:hover{background:#222;}
+/* DOCS */
+.dg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.dc{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:15px;cursor:pointer;transition:.25s;}
+.dc:hover{background:white;transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.06);}
+.dci{font-size:22px;margin-bottom:6px;}
+.dcn{font-size:12px;font-weight:500;margin-bottom:2px;}
+.dcm{font-size:10px;color:var(--muted);font-weight:300;}
+.dlck{display:inline-flex;align-items:center;gap:3px;font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);margin-top:4px;}
+
+/* DIAGNOSTICS */
+.diag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
+.diag-card{border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);}
+.diag-icon{font-size:24px;margin-bottom:8px;}
+.diag-name{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.diag-result{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4;}
+.diag-ok{background:#f0faf0;border-color:#4caf50;}
+.diag-attention{background:#fff8e1;border-color:#ff9800;}
+.diag-alerte{background:#fff0f0;border-color:#f44336;}
+.diag-{background:#f8f6f2;border-color:var(--border);color:var(--muted);}
+#map-quartier { cursor: default !important; }
+#map-quartier .leaflet-marker-icon { cursor: pointer !important; }
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:pointer;}
+.lightbox.open{display:flex;}
+.lightbox img{max-width:90vw;max-height:90vh;object-fit:contain;border-radius:10px;}
+.lbclose{position:absolute;top:16px;right:22px;color:white;font-size:22px;cursor:pointer;opacity:.7;}
+/* FOOTER */
+.pfooter{background:var(--dark);border-radius:20px;padding:40px;margin-top:32px;text-align:center;color:white;}
+.pfooter h2{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;margin-bottom:9px;}
+.pfooter p{max-width:540px;margin:auto;color:#7a7264;line-height:1.9;font-weight:300;font-size:13px;}
+/* RESPONSIVE */
+@media(max-width:960px){
+  .pg{grid-template-columns:1fr;}
+  .cons-card{position:static;margin-bottom:18px;}
+  .gallery{grid-template-columns:1fr;grid-template-rows:auto;}
+  .gallery .gm{grid-row:auto;}
+  .gallery img{height:200px;}
+  .kpi-grid{grid-template-columns:1fr 1fr;}
+  .rg{grid-template-columns:1fr 1fr;}
+  .pts-grid,.f2{grid-template-columns:1fr;}
+  .dg{grid-template-columns:1fr;}
+}
+@media(max-width:768px){
+  .header-inner{flex-direction:column;gap:24px;padding:0 20px;}
+  .price-card{min-width:100%;max-width:100%;}
+  .pamount{font-size:48px;}
+  .htitle{font-size:24px;}
+}
+@media(max-width:560px){
+  .header{padding:26px 0;}
+  .container{padding:16px 12px 50px;}
+  .kpi-grid,.rg{grid-template-columns:1fr;}
+  .nav{padding:0 8px;}
+  .srow{grid-template-columns:1fr;gap:4px;}
+  .sval{text-align:left;}
+  .ptrack{gap:0;}
+}
+#api-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:#141414;border-bottom:1px solid rgba(184,146,58,.45);padding:11px 20px;display:flex;align-items:center;justify-content:center;gap:12px;font-family:'DM Mono',monospace;}
+#api-banner label{color:rgba(184,146,58,.9);font-size:10px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;}
+#api-banner input[type=password]{background:rgba(255,255,255,.07);border:1px solid rgba(184,146,58,.35);border-radius:6px;padding:6px 12px;color:#fff;font-family:'DM Mono',monospace;font-size:12px;width:300px;outline:none;transition:border-color .2s;}
+#api-banner input[type=password]:focus{border-color:rgba(184,146,58,.8);}
+#api-banner button{background:#b8923a;border:none;border-radius:6px;padding:7px 18px;color:#141414;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:700;cursor:pointer;white-space:nowrap;}
+#api-banner button:hover{background:#d4a956;}
+</style>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style></head>
+<body>
+
+<div id="api-banner">
+  <label for="api-key-input">Clé API Anthropic</label>
+  <input type="password" id="api-key-input" placeholder="sk-ant-api03-…" autocomplete="off">
+  <button onclick="saveApiKey()">Valider</button>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <div class="lbclose">✕</div>
+  <img id="lb-img" src="" alt="">
+</div>
+
+<header class="header">
+  <div class="header-inner">
+    <div style="flex:1;max-width:55%;">
+      <div class="hbadge">Espace Acheteur Privé · Expertimo · Réf. EX 91 - CM</div>
+      <h1 class="htitle">11 Résidence de la Croix Blanche 91380 Chilly Mazarin<br><span style="color:var(--gold);font-style:italic;"></span></h1>
+      <p class="hsub">Appartement 3 pièces de 65 m² · 3 · DPE E</p>
+    </div>
+    <div class="price-card">
+      <div class="plabel">Prix affiché</div>
+      <div class="pamount">145 000 €</div>
+      <div class="pmeta">Frais d'agence inclus · Données temps réel</div>
+      <div class="hkpis">
+        <div class="hkpi"><div class="hl">Renta. nette</div><div class="hv" id="h-rnet">3,9%</div></div>
+        <div class="hkpi"><div class="hl">Cash-flow</div><div class="hv" id="h-cf">-539 €</div></div>
+        <div class="hkpi"><div class="hl">Score qualité</div><div class="hv" id="h-score">8,25/10</div></div>
+        <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe">E</div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav" id="main-nav">
+  <button class="active" onclick="showTab('bien',this)">🏠 Le Bien</button>
+  <button onclick="showTab('analyse',this)">📊 Analyse &amp; Chiffres</button>
+  <button onclick="showTab('budget',this)">💰 Mon Budget</button>
+  <button onclick="showTab('quartier',this);initMapQuartier()">🗺️ Quartier</button>
+  <button onclick="showTab('documents',this)">📁 Documents</button>
+  <button onclick="showTab('offre',this)">✍️ Faire une offre</button>
+</nav>
+
+<div class="container">
+
+<!-- ═══════════ ONGLET 1 : LE BIEN ═══════════ -->
+<section id="bien" class="tab active">
+<div class="pg">
+<div>
+  <div class="card">
+    <div class="lbl">Le bien</div>
+    <h2 class="stitle">11 Résidence de la Croix Blanche 91380 Chilly Mazarin · 3 pièces · 3</h2>
+    <p class="ssub">Appartement 3 pièces de 65 m² · 3 · DPE E</p>
+    <div class="gallery">
+    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854456/TIMERA-ExpertimoOlivierLoison-OlivierReynes-12_lm88dp.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin - Vue principale" class="gm" onclick="openLightbox(this.src)">
+    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-5_cdjafj.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
+    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854454/TIMERA-ExpertimoOlivierLoison-OlivierReynes-9_agno9m.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
+  </div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:.06em;">📷 Cliquez sur une photo pour l’agrandir · 3 photos disponibles</div>
+  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>Dernier étage sans vis-à-vis + balcon Sud-Ouest</li><li>Ravalement voté et pris en charge par le propriétaire</li><li>Résidence avec gardien, tennis, espaces verts</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>Travaux de rafraîchissement à prévoir</li><li>Charges de copropriété : 345€ (tout compris)</li></ul></div></div><div class="score-box">
+  <div class="lbl" style="color:#6a6358;">Score Qualité du Bien</div>
+  <div class="score-num">8,25</div>
+  <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;">Score 8,25/10. DPE E. Prix à confirmer.</p>
+  <div class="sline"><span>Prestations &amp; standing</span><div><strong>8/10</strong><div class="sbar"><div class="sbar-fill" style="width: 80%;"></div></div></div></div>
+  <div class="sline"><span>Secteur &amp; environnement</span><div><strong>9/10</strong><div class="sbar"><div class="sbar-fill" style="width:90%"></div></div></div></div>
+  <div class="sline"><span>Rapport qualité/prix</span><div><strong>10/10</strong><div class="sbar"><div class="sbar-fill" style="width: 100%;"></div></div></div></div>
+  <div class="sline"><span>État général</span><div><strong>6/10</strong><div class="sbar"><div class="sbar-fill" style="width: 60%;"></div></div></div></div>
+</div>
+</div>
+<div><div class="cons-card">
+  <div class="cons-avatar">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
+</div>
+</div></section>
+
+<!-- ═══════════ ONGLET 2 : ANALYSE ═══════════ -->
+<section id="analyse" class="tab">
+<div class="pg">
+<div>
+  <div class="sub-tabs" id="sub-nav">
+    <button class="active" onclick="showSub('marche',this)">📊 Marché</button>
+    <button onclick="showSub('rentabilite',this)">💰 Rentabilité</button>
+    <button onclick="showSub('patrimoine',this)">🏛️ Historique du bien</button>
+    <button onclick="showSub('diagnostics',this)">📋 Diagnostics</button>
+  </div>
+
+  <div id="sub-marche" class="sub-panel active">
+    <div class="kpi-grid">
+      <div class="kpi"><div class="kl">Prix m² · ce bien</div><div class="kv g">2 231 €</div></div>
+      <div class="kpi"><div class="kl">Médiane Longjumeau / Essonne 91</div><div class="kv">3 020 €</div></div>
+      <div class="kpi"><div class="kl">Tension locative</div><div class="kv v">Très forte</div></div>
+      <div class="kpi"><div class="kl">Délai vente moyen</div><div class="kv">21 jours</div></div>
+    </div>
+    <div class="card">
+      <div class="lbl">Transactions DVF officielles</div>
+      <h2 class="stitle">Comparables réels</h2>
+      <table class="dvft">
+        <thead><tr><th>Date</th><th>Adresse</th><th>Surface</th><th>Prix vendu</th><th>€/m²</th></tr></thead>
+        <tbody><tr class="dvf-row" data-date="Août 2025"><td>Août 2025</td><td>Résidence de la Croix Blanche</td><td class="mono">62.31 m²</td><td class="mono">145 000 €</td><td class="mono">2 327 €</td></tr><tr class="dvf-row" data-date="Août 2025"><td>Août 2025</td><td>Résidence de la Croix Blanche</td><td class="mono">67 m²</td><td class="mono">172 000 €</td><td class="mono">2 567 €</td></tr><tr class="dvf-row" data-date="Juillet 2025"><td>Juillet 2025</td><td>Résidence de la Croix Blanche</td><td class="mono">62 m²</td><td class="mono">170 000 €</td><td class="mono">2 742 €</td></tr><tr class="dvf-row" data-date="Avril 2025"><td>Avril 2025</td><td>Résidence de la Croix Blanche</td><td class="mono">62.36 m²</td><td class="mono">167 500 €</td><td class="mono">2 686 €</td></tr><tr class="dvf-row" data-date="Mars 2025"><td>Mars 2025</td><td>Résidence de la Croix Blanche</td><td class="mono">61.69 m²</td><td class="mono">190 000 €</td><td class="mono">3 080 €</td></tr><tr class="dvf-row" data-date="Janv. 2025"><td>Janv. 2025</td><td>Résidence de la Croix Blanche</td><td class="mono">61.52 m²</td><td class="mono">155 000 €</td><td class="mono">2 520 €</td></tr></tbody>
+      </table>
+      <div class="alert amber" id="comparables-lecture"><h4>📊 Positionnement prix</h4><p id="comparables-justification">Le prix de présentation a été établi sur la base des transactions récentes du secteur et des caractéristiques propres au bien.</p></div>
+    </div>
+    <div class="card">
+      <div class="lbl">DPE &amp; réglementation</div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;">
+        <div class="dpebar" style="margin-top:5px;">
+          <div class="dperow"><span class="dpeltr">A</span><div class="dperect" style="width:46px;background:#319834;">A</div></div>
+          <div class="dperow"><span class="dpeltr">B</span><div class="dperect" style="width:60px;background:#33CC33;">B</div></div>
+          <div class="dperow"><span class="dpeltr">C</span><div class="dperect" style="width:74px;background:#CBEC31;color:#333;">C</div></div>
+          <div class="dperow"><span class="dpeltr">D</span><div class="dperect" style="width:88px;background:#F7EC1B;color:#333;">D</div></div>
+          <div class="dperow"><span class="dpeltr" id="dpe-e">E</span><div class="dperect" style="width:102px;background:#F0A60E;" id="dperect-E">E</div></div>
+          <div class="dperow"><span class="dpeltr" id="dpe-f">F</span><div class="dperect" style="width:116px;background:#E3711F;" id="dperect-F">F</div></div>
+          <div class="dperow"><span class="dpeltr" id="dpe-g">G</span><div class="dperect" style="width:138px;background:#CF1B1B;" id="dperect-G">G</div></div>
+        </div>
+        <div>
+          <div class="alert amber" id="dpe-alert" style="margin-bottom:7px;"><h4 id="dpe-alert-title">📋 DPE E</h4><p id="dpe-alert-txt">Bien classé E — interdit à la location dès 2025. Travaux à prévoir.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sub-rentabilite" class="sub-panel">
+    <div class="card">
+      <div class="lbl">Simulateur investisseur temps réel</div>
+      <h2 class="stitle">Rentabilité interactive</h2>
+      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 200 € nu. Simulez votre rentabilité ci-dessous.</div>
+      <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="130500" max="159500" value="145000" step="500" oninput="calc()"><div class="sval" id="v-prix">145 000 €</div></div>
+      <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="300" max="5000" value="1200" step="10" oninput="calc()"><div class="sval" id="v-loyer">1200 €</div></div>
+      <div class="srow"><div class="slbl">Apport<small>% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
+      <div class="srow"><div class="slbl">Taux crédit<small>Oct. 2025 : 3,22%</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
+      <div class="srow"><div class="slbl">Durée<small>Années</small></div><input type="range" id="duree" min="5" max="25" value="20" step="1" oninput="calc()"><div class="sval" id="v-duree">20 ans</div></div>
+      <div class="srow"><div class="slbl">Charges ann.<small>Copro+assur+TF</small></div><input type="range" id="charges" min="500" max="10438" value="5219" step="50" oninput="calc()"><div class="sval" id="v-charges">5219 €</div></div>
+      <div style="font-size:11px;color:var(--muted);margin:-9px 0 11px 162px;font-weight:300;">Eau froide, nettoyage et entretien des parties communes, ascenseur</div>
+      <div class="srow"><div class="slbl">Budget travaux<small>Rénovation DPE</small></div><input type="range" id="travaux" min="0" max="20000" value="0" step="500" oninput="calc()"><div class="sval" id="v-travaux">0 €</div></div>
+    </div>
+    <div class="rg">
+      <div class="rc"><div class="rcl">Prix d'achat</div><div class="rcv mono" style="font-size:22px;" id="r-prix">—</div></div>
+      <div class="rc"><div class="rcl">Frais notaire</div><div class="rcv mono" style="font-size:22px;" id="r-notaire">—</div><div class="rcs">≈ 7,5%</div></div>
+      <div class="rc dk"><div class="rcl">Apport requis</div><div class="rcv mono" style="font-size:22px;" id="r-apport">—</div></div>
+      <div class="rc"><div class="rcl">Rendement brut</div><div class="rcv" style="font-size:22px;" id="r-brut">—</div></div>
+      <div class="rc"><div class="rcl">Mensualité crédit</div><div class="rcv" style="font-size:22px;" id="r-mens">—</div></div>
+      <div class="rc"><div class="rcl">Cash-flow / mois</div><div class="rcv" style="font-size:22px;" id="r-cf">—</div></div>
+    </div>
+  </div>
+
+  <div id="sub-patrimoine" class="sub-panel">
+    <div class="card">
+      <div class="lbl">Historique patrimonial</div>
+      <h2 class="stitle">Chronologie du bien</h2>
+      <div class="tl" style="margin-top:13px;" id="historique-timeline"><div class="tli"><div class="tly">1970 · CONSTRUCTION</div><div class="tlt">Année de construction de l'immeuble : 1970</div></div><div class="tli"><div class="tly">2026 · MISE EN VENTE</div><div class="tlt">Bien proposé à 145 000 € · DPE E · Libre à la vente · Charges 345 €/mois.</div></div></div>
+    </div>
+    <div class="card">
+      <div class="lbl">Projection patrimoniale — scénarios</div>
+      <!-- CSS PROJECTION CHART -->
+      <div style="display:flex;align-items:flex-end;gap:8px;height:150px;margin:14px 0;padding-bottom:4px;border-bottom:1px solid var(--border);">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
+          <div id="proj-bar-lbl-1" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);">—</div>
+          <div id="proj-bar-1" style="width:100%;background:rgba(184,146,58,.3);border-radius:3px 3px 0 0;height:46%;"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);">Basse</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
+          <div id="proj-bar-lbl-2" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);">—</div>
+          <div id="proj-bar-2" style="width:100%;background:var(--gold);border-radius:3px 3px 0 0;height:97%;"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);font-weight:600;">Médiane</div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
+          <div id="proj-bar-lbl-3" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--vert);">—</div>
+          <div id="proj-bar-3" style="width:100%;background:var(--vert);border-radius:3px 3px 0 0;height:100%;"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--vert);">Haute</div>
+        </div>
+        <div style="writing-mode:vertical-rl;font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-orientation:mixed;transform:rotate(180deg);padding-bottom:10px;">Plus-value sur 10 ans</div>
+      </div>
+      <table class="pt">
+        <thead><tr><th>Horizon</th><th>Hyp. basse (+1%/an)</th><th>Hyp. médiane (+2%/an)</th><th>Hyp. haute (+3%/an)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>3 ans</strong></td><td class="mono"><span id="proj-1-3">—</span></td><td class="mono"><span id="proj-2-3">—</span></td><td class="mono"><span id="proj-3-3">—</span></td></tr>
+          <tr><td><strong>5 ans</strong></td><td class="mono"><span id="proj-1-5">—</span></td><td class="mono txt-vert"><span id="proj-2-5">—</span></td><td class="mono"><span id="proj-3-5">—</span></td></tr>
+          <tr><td><strong>10 ans</strong></td><td class="mono"><span id="proj-1-10">—</span></td><td class="mono txt-vert"><span id="proj-2-10">—</span></td><td class="mono"><span id="proj-3-10">—</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="sub-diagnostics" class="sub-panel">
+    <div class="card">
+      <div class="lbl">Diagnostics réglementaires</div>
+      <h2 class="stitle">Diagnostics Techniques</h2>
+      <p class="ssub">Résultats officiels des diagnostics réglementaires</p>
+      <div class="diag-grid" id="diag-grid"><div class="diag-card diag-attention"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">En attente du rapport par le propriétaire</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis </div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis </div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">En attente du rapport par le propriétaire</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Non soumis </div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Raccordement au réseau collectif conforme</div></div></div>
+    </div>
+  </div>
+</div>
+<div><div class="cons-card">
+  <div class="cons-avatar">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
+</div>
+</section>
+
+<!-- ═══════════ ONGLET : MON BUDGET ═══════════ -->
+<section id="budget" class="tab">
+<div class="pg">
+  <div class="card">
+    <div class="lbl">Simulateur personnel</div>
+    <h2 class="stitle">Ce bien est-il fait pour vous ?</h2>
+    <p class="ssub">Entrez votre situation pour le savoir en 30 secondes</p>
+    <div class="f2" style="margin-top:20px;">
+      <div>
+        <label class="lbl">Revenu net mensuel du foyer (€)</label>
+        <input type="number" class="field" id="bgt-revenu" placeholder="3500" min="0">
+      </div>
+      <div>
+        <label class="lbl">Apport disponible (€)</label>
+        <input type="number" class="field" id="bgt-apport" placeholder="30000" min="0">
+      </div>
+      <div>
+        <label class="lbl">Durée du crédit souhaitée</label>
+        <select class="field" id="bgt-duree">
+          <option value="15">15 ans</option>
+          <option value="20" selected="">20 ans</option>
+          <option value="25">25 ans</option>
+        </select>
+      </div>
+    </div>
+    <button onclick="calcBudget()" style="margin-top:20px;padding:12px 28px;background:var(--dark);color:var(--gold);border:none;border-radius:99px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;">Calculer mon accessibilité</button>
+    <div id="bgt-result" style="margin-top:24px;display:none;"></div>
+    <p style="margin-top:24px;font-size:10px;color:var(--muted);line-height:1.6;font-weight:300;border-top:1px solid var(--border);padding-top:16px;">⚠️ Cette simulation est fournie à titre indicatif uniquement, sur la base des taux moyens du marché et des règles bancaires courantes. Elle ne constitue pas un accord de financement, une offre de prêt, ni un engagement d'un établissement bancaire. Les résultats dépendent de votre situation personnelle complète (revenus, charges, historique bancaire). Seul un établissement de crédit agréé peut vous délivrer une offre de prêt valable. Consultez votre banquier ou un courtier pour une analyse personnalisée.</p>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════ ONGLET : QUARTIER ═══════════ -->
+<section id="quartier" class="tab">
+<div class="pg">
+  <div class="card">
+    <div class="lbl">Vie du quartier</div>
+    <h2 class="stitle">Carte du quartier</h2>
+    <p class="ssub">Transports, commerces, écoles et espaces verts dans un rayon de 800m</p>
+    <div id="map-quartier" style="height:400px;border-radius:12px;margin:16px 0;border:1px solid var(--border);"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px;">
+      <button onclick="filterMap('transport',this)" class="map-filter-btn" style="padding:7px 13px;border:1px solid var(--border);border-radius:99px;background:white;font-size:12px;cursor:pointer;transition:.2s;">🚇 Transports</button>
+      <button onclick="filterMap('vert',this)" class="map-filter-btn" style="padding:7px 13px;border:1px solid var(--border);border-radius:99px;background:white;font-size:12px;cursor:pointer;transition:.2s;">🌳 Espaces verts</button>
+      <button onclick="filterMap('commerce',this)" class="map-filter-btn" style="padding:7px 13px;border:1px solid var(--border);border-radius:99px;background:white;font-size:12px;cursor:pointer;transition:.2s;">🛒 Commerces</button>
+      <button onclick="filterMap('ecole',this)" class="map-filter-btn" style="padding:7px 13px;border:1px solid var(--border);border-radius:99px;background:white;font-size:12px;cursor:pointer;transition:.2s;">🏫 Écoles</button>
+      <button onclick="filterMap('all',this)" class="map-filter-btn" style="padding:7px 13px;border:1px solid var(--border);border-radius:99px;background:white;font-size:12px;cursor:pointer;transition:.2s;">👁️ Tout afficher</button>
+    </div>
+    <div id="map-compteurs" style="display:flex;gap:12px;flex-wrap:wrap;font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px;">
+      <span>🚇 <span id="cnt-transport">—</span> transports</span>
+      <span>🌳 <span id="cnt-vert">—</span> espaces verts</span>
+      <span>🛒 <span id="cnt-commerce">—</span> commerces</span>
+      <span>🏫 <span id="cnt-ecole">—</span> établissements scolaires</span>
+      <span style="color:#aaa;">· rayon 800m</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════ ONGLET 3 : DOCUMENTS ═══════════ -->
+<section id="documents" class="tab">
+<div class="pg">
+<div>
+  <div class="card">
+    <div class="lbl">Espace documentaire sécurisé</div>
+    <h2 class="stitle">Documents disponibles</h2>
+    <p class="ssub">Renseignez vos coordonnées pour accéder aux documents. Votre demande est transmise au conseiller.</p>
+    <div id="doc-gate">
+      <div class="f2">
+        <div><label class="lbl">Prénom et nom</label><input type="text" class="field" id="doc-nom" placeholder="Jean Dupont"></div>
+        <div><label class="lbl">Email</label><input type="email" class="field" id="doc-email" placeholder="jean@email.com"></div>
+      </div>
+      <button onclick="unlockDocs()" class="btndark">🔓 Accéder aux documents</button>
+    </div>
+    <div id="doc-content" style="display:none;">
+      <div id="doc-success" class="alert vert" style="margin-top:13px;margin-bottom:14px;"><h4>✅ Accès déverrouillé</h4><p>Votre demande a été transmise. Le conseiller vous contactera dans les 24h avec les documents complets.</p></div>
+      <div class="dg">
+        <div class="dc"><div class="dci">📄</div><div class="dcn">PV Assemblée Générale</div><div class="dcm">Dernière AG copropriété</div><div class="dlck">🔓 Disponible</div></div>
+        <div class="dc"><div class="dci">📊</div><div class="dcn">Appels de charges</div><div class="dcm">Relevé annuel · 345 €/mois</div><div class="dlck">🔓 Disponible</div></div>
+        <div class="dc"><div class="dci">🏠</div><div class="dcn">Diagnostics techniques</div><div class="dcm">DPE, amiante, plomb...</div><div class="dlck">🔓 Disponible</div></div>
+        <div class="dc"><div class="dci">🏛️</div><div class="dcn">Avis taxe foncière</div><div class="dcm">1079 € / an</div><div class="dlck">🔓 Disponible</div></div>
+        <div class="dc"><div class="dci">🔨</div><div class="dcn">Factures &amp; devis travaux</div><div class="dcm">Rénovations réalisées</div><div class="dlck">🔓 Disponible</div></div>
+        <div class="dc"><div class="dci">📋</div><div class="dcn">Règlement copropriété</div><div class="dcm">Documents de la copro</div><div class="dlck">🔓 Disponible</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div><div class="cons-card">
+  <div class="cons-avatar">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
+</div>
+</section>
+
+
+
+<!-- ═══════════ ONGLET 5 : FAIRE UNE OFFRE ═══════════ -->
+<section id="offre" class="tab">
+<div class="pg">
+<div>
+  <div class="card">
+    <div class="lbl">Processus d'acquisition</div>
+    <div class="ptrack">
+      <div class="pstep done"><div class="picon">👀</div><div class="plbl">Visite</div></div>
+      <div class="pline done"></div>
+      <div class="pstep curr"><div class="picon">✍️</div><div class="plbl" style="color:var(--gold);">Offre</div></div>
+      <div class="pline"></div>
+      <div class="pstep"><div class="picon">🤝</div><div class="plbl">Négociation</div></div>
+      <div class="pline"></div>
+      <div class="pstep"><div class="picon">📑</div><div class="plbl">Promesse</div></div>
+      <div class="pline"></div>
+      <div class="pstep"><div class="picon">⏳</div><div class="plbl">10 jours</div></div>
+      <div class="pline"></div>
+      <div class="pstep"><div class="picon">🏦</div><div class="plbl">Financement</div></div>
+      <div class="pline"></div>
+      <div class="pstep"><div class="picon">🔑</div><div class="plbl">Signature</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="lbl">Tunnel d'offre sécurisé</div>
+    <h2 class="stitle">Votre offre d'achat</h2>
+    <p class="ssub">Renseignez votre proposition. Elle sera transmise au conseiller et au vendeur sous 24h.</p>
+    <div class="f2">
+      <div><label class="lbl">Montant de votre offre (€)</label><input type="number" class="field" id="offer-amount" value="145000" oninput="updateOffer()"></div>
+      <div><label class="lbl">Mode de financement</label><select class="field" id="offer-financement"><option>Financement bancaire</option><option>Comptant</option></select></div>
+      <div><label class="lbl">Apport personnel (€)</label><input type="number" class="field" id="offer-apport" value="25000"></div>
+      <div><label class="lbl">Délai souhaité</label><select class="field" id="offer-delai"><option>3 mois (standard)</option><option>2 mois (rapide)</option><option>4 mois ou plus</option></select></div>
+      <div><label class="lbl">Prénom et nom</label><input type="text" class="field" id="offer-nom" placeholder="Jean Dupont"></div>
+      <div><label class="lbl">Email</label><input type="email" class="field" id="offer-email" placeholder="jean@email.com"></div>
+    </div>
+    <div><label class="lbl">Message au vendeur (facultatif)</label><textarea class="field" id="offer-msg" placeholder="Présentez votre projet... Un message sincère rassure le vendeur."></textarea></div>
+    <button onclick="submitOffer()" class="btndark">✍️ Transmettre mon offre sécurisée</button>
+    <div id="offer-success" style="display:none;margin-top:11px;" class="alert vert"></div>
+  </div>
+  <div class="card">
+    <div class="lbl" style="margin-bottom:12px;">Après votre offre — la suite</div>
+    <div class="tl">
+      <div class="tli"><div class="tly">ÉTAPE 1 · RÉPONSE DU VENDEUR</div><div class="tlt">Acceptation, refus ou contre-proposition. Délai habituel : 2–5 jours.</div></div>
+      <div class="tli"><div class="tly">ÉTAPE 2 · SIGNATURE PROMESSE</div><div class="tlt">Chez le notaire, 8–10 jours après l'accord. Dépôt de garantie de 5–10%.</div></div>
+      <div class="tli"><div class="tly">ÉTAPE 3 · 10 JOURS RÉTRACTATION</div><div class="tlt">Délai légal sans pénalité. Vérifiez tous les documents.</div></div>
+      <div class="tli"><div class="tly">ÉTAPE 4 · VALIDATION BANCAIRE</div><div class="tlt">Votre banque dispose d'environ 60 jours pour valider votre prêt.</div></div>
+      <div class="tli"><div class="tly">ÉTAPE 5 · SIGNATURE DÉFINITIVE 🔑</div><div class="tlt">Environ 3 mois après la promesse — acte authentique et remise des clés.</div></div>
+    </div>
+  </div>
+</div>
+<div>
+  <div class="card-dark" style="margin-bottom:18px;">
+    <div class="lbl" style="color:#6a6358;margin-bottom:6px;">Votre offre</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:42px;color:var(--gold);line-height:1;" id="offer-display">145 000 €</div>
+    <div style="font-size:11px;color:#7a7264;margin-top:4px;" id="offer-diff">Prix affiché : 145 000 €</div>
+    <div style="margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:#7a7264;line-height:1.8;font-weight:300;">
+      Marge de négociation estimée : <strong style="color:var(--gold);">3 à 7%</strong> selon le DPE et les DVF du secteur.
+    </div>
+  </div>
+  <div class="cons-card">
+  <div class="cons-avatar">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<div class="pfooter">
+  <h2>Espace Acheteur Privé<br><span style="color:var(--gold);font-style:italic;">une expérience immobilière nouvelle génération</span></h2>
+  <p>Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.</p>
+</div>
+
+</div>
+
+<script>
+// ═══ NAV ═══
+function showTab(id, btn) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('#main-nav button').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function showTabById(id) {
+  var navMap = {bien: 0, analyse: 1, budget: 2, quartier: 3, documents: 4, offre: 5};
+  var navBtns = document.querySelectorAll('#main-nav button');
+  showTab(id, navBtns[navMap[id]]);
+}
+
+// ═══ SUB TABS ═══
+function showSub(id, btn) {
+  document.querySelectorAll('.sub-panel').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('sub-' + id).classList.add('active');
+  document.querySelectorAll('#sub-nav button').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  if (id === 'patrimoine') { setTimeout(function(){ try{ calcProjection(); }catch(e){} }, 50); }
+}
+
+function showSub2(id) {
+  showTabById('analyse');
+  setTimeout(function() {
+    var subBtns = document.querySelectorAll('#sub-nav button');
+    var subMap = {marche: 0, rentabilite: 1, patrimoine: 2, diagnostics: 3};
+    showSub(id, subBtns[subMap[id]]);
+  }, 100);
+}
+
+// ═══ LIGHTBOX ═══
+function openLightbox(src) {
+  document.getElementById('lightbox').classList.add('open');
+  document.getElementById('lb-img').src = src;
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeLightbox();
+});
+
+
+// ═══ UTILS ═══
+function fmt(n) { return Math.round(n).toLocaleString('fr-FR') + ' €'; }
+function fmtPct(n) { return n.toFixed(2).replace('.', ',') + ' %'; }
+function mensualite(cap, ta, da) {
+  var r = ta / 100 / 12;
+  var n = da * 12;
+  if (r === 0) return cap / n;
+  return cap * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+}
+
+// ═══ CALCULATEUR RENTABILITÉ ═══
+function calcProjection() {
+  try {
+    var prixEl = document.getElementById('prix');
+    var prixBase = parseFloat("145 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+    var prix = prixEl ? parseFloat(prixEl.value) : prixBase;
+    if (!prix || isNaN(prix)) return;
+    var taux = [0.01, 0.02, 0.03];
+    var ans  = [3, 5, 10];
+    var pvMax = 0;
+    // Calcul des valeurs et plus-values
+    taux.forEach(function(t, ti) {
+      ans.forEach(function(a) {
+        var valeur = prix * Math.pow(1 + t, a);
+        var pv = valeur - prix;
+        if (pv > pvMax) pvMax = pv;
+        var el = document.getElementById('proj-' + (ti+1) + '-' + a);
+        if (el) el.textContent = Math.round(valeur).toLocaleString('fr-FR') + ' €';
+      });
+    });
+    // Mise à jour des barres du graphique (basée sur plus-value à 10 ans)
+    var pvBarre = [
+      prix * Math.pow(1.01, 10) - prix,
+      prix * Math.pow(1.02, 10) - prix,
+      prix * Math.pow(1.03, 10) - prix
+    ];
+    var pvRef = pvBarre[2] || 1;
+    var lblEl1 = document.getElementById('proj-bar-lbl-1');
+    var lblEl2 = document.getElementById('proj-bar-lbl-2');
+    var lblEl3 = document.getElementById('proj-bar-lbl-3');
+    var barEl1 = document.getElementById('proj-bar-1');
+    var barEl2 = document.getElementById('proj-bar-2');
+    var barEl3 = document.getElementById('proj-bar-3');
+    function fmtK(v) { return '+' + (v >= 1000 ? (Math.round(v/100)/10).toFixed(1) + 'k€' : Math.round(v) + '€'); }
+    if (lblEl1) lblEl1.textContent = fmtK(pvBarre[0]);
+    if (lblEl2) lblEl2.textContent = fmtK(pvBarre[1]);
+    if (lblEl3) lblEl3.textContent = fmtK(pvBarre[2]);
+    if (barEl1) barEl1.style.height = Math.round(pvBarre[0] / pvRef * 100) + '%';
+    if (barEl2) barEl2.style.height = Math.round(pvBarre[1] / pvRef * 100) + '%';
+    if (barEl3) barEl3.style.height = '100%';
+  } catch(e) { console.error('[calcProjection]', e); }
+}
+
+function calc() {
+  try { _calc(); calcProjection(); } catch(e) { console.error('[calc]', e); }
+}
+function _calc() {
+  var prix = parseFloat(document.getElementById('prix').value);
+  var loyer = parseFloat(document.getElementById('loyer').value);
+  var ap = parseFloat(document.getElementById('apport').value);
+  var tx = parseFloat(document.getElementById('taux').value);
+  var du = parseFloat(document.getElementById('duree').value);
+  var ch = parseFloat(document.getElementById('charges').value);
+  var tv = parseFloat(document.getElementById('travaux').value);
+
+  document.getElementById('v-prix').textContent = fmt(prix);
+  document.getElementById('v-loyer').textContent = loyer + ' €';
+  document.getElementById('v-apport').textContent = ap + '%';
+  document.getElementById('v-taux').textContent = tx.toFixed(2).replace('.', ',') + '%';
+  document.getElementById('v-duree').textContent = du + ' ans';
+  document.getElementById('v-charges').textContent = ch + ' €';
+  document.getElementById('v-travaux').textContent = fmt(tv);
+
+  var not = prix * 0.075;
+  var tot = prix + not + tv;
+  var apE = tot * ap / 100;
+  var emp = tot - apE;
+  var mens = mensualite(emp, tx, du);
+  var brut = (loyer * 12 / prix * 100);
+  var cf = loyer - mens - ch / 12;
+  var cfAnnuel = cf * 12;
+  var rnet = (apE > 0) ? (cfAnnuel / apE * 100) : ((loyer * 12 - ch) / tot * 100);
+
+  document.getElementById('r-brut').textContent = fmtPct(brut);
+  document.getElementById('r-cf').textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + ' €';
+  document.getElementById('r-mens').textContent = Math.round(mens) + ' €';
+  document.getElementById('r-prix').textContent = fmt(prix);
+  document.getElementById('r-notaire').textContent = fmt(not);
+  document.getElementById('r-apport').textContent = fmt(apE);
+
+  var hRnet = document.getElementById('h-rnet');
+  var hCf = document.getElementById('h-cf');
+  if (hRnet) hRnet.textContent = fmtPct(rnet);
+  if (hCf) hCf.textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + '€';
+
+}
+
+// ═══ FINANCEMENT (stub — éléments remplacés par Mon Budget) ═══
+function calcBank() { /* éléments de financement remplacés par l'onglet Mon Budget */ }
+
+// ═══ OFFRE ═══
+function updateOffer() {
+  var prixBase = parseFloat("145 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  var v = parseFloat(document.getElementById('offer-amount').value) || prixBase;
+  document.getElementById('offer-display').textContent = fmt(v);
+  var diff = prixBase - v;
+  document.getElementById('offer-diff').textContent = diff > 0
+    ? '-' + fmt(diff) + ' vs prix affiché'
+    : diff < 0
+    ? '+' + fmt(-diff) + ' au-dessus du prix affiché'
+    : 'Au prix affiché';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  var offerInput = document.getElementById('offer-amount');
+  if (offerInput) {
+    offerInput.addEventListener('input', function() {
+      var el = document.getElementById('offer-display');
+      if (el) el.textContent = parseInt(this.value).toLocaleString('fr-FR') + ' €';
+    });
+  }
+});
+
+function submitOffer() {
+  var montant = document.getElementById('offer-amount').value;
+  var financement = (document.getElementById('offer-financement') || {}).value || '';
+  var apport = document.getElementById('offer-apport').value;
+  var delai = (document.getElementById('offer-delai') || {}).value || '';
+  var nom = document.getElementById('offer-nom').value;
+  var email = document.getElementById('offer-email').value;
+  var msg = document.getElementById('offer-msg').value;
+
+  if (!nom || !email || !montant) {
+    alert('Merci de remplir au moins le montant, votre nom et votre email.');
+    return;
+  }
+
+  var formspreeId = "xpqbnkjj";
+  var _ob = '[' + '[';
+  if (!formspreeId || formspreeId.indexOf(_ob) !== -1) {
+    alert('Formulaire non configuré. Contactez directement Olivier Loison au 06 85 68 46 13.');
+    return;
+  }
+
+  fetch('https://formspree.io/f/' + formspreeId, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify({
+      _subject: "Offre d'achat — 11 Résidence de la Croix Blanche 91380 Chilly Mazarin — " + montant + ' €',
+      montant: montant + ' €',
+      financement: financement,
+      apport: apport + ' €',
+      delai: delai,
+      nom: nom,
+      email: email,
+      message: msg,
+      bien: "11 Résidence de la Croix Blanche 91380 Chilly Mazarin",
+      reference: "EX 91 - CM",
+      prix_affiche: "260 000 €"
+    })
+  }).then(function(r) {
+    var el = document.getElementById('offer-success');
+    if (r.ok) {
+      el.style.display = 'block';
+      el.innerHTML = '<p>✅ Votre offre de <strong>' +
+        parseInt(montant).toLocaleString('fr-FR') +
+        ' €</strong> a été transmise. Olivier LOISON vous contactera dans les 24h.</p>';
+      el.scrollIntoView({behavior: 'smooth', block: 'center'});
+    } else {
+      alert("Erreur lors de l’envoi. Contactez directement Olivier LOISON au 06 85 68 46 13.");
+    }
+  }).catch(function() {
+    alert("Erreur réseau. Contactez directement Olivier LOISON au 06 85 68 46 13.");
+  });
+}
+
+function unlockDocs() {
+  var nom = document.getElementById('doc-nom').value;
+  var email = document.getElementById('doc-email').value;
+  if (!nom || !email) {
+    alert('Merci de renseigner votre nom et email.');
+    return;
+  }
+  document.getElementById('doc-gate').style.display = 'none';
+  document.getElementById('doc-content').style.display = 'block';
+  var formspreeId = "xpqbnkjj";
+  var _ob = '[' + '[';
+  if (formspreeId && formspreeId.indexOf(_ob) === -1) {
+    fetch('https://formspree.io/f/' + formspreeId, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+      body: JSON.stringify({
+        _subject: "Demande de documents — 11 Résidence de la Croix Blanche 91380 Chilly Mazarin",
+        nom: nom,
+        email: email,
+        bien: "11 Résidence de la Croix Blanche 91380 Chilly Mazarin",
+        reference: "EX 91 - CM",
+        demande: "Acces aux documents du bien"
+      })
+    }).catch(function(){});
+  }
+}
+
+// ═══ INIT ═══
+calc();
+calcBank();
+
+// ═══ MON BUDGET ═══
+function calcBudget() {
+  var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
+  var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
+  var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
+  var prixBien = parseFloat("145 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  var fraisNotaire = prixBien * 0.075;
+  var coutTotal = prixBien + fraisNotaire;
+  var capital = Math.max(0, coutTotal - apport);
+  var tauxAnnuel = 3.4;
+  var tauxMensuel = tauxAnnuel / 100 / 12;
+  var n = duree * 12;
+  var mens = capital > 0 ? capital * tauxMensuel / (1 - Math.pow(1 + tauxMensuel, -n)) : 0;
+  var charges = parseFloat("345") || 0;
+  var effortTotal = mens + charges;
+  var tauxEndettement = revenu > 0 ? (mens / revenu * 100) : 999;
+  var apportMinimum = coutTotal * 0.10;
+  var apportRestant = apport - apportMinimum;
+  var mensMax = revenu * 0.33;
+  var capitalMax = mensMax > 0 ? mensMax * (1 - Math.pow(1 + tauxMensuel, -n)) / tauxMensuel : 0;
+  var budgetMax = capitalMax + apport - fraisNotaire;
+  var res = document.getElementById('bgt-result');
+  res.style.display = 'block';
+  var html = '';
+  var infoLigne = '<div class="rc"><div class="rcl">Mensualité estimée</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
+    + '<div class="rc"><div class="rcl">Taux d\'endettement</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
+    + '<div class="rc"><div class="rcl">Budget max accessible</div><div class="rcv mono">' + fmt(Math.max(0, budgetMax)) + '</div></div>'
+    + '<div class="rc"><div class="rcl">Effort total <small style="font-size:9px;color:var(--muted);">(crédit + charges)</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">À titre informatif</div></div>';
+  if (revenu === 0) {
+    html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;">Veuillez renseigner votre revenu mensuel.</div>';
+  } else if (tauxEndettement <= 33 && apport >= apportMinimum) {
+    html = '<div class="alert" style="background:#f0faf0;border-left:3px solid #4caf50;padding:16px;border-radius:11px;"><h4 style="color:#2e7d32;font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">✅ Ce bien est accessible pour vous</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div></div>';
+  } else if (tauxEndettement <= 38 || budgetMax >= prixBien) {
+    html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;padding:16px;border-radius:11px;"><h4 style="color:#e65100;font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">⚠️ Accessible sous conditions</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
+      + '<p style="font-size:12px;color:#e65100;margin-top:10px;">Taux d\'endettement ' + tauxEndettement.toFixed(1) + '% — certaines banques acceptent jusqu\'à 38% selon votre profil. Votre budget max estimé : ' + fmt(Math.max(0, budgetMax)) + '.</p></div>';
+  } else {
+    html = '<div class="alert" style="background:#fff0f0;border-left:3px solid #f44336;padding:16px;border-radius:11px;"><h4 style="color:#c62828;font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">❌ Hors budget pour ce bien</h4>'
+      + '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
+      + '<p style="font-size:12px;color:#c62828;margin-top:10px;">Avec un revenu de ' + fmt(revenu) + ' €/mois et un apport de ' + fmt(apport) + ' €, votre budget max est estimé à <strong>' + fmt(Math.max(0, budgetMax)) + ' €</strong> vs ' + fmt(prixBien) + ' € pour ce bien.</p></div>';
+  }
+  res.innerHTML = html;
+}
+
+// ═══ CARTE QUARTIER ═══
+var _mapInit = false;
+function initMapQuartier() {
+  if (_mapInit) return;
+  _mapInit = true;
+  var adresse = "11 Résidence de la Croix Blanche 91380 Chilly Mazarin";
+  var latFallback = parseFloat("") || 0;
+  var lngFallback = parseFloat("") || 0;
+
+  function buildMap(lat, lng) {
+    var map = L.map('map-quartier', {cursor:'default'}).setView([lat, lng], 15);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    var iconMain = L.divIcon({className:'', html:'<div style="background:#141414;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #b8923a;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
+    L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>11 Résidence de la Croix Blanche 91380 Chilly Mazarin").openPopup();
+    var overpassUrl = 'https://overpass-api.de/api/interpreter';
+    var query = '[out:json][timeout:10];('
+      + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
+      + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
+      + 'node["amenity"="bus_station"](around:800,' + lat + ',' + lng + ');'
+      + 'node["leisure"="park"](around:800,' + lat + ',' + lng + ');'
+      + 'node["leisure"="garden"](around:800,' + lat + ',' + lng + ');'
+      + 'node["shop"="supermarket"](around:800,' + lat + ',' + lng + ');'
+      + 'node["shop"="bakery"](around:800,' + lat + ',' + lng + ');'
+      + 'node["amenity"="pharmacy"](around:800,' + lat + ',' + lng + ');'
+      + 'node["amenity"="school"](around:800,' + lat + ',' + lng + ');'
+      + 'node["amenity"="kindergarten"](around:800,' + lat + ',' + lng + ');'
+      + ');out body;';
+    var catMeta = {
+      transport: {color:'#1565c0', emoji:'🚇', label:'Transport'},
+      vert:      {color:'#2e7d32', emoji:'🌳', label:'Espace vert'},
+      commerce:  {color:'#c62828', emoji:'🛒', label:'Commerce'},
+      ecole:     {color:'#f57f17', emoji:'🏫', label:'École'}
+    };
+    var counts = {transport:0, vert:0, commerce:0, ecole:0};
+    // Stockage des marqueurs par catégorie pour le filtrage
+    window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
+    window._mapInstance = map;
+
+    setTimeout(function() { fetch(overpassUrl, {method:'POST', body:'data=' + encodeURIComponent(query)})
+      .then(function(r){return r.json();})
+      .then(function(data){
+        (data.elements||[]).forEach(function(el) {
+          var cat;
+          var tags = el.tags || {};
+          if (tags.public_transport || tags.railway === 'station' || tags.amenity === 'bus_station') { cat = 'transport'; }
+          else if (tags.leisure === 'park' || tags.leisure === 'garden') { cat = 'vert'; }
+          else if (tags.shop === 'supermarket' || tags.shop === 'bakery' || tags.amenity === 'pharmacy') { cat = 'commerce'; }
+          else if (tags.amenity === 'school' || tags.amenity === 'kindergarten') { cat = 'ecole'; }
+          else return;
+          counts[cat]++;
+          var meta = catMeta[cat];
+          var icon = L.divIcon({className:'', html:'<div style="background:'+meta.color+';border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid white;">'+meta.emoji+'</div>', iconSize:[28,28], iconAnchor:[14,14]});
+          var dist = Math.round(map.distance([lat,lng],[el.lat,el.lon]));
+          var mins = Math.ceil(dist / 80);
+          var name = tags.name || tags['name:fr'] || meta.label;
+          var popup = '<strong>'+name+'</strong><br>'+meta.emoji+' '+meta.label+'<br>'+dist+' m · ~'+mins+' min à pied';
+          var marker = L.marker([el.lat,el.lon],{icon:icon}).addTo(map).bindPopup(popup);
+          window._mapMarkers[cat].push(marker);
+        });
+        document.getElementById('cnt-transport').textContent = counts.transport;
+        document.getElementById('cnt-vert').textContent = counts.vert;
+        document.getElementById('cnt-commerce').textContent = counts.commerce;
+        document.getElementById('cnt-ecole').textContent = counts.ecole;
+      }).catch(function(){}); }, 1000);
+  }
+
+  if (latFallback && lngFallback) {
+    buildMap(latFallback, lngFallback);
+  } else {
+    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(adresse) + '&limit=1')
+      .then(function(r){return r.json();})
+      .then(function(data){
+        if (data && data[0]) {
+          buildMap(parseFloat(data[0].lat), parseFloat(data[0].lon));
+        } else if (latFallback && lngFallback) {
+          buildMap(latFallback, lngFallback);
+        }
+      }).catch(function(){
+        if (latFallback && lngFallback) buildMap(latFallback, lngFallback);
+      });
+  }
+}
+
+// ═══ FILTRE CARTE ═══
+function filterMap(cat, btn) {
+  var m = window._mapMarkers;
+  var map = window._mapInstance;
+  if (!m || !map) return;
+  // Réinitialiser le style de tous les boutons
+  document.querySelectorAll('.map-filter-btn').forEach(function(b) {
+    b.style.background = 'white';
+    b.style.color = 'var(--ink)';
+    b.style.borderColor = 'var(--border)';
+  });
+  if (btn) { btn.style.background = '#b8923a'; btn.style.color = 'white'; btn.style.borderColor = '#b8923a'; }
+  var cats = ['transport','vert','commerce','ecole'];
+  cats.forEach(function(c) {
+    (m[c]||[]).forEach(function(marker) {
+      if (cat === 'all' || cat === c) {
+        marker.addTo(map);
+      } else {
+        marker.remove();
+      }
+    });
+  });
+}
+
+// ═══ ASSISTANT IA ═══
+var _aiOpen = false;
+var _aiMessages = [];
+var _aiInit = false;
+function getAnthropicKey(){ return localStorage.getItem('_xp_ak') || ''; }
+var _sp_adresse   = "11 Résidence de la Croix Blanche 91380 Chilly Mazarin";
+var _sp_prix      = "145 000";
+var _sp_surface   = "65";
+var _sp_etage     = "3";
+var _sp_dpe       = "E";
+var _sp_charges   = "345";
+var _sp_detail    = "Chauffage, eau chaude et froide, entretien des parties communes et espaces verts, terrain de tennis et gardien";
+var _sp_tf        = "1079";
+var _sp_pf1       = "Dernier étage sans vis-à-vis + balcon Sud-Ouest";
+var _sp_pf2       = "Ravalement voté et pris en charge par le propriétaire";
+var _sp_pf3       = "Résidence avec gardien, tennis, espaces verts";
+var _sp_vigi1     = "Travaux de rafraîchissement à prévoir";
+var _sp_vigi2     = "Charges de copropriété : 345€ (tout compris)";
+var _sp_loyer     = "1200";
+var _sp_agent     = "Olivier LOISON";
+var _sp_tel       = "06 85 68 46 13";
+
+function toggleAI() {
+  _aiOpen = !_aiOpen;
+  var modal = document.getElementById('ai-modal');
+  modal.style.display = _aiOpen ? 'flex' : 'none';
+  modal.style.flexDirection = 'column';
+  if (_aiOpen && !_aiInit) {
+    _aiInit = true;
+    var welcome = "Bonjour ! Je suis l'assistant de " + _sp_adresse + ". Je connais tout de ce bien : prix, diagnostics, charges, DPE, points forts et plus encore. Que souhaitez-vous savoir ?";
+    addAIMsg(welcome, 'assistant');
+    _aiMessages.push({role:'user',content:'(début de session)'});
+    _aiMessages.push({role:'assistant',content:welcome});
+  }
+}
+
+function addAIMsg(text, role) {
+  var msgs = document.getElementById('ai-messages');
+  var div = document.createElement('div');
+  div.style.cssText = 'max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;font-family:\'DM Sans\',sans-serif;'
+    + (role==='assistant' ? 'background:#f8f6f2;color:var(--ink);align-self:flex-start;' : 'background:var(--dark);color:var(--gold);align-self:flex-end;');
+  div.textContent = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function sendAI() {
+  var input = document.getElementById('ai-input');
+  var q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+  addAIMsg(q, 'user');
+  _aiMessages.push({role:'user',content:q});
+  // Vérification clé API (détecte une clé vide ou non substituée)
+  var _openBracket = '[' + '[';
+  if (!getAnthropicKey() || getAnthropicKey().indexOf(_openBracket) !== -1) {
+    addAIMsg('Assistant non configuré.', 'assistant');
+    return;
+  }
+  var loadDiv = addAIMsg('…', 'assistant');
+  var systemPrompt = "Tu es l'assistant virtuel dedie a ce bien immobilier. Tu reponds UNIQUEMENT aux questions sur ce bien en francais, de facon concise et professionnelle."
+    + " Informations du bien :"
+    + " Adresse: " + _sp_adresse
+    + " | Prix: " + _sp_prix + " euros"
+    + " | Surface: " + _sp_surface + " m2"
+    + " | Etage: " + _sp_etage
+    + " | DPE: " + _sp_dpe
+    + " | Charges: " + _sp_charges + " euros/mois (" + _sp_detail + ")"
+    + " | Taxe fonciere: " + _sp_tf + " euros/an"
+    + " | Points forts: " + _sp_pf1 + ", " + _sp_pf2 + ", " + _sp_pf3
+    + " | Points vigilance: " + _sp_vigi1 + ", " + _sp_vigi2
+    + " | Loyer estime: " + _sp_loyer + " euros/mois"
+    + " | Agent: " + _sp_agent + ", tel: " + _sp_tel
+    + ". Si question hors sujet reponds: Je suis specialise sur ce bien uniquement. Contactez " + _sp_agent + " au " + _sp_tel + "."
+    + " Ne donne jamais de conseil juridique ou financier ferme.";
+  var msgs = _aiMessages.filter(function(m,i){return i>1;});
+  // Diagnostic logs
+  console.log('Cle API (8 premiers chars):', getAnthropicKey().substring(0,8));
+  console.log('Body envoye:', JSON.stringify({model:'claude-sonnet-4-5',max_tokens:300,messages:msgs.slice(-2)}));
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': getAnthropicKey(),
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-5',
+      max_tokens: 300,
+      system: systemPrompt,
+      messages: msgs
+    })
+  }).then(function(r){
+    console.log('HTTP Status:', r.status);
+    return r.json();
+  }).then(function(data){
+    console.log('Reponse API complete:', JSON.stringify(data));
+    var reply = (data.content && data.content[0] && data.content[0].text) || ('Erreur API : ' + (data.error && data.error.message ? data.error.message : JSON.stringify(data)));
+    loadDiv.textContent = reply;
+    _aiMessages.push({role:'assistant',content:reply});
+  }).catch(function(err){
+    console.error('AI Error:', err);
+    console.error('Message:', err.message);
+    loadDiv.textContent = 'Erreur : ' + (err && err.message ? err.message : JSON.stringify(err));
+  });
+}
+
+// ═══ DIAGNOSTICS ═══
+document.querySelectorAll('.diag-result').forEach(function(el) {
+  if (!el.textContent.trim() || el.textContent.trim() === '—') {
+    el.innerHTML = '<span style="color:var(--muted);font-size:11px;">ℹ️ Non soumis à obligation</span>';
+  }
+});
+</script>
+
+<script>
+function saveApiKey(){
+  var k = document.getElementById('api-key-input').value.trim();
+  if (!k) return;
+  localStorage.setItem('_xp_ak', k);
+  document.getElementById('api-banner').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+    if (localStorage.getItem('_xp_ak')) {
+      document.getElementById('api-banner').style.display = 'none';
+    }
+    document.getElementById('api-key-input').addEventListener('keydown', function(e){
+      if (e.key === 'Enter') saveApiKey();
+    });
+    ['prix','loyer','apport','taux','duree','charges','travaux'].forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', calc);
+    });
+    try{ calc(); }catch(e){ console.error('[init calc]', e); }
+    try{ calcBank(); }catch(e){ console.error('[init calcBank]', e); }
+    setTimeout(function(){ try{ calcProjection(); }catch(e){ console.error('[init calcProjection]', e); } }, 500);
+    // Masquer lignes DVF vides
+    document.querySelectorAll('.dvf-row').forEach(function(row) {
+        var d = row.dataset.date || '';
+        if (d === '—' || d === '—' || d.trim() === '') row.style.display = 'none';
+    });
+});
+</script>
+
+<!-- ═══ ASSISTANT IA ═══ -->
+<div id="ai-btn" onclick="toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--dark);color:var(--gold);border:none;border-radius:99px;padding:14px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;gap:8px;">
+  <span style="font-size:16px;">💬</span> Poser une question
+</div>
+
+<div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;z-index:1001;width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
+  <div style="background:var(--dark);color:var(--gold);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+    <div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;">Assistant</div>
+      <div style="font-size:13px;font-weight:500;margin-top:2px;">11 Résidence de la Croix Blanche 91380 Chilly Mazarin</div>
+    </div>
+    <button onclick="toggleAI()" style="background:none;border:none;color:var(--gold);font-size:20px;cursor:pointer;line-height:1;">×</button>
+  </div>
+  <div id="ai-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:380px;"></div>
+  <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">
+    <input id="ai-input" type="text" placeholder="Votre question..." style="flex:1;border:1px solid var(--border);border-radius:99px;padding:8px 14px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onkeydown="if(event.key==='Enter')sendAI()">
+    <button onclick="sendAI()" style="background:var(--dark);color:var(--gold);border:none;border-radius:99px;padding:8px 14px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;">→</button>
+  </div>
+</div>
+
+
+<!-- ═══ FOOTER NVP+ ═══ -->
+<footer style="text-align:center;padding:24px 20px;background:#141414;border-top:1px solid rgba(184,146,58,.15);">
+  <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#b8923a;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
+  <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;">L'immobilier avec l'expertise d'un professionnel</div>
+  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'DM Sans',sans-serif;">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</div>
+</footer>
+
+
+<script>
+// ═══ DPE DYNAMIQUE ═══
+(function(){
+  var dpe = "D";
+  var colors = {A:"#319834",B:"#33CC33",C:"#CBEC31",D:"#F7EC1B",E:"#F0A60E",F:"#E3711F",G:"#CF1B1B"};
+  var letters = ["A","B","C","D","E","F","G"];
+  letters.forEach(function(l){
+    var rect = document.getElementById("dperect-"+l);
+    var ltr = document.getElementById("dpe-"+l.toLowerCase());
+    if(rect && l === dpe){
+      rect.innerHTML = l + ' ← CE BIEN';
+      rect.style.border = "2px solid #333";
+      rect.style.fontWeight = "700";
+      if(ltr){ ltr.style.color = colors[l]; ltr.style.fontWeight = "700"; }
+    }
+  });
+  // Alerte DPE
+  var alertTitle = document.getElementById("dpe-alert-title");
+  var alertTxt = document.getElementById("dpe-alert-txt");
+  var alertBox = document.getElementById("dpe-alert");
+  var msgs = {
+    A: {t:"✅ DPE A — Excellent", txt:"Bien très performant énergétiquement. Aucune contrainte réglementaire.", cls:"vert"},
+    B: {t:"✅ DPE B — Très bon", txt:"Bien performant. Pas de contrainte de location.", cls:"vert"},
+    C: {t:"✅ DPE C — Bon", txt:"Bien correct. Pas de contrainte de location.", cls:"vert"},
+    D: {t:"✅ DPE D — Correct", txt:"Pas de contrainte réglementaire de location.", cls:"vert"},
+    E: {t:"⚠️ DPE E — Attention", txt:"Location toujours autorisée. Nouveau bail possible jusqu'en 2034. Rénovation conseillée.", cls:"amber"},
+    F: {t:"⚠️ DPE F — Passoire thermique", txt:"Nouveau bail interdit depuis jan. 2025. Bail en cours valide, loyer gelé. Rénovation nécessaire avant relocation.", cls:"amber"},
+    G: {t:"🚫 DPE G — Interdit à la location", txt:"Nouveau bail interdit. Loyer gelé. Rénovation obligatoire avant toute relocation (5–12k€, MaPrimeRénov éligible).", cls:"rouge"},
+  };
+  var m = msgs[dpe] || msgs["D"];
+  if(alertTitle) alertTitle.textContent = m.t;
+  if(alertTxt) alertTxt.textContent = m.txt;
+  if(alertBox){ alertBox.className = "alert " + m.cls; alertBox.style.marginBottom = "7px"; }
+
+  // Colorer le DPE dans le header
+  var hDpe = document.getElementById('h-dpe');
+  if(hDpe){ hDpe.style.color = colors[dpe] || 'var(--gold)'; }
+
+})();
+</script>
+
+
+</body></html>
