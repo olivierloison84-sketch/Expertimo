@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1129,7 +1129,7 @@ function sendAI() {
     + ". Si question hors sujet reponds: Je suis specialise sur ce bien uniquement. Contactez " + _sp_agent + " au " + _sp_tel + "."
     + " Ne donne jamais de conseil juridique ou financier ferme.";
   var msgs = _aiMessages.filter(function(m,i){return i>1;});
-  fetch('/api/chat', {
+  fetch('https://expertimo-phi.vercel.app/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ system: systemPrompt, messages: msgs })
