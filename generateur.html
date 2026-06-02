@@ -431,14 +431,6 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <div id="credit-preview"></div>
 
-    <!-- Clé API Anthropic -->
-    <div class="section-title">Chatbot IA</div>
-    <div class="form-group">
-      <label>🔑 Clé API Anthropic (optionnelle — active le chatbot IA)</label>
-      <input type="password" id="f-apikey" placeholder="sk-ant-…" autocomplete="off">
-      <p class="hint">Cette clé sera embarquée dans la fiche générée et ne sera pas visible par le client.</p>
-    </div>
-
     <!-- Diagnostics réglementaires -->
     <div class="section-title">Diagnostics réglementaires</div>
     <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
@@ -524,7 +516,7 @@ textarea { resize: vertical; min-height: 60px; }
   </div>
   <div class="step-body" id="step3-body">
     <div class="template-zone">
-      <p>Charger le fichier <strong>template-fiche-interactive-acquereur-FINAL.html</strong> (ou tout autre FINAL.html servant de template)</p>
+      <p>Charger le fichier <strong>index.html</strong> (template avec chatbot via Vercel /api/chat — dossier <code>Expertimo</code>)</p>
       <input type="file" id="template-input" accept=".html,.htm">
       <div id="template-status"></div>
     </div>
@@ -847,7 +839,6 @@ function getFormData() {
     histEvt2Date:    getV('f-hist-evt2-date'),
     histEvt2Desc:    getV('f-hist-evt2-desc'),
     histVenteDate:   getV('f-hist-vente-date') || '2025',
-    apikey:        (document.getElementById('f-apikey').value || '').trim(),
     diags: [
       { icon: '🧱', name: 'Amiante',        status: getV('f-diag-amiante-status'),     result: getV('f-diag-amiante-result') },
       { icon: '🔬', name: 'Plomb (CREP)',   status: getV('f-diag-plomb-status'),       result: getV('f-diag-plomb-result') },
@@ -935,16 +926,6 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
   html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
-
-  // Anthropic API key — embed hardcoded so chatbot works without localStorage prompt
-  // Uses regex (not srep) to be resilient to whitespace/quote variations in the template.
-  if (d.apikey) {
-    var safeKey = d.apikey.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
-    html = html.replace(
-      /function\s+getAnthropicKey\s*\(\s*\)\s*\{[^}]*\}/,
-      "function getAnthropicKey(){ return '" + safeKey + "'; }"
-    );
-  }
 
   // Address (the template may have it as literal string in JS)
   html = srep(html, "5 Rue de l'Arpajonnais", d.adresse);
@@ -1171,12 +1152,6 @@ function injectData(html, d) {
       dcm.textContent = Math.round(d.taxeFonciere) + ' € / an';
     }
   });
-
-  // API key banner — hide it if key is embedded (client won't need to enter it)
-  if (d.apikey) {
-    var apiBanner = id('api-banner');
-    if (apiBanner) apiBanner.style.display = 'none';
-  }
 
   // Offer tab
   var offerAmt = id('offer-amount');
