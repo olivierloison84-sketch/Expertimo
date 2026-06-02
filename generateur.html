@@ -916,6 +916,8 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_surface',  d.surface ? String(d.surface).replace('.', ',') : '');
   html = replaceSp(html, '_sp_etage',    d.etage || '');
   html = replaceSp(html, '_sp_dpe',      d.dpe || '');
+  // Replace hardcoded `var dpe = "D"` in the DPE IIFE — drives bar highlight + header color
+  if (d.dpe) html = replaceSp(html, 'dpe', d.dpe);
   html = replaceSp(html, '_sp_charges',  chargesCopro > 0 ? String(chargesCopro) : '0');
   html = replaceSp(html, '_sp_detail',   d.chargesDetail || '');
   html = replaceSp(html, '_sp_tf',       d.taxeFonciere > 0 ? String(Math.round(d.taxeFonciere)) : '0');
