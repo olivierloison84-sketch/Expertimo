@@ -256,21 +256,10 @@ textarea.field{min-height:95px;resize:vertical;}
   .sval{text-align:left;}
   .ptrack{gap:0;}
 }
-#api-banner{position:fixed;top:0;left:0;right:0;z-index:9999;background:#141414;border-bottom:1px solid rgba(184,146,58,.45);padding:11px 20px;display:flex;align-items:center;justify-content:center;gap:12px;font-family:'DM Mono',monospace;}
-#api-banner label{color:rgba(184,146,58,.9);font-size:10px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;}
-#api-banner input[type=password]{background:rgba(255,255,255,.07);border:1px solid rgba(184,146,58,.35);border-radius:6px;padding:6px 12px;color:#fff;font-family:'DM Mono',monospace;font-size:12px;width:300px;outline:none;transition:border-color .2s;}
-#api-banner input[type=password]:focus{border-color:rgba(184,146,58,.8);}
-#api-banner button{background:#b8923a;border:none;border-radius:6px;padding:7px 18px;color:#141414;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;font-weight:700;cursor:pointer;white-space:nowrap;}
-#api-banner button:hover{background:#d4a956;}
 </style>
 <style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style></head>
 <body>
 
-<div id="api-banner">
-  <label for="api-key-input">Clé API Anthropic</label>
-  <input type="password" id="api-key-input" placeholder="sk-ant-api03-…" autocomplete="off">
-  <button onclick="saveApiKey()">Valider</button>
-</div>
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <div class="lbclose">✕</div>
@@ -280,7 +269,7 @@ textarea.field{min-height:95px;resize:vertical;}
 <header class="header">
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
-      <div class="hbadge">Espace Acheteur Privé · Expertimo · Réf. EX 91 - CM</div>
+      <div class="hbadge">Espace Acheteur Privé · Expertimo · Réf. EX 91 CM</div>
       <h1 class="htitle">11 Résidence de la Croix Blanche 91380 Chilly Mazarin<br><span style="color:var(--gold);font-style:italic;"></span></h1>
       <p class="hsub">Appartement 3 pièces de 65 m² · 3 · DPE E</p>
     </div>
@@ -319,7 +308,7 @@ textarea.field{min-height:95px;resize:vertical;}
     <p class="ssub">Appartement 3 pièces de 65 m² · 3 · DPE E</p>
     <div class="gallery">
     <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854456/TIMERA-ExpertimoOlivierLoison-OlivierReynes-12_lm88dp.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin - Vue principale" class="gm" onclick="openLightbox(this.src)">
-    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-5_cdjafj.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
+    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854454/TIMERA-ExpertimoOlivierLoison-OlivierReynes-7_hd4mxb.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
     <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854454/TIMERA-ExpertimoOlivierLoison-OlivierReynes-9_agno9m.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
   </div>
   <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:.06em;">📷 Cliquez sur une photo pour l’agrandir · 3 photos disponibles</div>
@@ -422,7 +411,7 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="card">
       <div class="lbl">Historique patrimonial</div>
       <h2 class="stitle">Chronologie du bien</h2>
-      <div class="tl" style="margin-top:13px;" id="historique-timeline"><div class="tli"><div class="tly">1970 · CONSTRUCTION</div><div class="tlt">Année de construction de l'immeuble : 1970</div></div><div class="tli"><div class="tly">2026 · MISE EN VENTE</div><div class="tlt">Bien proposé à 145 000 € · DPE E · Libre à la vente · Charges 345 €/mois.</div></div></div>
+      <div class="tl" style="margin-top:13px;" id="historique-timeline"><div class="tli"><div class="tly">1970 · CONSTRUCTION</div><div class="tlt">Année de construction de l'immeuble : 1965</div></div><div class="tli"><div class="tly">2026 · MISE EN VENTE</div><div class="tlt">Bien proposé à 145 000 € · DPE E · Libre à la vente · Charges 345 €/mois.</div></div></div>
     </div>
     <div class="card">
       <div class="lbl">Projection patrimoniale — scénarios</div>
@@ -461,7 +450,7 @@ textarea.field{min-height:95px;resize:vertical;}
       <div class="lbl">Diagnostics réglementaires</div>
       <h2 class="stitle">Diagnostics Techniques</h2>
       <p class="ssub">Résultats officiels des diagnostics réglementaires</p>
-      <div class="diag-grid" id="diag-grid"><div class="diag-card diag-attention"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">En attente du rapport par le propriétaire</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis </div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis </div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">En attente du rapport par le propriétaire</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Non soumis </div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Raccordement au réseau collectif conforme</div></div></div>
+      <div class="diag-grid" id="diag-grid"><div class="diag-card diag-attention"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">En attente du rapport par le propriétaire</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">En attente du rapport par le propriétaire</div></div><div class="diag-card diag-attention"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Raccordement au réseau collectif conforme</div></div></div>
     </div>
   </div>
 </div>
@@ -868,7 +857,7 @@ function submitOffer() {
       email: email,
       message: msg,
       bien: "11 Résidence de la Croix Blanche 91380 Chilly Mazarin",
-      reference: "EX 91 - CM",
+      reference: "EX 91 CM",
       prix_affiche: "260 000 €"
     })
   }).then(function(r) {
@@ -907,7 +896,7 @@ function unlockDocs() {
         nom: nom,
         email: email,
         bien: "11 Résidence de la Croix Blanche 91380 Chilly Mazarin",
-        reference: "EX 91 - CM",
+        reference: "EX 91 CM",
         demande: "Acces aux documents du bien"
       })
     }).catch(function(){});
@@ -1074,14 +1063,13 @@ function filterMap(cat, btn) {
 var _aiOpen = false;
 var _aiMessages = [];
 var _aiInit = false;
-function getAnthropicKey(){ return localStorage.getItem('_xp_ak') || ''; }
 var _sp_adresse   = "11 Résidence de la Croix Blanche 91380 Chilly Mazarin";
 var _sp_prix      = "145 000";
 var _sp_surface   = "65";
 var _sp_etage     = "3";
 var _sp_dpe       = "E";
 var _sp_charges   = "345";
-var _sp_detail    = "Chauffage, eau chaude et froide, entretien des parties communes et espaces verts, terrain de tennis et gardien";
+var _sp_detail    = "";
 var _sp_tf        = "1079";
 var _sp_pf1       = "Dernier étage sans vis-à-vis + balcon Sud-Ouest";
 var _sp_pf2       = "Ravalement voté et pris en charge par le propriétaire";
@@ -1124,12 +1112,6 @@ function sendAI() {
   input.value = '';
   addAIMsg(q, 'user');
   _aiMessages.push({role:'user',content:q});
-  // Vérification clé API (détecte une clé vide ou non substituée)
-  var _openBracket = '[' + '[';
-  if (!getAnthropicKey() || getAnthropicKey().indexOf(_openBracket) !== -1) {
-    addAIMsg('Assistant non configuré.', 'assistant');
-    return;
-  }
   var loadDiv = addAIMsg('…', 'assistant');
   var systemPrompt = "Tu es l'assistant virtuel dedie a ce bien immobilier. Tu reponds UNIQUEMENT aux questions sur ce bien en francais, de facon concise et professionnelle."
     + " Informations du bien :"
@@ -1147,35 +1129,17 @@ function sendAI() {
     + ". Si question hors sujet reponds: Je suis specialise sur ce bien uniquement. Contactez " + _sp_agent + " au " + _sp_tel + "."
     + " Ne donne jamais de conseil juridique ou financier ferme.";
   var msgs = _aiMessages.filter(function(m,i){return i>1;});
-  // Diagnostic logs
-  console.log('Cle API (8 premiers chars):', getAnthropicKey().substring(0,8));
-  console.log('Body envoye:', JSON.stringify({model:'claude-sonnet-4-5',max_tokens:300,messages:msgs.slice(-2)}));
-  fetch('https://api.anthropic.com/v1/messages', {
+  fetch('/api/chat', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': getAnthropicKey(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-5',
-      max_tokens: 300,
-      system: systemPrompt,
-      messages: msgs
-    })
-  }).then(function(r){
-    console.log('HTTP Status:', r.status);
-    return r.json();
-  }).then(function(data){
-    console.log('Reponse API complete:', JSON.stringify(data));
-    var reply = (data.content && data.content[0] && data.content[0].text) || ('Erreur API : ' + (data.error && data.error.message ? data.error.message : JSON.stringify(data)));
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ system: systemPrompt, messages: msgs })
+  }).then(function(r){ return r.json(); })
+  .then(function(data){
+    var reply = (data.content && data.content[0] && data.content[0].text) || ('Erreur : ' + (data.error && data.error.message ? data.error.message : JSON.stringify(data)));
     loadDiv.textContent = reply;
     _aiMessages.push({role:'assistant',content:reply});
   }).catch(function(err){
-    console.error('AI Error:', err);
-    console.error('Message:', err.message);
-    loadDiv.textContent = 'Erreur : ' + (err && err.message ? err.message : JSON.stringify(err));
+    loadDiv.textContent = 'Erreur réseau : ' + (err && err.message ? err.message : String(err));
   });
 }
 
@@ -1188,20 +1152,7 @@ document.querySelectorAll('.diag-result').forEach(function(el) {
 </script>
 
 <script>
-function saveApiKey(){
-  var k = document.getElementById('api-key-input').value.trim();
-  if (!k) return;
-  localStorage.setItem('_xp_ak', k);
-  document.getElementById('api-banner').style.display = 'none';
-}
-
 document.addEventListener('DOMContentLoaded', function(){
-    if (localStorage.getItem('_xp_ak')) {
-      document.getElementById('api-banner').style.display = 'none';
-    }
-    document.getElementById('api-key-input').addEventListener('keydown', function(e){
-      if (e.key === 'Enter') saveApiKey();
-    });
     ['prix','loyer','apport','taux','duree','charges','travaux'].forEach(function(id){
         var el = document.getElementById(id);
         if (el) el.addEventListener('input', calc);
