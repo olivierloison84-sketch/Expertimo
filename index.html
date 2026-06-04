@@ -1209,7 +1209,13 @@ function sendAI() {
   + "Pour les questions sur le financement, oriente vers un courtier ou conseiller bancaire. "
   + "Pour les questions juridiques complexes, oriente vers un notaire. "
   + "Agent : " + _sp_agent + " — " + _sp_tel + ". "
-  + "Si une question sort complètement du domaine immobilier, réponds poliment que tu es spécialisé immobilier.";
+  + "Si une question sort complètement du domaine immobilier, réponds poliment que tu es spécialisé immobilier."
+  + " STYLE DE RÉPONSE OBLIGATOIRE : "
+  + "Réponds toujours en texte fluide et naturel, comme un conseiller immobilier bienveillant qui parle à son client. "
+  + "N'utilise jamais de titres markdown (##, ###), jamais de listes à puces (- ou *), jamais de texte en gras (**). "
+  + "Donne des réponses chaleureuses, rassurantes et pédagogiques avec des délais et chiffres concrets quand c'est pertinent. "
+  + "Tes réponses doivent faire 3 à 5 phrases maximum — concises mais complètes. "
+  + "Termine toujours par une invitation naturelle à contacter le vendeur ou à poser une autre question.";
   var msgs = _aiMessages.filter(function(m,i){return i>1;});
   fetch('https://expertimo-phi.vercel.app/api/chat', {
     method: 'POST',
