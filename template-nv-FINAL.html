@@ -897,7 +897,13 @@ function submitOffer() {
     + "Cordialement"
   );
 
-  window.location.href = 'mailto:' + dest + '?subject=' + sujet + '&body=' + corps;
+  var mailtoLink = 'mailto:' + dest + '?subject=' + sujet + '&body=' + corps;
+  var a = document.createElement('a');
+  a.href = mailtoLink;
+  a.target = '_blank';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 
   var el = document.getElementById('offer-success');
   el.style.display = 'block';
