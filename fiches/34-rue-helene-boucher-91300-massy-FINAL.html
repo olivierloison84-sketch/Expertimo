@@ -1113,21 +1113,24 @@ function sendAI() {
   addAIMsg(q, 'user');
   _aiMessages.push({role:'user',content:q});
   var loadDiv = addAIMsg('…', 'assistant');
-  var systemPrompt = "Tu es l'assistant virtuel dedie a ce bien immobilier. Tu reponds UNIQUEMENT aux questions sur ce bien en francais, de facon concise et professionnelle."
-    + " Informations du bien :"
-    + " Adresse: " + _sp_adresse
-    + " | Prix: " + _sp_prix + " euros"
-    + " | Surface: " + _sp_surface + " m2"
-    + " | Etage: " + _sp_etage
-    + " | DPE: " + _sp_dpe
-    + " | Charges: " + _sp_charges + " euros/mois (" + _sp_detail + ")"
-    + " | Taxe fonciere: " + _sp_tf + " euros/an"
-    + " | Points forts: " + _sp_pf1 + ", " + _sp_pf2 + ", " + _sp_pf3
-    + " | Points vigilance: " + _sp_vigi1 + ", " + _sp_vigi2
-    + " | Loyer estime: " + _sp_loyer + " euros/mois"
-    + " | Agent: " + _sp_agent + ", tel: " + _sp_tel
-    + ". Si question hors sujet reponds: Je suis specialise sur ce bien uniquement. Contactez " + _sp_agent + " au " + _sp_tel + "."
-    + " Ne donne jamais de conseil juridique ou financier ferme.";
+  var systemPrompt =
+    "Tu es un assistant immobilier expert, spécialisé sur le bien situé au " + _sp_adresse + ". "
+  + "Tu réponds en français, de façon claire et concise. "
+  + "Tu as accès aux informations suivantes sur ce bien : "
+  + "Prix : " + _sp_prix + " € | Surface : " + _sp_surface + " m² | Étage : " + _sp_etage
+  + " | DPE : " + _sp_dpe + " | Charges : " + _sp_charges + " €/mois"
+  + " | Taxe foncière : " + _sp_tf + " € | Loyer estimé : " + _sp_loyer + " €/mois"
+  + " | Points forts : " + _sp_pf1 + ", " + _sp_pf2 + ", " + _sp_pf3
+  + " | Points de vigilance : " + _sp_vigi1 + ", " + _sp_vigi2
+  + ". "
+  + "Tu peux répondre sur TROIS domaines : "
+  + "1) Les caractéristiques et détails de CE bien (surface, DPE, charges, équipements, points forts, vigilances, rentabilité). "
+  + "2) Le quartier et ses commodités (transports, écoles, commerces, parcs à proximité — utilise tes connaissances générales sur la ville et le secteur). "
+  + "3) Le processus d'achat immobilier en France : étapes après acceptation d'offre (compromis de vente, délai de rétractation 10 jours, financement bancaire, délai obtention prêt 45-60 jours, acte authentique chez le notaire, délais typiques 3-4 mois). "
+  + "Pour les questions sur le financement, oriente vers un courtier ou conseiller bancaire. "
+  + "Pour les questions juridiques complexes, oriente vers un notaire. "
+  + "Agent : " + _sp_agent + " — " + _sp_tel + ". "
+  + "Si une question sort complètement du domaine immobilier, réponds poliment que tu es spécialisé immobilier.";
   var msgs = _aiMessages.filter(function(m,i){return i>1;});
   fetch('https://expertimo-phi.vercel.app/api/chat', {
     method: 'POST',
