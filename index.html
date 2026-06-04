@@ -40,6 +40,32 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FR3DQQ8VSH');
+
+  var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
+  gtag('set', 'user_properties', { client_nom: clientId });
+
+  window.addEventListener('load', function() {
+    gtag('event', 'fiche_ouverte', {
+      client: clientId,
+      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
+    });
+    setInterval(function() {
+      gtag('event', 'temps_page', {
+        secondes: Math.round(performance.now() / 1000),
+        client: clientId
+      });
+    }, 30000);
+  });
+</script>
+<!-- /GA4 -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Espace Acheteur Privé · Expertimo</title>
@@ -735,6 +761,7 @@ textarea.field{min-height:95px;resize:vertical;}
 <script>
 // ═══ NAV ═══
 function showTab(id, btn) {
+  if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('#main-nav button').forEach(function(b) { b.classList.remove('active'); });
@@ -833,6 +860,7 @@ function calcProjection() {
 }
 
 function calc() {
+  if(typeof gtag!=='undefined') gtag('event','simulation_credit',{client:clientId});
   try { _calc(); calcProjection(); } catch(e) { console.error('[calc]', e); }
 }
 function _calc() {
@@ -904,6 +932,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function submitOffer() {
   var montant = document.getElementById('offer-amount').value;
+  if(typeof gtag!=='undefined') gtag('event','offre_initiee',{client:clientId,montant:montant});
   var financement = (document.getElementById('offer-financement') || {}).value || '';
   var apport = document.getElementById('offer-apport').value;
   var delai = (document.getElementById('offer-delai') || {}).value || '';
@@ -1188,6 +1217,7 @@ function sendAI() {
   var input = document.getElementById('ai-input');
   var q = input.value.trim();
   if (!q) return;
+  if(typeof gtag!=='undefined') gtag('event','chatbot_question',{client:clientId});
   input.value = '';
   addAIMsg(q, 'user');
   _aiMessages.push({role:'user',content:q});
