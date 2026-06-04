@@ -2,36 +2,36 @@
 <html lang="fr"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>5, Rue de l'Arpajonnais 91160 Longjumeau · Espace Acheteur Privé · Expertimo</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;family=DM+Sans:wght@300;400;500&amp;family=DM+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet">
+<title>110 Avenue Philippe-Auguste Paris 75011 - Roquette · Espace Acheteur Privé · Net Vendeur+</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=DM+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#f4f1ea;--card:#fff;--ink:#111;--gold:#b8923a;--gold2:#d4a956;--cream:#ede9df;--muted:#888880;--border:#ddd8cc;--vert:#2d6a4f;--rouge:#c0392b;--dark:#141414;}
+:root{--bg:#f5f8fc;--card:#fff;--ink:#111;--gold:#2e7de0;--gold2:#4a94f0;--cream:#f0f4f8;--muted:#6b8aaa;--border:#d0dce8;--vert:#1a6b4a;--rouge:#c0392b;--dark:#0c2340;--dark2:#112b4e;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
 /* HEADER */
-.header{background:linear-gradient(160deg,#0e0e0e 0%,#1a1816 100%);padding:48px 0 40px;min-height:280px;position:relative;overflow:hidden;}
-.header::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(184,146,58,.12),transparent 70%);top:-200px;right:-80px;border-radius:50%;}
+.header{background:linear-gradient(160deg,#0c2340 0%,#112b4e 100%);padding:48px 0 40px;min-height:280px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(46,125,224,.15),transparent 70%);top:-200px;right:-80px;border-radius:50%;}
 .header-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:flex-start;gap:48px;position:relative;z-index:2;}
-.hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(184,146,58,.35);border-radius:99px;background:rgba(184,146,58,.08);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(46,125,224,.4);border-radius:99px;background:rgba(46,125,224,.1);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
 .hbadge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.htitle{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.5vw,42px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
+.htitle{font-family:'Inter',sans-serif;font-size:clamp(24px,3.5vw,42px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
 .hsub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.8;max-width:540px;font-weight:300;margin-top:8px;}
-.price-card{background:rgba(255,255,255,.06);border:1px solid rgba(184,146,58,.25);border-radius:20px;padding:32px 36px;min-width:320px;max-width:380px;flex-shrink:0;}
+.price-card{background:rgba(255,255,255,.06);border:1px solid rgba(46,125,224,.3);border-radius:20px;padding:32px 36px;min-width:320px;max-width:380px;flex-shrink:0;}
 .plabel{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
-.pamount{font-family:'Cormorant Garamond',serif;font-size:64px;color:var(--gold);font-weight:300;line-height:1;margin-bottom:4px;}
+.pamount{font-family:'Inter',sans-serif;font-size:64px;color:var(--gold);font-weight:300;line-height:1;margin-bottom:4px;}
 .pmeta{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08);}
 .hkpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:0;}
 .hkpi{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;}
 .hkpi .hl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
-.hkpi .hv{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:300;line-height:1;}
+.hkpi .hv{font-family:'Inter',sans-serif;font-size:22px;color:var(--gold);font-weight:300;line-height:1;}
 /* NAV */
 .nav{position:sticky;top:0;z-index:999;background:rgba(255,255,255,.96);border-bottom:1px solid var(--border);padding:0 28px;display:flex;gap:0;overflow-x:auto;}
 .nav::-webkit-scrollbar{height:0;}
-.nav button{border:none;background:none;padding:17px 18px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;}
+.nav button{border:none;background:none;padding:17px 18px;font-family:'Inter',sans-serif;font-size:13px;font-weight:400;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;}
 .nav button:hover{color:var(--ink);}
 .nav button.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500;}
 /* CONTAINER */
@@ -43,38 +43,38 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);over
 .pg{display:grid;grid-template-columns:1fr 290px;gap:22px;align-items:start;}
 /* CONSEILLER */
 .cons-card{background:var(--dark);border-radius:18px;padding:20px;color:white;position:sticky;top:20px;text-align:center;}
-.cons-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#b8923a,#d4a956);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:24px;color:var(--dark);font-weight:600;margin:0 auto 12px;}
-.cons-name{font-family:'Cormorant Garamond',serif;font-size:18px;color:white;margin-bottom:2px;}
-.cons-role{font-size:12px;color:#7a7264;font-weight:300;margin-bottom:12px;}
+.cons-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2e7de0,#4a94f0);display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:18px;color:white;font-weight:600;margin:0 auto 12px;}
+.cons-name{font-family:'Inter',sans-serif;font-size:18px;color:white;margin-bottom:2px;}
+.cons-role{font-size:12px;color:#6b8aaa;font-weight:300;margin-bottom:12px;}
 .cons-contact a{justify-content:center;}
 .cons-contact{display:flex;flex-direction:column;gap:6px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.06);}
-.cons-contact a{font-size:11px;color:#c0b8ae;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s;}
+.cons-contact a{font-size:11px;color:#a0b8d0;text-decoration:none;display:flex;align-items:center;gap:6px;transition:.2s;}
 .cons-contact a:hover{color:var(--gold);}
-.btn-rdv{display:block;width:100%;padding:12px;background:var(--gold);color:var(--dark);border:none;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;transition:.2s;margin-bottom:8px;font-weight:500;}
-.btn-rdv:hover{background:var(--gold2);}
-.btn-offre{display:block;width:100%;padding:12px;background:transparent;color:var(--gold);border:1px solid rgba(184,146,58,.4);border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;transition:.2s;}
-.btn-offre:hover{background:rgba(184,146,58,.08);}
+.btn-offre{display:block;width:100%;padding:12px;background:var(--gold);color:white;border:none;border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;transition:.2s;margin-bottom:8px;font-weight:500;}
+.btn-offre:hover{background:var(--gold2);}
+.btn-offre-outline{display:block;width:100%;padding:12px;background:transparent;color:var(--gold);border:1px solid rgba(46,125,224,.4);border-radius:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;transition:.2s;}
+.btn-offre-outline:hover{background:rgba(46,125,224,.08);}
 .cons-stars{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);text-align:center;}
 .cons-stars .stars{font-size:13px;margin-bottom:1px;}
-.cons-stars .slbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6a6358;}
+.cons-stars .slbl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#4a6a8a;}
 /* CARDS */
-.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px;box-shadow:0 3px 16px rgba(0,0,0,.04);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px;box-shadow:0 3px 16px rgba(12,35,64,.04);}
 .card-dark{background:var(--dark);border-radius:18px;padding:24px;margin-bottom:18px;color:white;}
-.stitle{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:300;margin-bottom:5px;line-height:1.2;}
+.stitle{font-family:'Inter',sans-serif;font-size:24px;font-weight:400;margin-bottom:5px;line-height:1.2;}
 .ssub{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:16px;font-weight:300;}
 .lbl{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;display:block;}
 /* KPI GRID */
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px;}
 .kpi{background:var(--card);padding:16px;}
 .kpi .kl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
-.kpi .kv{font-family:'Cormorant Garamond',serif;font-size:26px;line-height:1;}
+.kpi .kv{font-family:'Inter',sans-serif;font-size:26px;line-height:1;}
 .kpi .kv.g{color:var(--gold);}.kpi .kv.v{color:var(--vert);}.kpi .kv.r{color:var(--rouge);}
 /* SCORE BOX */
 .score-box{background:var(--dark);border-radius:14px;padding:20px;color:white;margin-bottom:16px;}
-.score-num{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,6vw,48px);color:var(--gold);line-height:1;font-weight:300;overflow:hidden;}
+.score-num{font-family:'Inter',sans-serif;font-size:clamp(32px,6vw,48px);color:var(--gold);line-height:1;font-weight:300;overflow:hidden;}
 .sline{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px;}
 .sline:last-child{border:none;}
-.sline span{color:#9a9286;font-weight:300;}
+.sline span{color:#6b8aaa;font-weight:300;}
 .sline strong{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);}
 .sbar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:2px;overflow:hidden;}
 .sbar-fill{height:100%;background:var(--gold);border-radius:2px;}
@@ -87,9 +87,9 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);over
 .pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}
 .pb{border-radius:12px;padding:15px;}
 .pb.green{background:#f0f7f3;border:1px solid #c3dece;}
-.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}
+.pb.amber{background:#f0f4ff;border:1px solid #b8c6e8;}
 .pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}
-.pb.green h4{color:var(--vert);}.pb.amber h4{color:#8a6820;}
+.pb.green h4{color:var(--vert);}.pb.amber h4{color:#3a5fa8;}
 .pb ul{list-style:none;}
 .pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.05);display:flex;gap:5px;font-weight:300;line-height:1.5;}
 .pb ul li:last-child{border:none;}
@@ -97,7 +97,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);over
 /* SUB TABS */
 .sub-tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:20px;overflow-x:auto;}
 .sub-tabs::-webkit-scrollbar{height:0;}
-.sub-tabs button{border:none;background:none;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.2s;}
+.sub-tabs button{border:none;background:none;padding:11px 16px;font-family:'Inter',sans-serif;font-size:12px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:.2s;}
 .sub-tabs button:hover{color:var(--ink);}
 .sub-tabs button.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500;}
 .sub-panel{display:none;}
@@ -111,9 +111,9 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;heigh
 input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .sval{font-family:'DM Mono',monospace;font-size:12px;text-align:right;font-weight:500;}
 /* RENTA */
-.renta-box{border:2px solid var(--gold);border-radius:14px;padding:20px;margin-bottom:18px;background:linear-gradient(135deg,#fdf8f0,#faf6ee);}
+.renta-box{border:2px solid var(--gold);border-radius:14px;padding:20px;margin-bottom:18px;background:linear-gradient(135deg,#f0f4ff,#eaf0fb);}
 .renta-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:11px;flex-wrap:wrap;}
-.renta-big{font-family:'Cormorant Garamond',serif;font-size:48px;line-height:1;transition:color .3s;}
+.renta-big{font-family:'Inter',sans-serif;font-size:48px;line-height:1;transition:color .3s;}
 .renta-big.good{color:var(--vert);}.renta-big.ok{color:var(--gold);}.renta-big.bad{color:var(--rouge);}
 .formula{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);background:rgba(0,0,0,.03);padding:9px 12px;border-radius:7px;line-height:1.9;margin-bottom:10px;}
 .citation{font-size:11px;font-style:italic;color:var(--muted);border-left:2px solid var(--gold);padding-left:10px;line-height:1.8;}
@@ -123,22 +123,21 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .rc.dk{background:var(--dark);}
 .rc.dk .rcl{color:var(--gold);}.rc.dk .rcv{color:white;}
 .rcl{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-.rcv{font-family:'Cormorant Garamond',serif;font-size:20px;}
+.rcv{font-family:'Inter',sans-serif;font-size:20px;}
 .rcs{font-size:9px;color:var(--muted);margin-top:2px;}
 /* ALERTS */
 .alert{border-radius:11px;padding:14px;margin-bottom:11px;}
 .alert.rouge{background:#fde8e6;border:1px solid #e8bfbb;}
-.alert.amber{background:#fdf8f0;border:1px solid #e8d5a3;}
+.alert.amber{background:#f0f4ff;border:1px solid #b8c6e8;}
 .alert.vert{background:#f0f7f3;border:1px solid #c3dece;}
 .alert.blue{background:#f0f4ff;border:1px solid #b8c6e8;}
 .alert h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
-.alert.rouge h4{color:var(--rouge);}.alert.amber h4{color:#8a6820;}.alert.vert h4{color:var(--vert);}.alert.blue h4{color:#4a5fa8;}
-.alert p{font-size:12px;line-height:1.7;font-weight:300;}
+.alert.rouge h4{color:var(--rouge);}.alert.amber h4{color:#3a5fa8;}.alert.vert h4{color:var(--vert);}.alert.blue h4{color:#4a5fa8;}
 /* DVF TABLE */
 .dvft{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
 .dvft th{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 8px;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);}
 .dvft td{padding:7px 8px;border-bottom:1px solid var(--border);font-weight:300;}
-.dvft tr.ref td{background:#fdf8f0;}
+.dvft tr.ref td{background:#f0f4ff;}
 .mono{font-family:'DM Mono',monospace;}.txt-vert{color:var(--vert);font-weight:500;}
 /* PROJ TABLE */
 .pt{width:100%;border-collapse:collapse;margin-bottom:14px;}
@@ -154,10 +153,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 /* BANK */
 .bi{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:10px;margin-top:11px;}
 .bi.green{background:#f0f7f3;border:1px solid #c3dece;}
-.bi.amber{background:#fdf8f0;border:1px solid #e8d5a3;}
+.bi.amber{background:#f0f4ff;border:1px solid #b8c6e8;}
 .bi.red{background:#fde8e6;border:1px solid #e8bfbb;}
 .bd{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
-.bi.green .bd{background:var(--vert);}.bi.amber .bd{background:#c59b45;}.bi.red .bd{background:var(--rouge);}
+.bi.green .bd{background:var(--vert);}.bi.amber .bd{background:#3a5fa8;}.bi.red .bd{background:var(--rouge);}
 /* DPE */
 .dpebar{display:flex;flex-direction:column;gap:3px;}
 .dperow{display:flex;align-items:center;gap:7px;height:22px;}
@@ -167,7 +166,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .loibox{background:#f0f4ff;border:1px solid #b8c6e8;border-radius:10px;padding:12px 14px;margin-bottom:11px;}
 .loiref{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#4a5fa8;margin-bottom:4px;}
 .loibox p{font-size:12px;line-height:1.7;font-weight:300;color:#2a3050;}
-/* CSS CHART (no CDN needed) */
+/* CSS CHART */
 .css-chart{margin:14px 0;}
 .cc-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:7px;}
 .cc-label{font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);width:35px;text-align:right;flex-shrink:0;}
@@ -194,20 +193,19 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .pline.done{background:var(--gold);}
 /* FORM */
 .f2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px;}
-.field{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white;color:var(--ink);transition:.2s;margin-bottom:10px;}
+.field{width:100%;padding:12px;border:1px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;outline:none;background:white;color:var(--ink);transition:.2s;margin-bottom:10px;}
 .field:focus{border-color:var(--gold);}
 textarea.field{min-height:95px;resize:vertical;}
 .btndark{display:block;width:100%;padding:14px;background:var(--dark);color:var(--gold);border:none;border-radius:12px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;cursor:pointer;transition:.2s;}
-.btndark:hover{background:#222;}
+.btndark:hover{background:var(--dark2);}
 /* DOCS */
 .dg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
 .dc{background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:15px;cursor:pointer;transition:.25s;}
-.dc:hover{background:white;transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.06);}
+.dc:hover{background:white;transform:translateY(-2px);box-shadow:0 5px 16px rgba(12,35,64,.06);}
 .dci{font-size:22px;margin-bottom:6px;}
 .dcn{font-size:12px;font-weight:500;margin-bottom:2px;}
 .dcm{font-size:10px;color:var(--muted);font-weight:300;}
 .dlck{display:inline-flex;align-items:center;gap:3px;font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);margin-top:4px;}
-
 /* DIAGNOSTICS */
 .diag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
 .diag-card{border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);}
@@ -217,9 +215,9 @@ textarea.field{min-height:95px;resize:vertical;}
 .diag-ok{background:#f0faf0;border-color:#4caf50;}
 .diag-attention{background:#fff8e1;border-color:#ff9800;}
 .diag-alerte{background:#fff0f0;border-color:#f44336;}
-.diag-{background:#f8f6f2;border-color:var(--border);color:var(--muted);}
-#map-quartier { cursor: default !important; }
-#map-quartier .leaflet-marker-icon { cursor: pointer !important; }
+.diag-{background:#f5f8fc;border-color:var(--border);color:var(--muted);}
+#map-quartier{cursor:default !important;}
+#map-quartier .leaflet-marker-icon{cursor:pointer !important;}
 /* LIGHTBOX */
 .lightbox{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;align-items:center;justify-content:center;cursor:pointer;}
 .lightbox.open{display:flex;}
@@ -227,8 +225,8 @@ textarea.field{min-height:95px;resize:vertical;}
 .lbclose{position:absolute;top:16px;right:22px;color:white;font-size:22px;cursor:pointer;opacity:.7;}
 /* FOOTER */
 .pfooter{background:var(--dark);border-radius:20px;padding:40px;margin-top:32px;text-align:center;color:white;}
-.pfooter h2{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;margin-bottom:9px;}
-.pfooter p{max-width:540px;margin:auto;color:#7a7264;line-height:1.9;font-weight:300;font-size:13px;}
+.pfooter h2{font-family:'Inter',sans-serif;font-size:30px;font-weight:300;margin-bottom:9px;}
+.pfooter p{max-width:540px;margin:auto;color:#6b8aaa;line-height:1.9;font-weight:300;font-size:13px;}
 /* RESPONSIVE */
 @media(max-width:960px){
   .pg{grid-template-columns:1fr;}
@@ -256,10 +254,8 @@ textarea.field{min-height:95px;resize:vertical;}
   .sval{text-align:left;}
   .ptrack{gap:0;}
 }
-</style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style></head>
+</style></head>
 <body>
-
 
 <div class="lightbox" id="lightbox" onclick="closeLightbox()">
   <div class="lbclose">✕</div>
@@ -269,19 +265,19 @@ textarea.field{min-height:95px;resize:vertical;}
 <header class="header">
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
-      <div class="hbadge">Espace Acheteur Privé · Expertimo · Réf. ref-mandat</div>
-      <h1 class="htitle">5, Rue de l'Arpajonnais 91160 Longjumeau<br><span style="color:var(--gold);font-style:italic;">Centre ville</span></h1>
-      <p class="hsub">Appartement 3 pièces de 76,87 m² · 2 · DPE D</p>
+      <div class="hbadge">Espace Acheteur Privé · Net Vendeur+ · Réf. NV91- Paris</div>
+      <h1 class="htitle">110 Avenue Philippe-Auguste Paris 75011 - Roquette<br><span style="color:var(--gold);font-style:italic;"></span></h1>
+      <p class="hsub">Appartement 1 pièce de 8,59 m² · 8 · DPE G</p>
     </div>
     <div class="price-card">
       <div class="plabel">Prix affiché</div>
-      <div class="pamount">254 000 €</div>
-      <div class="pmeta">Frais d'agence inclus · Données temps réel</div>
+      <div class="pamount">89 000 €</div>
+      <div class="pmeta">En direct vendeur · Données temps réel</div>
       <div class="hkpis">
-        <div class="hkpi"><div class="hl">Renta. nette</div><div class="hv" id="h-rnet">3,9%</div></div>
-        <div class="hkpi"><div class="hl">Cash-flow</div><div class="hv" id="h-cf">-539 €</div></div>
+        <div class="hkpi"><div class="hl">Renta. nette</div><div class="hv" id="h-rnet">[[RENTA]]%</div></div>
+        <div class="hkpi"><div class="hl">Cash-flow</div><div class="hv" id="h-cf">[[CF]] €</div></div>
         <div class="hkpi"><div class="hl">Score qualité</div><div class="hv" id="h-score">9,3/10</div></div>
-        <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe">D</div></div>
+        <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe">G</div></div>
       </div>
     </div>
   </div>
@@ -304,35 +300,33 @@ textarea.field{min-height:95px;resize:vertical;}
 <div>
   <div class="card">
     <div class="lbl">Le bien</div>
-    <h2 class="stitle">5, Rue de l'Arpajonnais 91160 Longjumeau · 3 pièces · 2</h2>
-    <p class="ssub">Appartement 3 pièces de 76,87 m² · 2 · DPE D</p>
+    <h2 class="stitle">110 Avenue Philippe-Auguste Paris 75011 - Roquette · 1 pièce · 8</h2>
+    <p class="ssub">Appartement 1 pièce de 8,59 m² · 8 · DPE G</p>
     <div class="gallery">
-    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951051/TorresSalaun_OlivierLoison-OlivierReynes-3_r8dp1t.jpg" alt="5, Rue de l'Arpajonnais 91160 Longjumeau - Vue principale" class="gm" onclick="openLightbox(this.src)">
-    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951047/TorresSalaun_OlivierLoison-OlivierReynes-12_equrja.jpg" alt="5, Rue de l'Arpajonnais 91160 Longjumeau" onclick="openLightbox(this.src)">
-    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951044/TorresSalaun_OlivierLoison-OlivierReynes-14_zsnz81.jpg" alt="5, Rue de l'Arpajonnais 91160 Longjumeau" onclick="openLightbox(this.src)">
+    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780508895/PARIS11-ExpertimmoOlivierLoison-OlivierReynes-8_fyz84d.jpg" alt="110 Avenue Philippe-Auguste Paris 75011 - Roquette - Vue principale" class="gm" onclick="openLightbox(this.src)">
+    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780508892/PARIS11-ExpertimmoOlivierLoison-OlivierReynes-2_anmidj.jpg" alt="110 Avenue Philippe-Auguste Paris 75011 - Roquette" onclick="openLightbox(this.src)">
+    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780508892/PARIS11-ExpertimmoOlivierLoison-OlivierReynes_tzdnhj.jpg" alt="110 Avenue Philippe-Auguste Paris 75011 - Roquette" onclick="openLightbox(this.src)">
   </div>
-  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:.06em;">📷 Cliquez sur une photo pour l’agrandir · 3 photos disponibles</div>
-  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>Appartement lumineux avec triple exposition Est/Ouest/Sud dans une résidence très calme</li><li>Appartement entièrement refait à neuf avec une très belle décoration moderne</li><li>Superbe terrasse de près de 50m² avec vue à 180 degré sans vis à vis direct</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>Taxe foncière de 1682€ en 2025</li><li>Charges de copropriété de 253€ /mois</li></ul></div></div><div class="score-box">
-  <div class="lbl" style="color:#6a6358;">Score Qualité du Bien</div>
-  <div class="score-num">9,3</div>
-  <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;">Score 9,3/10. DPE D. Prix à confirmer.</p>
-  <div class="sline"><span>Prestations &amp; standing</span><div><strong>10/10</strong><div class="sbar"><div class="sbar-fill" style="width:100%"></div></div></div></div>
-  <div class="sline"><span>Secteur &amp; environnement</span><div><strong>9/10</strong><div class="sbar"><div class="sbar-fill" style="width:90%"></div></div></div></div>
-  <div class="sline"><span>Rapport qualité/prix</span><div><strong>8/10</strong><div class="sbar"><div class="sbar-fill" style="width:80%"></div></div></div></div>
-  <div class="sline"><span>État général</span><div><strong>10/10</strong><div class="sbar"><div class="sbar-fill" style="width:100%"></div></div></div></div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:.06em;">📷 Cliquez sur une photo pour l'agrandir · 3 photos disponibles</div>
+  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>Dernier étage d'un immeuble haussmannien</li><li>Appartement meublé et en bon état</li><li>Taxe foncière (155€/an) et charges de copropriété(43€/mois) très faibles : idéal investisseur</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>8ème et dernier étage sans ascenseur</li><li>Pas de balcon, cave et parking</li></ul></div></div><div class="score-box">
+  <div class="lbl" style="color:#4a6a8a;">Score Qualité du Bien</div>
+  <div class="score-num" id="score-num">9,3</div>
+  <p style="font-size:12px;color:#6b8aaa;margin-bottom:14px;font-weight:300;">Score 9,3/10. DPE G. Prix à confirmer.</p>
+  <div class="sline"><span>Prestations &amp; standing</span><div><strong id="score-prestations">10/10</strong><div class="sbar"><div class="sbar-fill" id="bar-prestations" style="width: 100%;"></div></div></div></div>
+  <div class="sline"><span>Secteur &amp; environnement</span><div><strong id="score-secteur">9/10</strong><div class="sbar"><div class="sbar-fill" id="bar-secteur" style="width: 90%;"></div></div></div></div>
+  <div class="sline"><span>Rapport qualité/prix</span><div><strong id="score-qp">8/10</strong><div class="sbar"><div class="sbar-fill" id="bar-qp" style="width: 80%;"></div></div></div></div>
+  <div class="sline"><span>État général</span><div><strong id="score-etat">10/10</strong><div class="sbar"><div class="sbar-fill" id="bar-etat" style="width: 100%;"></div></div></div></div>
 </div>
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
-  <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-avatar" id="vendeur-initiales">NV</div>
+  <div class="cons-name" id="vendeur-nom">NOM_VENDEUR</div>
+  <div class="cons-role">Vendeur particulier · Net Vendeur+</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
-    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+    <a href="tel:[[TEL_VENDEUR]]" id="vendeur-tel-link">📞 <span id="vendeur-tel-display">TEL_VENDEUR</span></a>
+    <a href="mailto:[[EMAIL_VENDEUR]]" id="vendeur-email-link">✉️ <span id="vendeur-email-display">EMAIL_VENDEUR</span></a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </div></section>
@@ -350,17 +344,21 @@ textarea.field{min-height:95px;resize:vertical;}
 
   <div id="sub-marche" class="sub-panel active">
     <div class="kpi-grid">
-      <div class="kpi"><div class="kl">Prix m² · ce bien</div><div class="kv g">3 304 €</div></div>
-      <div class="kpi"><div class="kl">Médiane Longjumeau / Essonne 91</div><div class="kv">3 020 €</div></div>
-      <div class="kpi"><div class="kl">Tension locative</div><div class="kv v">Très forte</div></div>
-      <div class="kpi"><div class="kl">Délai vente moyen</div><div class="kv">21 jours</div></div>
+      <div class="kpi"><div class="kl">Prix m² · ce bien</div><div class="kv g" id="kpi-prixm2">10 361 €</div></div>
+      <div class="kpi"><div class="kl">Médiane secteur</div><div class="kv" id="kpi-mediane">[[MEDIANE]] €</div></div>
+      <div class="kpi"><div class="kl">Tension locative</div><div class="kv v" id="kpi-tension">Très forte</div></div>
+      <div class="kpi"><div class="kl">Délai vente moyen</div><div class="kv" id="kpi-delai">21 jours</div></div>
     </div>
     <div class="card">
       <div class="lbl">Transactions DVF officielles</div>
       <h2 class="stitle">Comparables réels</h2>
       <table class="dvft">
         <thead><tr><th>Date</th><th>Adresse</th><th>Surface</th><th>Prix vendu</th><th>€/m²</th></tr></thead>
-        <tbody><tr class="dvf-row" data-date="Nov. 2025"><td>Nov. 2025</td><td>29 Avenue Du Général De Gaulle</td><td class="mono">95 m²</td><td class="mono">252 250 €</td><td class="mono">2 655 €</td></tr><tr class="dvf-row" data-date="Juin  2025"><td>Juin  2025</td><td>11 b Rue De Chilly</td><td class="mono">72 m²</td><td class="mono">277 701 €</td><td class="mono">3 857 €</td></tr><tr class="dvf-row" data-date="Oct 2024"><td>Oct 2024</td><td>2 b Avenue De La Gare</td><td class="mono">76 m²</td><td class="mono">285 000 €</td><td class="mono">3 750 €</td></tr><tr class="dvf-row" data-date="Jull. 2024"><td>Jull. 2024</td><td>1 Rue Siniargoux</td><td class="mono">95 m²</td><td class="mono">358 000 €</td><td class="mono">3 768 €</td></tr><tr class="dvf-row" data-date="Juill. 2024"><td>Juill. 2024</td><td>26 Rue Victor Schoelcher</td><td class="mono">88 m²</td><td class="mono">273 100 €</td><td class="mono">3 103 €</td></tr><tr class="dvf-row" data-date="Juin 2024"><td>Juin 2024</td><td>2 b Avenue De La Gare</td><td class="mono">91 m²</td><td class="mono">345 000 €</td><td class="mono">3 791 €</td></tr></tbody>
+        <tbody id="dvf-tbody">
+          <tr class="dvf-row" data-date="[[DVF1_DATE]]"><td>[[DVF1_DATE]]</td><td>[[DVF1_ADR]]</td><td class="mono">[[DVF1_SURF]] m²</td><td class="mono">[[DVF1_PRIX]] €</td><td class="mono">[[DVF1_M2]] €</td></tr>
+          <tr class="dvf-row" data-date="[[DVF2_DATE]]"><td>[[DVF2_DATE]]</td><td>[[DVF2_ADR]]</td><td class="mono">[[DVF2_SURF]] m²</td><td class="mono">[[DVF2_PRIX]] €</td><td class="mono">[[DVF2_M2]] €</td></tr>
+          <tr class="dvf-row ref" data-date="[[DVF3_DATE]]"><td>[[DVF3_DATE]]</td><td><strong>[[DVF3_ADR]] ★</strong></td><td class="mono">[[DVF3_SURF]] m²</td><td class="mono">[[DVF3_PRIX]] €</td><td class="mono" style="color:var(--muted);">[[DVF3_M2]] €</td></tr>
+        </tbody>
       </table>
       <div class="alert amber" id="comparables-lecture"><h4>📊 Positionnement prix</h4><p id="comparables-justification">Le prix de présentation a été établi sur la base des transactions récentes du secteur et des caractéristiques propres au bien.</p></div>
     </div>
@@ -377,7 +375,7 @@ textarea.field{min-height:95px;resize:vertical;}
           <div class="dperow"><span class="dpeltr" id="dpe-g">G</span><div class="dperect" style="width:138px;background:#CF1B1B;" id="dperect-G">G</div></div>
         </div>
         <div>
-          <div class="alert amber" id="dpe-alert" style="margin-bottom:7px;"><h4 id="dpe-alert-title">📋 DPE D</h4><p id="dpe-alert-txt">Bien classé D — vérifiez les obligations réglementaires en vigueur.</p></div>
+          <div class="alert amber" id="dpe-alert" style="margin-bottom:7px;"><h4 id="dpe-alert-title">📋 DPE G</h4><p id="dpe-alert-txt">Passoire thermique sévère — interdit à la location. Décote importante.</p></div>
         </div>
       </div>
     </div>
@@ -387,14 +385,14 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="card">
       <div class="lbl">Simulateur investisseur temps réel</div>
       <h2 class="stitle">Rentabilité interactive</h2>
-      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 300 € nu / 1 400 € meublé. Simulez votre rentabilité ci-dessous.</div>
-      <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="228600" max="279400" value="254000" step="500" oninput="calc()"><div class="sval" id="v-prix">254 000 €</div></div>
-      <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="300" max="5000" value="1300" step="10" oninput="calc()"><div class="sval" id="v-loyer">1300 €</div></div>
+      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Loyer estimé : 450 € nu. Simulez votre rentabilité ci-dessous.</div>
+      <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="80100" max="97900" value="89000" step="500" oninput="calc()"><div class="sval" id="v-prix">89 000 €</div></div>
+      <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="300" max="5000" value="450" step="10" oninput="calc()"><div class="sval" id="v-loyer">450 €</div></div>
       <div class="srow"><div class="slbl">Apport<small>% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
-      <div class="srow"><div class="slbl">Taux crédit<small>Oct. 2025 : 3,22%</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
+      <div class="srow"><div class="slbl">Taux crédit<small>Marché actuel</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
       <div class="srow"><div class="slbl">Durée<small>Années</small></div><input type="range" id="duree" min="5" max="25" value="20" step="1" oninput="calc()"><div class="sval" id="v-duree">20 ans</div></div>
-      <div class="srow"><div class="slbl">Charges ann.<small>Copro+assur+TF</small></div><input type="range" id="charges" min="500" max="9436" value="4718" step="50" oninput="calc()"><div class="sval" id="v-charges">4718 €</div></div>
-      <div style="font-size:11px;color:var(--muted);margin:-9px 0 11px 162px;font-weight:300;">Eau froide, nettoyage et entretien des parties communes, ascenseur</div>
+      <div class="srow"><div class="slbl">Charges ann.<small>Copro+assur+TF</small></div><input type="range" id="charges" min="500" max="9436" value="671" step="50" oninput="calc()"><div class="sval" id="v-charges">671 €</div></div>
+      <div style="font-size:11px;color:var(--muted);margin:-9px 0 11px 162px;font-weight:300;" id="charges-detail">[[CHARGES_DETAIL]]</div>
       <div class="srow"><div class="slbl">Budget travaux<small>Rénovation DPE</small></div><input type="range" id="travaux" min="0" max="20000" value="0" step="500" oninput="calc()"><div class="sval" id="v-travaux">0 €</div></div>
     </div>
     <div class="rg">
@@ -411,15 +409,14 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="card">
       <div class="lbl">Historique patrimonial</div>
       <h2 class="stitle">Chronologie du bien</h2>
-      <div class="tl" style="margin-top:13px;" id="historique-timeline"><div class="tli"><div class="tly">2003 · CONSTRUCTION</div><div class="tlt"></div></div><div class="tli"><div class="tly">2015 : Appartement entièrement refait à neuf avec une très belle décoration moderne</div><div class="tlt"></div></div><div class="tli"><div class="tly">2026 · MISE EN VENTE</div><div class="tlt">Bien proposé à 254 000 € · DPE D · Libre à la vente · Charges 253 €/mois.</div></div></div>
+      <div class="tl" style="margin-top:13px;" id="historique-timeline"><div class="tli"><div class="tly">1925 · CONSTRUCTION</div><div class="tlt"></div></div><div class="tli"><div class="tly">2025 · MISE EN VENTE</div><div class="tlt">Bien proposé à 89 000 € · DPE G · Libre à la vente · Charges 43 €/mois.</div></div></div>
     </div>
     <div class="card">
       <div class="lbl">Projection patrimoniale — scénarios</div>
-      <!-- CSS PROJECTION CHART -->
       <div style="display:flex;align-items:flex-end;gap:8px;height:150px;margin:14px 0;padding-bottom:4px;border-bottom:1px solid var(--border);">
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
           <div id="proj-bar-lbl-1" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);">—</div>
-          <div id="proj-bar-1" style="width:100%;background:rgba(184,146,58,.3);border-radius:3px 3px 0 0;height:46%;"></div>
+          <div id="proj-bar-1" style="width:100%;background:rgba(46,125,224,.3);border-radius:3px 3px 0 0;height:46%;"></div>
           <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);">Basse</div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
@@ -455,16 +452,14 @@ textarea.field{min-height:95px;resize:vertical;}
   </div>
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
-  <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-avatar" id="vendeur-initiales-2">NV</div>
+  <div class="cons-name" id="vendeur-nom-2">NOM_VENDEUR</div>
+  <div class="cons-role">Vendeur particulier · Net Vendeur+</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
-    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+    <a href="tel:[[TEL_VENDEUR]]" id="vendeur-tel-link-2">📞 <span id="vendeur-tel-display-2">TEL_VENDEUR</span></a>
+    <a href="mailto:[[EMAIL_VENDEUR]]" id="vendeur-email-link-2">✉️ <span id="vendeur-email-display-2">EMAIL_VENDEUR</span></a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -527,14 +522,14 @@ textarea.field{min-height:95px;resize:vertical;}
 </div>
 </section>
 
-<!-- ═══════════ ONGLET 3 : DOCUMENTS ═══════════ -->
+<!-- ═══════════ ONGLET : DOCUMENTS ═══════════ -->
 <section id="documents" class="tab">
 <div class="pg">
 <div>
   <div class="card">
     <div class="lbl">Espace documentaire sécurisé</div>
     <h2 class="stitle">Documents disponibles</h2>
-    <p class="ssub">Renseignez vos coordonnées pour accéder aux documents. Votre demande est transmise au conseiller.</p>
+    <p class="ssub">Renseignez vos coordonnées pour accéder aux documents. Votre demande est transmise au vendeur.</p>
     <div id="doc-gate">
       <div class="f2">
         <div><label class="lbl">Prénom et nom</label><input type="text" class="field" id="doc-nom" placeholder="Jean Dupont"></div>
@@ -543,36 +538,29 @@ textarea.field{min-height:95px;resize:vertical;}
       <button onclick="unlockDocs()" class="btndark">🔓 Accéder aux documents</button>
     </div>
     <div id="doc-content" style="display:none;">
-      <div id="doc-success" class="alert vert" style="margin-top:13px;margin-bottom:14px;"><h4>✅ Accès déverrouillé</h4><p>Votre demande a été transmise. Le conseiller vous contactera dans les 24h avec les documents complets.</p></div>
-      <div class="dg">
-        <div class="dc"><div class="dci">📄</div><div class="dcn">PV Assemblée Générale</div><div class="dcm">Dernière AG copropriété</div><div class="dlck">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">📊</div><div class="dcn">Appels de charges</div><div class="dcm">Relevé annuel · 253 €/mois</div><div class="dlck">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">🏠</div><div class="dcn">Diagnostics techniques</div><div class="dcm">DPE, amiante, plomb...</div><div class="dlck">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">🏛️</div><div class="dcn">Avis taxe foncière</div><div class="dcm">1682 € / an</div><div class="dlck">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">🔨</div><div class="dcn">Factures &amp; devis travaux</div><div class="dcm">Rénovations réalisées</div><div class="dlck">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">📋</div><div class="dcn">Règlement copropriété</div><div class="dcm">Documents de la copro</div><div class="dlck">🔓 Disponible</div></div>
+      <div id="doc-success" class="alert vert" style="margin-top:13px;margin-bottom:14px;"><h4>✅ Accès déverrouillé</h4><p>Votre demande a été transmise. Le vendeur vous contactera dans les 24h avec les documents complets.</p></div>
+      <div class="dg" id="doc-list">
+        <!-- injecté par générateur via id="doc-list" -->
+        <div class="dc"><div class="dci">📄</div><div class="dcn">Diagnostics techniques</div><div class="dcm">DPE, amiante, plomb...</div><div class="dlck">🔓 Disponible</div></div>
+        <div class="dc"><div class="dci">🏛️</div><div class="dcn">Avis taxe foncière</div><div class="dcm">155 € / an</div><div class="dlck">🔓 Disponible</div></div>
       </div>
     </div>
   </div>
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
-  <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-avatar" id="vendeur-initiales-3">NV</div>
+  <div class="cons-name" id="vendeur-nom-3">NOM_VENDEUR</div>
+  <div class="cons-role">Vendeur particulier · Net Vendeur+</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
-    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+    <a href="tel:[[TEL_VENDEUR]]" id="vendeur-tel-link-3">📞 <span id="vendeur-tel-display-3">TEL_VENDEUR</span></a>
+    <a href="mailto:[[EMAIL_VENDEUR]]" id="vendeur-email-link-3">✉️ <span id="vendeur-email-display-3">EMAIL_VENDEUR</span></a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
 
-
-
-<!-- ═══════════ ONGLET 5 : FAIRE UNE OFFRE ═══════════ -->
+<!-- ═══════════ ONGLET : FAIRE UNE OFFRE ═══════════ -->
 <section id="offre" class="tab">
 <div class="pg">
 <div>
@@ -595,11 +583,11 @@ textarea.field{min-height:95px;resize:vertical;}
     </div>
   </div>
   <div class="card">
-    <div class="lbl">Tunnel d'offre sécurisé</div>
+    <div class="lbl">Faire une offre</div>
     <h2 class="stitle">Votre offre d'achat</h2>
-    <p class="ssub">Renseignez votre proposition. Elle sera transmise au conseiller et au vendeur sous 24h.</p>
+    <p class="ssub">Renseignez votre proposition. Elle sera envoyée directement au vendeur par email.</p>
     <div class="f2">
-      <div><label class="lbl">Montant de votre offre (€)</label><input type="number" class="field" id="offer-amount" value="254000" oninput="updateOffer()"></div>
+      <div><label class="lbl">Montant de votre offre (€)</label><input type="number" class="field" id="offer-amount" value="89000" oninput="updateOffer()"></div>
       <div><label class="lbl">Mode de financement</label><select class="field" id="offer-financement"><option>Financement bancaire</option><option>Comptant</option></select></div>
       <div><label class="lbl">Apport personnel (€)</label><input type="number" class="field" id="offer-apport" value="25000"></div>
       <div><label class="lbl">Délai souhaité</label><select class="field" id="offer-delai"><option>3 mois (standard)</option><option>2 mois (rapide)</option><option>4 mois ou plus</option></select></div>
@@ -607,7 +595,7 @@ textarea.field{min-height:95px;resize:vertical;}
       <div><label class="lbl">Email</label><input type="email" class="field" id="offer-email" placeholder="jean@email.com"></div>
     </div>
     <div><label class="lbl">Message au vendeur (facultatif)</label><textarea class="field" id="offer-msg" placeholder="Présentez votre projet... Un message sincère rassure le vendeur."></textarea></div>
-    <button onclick="submitOffer()" class="btndark">✍️ Transmettre mon offre sécurisée</button>
+    <button onclick="submitOffer()" class="btndark">✍️ Envoyer mon offre au vendeur</button>
     <div id="offer-success" style="display:none;margin-top:11px;" class="alert vert"></div>
   </div>
   <div class="card">
@@ -623,25 +611,23 @@ textarea.field{min-height:95px;resize:vertical;}
 </div>
 <div>
   <div class="card-dark" style="margin-bottom:18px;">
-    <div class="lbl" style="color:#6a6358;margin-bottom:6px;">Votre offre</div>
-    <div style="font-family:'Cormorant Garamond',serif;font-size:42px;color:var(--gold);line-height:1;" id="offer-display">254 000 €</div>
-    <div style="font-size:11px;color:#7a7264;margin-top:4px;" id="offer-diff">Prix affiché : 254 000 €</div>
-    <div style="margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:#7a7264;line-height:1.8;font-weight:300;">
+    <div class="lbl" style="color:#4a6a8a;margin-bottom:6px;">Votre offre</div>
+    <div style="font-family:'Inter',sans-serif;font-size:42px;color:var(--gold);line-height:1;" id="offer-display">89 000 €</div>
+    <div style="font-size:11px;color:#6b8aaa;margin-top:4px;" id="offer-diff">Prix affiché : 89 000 €</div>
+    <div style="margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:#6b8aaa;line-height:1.8;font-weight:300;">
       Marge de négociation estimée : <strong style="color:var(--gold);">3 à 7%</strong> selon le DPE et les DVF du secteur.
     </div>
   </div>
   <div class="cons-card">
-  <div class="cons-avatar">OL</div>
-  <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · Expertimo</div>
-  <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
-    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+    <div class="cons-avatar" id="vendeur-initiales-4">NV</div>
+    <div class="cons-name" id="vendeur-nom-4">NOM_VENDEUR</div>
+    <div class="cons-role">Vendeur particulier · Net Vendeur+</div>
+    <div class="cons-contact">
+      <a href="tel:[[TEL_VENDEUR]]" id="vendeur-tel-link-4">📞 <span id="vendeur-tel-display-4">TEL_VENDEUR</span></a>
+      <a href="mailto:[[EMAIL_VENDEUR]]" id="vendeur-email-link-4">✉️ <span id="vendeur-email-display-4">EMAIL_VENDEUR</span></a>
+    </div>
+    <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
-  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
-</div>
 </div>
 </div>
 </section>
@@ -654,6 +640,36 @@ textarea.field{min-height:95px;resize:vertical;}
 </div>
 
 <script>
+// ═══ VARIABLES VENDEUR — injectées par le générateur ═══
+var _nv_vendeur_nom   = "Graziella Horrelbecke";
+var _nv_vendeur_tel   = "";
+var _nv_vendeur_email = "olivier.loison84@gmail.com";
+var _nv_offre_email   = "olivier.loison84@gmail.com";
+
+// ═══ INJECTION VENDEUR ═══
+(function() {
+  var nom = _nv_vendeur_nom;
+  var tel = _nv_vendeur_tel;
+  var email = _nv_vendeur_email;
+  var initiales = nom.split(' ').map(function(w){return w[0]||'';}).join('').toUpperCase().slice(0,2) || 'NV';
+
+  [1,2,3,4].forEach(function(i) {
+    var sfx = i === 1 ? '' : '-' + i;
+    var elNom = document.getElementById('vendeur-nom' + sfx);
+    var elInit = document.getElementById('vendeur-initiales' + sfx);
+    var elTelLink = document.getElementById('vendeur-tel-link' + sfx);
+    var elTelDisp = document.getElementById('vendeur-tel-display' + sfx);
+    var elEmailLink = document.getElementById('vendeur-email-link' + sfx);
+    var elEmailDisp = document.getElementById('vendeur-email-display' + sfx);
+    if (elNom) elNom.textContent = nom;
+    if (elInit) elInit.textContent = initiales;
+    if (elTelLink) elTelLink.href = 'tel:' + tel.replace(/\s/g,'');
+    if (elTelDisp) elTelDisp.textContent = tel;
+    if (elEmailLink) elEmailLink.href = 'mailto:' + email;
+    if (elEmailDisp) elEmailDisp.textContent = email;
+  });
+})();
+
 // ═══ NAV ═══
 function showTab(id, btn) {
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -699,7 +715,6 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') closeLightbox();
 });
 
-
 // ═══ UTILS ═══
 function fmt(n) { return Math.round(n).toLocaleString('fr-FR') + ' €'; }
 function fmtPct(n) { return n.toFixed(2).replace('.', ',') + ' %'; }
@@ -710,17 +725,16 @@ function mensualite(cap, ta, da) {
   return cap * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
 }
 
-// ═══ CALCULATEUR RENTABILITÉ ═══
+// ═══ PROJECTION PATRIMONIALE ═══
 function calcProjection() {
   try {
     var prixEl = document.getElementById('prix');
-    var prixBase = parseFloat("254 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+    var prixBase = parseFloat(document.getElementById('prix').value) || 0;
     var prix = prixEl ? parseFloat(prixEl.value) : prixBase;
     if (!prix || isNaN(prix)) return;
     var taux = [0.01, 0.02, 0.03];
     var ans  = [3, 5, 10];
     var pvMax = 0;
-    // Calcul des valeurs et plus-values
     taux.forEach(function(t, ti) {
       ans.forEach(function(a) {
         var valeur = prix * Math.pow(1 + t, a);
@@ -730,20 +744,19 @@ function calcProjection() {
         if (el) el.textContent = Math.round(valeur).toLocaleString('fr-FR') + ' €';
       });
     });
-    // Mise à jour des barres du graphique (basée sur plus-value à 10 ans)
     var pvBarre = [
       prix * Math.pow(1.01, 10) - prix,
       prix * Math.pow(1.02, 10) - prix,
       prix * Math.pow(1.03, 10) - prix
     ];
     var pvRef = pvBarre[2] || 1;
+    function fmtK(v) { return '+' + (v >= 1000 ? (Math.round(v/100)/10).toFixed(1) + 'k€' : Math.round(v) + '€'); }
     var lblEl1 = document.getElementById('proj-bar-lbl-1');
     var lblEl2 = document.getElementById('proj-bar-lbl-2');
     var lblEl3 = document.getElementById('proj-bar-lbl-3');
     var barEl1 = document.getElementById('proj-bar-1');
     var barEl2 = document.getElementById('proj-bar-2');
     var barEl3 = document.getElementById('proj-bar-3');
-    function fmtK(v) { return '+' + (v >= 1000 ? (Math.round(v/100)/10).toFixed(1) + 'k€' : Math.round(v) + '€'); }
     if (lblEl1) lblEl1.textContent = fmtK(pvBarre[0]);
     if (lblEl2) lblEl2.textContent = fmtK(pvBarre[1]);
     if (lblEl3) lblEl3.textContent = fmtK(pvBarre[2]);
@@ -794,15 +807,13 @@ function _calc() {
   var hCf = document.getElementById('h-cf');
   if (hRnet) hRnet.textContent = fmtPct(rnet);
   if (hCf) hCf.textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + '€';
-
 }
 
-// ═══ FINANCEMENT (stub — éléments remplacés par Mon Budget) ═══
-function calcBank() { /* éléments de financement remplacés par l'onglet Mon Budget */ }
+function calcBank() {}
 
-// ═══ OFFRE ═══
+// ═══ OFFRE — mailto: vers le vendeur ═══
 function updateOffer() {
-  var prixBase = parseFloat("254 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  var prixBase = parseFloat(document.getElementById('offer-amount').getAttribute('value')) || 0;
   var v = parseFloat(document.getElementById('offer-amount').value) || prixBase;
   document.getElementById('offer-display').textContent = fmt(v);
   var diff = prixBase - v;
@@ -837,43 +848,27 @@ function submitOffer() {
     return;
   }
 
-  var formspreeId = "xpqbnkjj";
-  var _ob = '[' + '[';
-  if (!formspreeId || formspreeId.indexOf(_ob) !== -1) {
-    alert('Formulaire non configuré. Contactez directement Olivier Loison au 06 85 68 46 13.');
-    return;
-  }
+  var dest = _nv_offre_email;
+  var sujet = encodeURIComponent("Offre d'achat — " + parseInt(montant).toLocaleString('fr-FR') + ' €');
+  var corps = encodeURIComponent(
+    "Offre d'achat\n\n"
+    + "Montant : " + parseInt(montant).toLocaleString('fr-FR') + " €\n"
+    + "Financement : " + financement + "\n"
+    + "Apport : " + parseInt(apport).toLocaleString('fr-FR') + " €\n"
+    + "Délai souhaité : " + delai + "\n\n"
+    + "Acheteur : " + nom + "\n"
+    + "Email acheteur : " + email + "\n\n"
+    + (msg ? "Message :\n" + msg : "")
+  );
 
-  fetch('https://formspree.io/f/' + formspreeId, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-    body: JSON.stringify({
-      _subject: "Offre d'achat — 5, Rue de l'Arpajonnais 91160 Longjumeau — " + montant + ' €',
-      montant: montant + ' €',
-      financement: financement,
-      apport: apport + ' €',
-      delai: delai,
-      nom: nom,
-      email: email,
-      message: msg,
-      bien: "5, Rue de l'Arpajonnais 91160 Longjumeau",
-      reference: "ref-mandat",
-      prix_affiche: "260 000 €"
-    })
-  }).then(function(r) {
-    var el = document.getElementById('offer-success');
-    if (r.ok) {
-      el.style.display = 'block';
-      el.innerHTML = '<p>✅ Votre offre de <strong>' +
-        parseInt(montant).toLocaleString('fr-FR') +
-        ' €</strong> a été transmise. Olivier LOISON vous contactera dans les 24h.</p>';
-      el.scrollIntoView({behavior: 'smooth', block: 'center'});
-    } else {
-      alert("Erreur lors de l’envoi. Contactez directement Olivier LOISON au 06 85 68 46 13.");
-    }
-  }).catch(function() {
-    alert("Erreur réseau. Contactez directement Olivier LOISON au 06 85 68 46 13.");
-  });
+  window.location.href = 'mailto:' + dest + '?subject=' + sujet + '&body=' + corps;
+
+  var el = document.getElementById('offer-success');
+  el.style.display = 'block';
+  el.innerHTML = '<p>✅ Votre client email s\'est ouvert avec l\'offre de <strong>'
+    + parseInt(montant).toLocaleString('fr-FR')
+    + ' €</strong>. Envoyez l\'email pour transmettre votre offre au vendeur.</p>';
+  el.scrollIntoView({behavior: 'smooth', block: 'center'});
 }
 
 function unlockDocs() {
@@ -885,22 +880,14 @@ function unlockDocs() {
   }
   document.getElementById('doc-gate').style.display = 'none';
   document.getElementById('doc-content').style.display = 'block';
-  var formspreeId = "xpqbnkjj";
-  var _ob = '[' + '[';
-  if (formspreeId && formspreeId.indexOf(_ob) === -1) {
-    fetch('https://formspree.io/f/' + formspreeId, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-      body: JSON.stringify({
-        _subject: "Demande de documents — 5, Rue de l'Arpajonnais 91160 Longjumeau",
-        nom: nom,
-        email: email,
-        bien: "5, Rue de l'Arpajonnais 91160 Longjumeau",
-        reference: "ref-mandat",
-        demande: "Acces aux documents du bien"
-      })
-    }).catch(function(){});
-  }
+
+  // Notifier le vendeur par mailto
+  var dest = _nv_vendeur_email;
+  var sujet = encodeURIComponent('Demande de documents — ' + nom);
+  var corps = encodeURIComponent(nom + ' (' + email + ') a demandé accès aux documents de votre bien.');
+  var link = document.createElement('a');
+  link.href = 'mailto:' + dest + '?subject=' + sujet + '&body=' + corps;
+  // Lancement silencieux — le vendeur sera notifié si le navigateur accepte
 }
 
 // ═══ INIT ═══
@@ -912,7 +899,7 @@ function calcBudget() {
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
-  var prixBien = parseFloat("254 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  var prixBien = parseFloat(document.getElementById('prix').value) || 0;
   var fraisNotaire = prixBien * 0.075;
   var coutTotal = prixBien + fraisNotaire;
   var capital = Math.max(0, coutTotal - apport);
@@ -920,32 +907,31 @@ function calcBudget() {
   var tauxMensuel = tauxAnnuel / 100 / 12;
   var n = duree * 12;
   var mens = capital > 0 ? capital * tauxMensuel / (1 - Math.pow(1 + tauxMensuel, -n)) : 0;
-  var charges = parseFloat("253") || 0;
+  var charges = parseFloat(document.getElementById('charges').value) / 12 || 0;
   var effortTotal = mens + charges;
   var tauxEndettement = revenu > 0 ? (mens / revenu * 100) : 999;
   var apportMinimum = coutTotal * 0.10;
-  var apportRestant = apport - apportMinimum;
   var mensMax = revenu * 0.33;
   var capitalMax = mensMax > 0 ? mensMax * (1 - Math.pow(1 + tauxMensuel, -n)) / tauxMensuel : 0;
   var budgetMax = capitalMax + apport - fraisNotaire;
   var res = document.getElementById('bgt-result');
   res.style.display = 'block';
-  var html = '';
   var infoLigne = '<div class="rc"><div class="rcl">Mensualité estimée</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
     + '<div class="rc"><div class="rcl">Taux d\'endettement</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
     + '<div class="rc"><div class="rcl">Budget max accessible</div><div class="rcv mono">' + fmt(Math.max(0, budgetMax)) + '</div></div>'
     + '<div class="rc"><div class="rcl">Effort total <small style="font-size:9px;color:var(--muted);">(crédit + charges)</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">À titre informatif</div></div>';
+  var html = '';
   if (revenu === 0) {
     html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;">Veuillez renseigner votre revenu mensuel.</div>';
   } else if (tauxEndettement <= 33 && apport >= apportMinimum) {
     html = '<div class="alert" style="background:#f0faf0;border-left:3px solid #4caf50;padding:16px;border-radius:11px;"><h4 style="color:#2e7d32;font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">✅ Ce bien est accessible pour vous</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div></div>';
   } else if (tauxEndettement <= 38 || budgetMax >= prixBien) {
     html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;padding:16px;border-radius:11px;"><h4 style="color:#e65100;font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">⚠️ Accessible sous conditions</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-      + '<p style="font-size:12px;color:#e65100;margin-top:10px;">Taux d\'endettement ' + tauxEndettement.toFixed(1) + '% — certaines banques acceptent jusqu\'à 38% selon votre profil. Votre budget max estimé : ' + fmt(Math.max(0, budgetMax)) + '.</p></div>';
+      + '<p style="font-size:12px;color:#e65100;margin-top:10px;">Taux d\'endettement ' + tauxEndettement.toFixed(1) + '% — certaines banques acceptent jusqu\'à 38% selon votre profil.</p></div>';
   } else {
     html = '<div class="alert" style="background:#fff0f0;border-left:3px solid #f44336;padding:16px;border-radius:11px;"><h4 style="color:#c62828;font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">❌ Hors budget pour ce bien</h4>'
       + '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-      + '<p style="font-size:12px;color:#c62828;margin-top:10px;">Avec un revenu de ' + fmt(revenu) + ' €/mois et un apport de ' + fmt(apport) + ' €, votre budget max est estimé à <strong>' + fmt(Math.max(0, budgetMax)) + ' €</strong> vs ' + fmt(prixBien) + ' € pour ce bien.</p></div>';
+      + '<p style="font-size:12px;color:#c62828;margin-top:10px;">Budget max estimé à <strong>' + fmt(Math.max(0, budgetMax)) + ' €</strong> vs ' + fmt(prixBien) + ' € pour ce bien.</p></div>';
   }
   res.innerHTML = html;
 }
@@ -955,17 +941,17 @@ var _mapInit = false;
 function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
-  var adresse = "5, Rue de l'Arpajonnais 91160 Longjumeau";
-  var latFallback = parseFloat("") || 0;
-  var lngFallback = parseFloat("") || 0;
+  var adresse = "[[ADRESSE]]";
+  var latFallback = parseFloat("[[LAT]]") || 0;
+  var lngFallback = parseFloat("[[LNG]]") || 0;
 
   function buildMap(lat, lng) {
     var map = L.map('map-quartier', {cursor:'default'}).setView([lat, lng], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
-    var iconMain = L.divIcon({className:'', html:'<div style="background:#141414;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #b8923a;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
-    L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>5, Rue de l'Arpajonnais 91160 Longjumeau").openPopup();
+    var iconMain = L.divIcon({className:'', html:'<div style="background:#0c2340;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #2e7de0;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
+    L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup('<strong>Le bien</strong><br>' + adresse).openPopup();
     var overpassUrl = 'https://overpass-api.de/api/interpreter';
     var query = '[out:json][timeout:10];('
       + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
@@ -986,7 +972,6 @@ function initMapQuartier() {
       ecole:     {color:'#f57f17', emoji:'🏫', label:'École'}
     };
     var counts = {transport:0, vert:0, commerce:0, ecole:0};
-    // Stockage des marqueurs par catégorie pour le filtrage
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
@@ -1040,21 +1025,16 @@ function filterMap(cat, btn) {
   var m = window._mapMarkers;
   var map = window._mapInstance;
   if (!m || !map) return;
-  // Réinitialiser le style de tous les boutons
   document.querySelectorAll('.map-filter-btn').forEach(function(b) {
     b.style.background = 'white';
     b.style.color = 'var(--ink)';
     b.style.borderColor = 'var(--border)';
   });
-  if (btn) { btn.style.background = '#b8923a'; btn.style.color = 'white'; btn.style.borderColor = '#b8923a'; }
+  if (btn) { btn.style.background = '#2e7de0'; btn.style.color = 'white'; btn.style.borderColor = '#2e7de0'; }
   var cats = ['transport','vert','commerce','ecole'];
   cats.forEach(function(c) {
     (m[c]||[]).forEach(function(marker) {
-      if (cat === 'all' || cat === c) {
-        marker.addTo(map);
-      } else {
-        marker.remove();
-      }
+      if (cat === 'all' || cat === c) { marker.addTo(map); } else { marker.remove(); }
     });
   });
 }
@@ -1063,22 +1043,22 @@ function filterMap(cat, btn) {
 var _aiOpen = false;
 var _aiMessages = [];
 var _aiInit = false;
-var _sp_adresse   = "5, Rue de l'Arpajonnais 91160 Longjumeau";
-var _sp_prix      = "254 000";
-var _sp_surface   = "76,87";
-var _sp_etage     = "2";
-var _sp_dpe       = "D";
-var _sp_charges   = "253";
+var _sp_adresse   = "110 Avenue Philippe-Auguste Paris 75011 - Roquette";
+var _sp_prix      = "89 000";
+var _sp_surface   = "8,59";
+var _sp_etage     = "8";
+var _sp_dpe       = "G";
+var _sp_charges   = "43";
 var _sp_detail    = "";
-var _sp_tf        = "1682";
-var _sp_pf1       = "Appartement lumineux avec triple exposition Est/Ouest/Sud dans une résidence très calme";
-var _sp_pf2       = "Appartement entièrement refait à neuf avec une très belle décoration moderne";
-var _sp_pf3       = "Superbe terrasse de près de 50m² avec vue à 180 degré sans vis à vis direct";
-var _sp_vigi1     = "Taxe foncière de 1682€ en 2025";
-var _sp_vigi2     = "Charges de copropriété de 253€ /mois";
-var _sp_loyer     = "0";
-var _sp_agent     = "Olivier LOISON";
-var _sp_tel       = "06 85 68 46 13";
+var _sp_tf        = "155";
+var _sp_pf1       = "Dernier étage d'un immeuble haussmannien";
+var _sp_pf2       = "Appartement meublé et en bon état";
+var _sp_pf3       = "Taxe foncière (155€/an) et charges de copropriété(43€/mois) très faibles : idéal investisseur";
+var _sp_vigi1     = "8ème et dernier étage sans ascenseur";
+var _sp_vigi2     = "Pas de balcon, cave et parking";
+var _sp_loyer     = "450";
+var _sp_agent     = _nv_vendeur_nom;
+var _sp_tel       = _nv_vendeur_tel;
 
 function toggleAI() {
   _aiOpen = !_aiOpen;
@@ -1097,8 +1077,8 @@ function toggleAI() {
 function addAIMsg(text, role) {
   var msgs = document.getElementById('ai-messages');
   var div = document.createElement('div');
-  div.style.cssText = 'max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;font-family:\'DM Sans\',sans-serif;'
-    + (role==='assistant' ? 'background:#f8f6f2;color:var(--ink);align-self:flex-start;' : 'background:var(--dark);color:var(--gold);align-self:flex-end;');
+  div.style.cssText = 'max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;font-family:\'Inter\',sans-serif;'
+    + (role==='assistant' ? 'background:#f0f4f8;color:var(--ink);align-self:flex-start;' : 'background:var(--dark);color:var(--gold);align-self:flex-end;');
   div.textContent = text;
   msgs.appendChild(div);
   msgs.scrollTop = msgs.scrollHeight;
@@ -1125,8 +1105,8 @@ function sendAI() {
     + " | Points forts: " + _sp_pf1 + ", " + _sp_pf2 + ", " + _sp_pf3
     + " | Points vigilance: " + _sp_vigi1 + ", " + _sp_vigi2
     + " | Loyer estime: " + _sp_loyer + " euros/mois"
-    + " | Agent: " + _sp_agent + ", tel: " + _sp_tel
-    + ". Si question hors sujet reponds: Je suis specialise sur ce bien uniquement. Contactez " + _sp_agent + " au " + _sp_tel + "."
+    + " | Vendeur: " + _sp_agent + ", tel: " + _sp_tel
+    + ". Si question hors sujet reponds: Je suis specialise sur ce bien uniquement. Contactez le vendeur au " + _sp_tel + "."
     + " Ne donne jamais de conseil juridique ou financier ferme.";
   var msgs = _aiMessages.filter(function(m,i){return i>1;});
   fetch('https://expertimo-phi.vercel.app/api/chat', {
@@ -1153,54 +1133,51 @@ document.querySelectorAll('.diag-result').forEach(function(el) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    ['prix','loyer','apport','taux','duree','charges','travaux'].forEach(function(id){
-        var el = document.getElementById(id);
-        if (el) el.addEventListener('input', calc);
-    });
-    try{ calc(); }catch(e){ console.error('[init calc]', e); }
-    try{ calcBank(); }catch(e){ console.error('[init calcBank]', e); }
-    setTimeout(function(){ try{ calcProjection(); }catch(e){ console.error('[init calcProjection]', e); } }, 500);
-    // Masquer lignes DVF vides
-    document.querySelectorAll('.dvf-row').forEach(function(row) {
-        var d = row.dataset.date || '';
-        if (d === '—' || d === '—' || d.trim() === '') row.style.display = 'none';
-    });
+  ['prix','loyer','apport','taux','duree','charges','travaux'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el) el.addEventListener('input', calc);
+  });
+  try{ calc(); }catch(e){ console.error('[init calc]', e); }
+  try{ calcBank(); }catch(e){ console.error('[init calcBank]', e); }
+  setTimeout(function(){ try{ calcProjection(); }catch(e){ console.error('[init calcProjection]', e); } }, 500);
+  document.querySelectorAll('.dvf-row').forEach(function(row) {
+    var d = row.dataset.date || '';
+    if (d === '—' || d.trim() === '') row.style.display = 'none';
+  });
 });
 </script>
 
-<!-- ═══ ASSISTANT IA ═══ -->
-<div id="ai-btn" onclick="toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--dark);color:var(--gold);border:none;border-radius:99px;padding:14px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;gap:8px;">
+<!-- ═══ ASSISTANT IA — BOUTON ═══ -->
+<div id="ai-btn" onclick="toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--dark);color:var(--gold);border:none;border-radius:99px;padding:14px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 20px rgba(12,35,64,.4);display:flex;align-items:center;gap:8px;">
   <span style="font-size:16px;">💬</span> Poser une question
 </div>
 
-<div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;z-index:1001;width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
+<div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;z-index:1001;width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(12,35,64,.2);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
   <div style="background:var(--dark);color:var(--gold);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
     <div>
-      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;">Assistant</div>
-      <div style="font-size:13px;font-weight:500;margin-top:2px;">5, Rue de l'Arpajonnais 91160 Longjumeau</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;">Assistant Net Vendeur+</div>
+      <div style="font-size:13px;font-weight:500;margin-top:2px;" id="ai-modal-title">110 Avenue Philippe-Auguste Paris 75011 - Roquette</div>
     </div>
     <button onclick="toggleAI()" style="background:none;border:none;color:var(--gold);font-size:20px;cursor:pointer;line-height:1;">×</button>
   </div>
   <div id="ai-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:380px;"></div>
   <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">
-    <input id="ai-input" type="text" placeholder="Votre question..." style="flex:1;border:1px solid var(--border);border-radius:99px;padding:8px 14px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;" onkeydown="if(event.key==='Enter')sendAI()">
+    <input id="ai-input" type="text" placeholder="Votre question..." style="flex:1;border:1px solid var(--border);border-radius:99px;padding:8px 14px;font-size:13px;font-family:'Inter',sans-serif;outline:none;" onkeydown="if(event.key==='Enter')sendAI()">
     <button onclick="sendAI()" style="background:var(--dark);color:var(--gold);border:none;border-radius:99px;padding:8px 14px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;">→</button>
   </div>
 </div>
 
-
-<!-- ═══ FOOTER NVP+ ═══ -->
-<footer style="text-align:center;padding:24px 20px;background:#141414;border-top:1px solid rgba(184,146,58,.15);">
-  <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#b8923a;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
-  <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;">L'immobilier avec l'expertise d'un professionnel</div>
-  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'DM Sans',sans-serif;">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</div>
+<!-- ═══ FOOTER NET VENDEUR+ ═══ -->
+<footer style="text-align:center;padding:24px 20px;background:#0c2340;border-top:1px solid rgba(46,125,224,.15);">
+  <div style="font-family:'Inter',sans-serif;font-size:18px;color:#2e7de0;font-weight:400;letter-spacing:.06em;margin-bottom:4px;">Net Vendeur+</div>
+  <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#4a6a8a;">La vente immobilière en direct, sans compromis</div>
+  <div style="margin-top:8px;font-size:10px;color:#2a4a6a;font-family:'Inter',sans-serif;">Fiche réalisée avec Net Vendeur+ · Vente directe particulier</div>
 </footer>
-
 
 <script>
 // ═══ DPE DYNAMIQUE ═══
 (function(){
-  var dpe = "D";
+  var dpe = "G";
   var colors = {A:"#319834",B:"#33CC33",C:"#CBEC31",D:"#F7EC1B",E:"#F0A60E",F:"#E3711F",G:"#CF1B1B"};
   var letters = ["A","B","C","D","E","F","G"];
   letters.forEach(function(l){
@@ -1213,7 +1190,6 @@ document.addEventListener('DOMContentLoaded', function(){
       if(ltr){ ltr.style.color = colors[l]; ltr.style.fontWeight = "700"; }
     }
   });
-  // Alerte DPE
   var alertTitle = document.getElementById("dpe-alert-title");
   var alertTxt = document.getElementById("dpe-alert-txt");
   var alertBox = document.getElementById("dpe-alert");
@@ -1224,19 +1200,17 @@ document.addEventListener('DOMContentLoaded', function(){
     D: {t:"✅ DPE D — Correct", txt:"Pas de contrainte réglementaire de location.", cls:"vert"},
     E: {t:"⚠️ DPE E — Attention", txt:"Location toujours autorisée. Nouveau bail possible jusqu'en 2034. Rénovation conseillée.", cls:"amber"},
     F: {t:"⚠️ DPE F — Passoire thermique", txt:"Nouveau bail interdit depuis jan. 2025. Bail en cours valide, loyer gelé. Rénovation nécessaire avant relocation.", cls:"amber"},
-    G: {t:"🚫 DPE G — Interdit à la location", txt:"Nouveau bail interdit. Loyer gelé. Rénovation obligatoire avant toute relocation (5–12k€, MaPrimeRénov éligible).", cls:"rouge"},
+    G: {t:"🚫 DPE G — Interdit à la location", txt:"Nouveau bail interdit. Loyer gelé. Rénovation obligatoire avant toute relocation.", cls:"rouge"},
   };
   var m = msgs[dpe] || msgs["D"];
   if(alertTitle) alertTitle.textContent = m.t;
   if(alertTxt) alertTxt.textContent = m.txt;
   if(alertBox){ alertBox.className = "alert " + m.cls; alertBox.style.marginBottom = "7px"; }
-
-  // Colorer le DPE dans le header
   var hDpe = document.getElementById('h-dpe');
   if(hDpe){ hDpe.style.color = colors[dpe] || 'var(--gold)'; }
-
 })();
 </script>
+
 
 
 </body></html>
