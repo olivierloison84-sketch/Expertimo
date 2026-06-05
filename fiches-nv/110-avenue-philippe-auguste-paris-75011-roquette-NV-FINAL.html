@@ -1252,4 +1252,47 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 
+<!-- Bouton Partager cette fiche -->
+<button onclick="openSharePanel()" style="position:fixed;bottom:20px;right:20px;z-index:999;display:flex;align-items:center;gap:8px;padding:10px 18px;font-size:14px;font-weight:500;border:1px solid #ccc;border-radius:8px;background:#fff;cursor:pointer;">
+  &#128279; Partager cette fiche
+</button>
+
+<div id="share-overlay" style="display:none;position:fixed;bottom:80px;right:20px;z-index:1000;background:#fff;border:1px solid #ddd;border-radius:10px;padding:1.25rem;width:300px;box-shadow:0 4px 20px rgba(0,0,0,0.12);">
+  <p style="font-weight:600;margin:0 0 10px;">Nom de l'acheteur</p>
+  <input id="share-name" type="text" placeholder="ex : Jean Martin" style="width:100%;box-sizing:border-box;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;margin-bottom:10px;" oninput="updateShareUrl()" />
+  <div id="share-url" style="display:none;font-size:11px;color:#666;background:#f5f5f5;border-radius:6px;padding:6px 8px;word-break:break-all;margin-bottom:10px;font-family:monospace;"></div>
+  <button id="share-copy-btn" onclick="copyShareUrl()" style="display:none;width:100%;padding:9px;font-size:13px;font-weight:500;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;">Copier le lien</button>
+  <p id="share-copied" style="display:none;font-size:13px;color:green;text-align:center;margin:6px 0 0;">Lien copié ✓</p>
+</div>
+
+<script>
+function openSharePanel() {
+  var p = document.getElementById('share-overlay');
+  p.style.display = p.style.display === 'none' ? 'block' : 'none';
+}
+function slugify(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+function updateShareUrl() {
+  var name = document.getElementById('share-name').value.trim();
+  var urlEl = document.getElementById('share-url');
+  var btn = document.getElementById('share-copy-btn');
+  document.getElementById('share-copied').style.display = 'none';
+  if (name) {
+    var url = window.location.href.split('?')[0] + '?client=' + slugify(name);
+    urlEl.textContent = url; urlEl.style.display = 'block'; btn.style.display = 'block';
+  } else { urlEl.style.display = 'none'; btn.style.display = 'none'; }
+}
+function copyShareUrl() {
+  var name = document.getElementById('share-name').value.trim();
+  if (!name) return;
+  var url = window.location.href.split('?')[0] + '?client=' + slugify(name);
+  navigator.clipboard.writeText(url).then(function() {
+    var m = document.getElementById('share-copied');
+    m.style.display = 'block';
+    setTimeout(function(){ m.style.display = 'none'; }, 2500);
+  });
+}
+</script>
+
 </body></html>
