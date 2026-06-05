@@ -1253,11 +1253,11 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
 <!-- Bouton Partager cette fiche -->
-<button onclick="openSharePanel()" style="position:fixed;bottom:80px;right:20px;z-index:999;display:flex;align-items:center;gap:8px;padding:10px 18px;font-size:14px;font-weight:500;border:1px solid #ccc;border-radius:8px;background:#fff;cursor:pointer;">
+<button onclick="openSharePanel()" style="position:fixed;top:20px;right:20px;z-index:999;display:flex;align-items:center;gap:8px;padding:10px 18px;font-size:14px;font-weight:500;border:1px solid #ccc;border-radius:8px;background:#fff;cursor:pointer;">
   &#128279; Partager cette fiche
 </button>
 
-<div id="share-overlay" style="display:none;position:fixed;bottom:80px;right:20px;z-index:1000;background:#fff;border:1px solid #ddd;border-radius:10px;padding:1.25rem;width:300px;box-shadow:0 4px 20px rgba(0,0,0,0.12);">
+<div id="share-overlay" style="display:none;position:fixed;top:70px;right:20px;z-index:1000;background:#fff;border:1px solid #ddd;border-radius:10px;padding:1.25rem;width:300px;box-shadow:0 4px 20px rgba(0,0,0,0.12);">
   <p style="font-weight:600;margin:0 0 10px;">Nom de l'acheteur</p>
   <input id="share-name" type="text" placeholder="ex : Jean Martin" style="width:100%;box-sizing:border-box;padding:8px;border:1px solid #ccc;border-radius:6px;font-size:14px;margin-bottom:10px;" oninput="updateShareUrl()" />
   <div id="share-url" style="display:none;font-size:11px;color:#666;background:#f5f5f5;border-radius:6px;padding:6px 8px;word-break:break-all;margin-bottom:10px;font-family:monospace;"></div>
