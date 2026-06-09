@@ -394,9 +394,9 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="card">
       <div class="lbl">Simulateur investisseur temps réel</div>
       <h2 class="stitle">Rentabilité interactive</h2>
-      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 850 € nu. Simulez votre rentabilité ci-dessous.</div>
+      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 300 € nu / 1 400 € meublé. Simulez votre rentabilité ci-dessous.</div>
       <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="368100" max="449900" value="409000" step="100" oninput="calc()"><div class="sval" id="v-prix">409 000 €</div></div>
-      <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="925" max="4625" value="1850" step="10" oninput="calc()"><div class="sval" id="v-loyer">1850 €</div></div>
+      <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="650" max="3250" value="1300" step="10" oninput="calc()"><div class="sval" id="v-loyer">1300 €</div></div>
       <div class="srow"><div class="slbl">Apport<small>% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
       <div class="srow"><div class="slbl">Taux crédit<small>Oct. 2025 : 3,22%</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
       <div class="srow"><div class="slbl">Durée<small>Années</small></div><input type="range" id="duree" min="5" max="25" value="20" step="1" oninput="calc()"><div class="sval" id="v-duree">20 ans</div></div>
@@ -1161,7 +1161,7 @@ var _sp_pf2       = "S/sol total de 90m²";
 var _sp_pf3       = " belles chambres, 2 sdb + 2 wc";
 var _sp_vigi1     = "Travaux de rafraichissement à prévoir";
 var _sp_vigi2     = "Taxe foncière élevée : 2 431€ en 2025";
-var _sp_loyer     = "1850";
+var _sp_loyer     = "0";
 var _sp_agent     = "Olivier LOISON";
 var _sp_tel       = "06 85 68 46 13";
 
@@ -1340,21 +1340,60 @@ function ouvrirPartage() {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
   var url = window.location.href.split('?')[0] + '?client=' + slug;
-  // Copier dans le presse-papier
-  navigator.clipboard.writeText(url)
-    .then(function() {
-      afficherToastPartage('📋 Lien copié pour ' + nom + ' !');
-    })
-    .catch(function() {
-      afficherToastPartage('🔗 ' + url);
-    });
-  // Event Google Analytics
+
+  // Afficher modal avec URL + bouton copier
+  var modal = document.getElementById('modal-partage');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'modal-partage';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+      + 'background:rgba(0,0,0,.5);z-index:99999;display:flex;'
+      + 'align-items:center;justify-content:center;';
+    modal.innerHTML =
+      '<div style="background:#fff;border-radius:12px;padding:28px;'
+      + 'max-width:520px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.3);">'
+      + '<div style="font-weight:700;font-size:16px;margin-bottom:12px;">'
+      + '🔗 Lien personnalisé</div>'
+      + '<div style="font-size:12px;color:#666;margin-bottom:8px;">'
+      + 'Envoyez ce lien à votre client — la visite sera tracée dans Google Analytics.</div>'
+      + '<div id="partage-url-box" style="background:#f5f5f5;border-radius:8px;'
+      + 'padding:10px 14px;font-size:12px;word-break:break-all;'
+      + 'color:#1a1714;margin-bottom:14px;border:1px solid #ddd;"></div>'
+      + '<div style="display:flex;gap:10px;">'
+      + '<button onclick="copierLienPartage()" '
+      + 'style="flex:1;background:var(--gold);color:#1a1714;border:none;'
+      + 'border-radius:8px;padding:10px;font-weight:700;cursor:pointer;">'
+      + '📋 Copier le lien</button>'
+      + '<button onclick="document.getElementById(\'modal-partage\').style.display=\'none\'" '
+      + 'style="background:#eee;border:none;border-radius:8px;'
+      + 'padding:10px 16px;cursor:pointer;">Fermer</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+  }
+
+  document.getElementById('partage-url-box').textContent = url;
+  modal.style.display = 'flex';
+  window._partageUrl = url;
+
   if (typeof gtag === 'function') {
     gtag('event', 'partage_fiche', {
       'event_category': 'fiche',
       'event_label': slug
     });
   }
+}
+
+function copierLienPartage() {
+  var url = window._partageUrl;
+  if (!url) return;
+  navigator.clipboard.writeText(url)
+    .then(function() {
+      afficherToastPartage('📋 Lien copié !');
+      document.getElementById('modal-partage').style.display = 'none';
+    })
+    .catch(function() {
+      afficherToastPartage('Copiez manuellement : ' + url);
+    });
 }
 
 function afficherToastPartage(msg) {
