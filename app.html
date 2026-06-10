@@ -1,0 +1,2813 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Expertimo · Générateur Fiche Acheteur</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+/* ═══════════════════════════════════════
+   VARIABLES — overridable per agent
+═══════════════════════════════════════ */
+:root {
+  --primary: #1a3a5c;
+  --accent:  #c9a84c;
+  --light:   #f4f6f9;
+  --border:  #cdd5e0;
+  --text:    #1e2a38;
+  --muted:   #6b7a8d;
+  --danger:  #c0392b;
+  --success: #27ae60;
+  --radius:  6px;
+  --shadow:  0 2px 8px rgba(0,0,0,.12);
+}
+
+/* ═══════════════════════════════════════
+   RESET & BASE
+═══════════════════════════════════════ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; background: #e8ecf1; color: var(--text); }
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+header {
+  background: var(--primary);
+  color: #fff;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
+.header-brand { display: flex; align-items: center; gap: 14px; }
+.logo-circle {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 16px; color: #fff;
+  flex-shrink: 0; overflow: hidden;
+}
+.logo-circle img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 50%; }
+.header-brand h1 { font-size: 17px; font-weight: 700; }
+.header-brand p  { font-size: 11px; opacity: .75; margin-top: 1px; }
+.header-right { font-size: 11px; opacity: .7; text-align: right; }
+
+/* ═══════════════════════════════════════
+   STEPPER
+═══════════════════════════════════════ */
+.stepper {
+  background: #fff;
+  border-bottom: 2px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+.step-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 24px;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all .2s;
+  white-space: nowrap;
+  user-select: none;
+}
+.step-tab:hover { color: var(--primary); }
+.step-tab.active { color: var(--primary); border-bottom-color: var(--accent); }
+.step-tab.done   { color: var(--success); }
+.step-tab.done   .step-num { background: var(--success); }
+.step-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--muted);
+  color: #fff; font-size: 11px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step-tab.active .step-num { background: var(--accent); }
+
+/* ═══════════════════════════════════════
+   PAGES
+═══════════════════════════════════════ */
+.page { display: none; }
+.page.active { display: block; }
+.container { max-width: 900px; margin: 0 auto; padding: 24px 20px; }
+
+/* ═══════════════════════════════════════
+   CARDS
+═══════════════════════════════════════ */
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.card-header {
+  background: var(--primary); color: #fff;
+  padding: 11px 18px;
+  font-weight: 700; font-size: 13px;
+  letter-spacing: .4px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-body { padding: 20px; }
+.section-title {
+  font-size: 12px; font-weight: 700; color: var(--primary);
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 5px; margin: 20px 0 14px;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+
+/* ═══════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════ */
+.form-group { margin-bottom: 12px; }
+.form-group label {
+  display: block; font-size: 11px; font-weight: 700;
+  color: var(--muted); text-transform: uppercase;
+  letter-spacing: .4px; margin-bottom: 4px;
+}
+input[type=text], input[type=email], input[type=tel],
+input[type=number], input[type=url], input[type=date],
+input[type=color], select, textarea {
+  width: 100%; padding: 8px 10px;
+  border: 1.5px solid var(--border); border-radius: var(--radius);
+  font-size: 13px; font-family: inherit; color: var(--text);
+  background: #fafcff; transition: border-color .2s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--primary); background: #fff;
+}
+textarea { resize: vertical; min-height: 60px; }
+.hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
+.computed { background: #f0f7ff !important; color: var(--primary); font-weight: 600; }
+
+/* Grids */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+/* ═══════════════════════════════════════
+   BUTTONS
+═══════════════════════════════════════ */
+.btn {
+  padding: 9px 18px; border: none; border-radius: var(--radius);
+  cursor: pointer; font-size: 13px; font-weight: 600;
+  transition: opacity .2s;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.btn:hover { opacity: .85; }
+.btn-primary  { background: var(--accent); color: #fff; }
+.btn-outline  { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+.btn-success  { background: var(--success); color: #fff; }
+.btn-danger   { background: var(--danger); color: #fff; }
+.btn-lg       { padding: 12px 28px; font-size: 15px; }
+.btn-sm       { padding: 5px 12px; font-size: 12px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ═══════════════════════════════════════
+   ACTION ROW (bottom nav)
+═══════════════════════════════════════ */
+.action-row {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  align-items: center; margin-top: 24px;
+  padding: 16px 20px;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.action-row .spacer { flex: 1; }
+
+/* ═══════════════════════════════════════
+   AGENT PROFILE PREVIEW
+═══════════════════════════════════════ */
+.agent-preview {
+  display: flex; align-items: center; gap: 16px;
+  background: var(--light); border: 1.5px solid var(--border);
+  border-radius: var(--radius); padding: 16px;
+  margin-bottom: 20px;
+}
+.agent-preview-logo {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 20px; color: #fff;
+  flex-shrink: 0; overflow: hidden;
+}
+.agent-preview-logo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 50%; }
+.agent-preview-info h3 { font-size: 16px; font-weight: 700; color: var(--primary); }
+.agent-preview-info p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+/* ═══════════════════════════════════════
+   COLOR PREVIEW
+═══════════════════════════════════════ */
+.color-row { display: flex; align-items: center; gap: 10px; }
+.color-row input[type=color] {
+  width: 48px; height: 36px; padding: 2px 4px;
+  border-radius: var(--radius); cursor: pointer;
+}
+.color-swatch {
+  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
+  margin-top: 8px;
+}
+.color-swatch span {
+  display: inline-block; width: 28px; height: 28px;
+  border-radius: 50%; border: 2px solid rgba(0,0,0,.1);
+  cursor: pointer; transition: transform .15s;
+}
+.color-swatch span:hover { transform: scale(1.2); }
+
+/* ═══════════════════════════════════════
+   SAVED BADGE
+═══════════════════════════════════════ */
+.saved-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--success);
+  background: #e8f8f0; border: 1px solid #c3dece;
+  border-radius: 20px; padding: 3px 10px;
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--success); color: #fff;
+  padding: 12px 20px; border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,.2);
+  font-weight: 600; z-index: 9999;
+  transform: translateY(80px); opacity: 0; transition: all .3s;
+  font-size: 13px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.error { background: var(--danger); }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width: 700px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .step-tab span.step-label { display: none; }
+  .agent-preview { flex-direction: column; text-align: center; }
+}
+@media(max-width: 480px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════
+   STEP 2 — type tabs
+═══════════════════════════════════════ */
+.type-tabs { background:#fff; border-bottom:3px solid var(--border); padding:0 24px; display:flex; gap:4px; overflow-x:auto; align-items:flex-end; }
+.type-tab {
+  padding: 10px 24px;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  border: 1.5px solid var(--border);
+  border-bottom: none;
+  background: #f0f4f8;
+  color: var(--muted);
+  transition: all .15s;
+  position: relative;
+  top: 2px;
+  user-select: none;
+  white-space: nowrap;
+}
+.type-tab:hover {
+  background: #e2e8f0;
+  color: var(--text);
+}
+.type-tab.active {
+  background: #fff;
+  color: var(--primary);
+  border-color: var(--primary);
+  border-bottom: 2px solid #fff;
+  top: 0px;
+  box-shadow: 0 -2px 6px rgba(0,0,0,0.06);
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════
+   STEP 2 — form extras
+═══════════════════════════════════════ */
+.check-group  { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+.check-item   { display:flex; align-items:center; gap:5px; cursor:pointer; font-size:13px; }
+.check-item input { width:auto; margin:0; cursor:pointer; }
+.radio-group  { display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+.radio-item   { display:flex; align-items:center; gap:5px; cursor:pointer; font-size:13px; }
+.rating-row   { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.rating-badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; cursor:pointer; border:1.5px solid transparent; transition:all .15s; user-select:none; }
+.r-neuf   { background:#e8f8f0; color:#27ae60; border-color:#27ae60; }
+.r-neuf.sel   { background:#27ae60; color:#fff; }
+.r-soigne { background:#e8f4fd; color:#2980b9; border-color:#2980b9; }
+.r-soigne.sel { background:#2980b9; color:#fff; }
+.r-moyen  { background:#fef9e7; color:#f39c12; border-color:#f39c12; }
+.r-moyen.sel  { background:#f39c12; color:#fff; }
+.r-renov  { background:#fdedec; color:#c0392b; border-color:#c0392b; }
+.r-renov.sel  { background:#c0392b; color:#fff; }
+.dpe-grid { display:flex; gap:6px; flex-wrap:wrap; margin-top:4px; }
+.dpe-btn  { width:36px; height:36px; border:2px solid transparent; border-radius:var(--radius); font-weight:900; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .1s; }
+.dpe-btn:hover { transform:scale(1.1); }
+.dpe-btn.sel   { border-color:#222; transform:scale(1.15); box-shadow:0 2px 8px rgba(0,0,0,.3); }
+.dpe-A{background:#00a651;color:#fff;} .dpe-B{background:#4cb848;color:#fff;} .dpe-C{background:#bcd631;color:#222;}
+.dpe-D{background:#ffef00;color:#222;} .dpe-E{background:#f7941d;color:#fff;} .dpe-F{background:#ed1c24;color:#fff;} .dpe-G{background:#9b1c1c;color:#fff;}
+.defaut-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
+.defaut-item { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border:1.5px solid var(--border); border-radius:var(--radius); font-size:13px; }
+.defaut-item.oui { border-color:var(--danger); background:#fdedec; }
+.photo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin-top:12px; }
+.photo-thumb { position:relative; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }
+.photo-thumb img { width:100%; height:130px; object-fit:cover; display:block; }
+.photo-thumb .photo-caption { padding:5px 8px; }
+.photo-thumb .photo-caption input { font-size:12px; padding:4px 6px; }
+.photo-thumb .del-photo { position:absolute; top:5px; right:5px; background:rgba(192,57,43,.9); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; }
+.photo-drop { border:2px dashed var(--border); border-radius:var(--radius); padding:24px; text-align:center; cursor:pointer; color:var(--muted); transition:border-color .2s; }
+.photo-drop:hover { border-color:var(--primary); color:var(--primary); }
+.dvf-box { background:#0f1e2e; color:#e0e8f0; border-radius:8px; padding:20px; margin-top:16px; }
+.dvf-box h3 { color:#f0c040; font-size:14px; text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+.dvf-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+.dvf-stat { background:rgba(255,255,255,.07); border-radius:6px; padding:12px; text-align:center; }
+.dvf-stat .val { font-size:22px; font-weight:900; color:#f0c040; }
+.dvf-stat .lbl { font-size:11px; opacity:.7; margin-top:4px; }
+.dvf-fourchette { background:rgba(201,168,76,.15); border:1px solid rgba(201,168,76,.4); border-radius:6px; padding:12px 16px; margin-bottom:16px; text-align:center; }
+.dvf-fourchette .range { font-size:24px; font-weight:900; color:#f0c040; }
+.dvf-tbl { width:100%; border-collapse:collapse; font-size:12px; }
+.dvf-tbl th { background:rgba(255,255,255,.08); color:#f0c040; padding:7px 10px; text-align:left; }
+.dvf-tbl td { padding:6px 10px; border-bottom:1px solid rgba(255,255,255,.06); color:#c8d8e8; }
+.viab-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; }
+.viab-item { display:flex; align-items:center; justify-content:space-between; padding:7px 12px; border:1.5px solid var(--border); border-radius:var(--radius); font-size:13px; cursor:pointer; }
+.viab-item.ok { border-color:var(--success); background:#e8f8f0; }
+.scenario-box { background:#fff8e6; border:1.5px solid var(--accent); border-radius:var(--radius); padding:12px 16px; margin-top:8px; }
+.scenario-box > label { color:var(--accent); font-size:12px; font-weight:700; }
+.col-span-2 { grid-column:span 2; }
+.col-span-3 { grid-column:span 3; }
+.mt-8  { margin-top:8px; }
+.mt-16 { margin-top:16px; }
+.text-sm { font-size:12px; color:var(--muted); }
+.hidden { display:none !important; }
+/* DVF editable table (generateur style) */
+.dvf-edit-table { width:100%; border-collapse:collapse; }
+.dvf-edit-table th { background:var(--primary); color:#fff; padding:7px 8px; font-size:11px; text-align:left; font-weight:600; }
+.dvf-edit-table td { padding:4px 6px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.dvf-edit-table td input { border:1px solid var(--border); padding:5px 7px; border-radius:4px; font-size:12px; width:100%; background:#fafcff; }
+.dvf-edit-table tr:nth-child(even) td { background:#f8fafc; }
+/* Score inputs */
+.score-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
+.score-item label { text-align:center; display:block; font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; margin-bottom:4px; }
+.score-item input { text-align:center; font-size:18px; font-weight:700; color:var(--primary); }
+/* Diagnostics grid */
+.diag-form-grid { display:grid; grid-template-columns:145px 140px 1fr; gap:6px; align-items:center; padding:6px 0; border-top:1px solid var(--border); }
+.diag-form-grid:first-of-type { border-top:none; }
+.diag-form-head { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
+.diag-form-label { font-size:13px; font-weight:600; color:var(--text); }
+/* Credit preview */
+#credit-preview-step2 { margin-top:8px; font-size:12px; color:var(--muted); background:#f8f6f0; padding:10px 12px; border-radius:var(--radius); display:none; line-height:1.8; }
+.leaflet-div-icon-clean { background: none !important; border: none !important; }
+</style>
+<!-- ══════════ AUTH GUARD (Supabase) ══════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  const AUTH_SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+  const AUTH_SUPABASE_KEY = 'sb_publishable_Asv3-Q2Q9XSA_gvV1nB74Q_0N6prN2E';
+
+  const authClient = supabase.createClient(AUTH_SUPABASE_URL, AUTH_SUPABASE_KEY);
+  window.privencyAuth = authClient;
+
+  authClient.auth.getSession().then(({ data: { session } }) => {
+    if (!session || (session.expires_at && session.expires_at * 1000 < Date.now())) {
+      window.location.replace('/login.html');
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.createElement('button');
+    btn.id = 'logout-btn';
+    btn.textContent = 'Déconnexion';
+    btn.style.cssText = 'position:fixed;top:10px;right:12px;z-index:10000;background:#141414;color:#b8923a;border:1px solid #b8923a;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
+    btn.addEventListener('click', async () => {
+      await authClient.auth.signOut();
+      window.location.replace('/login.html');
+    });
+    document.body.appendChild(btn);
+  });
+})();
+</script>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <div class="header-brand">
+    <div class="logo-circle" id="header-logo">
+      <span id="header-initials">EX</span>
+      <img id="header-photo" style="display:none" alt="">
+    </div>
+    <div>
+      <h1 id="header-name">Expertimo</h1>
+      <p id="header-sub">Générateur Fiche Acheteur</p>
+    </div>
+  </div>
+  <div class="header-right">
+    Import → Saisie → Génération → Publication
+  </div>
+</header>
+
+<!-- ══════════ STEPPER ══════════ -->
+<nav class="stepper" id="stepper">
+  <div class="step-tab active" id="tab-1" onclick="goToStep(1)">
+    <span class="step-num">1</span>
+    <span class="step-label">Profil agent</span>
+  </div>
+  <div class="step-tab" id="tab-2" onclick="goToStep(2)">
+    <span class="step-num">2</span>
+    <span class="step-label">Saisie du bien</span>
+  </div>
+  <div class="step-tab" id="tab-3" onclick="goToStep(3)">
+    <span class="step-num">3</span>
+    <span class="step-label">Génération</span>
+  </div>
+  <div class="step-tab" id="tab-4" onclick="goToStep(4)">
+    <span class="step-num">4</span>
+    <span class="step-label">Publication</span>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 1 — PROFIL AGENT
+══════════════════════════════════════════════════════ -->
+<div class="page active" id="page-1">
+<div class="container">
+
+  <!-- Preview dynamique -->
+  <div class="agent-preview" id="agent-preview">
+    <div class="agent-preview-logo" id="prev-logo">
+      <span id="prev-initials">EX</span>
+      <img id="prev-photo" style="display:none" alt="">
+    </div>
+    <div class="agent-preview-info">
+      <h3 id="prev-name">Votre nom apparaîtra ici</h3>
+      <p  id="prev-sub">Réseau · Secteur · email · téléphone</p>
+    </div>
+    <div style="margin-left:auto">
+      <span class="saved-badge" id="profile-saved-badge" style="display:none">✅ Profil sauvegardé</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">👤 Identité de l'agent</div>
+    <div class="card-body">
+      <div class="grid-3">
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" id="agent-prenom" placeholder="Olivier" oninput="updateAgentPreview()">
+        </div>
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" id="agent-nom" placeholder="Loison" oninput="updateAgentPreview()">
+        </div>
+        <div class="form-group">
+          <label>Réseau / Enseigne</label>
+          <input type="text" id="agent-reseau" placeholder="Expertimo" oninput="updateAgentPreview()">
+        </div>
+        <div class="form-group">
+          <label>Téléphone</label>
+          <input type="tel" id="agent-tel" placeholder="06 85 68 46 13">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="agent-email" placeholder="olivier.loison@expertimo.com">
+        </div>
+        <div class="form-group">
+          <label>Secteur / Département</label>
+          <input type="text" id="agent-secteur" placeholder="Essonne · 91" oninput="updateAgentPreview()">
+        </div>
+      </div>
+
+      <div class="section-title">Liens professionnels</div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Lien prise de RDV (Calendly, Google…)</label>
+          <input type="url" id="agent-rdv-url" placeholder="https://calendar.app.google/...">
+        </div>
+        <div class="form-group">
+          <label>Photo de profil (URL)</label>
+          <input type="url" id="agent-photo-url" placeholder="https://… (optionnel)" oninput="updateAgentPreview()">
+          <p class="hint">Laissez vide pour utiliser vos initiales</p>
+        </div>
+      </div>
+
+      <div class="section-title">Couleurs de marque</div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Couleur principale (--primary)</label>
+          <div class="color-row">
+            <input type="color" id="agent-color-primary" value="#1a3a5c" oninput="applyAgentColors()">
+            <input type="text" id="agent-color-primary-hex" value="#1a3a5c" placeholder="#1a3a5c"
+              oninput="syncColorHex('primary')" style="width:110px">
+          </div>
+          <div class="color-swatch" id="swatch-primary">
+            <span title="#1a3a5c" style="background:#1a3a5c" onclick="setColor('primary','#1a3a5c')"></span>
+            <span title="#2c3e50" style="background:#2c3e50" onclick="setColor('primary','#2c3e50')"></span>
+            <span title="#1e3a5f" style="background:#1e3a5f" onclick="setColor('primary','#1e3a5f')"></span>
+            <span title="#2d4a22" style="background:#2d4a22" onclick="setColor('primary','#2d4a22')"></span>
+            <span title="#4a1942" style="background:#4a1942" onclick="setColor('primary','#4a1942')"></span>
+            <span title="#7b3f00" style="background:#7b3f00" onclick="setColor('primary','#7b3f00')"></span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Couleur accent (--accent)</label>
+          <div class="color-row">
+            <input type="color" id="agent-color-accent" value="#c9a84c" oninput="applyAgentColors()">
+            <input type="text" id="agent-color-accent-hex" value="#c9a84c" placeholder="#c9a84c"
+              oninput="syncColorHex('accent')" style="width:110px">
+          </div>
+          <div class="color-swatch" id="swatch-accent">
+            <span title="#c9a84c" style="background:#c9a84c" onclick="setColor('accent','#c9a84c')"></span>
+            <span title="#e67e22" style="background:#e67e22" onclick="setColor('accent','#e67e22')"></span>
+            <span title="#27ae60" style="background:#27ae60" onclick="setColor('accent','#27ae60')"></span>
+            <span title="#2980b9" style="background:#2980b9" onclick="setColor('accent','#2980b9')"></span>
+            <span title="#8e44ad" style="background:#8e44ad" onclick="setColor('accent','#8e44ad')"></span>
+            <span title="#c0392b" style="background:#c0392b" onclick="setColor('accent','#c0392b')"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="btn btn-outline" onclick="resetProfile()">🗑 Réinitialiser le profil</button>
+    <div class="spacer"></div>
+    <button class="btn btn-primary btn-lg" onclick="saveProfileAndContinue()">
+      Enregistrer et continuer →
+    </button>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 2 — SAISIE DU BIEN
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-2">
+
+<!-- ── Adresse du bien (doit être en tête — critique pour Leaflet, DVF, slug) ── -->
+<div class="card" style="margin:16px 16px 0;border-radius:var(--radius);">
+  <div class="card-header">📍 Adresse du bien</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Adresse complète</label>
+        <input type="text" id="adresse" placeholder="34 rue Hélène Boucher, 91300 Massy"
+          oninput="onAdresseChange(this.value)">
+      </div>
+      <div class="form-group">
+        <label>Quartier / Secteur</label>
+        <input type="text" id="quartier" placeholder="Centre-ville, Les Ulis…">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Type tabs -->
+<div class="type-tabs">
+  <div class="type-tab active" data-type="appart" onclick="switchType('appart')" id="tab-appart">🏢 Appartement</div>
+  <div class="type-tab" data-type="maison"  onclick="switchType('maison')"  id="tab-maison">🏠 Maison</div>
+  <div class="type-tab" data-type="terrain" onclick="switchType('terrain')" id="tab-terrain">🌿 Terrain</div>
+</div>
+
+<div class="container" style="max-width:1100px">
+
+<!-- ── Propriétaire & RDV ── -->
+<div class="card">
+  <div class="card-header">👤 Propriétaire &amp; Rendez-vous</div>
+  <div class="card-body">
+    <div class="grid-3">
+      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" placeholder="Prénom"></div>
+      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" placeholder="Nom"></div>
+      <div class="form-group"><label>Date R1</label><input type="date" id="date_r1"></div>
+      <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" placeholder="01 XX XX XX XX"></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" placeholder="06 XX XX XX XX"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="email_proprio" placeholder="email@exemple.fr"></div>
+    </div>
+    <div class="grid-3 mt-8">
+      <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" placeholder="ex91-lg001"></div>
+      <div class="form-group"><label>Raison de la vente</label><input type="text" id="raison_vente" placeholder="Mutation, divorce, succession…"></div>
+      <div class="form-group"><label>Bien en vente depuis</label><input type="text" id="vente_depuis" placeholder="Date ou durée"></div>
+      <div class="form-group"><label>Délai maxi pour vendre</label><input type="text" id="delai_vente" placeholder="3 mois, 6 mois…"></div>
+      <div class="form-group"><label>Clés chez ?</label><input type="text" id="cles_chez" placeholder="Propriétaire, gardien…"></div>
+      <div class="form-group"><label>Déjà des agences ?</label><input type="text" id="agences" placeholder="Noms des agences"></div>
+      <div class="form-group"><label>Année d'achat</label><input type="number" id="annee_achat" placeholder="2010"></div>
+      <div class="form-group"><label>Prix d'achat (€)</label><input type="number" id="prix_achat" placeholder="180000"></div>
+    </div>
+    <div class="grid-3 mt-8">
+      <div class="form-group"><label>Nb de visites</label><input type="number" id="nb_visites" placeholder="0"></div>
+      <div class="form-group"><label>Nb d'offres reçues</label><input type="number" id="nb_offres" placeholder="0"></div>
+      <div class="form-group"><label>Prix des offres (€)</label><input type="text" id="prix_offres" placeholder="195 000 €"></div>
+    </div>
+    <div class="form-group mt-8">
+      <label>Utilisation actuelle</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="utilisation" value="rp"> Résidence primaire</label>
+        <label class="radio-item"><input type="radio" name="utilisation" value="rs"> Résidence secondaire</label>
+        <label class="radio-item"><input type="radio" name="utilisation" value="vacant"> Vacant</label>
+        <label class="radio-item"><input type="radio" name="utilisation" value="location"> En location</label>
+      </div>
+    </div>
+    <div class="form-group" id="loyer_group" style="display:none">
+      <label>Loyer mensuel (€)</label><input type="number" id="loyer" placeholder="850">
+    </div>
+    <div class="scenario-box mt-8">
+      <label>Scénario "Dans 3 mois j'ai une offre à ___ € — on fait quoi ?"</label>
+      <div class="grid-2 mt-8">
+        <input type="number" id="scenario_montant" placeholder="Montant de l'offre (€)">
+        <textarea id="scenario_reponse" placeholder="Réponse / stratégie…" style="min-height:50px"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Historique du bien ── -->
+<div class="card">
+  <div class="card-header">📅 Historique du bien (timeline fiche acheteur)</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div class="form-group"><label>Construction — description</label><input type="text" id="hist_constr_desc" placeholder="Immeuble résidentiel récent, bonne qualité de construction"></div>
+      <div class="form-group"><label>Événement 1 — date · label</label><input type="text" id="hist_evt1_date" placeholder="2015 · RÉNOVATION"></div>
+      <div class="form-group"><label>Événement 1 — description</label><input type="text" id="hist_evt1_desc" placeholder="Rénovation complète : sols, murs, cuisine, salle de bains…"></div>
+      <div class="form-group"><label>Événement 2 — date · label (optionnel)</label><input type="text" id="hist_evt2_date" placeholder=""></div>
+      <div class="form-group"><label>Événement 2 — description (optionnel)</label><input type="text" id="hist_evt2_desc" placeholder=""></div>
+      <div class="form-group"><label>Année de mise en vente</label><input type="text" id="hist_vente_date" value="2025" placeholder="2025"></div>
+    </div>
+    <p class="hint">Laisser vide les événements non utilisés — ils ne seront pas affichés dans la fiche acheteur.</p>
+    <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:18%">Année</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Montant (€)</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Nature des travaux</th>
+      </tr></thead>
+      <tbody id="renov_tbody">
+        <tr>
+          <td><input type="number" id="renov_annee_1" placeholder="2022"></td>
+          <td><input type="number" id="renov_montant_1" placeholder="15000"></td>
+          <td><input type="text" id="renov_desc_1" placeholder="Réfection toiture"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_2" placeholder="2021"></td>
+          <td><input type="number" id="renov_montant_2"></td>
+          <td><input type="text" id="renov_desc_2"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_3"></td>
+          <td><input type="number" id="renov_montant_3"></td>
+          <td><input type="text" id="renov_desc_3"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_4"></td>
+          <td><input type="number" id="renov_montant_4"></td>
+          <td><input type="text" id="renov_desc_4"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_5"></td>
+          <td><input type="number" id="renov_montant_5"></td>
+          <td><input type="text" id="renov_desc_5"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ── Caractéristiques ── -->
+<div class="card">
+  <div class="card-header">📐 Caractéristiques du bien</div>
+  <div class="card-body">
+    <div class="section-title">Surfaces &amp; Pièces</div>
+    <div class="grid-4">
+      <div class="form-group"><label>Surface habitable (m²)</label><input type="number" id="surface_hab" placeholder="75" step="0.01"></div>
+      <div class="form-group"><label>Surface Carrez (m²)</label><input type="number" id="surface_carrez" placeholder="72" step="0.01"></div>
+      <div class="form-group terrain-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain" placeholder="500"></div>
+      <div class="form-group maison-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain_m" placeholder="300"></div>
+    </div>
+    <div class="grid-4 appart-maison-only">
+      <div class="form-group"><label>Nb total de pièces</label><input type="number" id="nb_pieces" placeholder="4"></div>
+      <div class="form-group"><label>Chambres</label><input type="number" id="nb_chambres" placeholder="2"></div>
+      <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" placeholder="0" min="0"></div>
+      <div class="form-group"><label>WC</label><input type="number" id="nb_wc" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" placeholder="0" min="0"></div>
+      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" placeholder="0" min="0"></div>
+    </div>
+    <div class="section-title appart-only">Immeuble</div>
+    <div class="grid-3 appart-only">
+      <div class="form-group"><label>Étage du bien</label><input type="text" id="etage" placeholder="3e sur 8"></div>
+      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages" placeholder="8"></div>
+      <div class="form-group"><label>Ascenseur</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="ascenseur" value="non"> Non</label>
+          <label class="radio-item"><input type="radio" name="ascenseur" value="oui"> Oui</label>
+        </div>
+      </div>
+      <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction" placeholder="1985"></div>
+      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom" placeholder="Nom du syndic"></div>
+      <div class="form-group"><label>Travaux votés en AG</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="travaux_ag" value="non"> Non</label>
+          <label class="radio-item"><input type="radio" name="travaux_ag" value="oui"> Oui</label>
+        </div>
+      </div>
+      <div class="form-group col-span-3"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail" placeholder="Ravalement + toiture : 8 500 €"></div>
+      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble" placeholder="Ravalement 2022, toiture 2019…"></div>
+    </div>
+    <div class="section-title maison-only hidden">Construction</div>
+    <div class="grid-3 maison-only hidden">
+      <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction_m" placeholder="1995"></div>
+      <div class="form-group"><label>Nb d'étages</label><input type="number" id="nb_etages_m" placeholder="1"></div>
+      <div class="form-group"><label>Standard général</label>
+        <select id="standard_general">
+          <option value="">— Choisir —</option>
+          <option>Luxe</option><option>Haut de gamme</option><option>Très bon</option><option>Standard</option><option>Entrée de gamme</option>
+        </select>
+      </div>
+    </div>
+    <div class="section-title appart-maison-only">Prix &amp; Fiscalité</div>
+    <div class="grid-4 appart-maison-only">
+      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente" placeholder="220000"></div>
+      <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere" placeholder="900"></div>
+      <div class="form-group"><label>Taxe d'habitation (€/an)</label><input type="number" id="taxe_hab" placeholder="600"></div>
+      <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro" placeholder="200"></div>
+      <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" placeholder="150"></div>
+    </div>
+    <div class="form-group appart-maison-only mt-8">
+      <label>Détail des charges (contexte chatbot)</label>
+      <input type="text" id="charges_detail" placeholder="Eau froide, nettoyage parties communes, ascenseur…">
+    </div>
+    <div class="section-title appart-maison-only">Les + du bien</div>
+    <div class="form-group appart-maison-only">
+      <textarea id="plus_appartement" placeholder="Points forts, luminosité, vue, calme, terrasse, prestations…" style="min-height:70px"></textarea>
+    </div>
+    <div class="section-title terrain-only hidden">Prix &amp; Fiscalité Terrain</div>
+    <div class="grid-2 terrain-only hidden">
+      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente_t" placeholder="120000"></div>
+      <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere_t" placeholder="450"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Pièces utiles & Parking ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">🔑 Pièces utiles &amp; Parking</div>
+  <div class="card-body">
+    <div class="defaut-grid" id="pieces_utiles_grid"></div>
+    <div class="section-title mt-16">Parking</div>
+    <div class="grid-3">
+      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" placeholder="0" min="0"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Plan des pièces ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">📏 Plan des pièces <span style="background:var(--accent);border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px;">Détail m²</span></div>
+  <div class="card-body">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;" id="pieces_table">
+      <thead><tr>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:28px;"></th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Pièce</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:12%">Surface m²</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:12%">Étage</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Particularités / Équipements</th>
+      </tr></thead>
+      <tbody id="pieces_tbody"></tbody>
+    </table>
+    <button class="btn btn-sm mt-8" style="background:var(--primary);color:#fff" onclick="addPieceRow()">+ Ajouter une ligne</button>
+  </div>
+</div>
+
+<!-- ── Construction & Matériaux ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">🏗 Construction &amp; Matériaux</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div id="toit_section" class="maison-only hidden">
+        <div class="section-title">Toit</div>
+        <div class="check-group" id="toit_type_group"></div>
+        <div class="mt-8"><label>État</label><div class="rating-row" id="toit_etat_group"></div></div>
+      </div>
+      <div id="facade_section" class="maison-only hidden">
+        <div class="section-title">Façade</div>
+        <div class="check-group" id="facade_type_group"></div>
+        <div class="mt-8"><label>État</label><div class="rating-row" id="facade_etat_group"></div></div>
+      </div>
+      <div>
+        <div class="section-title">Sols</div>
+        <div class="check-group" id="sols_type_group"></div>
+        <div class="mt-8"><label>État</label><div class="rating-row" id="sols_etat_group"></div></div>
+      </div>
+      <div>
+        <div class="section-title">Vitrage</div>
+        <div class="check-group" id="vitrage_type_group"></div>
+        <div class="check-group mt-8" id="vitrage_materiau_group"></div>
+        <div class="mt-8"><label>Volets roulants électriques</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="volets_elec" value="non"> Non</label>
+            <label class="radio-item"><input type="radio" name="volets_elec" value="oui"> Oui</label>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="section-title">Chauffage</div>
+        <div class="check-group" id="chauf_type_group"></div>
+        <div class="check-group mt-8" id="chauf_energie_group"></div>
+        <div class="check-group mt-8" id="chauf_diffusion_group"></div>
+        <div class="form-group mt-8"><label>Année installation</label><input type="number" id="chauf_annee" placeholder="2015" style="max-width:120px"></div>
+      </div>
+      <div>
+        <div class="section-title">Eau chaude sanitaire</div>
+        <div class="check-group" id="ecs_group"></div>
+      </div>
+      <div>
+        <div class="section-title">État général</div>
+        <label style="margin-bottom:6px">Appréciation globale</label>
+        <div class="rating-row" id="etat_general_group"></div>
+        <div class="form-group mt-8"><label>Travaux récents</label>
+          <textarea id="travaux_recents" placeholder="Cuisine rénovée 2021, salle de bains 2019…" style="min-height:60px"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Défauts & Risques ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">⚠️ Défauts &amp; Risques constatés</div>
+  <div class="card-body">
+    <div class="defaut-grid" id="defauts_grid"></div>
+  </div>
+</div>
+
+<!-- ── Équipements ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">🔧 Équipements</div>
+  <div class="card-body">
+    <div class="section-title">Équipements généraux</div>
+    <div class="defaut-grid" id="equip_general_grid"></div>
+    <div class="section-title mt-16">Cuisine</div>
+    <div class="form-group">
+      <label>Plaque de cuisson</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value=""> —</label>
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Induction"> 🔵 Induction</label>
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Électrique"> ⚡ Électrique</label>
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Gaz"> 🔥 Gaz</label>
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Mixte"> Mixte</label>
+      </div>
+    </div>
+    <div class="defaut-grid" id="equip_cuisine_grid"></div>
+    <div class="form-group mt-8"><label>Autres équipements cuisine</label><input type="text" id="equip_autre" placeholder="Hotte aspirante, crédence, plan de travail marbre…"></div>
+    <div class="section-title mt-16">Extérieur</div>
+    <div id="exterieur_grid" class="defaut-grid"></div>
+    <div class="section-title mt-16">Points de vigilance / Points faibles</div>
+    <div class="defaut-grid" id="vigilances_grid"></div>
+    <div class="form-group mt-8">
+      <label>Vigilances complémentaires (texte libre)</label>
+      <textarea id="vigilances_texte" placeholder="Nuisances sonores, vis-à-vis direct, humidité récurrente…" style="min-height:70px;border-color:var(--danger);"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ── Localisation & Environnement ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">📍 Localisation &amp; Environnement</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div>
+        <div class="section-title">Exposition</div>
+        <div class="check-group" id="exposition_group"></div>
+        <div class="section-title mt-16">Exposition sonore</div>
+        <div class="radio-group" id="expo_sonore_group"></div>
+      </div>
+      <div>
+        <div class="section-title">Transports à proximité</div>
+        <div class="check-group" id="transport_group"></div>
+        <div class="form-group mt-16"><label>Services de proximité</label>
+          <textarea id="services_prox" placeholder="Écoles, commerces, médecins, parcs…" style="min-height:60px"></textarea>
+        </div>
+        <div class="form-group"><label>Voisinage</label>
+          <textarea id="voisinage" placeholder="Calme, famille, commerçants…" style="min-height:50px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="section-title mt-16">📍 Carte — Commodités dans un rayon de 800m</div>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
+      <button type="button" class="btn btn-primary" onclick="initFicheMap()" id="btn-geolocate">🗺️ Centrer sur l'adresse</button>
+      <span style="font-size:12px;color:var(--muted);" id="geo-status">Entrez l'adresse ci-dessus puis cliquez.</span>
+    </div>
+    <div id="fiche-map" style="height:350px;border-radius:6px;border:1.5px solid var(--border);background:#e8ecf1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;">La carte s'affichera ici</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;" id="map-filter-btns" style="display:none;">
+      <button type="button" class="btn btn-sm" style="background:#1565c0;color:#fff" onclick="filterFicheMap('transport')">🚇 Transports</button>
+      <button type="button" class="btn btn-sm" style="background:#2e7d32;color:#fff" onclick="filterFicheMap('parc')">🌳 Parcs</button>
+      <button type="button" class="btn btn-sm" style="background:#c62828;color:#fff" onclick="filterFicheMap('commerce')">🛒 Commerces</button>
+      <button type="button" class="btn btn-sm" style="background:#f57f17;color:#fff" onclick="filterFicheMap('ecole')">🏫 Écoles</button>
+      <button type="button" class="btn btn-sm" style="background:#555;color:#fff" onclick="filterFicheMap('all')">👁 Tout</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;font-size:12px;" id="map-counts" style="display:none;">
+      <div>🚇 <span id="mc-transport">—</span> transports</div>
+      <div>🌳 <span id="mc-parc">—</span> parcs</div>
+      <div>🛒 <span id="mc-commerce">—</span> commerces</div>
+      <div>🏫 <span id="mc-ecole">—</span> écoles</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Terrain spécifique ── -->
+<div class="card terrain-only hidden">
+  <div class="card-header">🌿 Informations Terrain</div>
+  <div class="card-body">
+    <div class="grid-3">
+      <div class="form-group"><label>Zone PLU</label><input type="text" id="zone_plu" placeholder="UA, UB, AU…"></div>
+      <div class="form-group"><label>Superficie totale (m²)</label><input type="number" id="superficie_totale" placeholder="1000"></div>
+      <div class="form-group"><label>Superficie constructible (m²)</label><input type="number" id="superficie_constructible" placeholder="800"></div>
+      <div class="form-group"><label>Forme</label><input type="text" id="forme_terrain" placeholder="Rectangulaire, irrégulier…"></div>
+      <div class="form-group"><label>Accès / Voirie</label><input type="text" id="acces_terrain" placeholder="Chemin privé, route communale…"></div>
+      <div class="form-group"><label>COS / CES</label><input type="text" id="cos_ces" placeholder="0.4 / 0.6"></div>
+      <div class="form-group"><label>Hauteur max autorisée (m)</label><input type="number" id="hauteur_max" placeholder="9"></div>
+      <div class="form-group"><label>Projet envisagé</label><input type="text" id="projet_terrain" placeholder="Maison individuelle…"></div>
+    </div>
+    <div class="section-title">Viabilisation</div>
+    <div class="viab-grid" id="viab_grid"></div>
+    <div class="section-title mt-16">Études &amp; Certificats</div>
+    <div class="grid-3">
+      <div><label>Étude de sol</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="etude_sol" value="aucune"> Aucune</label>
+        <label class="radio-item"><input type="radio" name="etude_sol" value="G1"> G1</label>
+        <label class="radio-item"><input type="radio" name="etude_sol" value="G2"> G2</label>
+      </div></div>
+      <div><label>Certificat d'urbanisme</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="cert_urba" value="aucun"> Aucun</label>
+        <label class="radio-item"><input type="radio" name="cert_urba" value="CUa"> CUa</label>
+        <label class="radio-item"><input type="radio" name="cert_urba" value="CUb"> CUb</label>
+      </div></div>
+    </div>
+    <div class="section-title mt-16">Risques</div>
+    <div class="defaut-grid" id="risques_terrain_grid"></div>
+  </div>
+</div>
+
+<!-- ── Photos ── -->
+<div class="card">
+  <div class="card-header">📸 Photos du bien</div>
+  <div class="card-body">
+    <div class="photo-drop" onclick="document.getElementById('photo_input').click()">
+      📁 Cliquez pour ajouter des photos (JPEG, PNG, HEIC…)
+      <br><span class="text-sm mt-8" style="display:block">Vous pouvez sélectionner plusieurs fichiers à la fois</span>
+    </div>
+    <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
+    <div class="photo-grid" id="photo_grid"></div>
+    <div class="section-title mt-16">URLs photos pour la fiche acheteur (3 premières)</div>
+    <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
+    <div class="grid-3">
+      <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
+      <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
+      <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── DPE & Diagnostics ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">⚡ DPE &amp; Diagnostics</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div>
+        <div class="section-title">Consommation d'énergie (DPE)</div>
+        <div class="dpe-grid" id="dpe_grid"></div>
+        <div class="form-group mt-8"><label>Valeur numérique (kWh/m²/an)</label><input type="number" id="dpe_valeur" placeholder="180" style="max-width:150px"></div>
+      </div>
+      <div>
+        <div class="section-title">Émissions GES</div>
+        <div class="dpe-grid" id="ges_grid"></div>
+        <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" placeholder="32" style="max-width:150px"></div>
+      </div>
+    </div>
+    <div class="grid-3 mt-16">
+      <div><label>Servitudes</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="servitudes" value="non"> Non</label>
+        <label class="radio-item"><input type="radio" name="servitudes" value="oui"> Oui</label>
+      </div></div>
+      <div><label>Droits de superficie</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="droits_superf" value="non"> Non</label>
+        <label class="radio-item"><input type="radio" name="droits_superf" value="oui"> Oui</label>
+      </div></div>
+      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" placeholder="Nom du syndic"></div>
+    </div>
+    <div class="section-title mt-16">Diagnostics réglementaires</div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
+      <div class="diag-form-grid" style="background:var(--primary);padding:8px 6px;border-top:none;">
+        <div class="diag-form-head" style="color:#fff;">Diagnostic</div>
+        <div class="diag-form-head" style="color:#fff;">Statut</div>
+        <div class="diag-form-head" style="color:#fff;">Résultat affiché</div>
+      </div>
+      <div style="padding:0 6px;">
+        <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
+          <select id="diag_amiante_status"><option value="non-soumis" selected>Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
+          <input type="text" id="diag_amiante_result" value="Non soumis — bâtiment après 1997"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🔬 Plomb (CREP)</div>
+          <select id="diag_plomb_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_plomb_result" value="Absence de plomb détectée"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🪲 Termites</div>
+          <select id="diag_termites_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_termites_result" value="Absence de termites constatée"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">⚡ Électricité</div>
+          <select id="diag_electricite_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_electricite_result" value="Installation intérieure sans anomalie"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🔥 Gaz</div>
+          <select id="diag_gaz_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_gaz_result" value="Installation sans anomalie"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">💧 Assainissement</div>
+          <select id="diag_assain_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_assain_result" value="Raccordement au réseau collectif conforme"></div>
+      </div>
+    </div>
+    <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
+  </div>
+</div>
+
+<!-- ── Transactions DVF — saisie manuelle ── -->
+<div class="card">
+  <div class="card-header">
+    📊 Transactions comparables DVF
+    <span style="background:var(--accent);border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px;font-weight:600;">Saisie manuelle — source dvf.etalab.gouv.fr</span>
+  </div>
+  <div class="card-body">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">
+      Consultez <a href="https://dvf.etalab.gouv.fr" target="_blank" style="color:var(--primary)">dvf.etalab.gouv.fr</a>
+      ou <a href="https://app.dvf.etalab.gouv.fr" target="_blank" style="color:var(--primary)">app.dvf.etalab.gouv.fr</a>
+      et saisissez les transactions comparables ci-dessous.
+    </p>
+    <div style="overflow-x:auto">
+      <table class="dvf-edit-table">
+        <thead>
+          <tr>
+            <th style="width:110px">Date</th>
+            <th>Adresse</th>
+            <th style="width:90px">Surface m²</th>
+            <th style="width:110px">Prix €</th>
+            <th style="width:100px">€/m²</th>
+          </tr>
+        </thead>
+        <tbody id="dvf-tbody"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:8px">Laisser vide pour ne pas inclure la ligne · €/m² calculé automatiquement</p>
+  </div>
+</div>
+
+<!-- ── Analyse & Scores ── -->
+<div class="card">
+  <div class="card-header">🎯 Analyse &amp; Scores (fiche acheteur)</div>
+  <div class="card-body">
+    <div class="section-title">Scores (0 – 10)</div>
+    <div class="score-grid">
+      <div class="score-item"><label>Score global</label><input type="number" id="bien_score" min="0" max="10" step="0.1" value="9.3"></div>
+      <div class="score-item"><label>Prestations</label><input type="number" id="bien_score_prest" min="0" max="10" step="1" value="10"></div>
+      <div class="score-item"><label>Secteur</label><input type="number" id="bien_score_secteur" min="0" max="10" step="1" value="9"></div>
+      <div class="score-item"><label>Qualité-prix</label><input type="number" id="bien_score_qp" min="0" max="10" step="1" value="8"></div>
+      <div class="score-item"><label>État général</label><input type="number" id="bien_score_etat" min="0" max="10" step="1" value="10"></div>
+    </div>
+    <div class="grid-2 mt-16">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">✅ Points forts (3 max — fiche acheteur)</div>
+        <div class="form-group"><input type="text" id="bien_fort1" placeholder="Point fort 1"></div>
+        <div class="form-group"><input type="text" id="bien_fort2" placeholder="Point fort 2"></div>
+        <div class="form-group"><input type="text" id="bien_fort3" placeholder="Point fort 3"></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">⚠️ Vigilances (3 max — fiche acheteur)</div>
+        <div class="form-group"><input type="text" id="bien_vig1" placeholder="Vigilance 1"></div>
+        <div class="form-group"><input type="text" id="bien_vig2" placeholder="Vigilance 2"></div>
+        <div class="form-group"><input type="text" id="bien_vig3" placeholder="Vigilance 3"></div>
+      </div>
+    </div>
+    <div class="section-title">Marché &amp; Fourchette de prix</div>
+    <div class="grid-4">
+      <div class="form-group"><label>Médiane secteur (€/m²)</label><input type="number" id="bien_mediane" placeholder="3020"></div>
+      <div class="form-group"><label>Tension locative</label><input type="text" id="bien_tension" value="Très forte" placeholder="Très forte"></div>
+      <div class="form-group"><label>Délai vente moyen</label><input type="text" id="bien_delai" value="21 jours" placeholder="21 jours"></div>
+      <div class="form-group"><label>Loyer estimé (€/mois)</label><input type="number" id="bien_loyer_estime" placeholder="1300"></div>
+    </div>
+    <div class="grid-3">
+      <div class="form-group"><label>Fourchette basse (€)</label><input type="number" id="bien_fourchette_basse" placeholder="156000"></div>
+      <div class="form-group"><label>Fourchette milieu (€)</label><input type="number" id="bien_fourchette_milieu" placeholder="221000"></div>
+      <div class="form-group"><label>Fourchette haute (€)</label><input type="number" id="bien_fourchette_haute" placeholder="286000"></div>
+    </div>
+    <div class="section-title">Simulation crédit</div>
+    <div class="grid-4">
+      <div class="form-group"><label>Durée (ans)</label><input type="number" id="bien_credit_duree" value="20" min="5" max="30" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Apport (%)</label><input type="number" id="bien_credit_apport" value="10" min="0" max="100" step="5" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux haut (%)</label><input type="number" id="bien_credit_taux_haut" value="5.00" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux moyen (%)</label><input type="number" id="bien_credit_taux_moyen" value="3.40" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux bas (%)</label><input type="number" id="bien_credit_taux_bas" value="2.50" step="0.1" oninput="calcCreditStep2()"></div>
+    </div>
+    <div id="credit-preview-step2"></div>
+  </div>
+</div>
+
+<!-- ── Questions de découverte & Notes ── -->
+<div class="card">
+  <div class="card-header">💬 Questions de découverte &amp; Notes</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div class="form-group"><label>Pourquoi ce bien vous avait-il plu ?</label><textarea id="q1" placeholder="Réponse du propriétaire…"></textarea></div>
+      <div class="form-group"><label>Quel est le plus grand atout de votre bien ?</label><textarea id="q2" placeholder="Réponse du propriétaire…"></textarea></div>
+      <div class="form-group"><label>Pourquoi déménager ?</label><textarea id="q3" placeholder="Réponse du propriétaire…"></textarea></div>
+      <div class="form-group"><label>Quel est votre projet après la vente ?</label><textarea id="q4" placeholder="Réponse du propriétaire…"></textarea></div>
+      <div class="form-group col-span-2"><label>Avez-vous déjà fait estimer le bien ? À combien ?</label><textarea id="q5" placeholder="Réponse du propriétaire…" style="min-height:50px"></textarea></div>
+    </div>
+    <div class="form-group mt-8"><label>Notes libres (observations terrain, points à vérifier…)</label><textarea id="notes_libres" style="min-height:120px" placeholder="Toutes vos observations…"></textarea></div>
+    <div class="section-title">Prochaines étapes</div>
+    <div class="grid-2">
+      <div class="form-group"><label>À faire</label><textarea id="prochaines_etapes" placeholder="Envoyer le mandat, relancer pour les diagnostics…" style="min-height:70px"></textarea></div>
+      <div class="form-group"><label>Date R2</label><input type="date" id="date_r2"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Financement & Relogement ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">🏦 Financement &amp; Relogement</div>
+  <div class="card-body">
+    <div class="form-group">
+      <label>Loyer potentiel estimé (€/mois)</label>
+      <input type="number" id="loyer" placeholder="1 300" step="50" min="0">
+    </div>
+    <div class="form-group">
+      <label>Capital restant à rembourser (€)</label>
+      <input type="number" id="capital_restant" placeholder="0">
+    </div>
+    <div class="section-title">Prêt en cours</div>
+    <div class="grid-4">
+      <div class="form-group"><label>Montant de la dette (€)</label><input type="number" id="dette_montant" placeholder="80000"></div>
+      <div class="form-group"><label>Échéance</label><input type="date" id="dette_echeance"></div>
+      <div class="form-group"><label>Banque</label><input type="text" id="banque" placeholder="Nom de la banque"></div>
+      <div class="form-group"><label>Taux (%)</label><input type="number" id="taux_pret" placeholder="1.45" step="0.01"></div>
+    </div>
+    <div class="section-title mt-16">Relogement</div>
+    <div class="grid-3">
+      <div class="form-group"><label>Relogement trouvé</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="relogement_trouve" value="non"> Non</label>
+        <label class="radio-item"><input type="radio" name="relogement_trouve" value="oui"> Oui</label>
+      </div></div>
+      <div class="form-group"><label>Budget maximum (€)</label><input type="number" id="reloge_budget" placeholder="250000"></div>
+      <div class="form-group"><label>Type de bien recherché</label><input type="text" id="reloge_type" placeholder="Maison 4 pièces…"></div>
+      <div class="form-group"><label>Délai d'acquisition</label><input type="text" id="reloge_delai" placeholder="3 mois, avant la rentrée…"></div>
+      <div class="form-group"><label>Zone de recherche</label><input type="text" id="reloge_zone" placeholder="Évry, Corbeil, Massy…"></div>
+      <div class="form-group"><label>Nb de pièces souhaité</label><input type="number" id="reloge_pieces" placeholder="4"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Action row ── -->
+<div class="action-row">
+  <button class="btn btn-outline" onclick="goToStep(1)">← Retour Profil</button>
+  <span id="draft-saved-badge" style="font-size:11px;color:var(--success);display:none;">✅ Brouillon sauvegardé</span>
+  <div class="spacer"></div>
+  <button class="btn btn-success btn-lg" onclick="continuerVersGeneration()">Continuer → Générer la fiche</button>
+</div>
+
+</div><!-- /container -->
+</div><!-- /page-2 -->
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 3 — GÉNÉRATION (placeholder)
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-3">
+<div class="container">
+  <div class="card">
+    <div class="card-header">⚙️ Génération de la fiche</div>
+    <div class="card-body">
+
+      <!-- Résumé -->
+      <div class="section-title">Résumé</div>
+      <div id="step3-summary" style="margin-bottom:16px;color:var(--muted);font-size:13px;">
+        Cliquez sur "Générer" pour voir le résumé.
+      </div>
+
+      <!-- Aperçu iframe -->
+      <div class="section-title">Aperçu de la fiche</div>
+      <div id="step3-status" style="margin-bottom:8px;font-size:13px;"></div>
+      <div style="margin-bottom:12px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-lg" onclick="generatePreview()">
+          🔄 Générer l'aperçu
+        </button>
+        <button class="btn btn-outline btn-lg" id="btn-download-fiche"
+                onclick="downloadFiche()" disabled>
+          ⬇ Télécharger le HTML
+        </button>
+      </div>
+      <iframe id="preview-iframe"
+        style="width:100%;height:600px;border:1px solid var(--border);
+               border-radius:var(--radius);background:#fff;display:block;">
+      </iframe>
+
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-outline" onclick="goToStep(2)">← Retour</button>
+    <div class="spacer"></div>
+    <button class="btn btn-primary btn-lg" id="btn-step3-continue"
+            onclick="continuerVersPublication()" disabled>
+      Continuer →
+    </button>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 4 — PUBLICATION (placeholder)
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-4">
+<div class="container">
+  <div class="card">
+    <div class="card-header">📤 Publication GitHub</div>
+    <div class="card-body">
+
+      <!-- Token -->
+      <div class="section-title">Token GitHub</div>
+      <div style="margin-bottom:16px;">
+        <input type="password" id="gh-token-input" class="form-control"
+               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+               style="max-width:420px;margin-bottom:8px;">
+        <button class="btn btn-outline" id="gh-token-save-btn"
+                onclick="saveGhToken()">💾 Sauvegarder</button>
+        <div id="gh-token-status" style="margin-top:6px;font-size:13px;"></div>
+      </div>
+
+      <!-- Résumé publication -->
+      <div class="section-title">Fichier à publier</div>
+      <div id="step4-summary"
+           style="margin-bottom:16px;color:var(--muted);font-size:13px;">
+        —
+      </div>
+
+      <!-- Bouton publication -->
+      <div class="section-title">Publication</div>
+      <div id="step3-status-pub" style="margin-bottom:8px;"></div>
+      <button class="btn btn-primary btn-lg" id="gh-push-btn"
+              onclick="pushToGitHub()">
+        📤 Publier sur GitHub Pages
+      </button>
+      <div id="gh-push-status"
+           style="margin-top:12px;font-size:13px;line-height:1.6;"></div>
+      <div id="gh-link-area" style="display:none;margin-top:12px;"></div>
+
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-outline" onclick="goToStep(3)">← Retour</button>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// GLOBAL STATE
+// ═══════════════════════════════════════════════════════
+var _currentStep   = 1;
+var _stepsComplete = { 1: false, 2: false, 3: false, 4: false };
+var _step2Inited   = false;
+var _draftTimer    = null;
+window._bienData   = null;
+var _templateHTML      = null;
+var _lastGeneratedHTML = null;
+var _lastGeneratedSlug = null;
+
+refreshTokenUI();
+
+fetch('./index.html')
+  .then(function(r) { return r.text(); })
+  .then(function(html) { _templateHTML = html; })
+  .catch(function(err) { console.warn('Template non chargé :', err); });
+
+// ═══════════════════════════════════════════════════════
+// SHARED HELPERS
+// ═══════════════════════════════════════════════════════
+function getV(id) { var e = document.getElementById(id); return e ? e.value : ''; }
+function setV(id, v) { var e = document.getElementById(id); if (e) e.value = (v == null ? '' : v); }
+
+// ═══════════════════════════════════════════════════════
+// STEP NAVIGATION
+// ═══════════════════════════════════════════════════════
+function goToStep(n) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.getElementById('page-' + n).classList.add('active');
+  // Update tabs
+  [1,2,3,4].forEach(function(i) {
+    var tab = document.getElementById('tab-' + i);
+    tab.classList.remove('active', 'done');
+    if (i === n)             tab.classList.add('active');
+    else if (_stepsComplete[i]) tab.classList.add('done');
+  });
+  _currentStep = n;
+  if (n === 3) { refreshStep3Summary(); }
+  if (n === 4) { refreshStep4Summary(); refreshTokenUI(); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateStepperTabs() {
+  [1,2,3,4].forEach(function(i) {
+    var tab = document.getElementById('tab-' + i);
+    if (!tab) return;
+    tab.classList.remove('active', 'done');
+    if (i === _currentStep)      tab.classList.add('active');
+    else if (_stepsComplete[i])  tab.classList.add('done');
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════
+function showToast(msg, error) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (error ? ' error' : '');
+  setTimeout(function() { t.className = 'toast'; }, 3000);
+}
+
+// ═══════════════════════════════════════════════════════
+// AGENT PROFILE — helpers
+// ═══════════════════════════════════════════════════════
+// STEP 1 — AGENT PROFILE
+
+function getInitials(prenom, nom) {
+  var p = (prenom || '').trim();
+  var n = (nom   || '').trim();
+  if (!p && !n) return 'EX';
+  if (!n) return p.substring(0,2).toUpperCase();
+  return (p[0] || '') .toUpperCase() + (n[0] || '').toUpperCase();
+}
+
+function updateAgentPreview() {
+  var prenom  = getV('agent-prenom');
+  var nom     = getV('agent-nom');
+  var reseau  = getV('agent-reseau');
+  var secteur = getV('agent-secteur');
+  var photo   = getV('agent-photo-url');
+
+  // Initials
+  var initials = getInitials(prenom, nom);
+  document.getElementById('prev-initials').textContent  = initials;
+  document.getElementById('header-initials').textContent = initials;
+
+  // Photo
+  var prevImg = document.getElementById('prev-photo');
+  var hdrImg  = document.getElementById('header-photo');
+  if (photo) {
+    prevImg.src = photo; prevImg.style.display = 'block';
+    hdrImg.src  = photo; hdrImg.style.display  = 'block';
+    document.getElementById('prev-initials').style.display  = 'none';
+    document.getElementById('header-initials').style.display = 'none';
+  } else {
+    prevImg.style.display = 'none';
+    hdrImg.style.display  = 'none';
+    document.getElementById('prev-initials').style.display  = 'block';
+    document.getElementById('header-initials').style.display = 'block';
+  }
+
+  // Full name in preview + header
+  var fullname = [prenom, nom].filter(Boolean).join(' ') || 'Votre nom apparaîtra ici';
+  document.getElementById('prev-name').textContent   = fullname;
+  document.getElementById('header-name').textContent = fullname || 'Expertimo';
+
+  var sub = [reseau, secteur].filter(Boolean).join(' · ');
+  document.getElementById('prev-sub').textContent    = sub || 'Réseau · Secteur · email · téléphone';
+  document.getElementById('header-sub').textContent  = sub || 'Générateur Fiche Acheteur';
+}
+
+// ═══════════════════════════════════════════════════════
+// AGENT PROFILE — colors
+// ═══════════════════════════════════════════════════════
+function applyAgentColors() {
+  var cp = getV('agent-color-primary');
+  var ca = getV('agent-color-accent');
+  if (cp) {
+    document.documentElement.style.setProperty('--primary', cp);
+    document.getElementById('agent-color-primary-hex').value = cp;
+  }
+  if (ca) {
+    document.documentElement.style.setProperty('--accent', ca);
+    document.getElementById('agent-color-accent-hex').value = ca;
+  }
+}
+
+function syncColorHex(which) {
+  var hex = getV('agent-color-' + which + '-hex').trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+    document.getElementById('agent-color-' + which).value = hex;
+    document.documentElement.style.setProperty('--' + which, hex);
+  }
+}
+
+function setColor(which, hex) {
+  document.getElementById('agent-color-' + which).value     = hex;
+  document.getElementById('agent-color-' + which + '-hex').value = hex;
+  document.documentElement.style.setProperty('--' + which, hex);
+}
+
+// ═══════════════════════════════════════════════════════
+// AGENT PROFILE — save / load / reset
+// ═══════════════════════════════════════════════════════
+function saveProfile() {
+  var profile = {
+    prenom:        getV('agent-prenom'),
+    nom:           getV('agent-nom'),
+    reseau:        getV('agent-reseau'),
+    tel:           getV('agent-tel'),
+    email:         getV('agent-email'),
+    secteur:       getV('agent-secteur'),
+    rdv_url:       getV('agent-rdv-url'),
+    photo_url:     getV('agent-photo-url'),
+    color_primary: getV('agent-color-primary'),
+    color_accent:  getV('agent-color-accent')
+  };
+  localStorage.setItem('_agent_profile', JSON.stringify(profile));
+  document.getElementById('profile-saved-badge').style.display = 'inline-flex';
+  return profile;
+}
+
+function loadProfile() {
+  var raw = localStorage.getItem('_agent_profile');
+  if (!raw) return null;
+  try { return JSON.parse(raw); } catch(e) { return null; }
+}
+
+function applyProfile(p) {
+  if (!p) return;
+  function sv(id, v) { var e = document.getElementById(id); if (e) e.value = v || ''; }
+  sv('agent-prenom',    p.prenom);
+  sv('agent-nom',       p.nom);
+  sv('agent-reseau',    p.reseau);
+  sv('agent-tel',       p.tel);
+  sv('agent-email',     p.email);
+  sv('agent-secteur',   p.secteur);
+  sv('agent-rdv-url',   p.rdv_url);
+  sv('agent-photo-url', p.photo_url);
+  if (p.color_primary) {
+    sv('agent-color-primary',     p.color_primary);
+    sv('agent-color-primary-hex', p.color_primary);
+    document.documentElement.style.setProperty('--primary', p.color_primary);
+  }
+  if (p.color_accent) {
+    sv('agent-color-accent',      p.color_accent);
+    sv('agent-color-accent-hex',  p.color_accent);
+    document.documentElement.style.setProperty('--accent', p.color_accent);
+  }
+  updateAgentPreview();
+  if (p.prenom || p.nom) {
+    document.getElementById('profile-saved-badge').style.display = 'inline-flex';
+  }
+}
+
+function saveProfileAndContinue() {
+  var prenom = getV('agent-prenom');
+  var nom    = getV('agent-nom');
+  if (!prenom && !nom) {
+    showToast('⚠️ Saisissez au moins votre prénom ou nom.', true);
+    return;
+  }
+  saveProfile();
+  _stepsComplete[1] = true;
+  showToast('✅ Profil enregistré !');
+  setTimeout(function() { goToStep(2); }, 700);
+}
+
+function resetProfile() {
+  if (!confirm('Réinitialiser le profil agent ? Les données seront effacées.')) return;
+  localStorage.removeItem('_agent_profile');
+  ['agent-prenom','agent-nom','agent-reseau','agent-tel','agent-email',
+   'agent-secteur','agent-rdv-url','agent-photo-url'].forEach(function(id) {
+    var e = document.getElementById(id); if (e) e.value = '';
+  });
+  document.getElementById('agent-color-primary').value     = '#1a3a5c';
+  document.getElementById('agent-color-primary-hex').value = '#1a3a5c';
+  document.getElementById('agent-color-accent').value      = '#c9a84c';
+  document.getElementById('agent-color-accent-hex').value  = '#c9a84c';
+  document.documentElement.style.setProperty('--primary', '#1a3a5c');
+  document.documentElement.style.setProperty('--accent',  '#c9a84c');
+  document.getElementById('profile-saved-badge').style.display = 'none';
+  updateAgentPreview();
+  showToast('Profil réinitialisé');
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 1 — INIT
+// ═══════════════════════════════════════════════════════
+(function initApp() {
+  var saved = loadProfile();
+  if (saved) { applyProfile(saved); _stepsComplete[1] = true; }
+})();
+
+// ═══════════════════════════════════════════════════════
+// STEP NAVIGATION — init step 2 on first visit
+// ═══════════════════════════════════════════════════════
+var _origGoToStep = goToStep;
+goToStep = function(n) {
+  _origGoToStep(n);
+  if (n === 2 && !_step2Inited) { initStep2(); _step2Inited = true; }
+  if (n === 2) loadDraftBien();
+  if (n === 2 && !_ficheMap) { if (getV('adresse')) initFicheMap(); }
+};
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — DATA ARRAYS
+// ═══════════════════════════════════════════════════════
+var PIECES_UTILES    = ['Sous-sol','Cave','Grenier','Cave à vin','Local de rangement','Salle de loisirs','Combles','Dépendances'];
+var DEFAUTS_LIST     = ['Moisissures','Fissures','Remontées capillaires','Insectes/nuisibles','Dégâts d\'eau','Câbles haute tension','Antenne téléphonie mobile','Amiante'];
+var VIGILANCES_LIST  = ['Nuisances sonores','Vis-à-vis direct','Humidité récurrente','Travaux importants à prévoir','Isolation thermique insuffisante','Parties communes dégradées','Environnement en mutation','Servitude de passage','Litige de voisinage','Toit / toiture à refaire','Fenêtres à changer','Chauffage vétuste','Électricité à mettre aux normes'];
+var EQUIP_GENERAL    = ['Cheminée','Poêle','Sauna','Photovoltaïque','Jacuzzi / Whirlpool','Ascenseur','Piscine intérieure','Solaire thermique'];
+var EQUIP_CUISINE    = ['Four','Hotte aspirante','Congélateur','Lave-vaisselle','Réfrigérateur','Cave à vin'];
+var EXTERIEUR_ITEMS  = [{label:'Jardin',m2:true},{label:'Véranda',m2:true},{label:'Terrasse',m2:true},{label:'Vue',m2:false},{label:'Balcon(s)',m2:true},{label:'Piscine',m2:true},{label:'Pelouse',m2:true},{label:'Portail',m2:false}];
+var VIABILISATION    = ['Eau','Électricité','Gaz','Assainissement','Fibre optique'];
+var RISQUES_TERRAIN  = ['Zone inondable','Sol argileux','Zone sismique','Ligne haute tension','Servitude'];
+var TOIT_TYPES       = ['Ardoises','Zinc','Tuiles','Terrasse','Autre'];
+var FACADE_TYPES     = ['Pierre','Crépis','Béton','Bois','Terre','Autre'];
+var SOLS_TYPES       = ['Carrelage','Parquet','Marbre','PVC','Autre'];
+var VITRAGE_TYPES    = ['Simple vitrage','Double vitrage','Triple vitrage'];
+var VITRAGE_MAT      = ['Bois','PVC','Aluminium'];
+var CHAUF_TYPES      = ['Individuel','Collectif','Semi-collectif'];
+var CHAUF_ENERGIES   = ['Mazout / Fuel','Gaz','Électrique','PAC'];
+var CHAUF_DIFFUSIONS = ['Radiateur','Convecteur','Plancher chauffant','Autre'];
+var ECS_TYPES        = ['Gaz','Fioul','Urbain','Électricité','Autre'];
+var ETAT_OPTIONS     = [{label:'Neuf',cls:'r-neuf'},{label:'Comme neuf',cls:'r-soigne'},{label:'Soigné',cls:'r-soigne'},{label:'Moyen',cls:'r-moyen'},{label:'À rénover',cls:'r-renov'}];
+var EXPOSITIONS      = ['Sud','Nord','Est','Ouest','Autre'];
+var EXPO_SONORE      = ['Bruyant','Normal','Calme'];
+var TRANSPORTS       = ['Bus','Métro','Tram','Train','Autre'];
+var DPE_LETTERS      = ['A','B','C','D','E','F','G'];
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — DYNAMIC BUILDERS
+// ═══════════════════════════════════════════════════════
+function buildCheckGrid(containerId, items, prefix) {
+  var c = document.getElementById(containerId); if (!c) return; c.innerHTML = '';
+  items.forEach(function(item) {
+    var label = typeof item === 'object' ? item.label : item;
+    var id = prefix + '_' + label.replace(/[^a-zA-Z0-9]/g,'_');
+    var div = document.createElement('div'); div.className = 'defaut-item'; div.id = 'wrap_' + id;
+    var m2html = (typeof item === 'object' && item.m2) ? '<input type="number" id="'+id+'_m2" placeholder="m²" style="width:55px;font-size:11px;padding:3px 5px">' : '';
+    div.innerHTML = '<span>'+label+'</span><div style="display:flex;gap:6px;align-items:center">'+m2html+
+      '<label class="radio-item"><input type="radio" name="'+id+'" value="non" checked> Non</label>'+
+      '<label class="radio-item"><input type="radio" name="'+id+'" value="oui"> Oui</label></div>';
+    c.appendChild(div);
+    div.querySelectorAll('input[type=radio]').forEach(function(r) {
+      r.addEventListener('change', function() { div.classList.toggle('oui', r.value==='oui'&&r.checked); });
+    });
+  });
+}
+
+function buildCheckGroup(containerId, items, namePrefix, multi) {
+  var c = document.getElementById(containerId); if (!c) return; c.innerHTML = '';
+  items.forEach(function(item) {
+    var lbl = document.createElement('label'); lbl.className = 'check-item';
+    var inp = document.createElement('input');
+    inp.type = multi ? 'checkbox' : 'radio'; if (!multi) inp.name = namePrefix; inp.value = item;
+    lbl.appendChild(inp); lbl.appendChild(document.createTextNode(' '+item)); c.appendChild(lbl);
+    if (item === 'Autre') {
+      var txt = document.createElement('input'); txt.type='text'; txt.id=namePrefix+'_autre_txt'; txt.placeholder='Précisez…';
+      txt.style.cssText='display:none;margin-left:6px;padding:3px 7px;border:1px solid var(--border);border-radius:4px;font-size:12px;width:140px;';
+      c.appendChild(txt); inp.addEventListener('change', function() { txt.style.display=inp.checked?'inline-block':'none'; });
+    }
+  });
+}
+
+function buildRatingGroup(containerId, namePrefix) {
+  var c = document.getElementById(containerId); if (!c) return; c.innerHTML = '';
+  ETAT_OPTIONS.forEach(function(opt) {
+    var span = document.createElement('span'); span.className='rating-badge '+opt.cls; span.textContent=opt.label;
+    span.dataset.val=opt.label; span.dataset.name=namePrefix;
+    span.onclick = function() { c.querySelectorAll('.rating-badge').forEach(function(b){b.classList.remove('sel');}); span.classList.add('sel'); };
+    c.appendChild(span);
+  });
+}
+
+function buildDPEGrid(containerId, namePrefix) {
+  var c = document.getElementById(containerId); if (!c) return; c.innerHTML = '';
+  DPE_LETTERS.forEach(function(l) {
+    var btn = document.createElement('div'); btn.className='dpe-btn dpe-'+l; btn.textContent=l;
+    btn.dataset.letter=l; btn.dataset.group=namePrefix;
+    btn.onclick = function() { c.querySelectorAll('.dpe-btn').forEach(function(b){b.classList.remove('sel');}); btn.classList.add('sel'); scheduleDraftSave(); };
+    c.appendChild(btn);
+  });
+}
+
+function buildViabGrid() {
+  var c = document.getElementById('viab_grid'); if (!c) return; c.innerHTML = '';
+  VIABILISATION.forEach(function(v) {
+    var div = document.createElement('div'); div.className = 'viab-item';
+    div.innerHTML = '<span>'+v+'</span><div style="display:flex;gap:6px"><label class="radio-item"><input type="radio" name="viab_'+v+'" value="non" checked> Non</label><label class="radio-item"><input type="radio" name="viab_'+v+'" value="oui"> Oui</label></div>';
+    div.querySelectorAll('input[type=radio]').forEach(function(r) { r.addEventListener('change', function() { div.classList.toggle('ok',r.value==='oui'&&r.checked); }); });
+    c.appendChild(div);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — PIECES TABLE
+// ═══════════════════════════════════════════════════════
+var DEFAULT_PIECES = [
+  {name:'Entrée'},{name:'Séjour'},{name:'Salle à manger'},
+  {name:'Chambre 1'},{name:'Chambre 2'},{name:'Chambre 3'},{name:'Chambre 4'},{name:'Chambre 5'},
+  {name:'Cuisine'},{name:'WC'},{name:'Salle de bains'},{name:'Salle d\'eau'},{name:''},{name:''}
+];
+var _dragSrc = null;
+var _photos  = [];
+var currentType = 'appart';
+
+function makePieceRow(name) {
+  name = name || '';
+  var tr = document.createElement('tr'); tr.draggable=true; tr.style.cssText='cursor:grab;';
+  var tdStyle = 'padding:6px 8px;border-bottom:1px solid var(--border)';
+  var inStyle  = 'width:100%;border:1px solid var(--border);padding:5px 7px;border-radius:4px;font-size:12px;';
+  tr.innerHTML = '<td style="text-align:center;color:#aaa;font-size:16px;cursor:grab;user-select:none;">⠿</td>'+
+    '<td style="'+tdStyle+'"><input type="text" value="'+name+'" placeholder="Pièce…" style="'+inStyle+'"></td>'+
+    '<td style="'+tdStyle+'"><input type="number" placeholder="m²" style="width:70px;'+inStyle.slice(8)+'"></td>'+
+    '<td style="'+tdStyle+'"><input type="text" placeholder="RDC…" style="width:60px;'+inStyle.slice(8)+'"></td>'+
+    '<td style="'+tdStyle+'"><input type="text" placeholder="Particularités…" style="'+inStyle+'"></td>';
+  addDragEvents(tr); return tr;
+}
+
+function addDragEvents(tr) {
+  tr.addEventListener('dragstart', function(e) { _dragSrc=this; this.style.opacity='0.4'; e.dataTransfer.effectAllowed='move'; });
+  tr.addEventListener('dragend',   function()  { this.style.opacity='1'; });
+  tr.addEventListener('dragover',  function(e) { e.preventDefault(); this.style.background='#e8f4fd'; return false; });
+  tr.addEventListener('dragleave', function()  { this.style.background=''; });
+  tr.addEventListener('drop', function(e) {
+    e.stopPropagation(); if (_dragSrc===this) return false;
+    var tbody=document.getElementById('pieces_tbody'), rows=Array.from(tbody.querySelectorAll('tr'));
+    var si=rows.indexOf(_dragSrc), ti=rows.indexOf(this);
+    if (si<ti) tbody.insertBefore(_dragSrc,this.nextSibling); else tbody.insertBefore(_dragSrc,this);
+    this.style.background=''; return false;
+  });
+}
+
+function buildPiecesTable() {
+  var tbody = document.getElementById('pieces_tbody'); if (!tbody) return; tbody.innerHTML='';
+  DEFAULT_PIECES.forEach(function(p) { tbody.appendChild(makePieceRow(p.name)); });
+}
+
+function addPieceRow() { var t=document.getElementById('pieces_tbody'); if(t) t.appendChild(makePieceRow()); }
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — SWITCH TYPE
+// ═══════════════════════════════════════════════════════
+function switchType(type) {
+  currentType = type;
+  // Onglets actifs via data-type
+  document.querySelectorAll('.type-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.type === type);
+  });
+  // Visibilité des sections
+  document.querySelectorAll('.appart-only').forEach(function(el) {
+    el.classList.toggle('hidden', type !== 'appart');
+  });
+  document.querySelectorAll('.maison-only').forEach(function(el) {
+    el.classList.toggle('hidden', type !== 'maison');
+  });
+  document.querySelectorAll('.terrain-only').forEach(function(el) {
+    el.classList.toggle('hidden', type !== 'terrain');
+  });
+  document.querySelectorAll('.appart-maison-only').forEach(function(el) {
+    el.classList.toggle('hidden', type === 'terrain');
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — PHOTOS
+// ═══════════════════════════════════════════════════════
+function addPhotos(input) {
+  Array.from(input.files).forEach(function(f) {
+    var reader=new FileReader();
+    reader.onload=function(e) { _photos.push({dataUrl:e.target.result,caption:''}); renderPhotos(); };
+    reader.readAsDataURL(f);
+  }); input.value='';
+}
+function escAttr(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function renderPhotos() {
+  var grid=document.getElementById('photo_grid'); if(!grid) return; grid.innerHTML='';
+  _photos.forEach(function(p,i) {
+    var div=document.createElement('div'); div.className='photo-thumb';
+    div.innerHTML='<img src="'+p.dataUrl+'" alt="Photo '+(i+1)+'">'+'<button class="del-photo" onclick="removePhoto('+i+')">✕</button>'+'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" oninput="_photos['+i+'].caption=this.value"></div>';
+    grid.appendChild(div);
+  }); scheduleDraftSave();
+}
+function removePhoto(i) { _photos.splice(i,1); renderPhotos(); }
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — DVF API
+// ═══════════════════════════════════════════════════════
+var _dvfCache = null;
+
+function initDVFTable() {
+  var tbody = document.querySelector('#dvf-tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  for (var i = 1; i <= 6; i++) {
+    tbody.innerHTML += '<tr>' +
+      '<td><input type="text" id="dvf-date-'+i+'" placeholder="01/2024"></td>' +
+      '<td><input type="text" id="dvf-adresse-'+i+'" placeholder="Rue du Marché"></td>' +
+      '<td><input type="number" id="dvf-surface-'+i+'" placeholder="65" oninput="calcDVFm2('+i+')"></td>' +
+      '<td><input type="number" id="dvf-prix-'+i+'" placeholder="180000" oninput="calcDVFm2('+i+')"></td>' +
+      '<td><input type="number" id="dvf-prixm2-'+i+'" placeholder="auto" style="background:#f0f7ff" readonly></td>' +
+    '</tr>';
+  }
+}
+
+function calcDVFm2(row) {
+  var surf = parseFloat(getV('dvf-surface-'+row)) || 0;
+  var prix = parseFloat(getV('dvf-prix-'+row)) || 0;
+  if (surf && prix) setV('dvf-prixm2-'+row, Math.round(prix/surf));
+}
+
+function getDVFRows() {
+  var rows = [];
+  for (var i = 1; i <= 6; i++) {
+    var date = getV('dvf-date-'+i), adr = getV('dvf-adresse-'+i), prix = getV('dvf-prix-'+i);
+    if (date || adr || prix) rows.push({
+      date: date, adresse: adr,
+      surface: getV('dvf-surface-'+i),
+      prix: parseFloat(prix) || 0,
+      prixm2: parseFloat(getV('dvf-prixm2-'+i)) || 0
+    });
+  }
+  return rows;
+}
+
+// ═══════════════════════════════════════
+// COPIED FROM generateur.html — mot pour mot
+// ═══════════════════════════════════════
+function injectData(html, d) {
+  var prixFmt = fmtNum(d.prix);                         // "260 000" — used for JS string matching
+  var chargesCopro = Math.round(d.chargesCopro);
+  var chargesAnnuelles = chargesCopro * 12 + Math.round(d.taxeFonciere);
+
+  // ── PHASE 1 : JS string replacements BEFORE DOM parsing ──
+  // Replace hardcoded strings that live inside <script> blocks.
+  // srep() uses split/join — safe with special characters.
+
+  // ── _sp_ chatbot variables (AI assistant context) ──
+  // replaceSp() uses regex so it works regardless of the current template values.
+  html = replaceSp(html, '_sp_adresse',  d.adresse);
+  html = replaceSp(html, '_sp_prix',     prixFmt);
+  html = replaceSp(html, '_sp_surface',  d.surface ? String(d.surface).replace('.', ',') : '');
+  html = replaceSp(html, '_sp_etage',    d.etage || '');
+  html = replaceSp(html, '_sp_dpe',      d.dpe || '');
+  // Replace hardcoded `var dpe = "D"` in the DPE IIFE — drives bar highlight + header color
+  if (d.dpe) html = replaceSp(html, 'dpe', d.dpe);
+  html = replaceSp(html, '_sp_charges',  chargesCopro > 0 ? String(chargesCopro) : '0');
+  html = replaceSp(html, '_sp_detail',   d.chargesDetail || '');
+  html = replaceSp(html, '_sp_tf',       d.taxeFonciere > 0 ? String(Math.round(d.taxeFonciere)) : '0');
+  html = replaceSp(html, '_sp_pf1',      d.fort1 || '');
+  html = replaceSp(html, '_sp_pf2',      d.fort2 || '');
+  html = replaceSp(html, '_sp_pf3',      d.fort3 || '');
+  html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
+  html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
+  html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
+  // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
+
+  // Loyer slider — replace hardcoded 1300 in template JS
+  html = srep(html, 'value="1300"', 'value="' + (d.loyer || 1300) + '"');
+  html = srep(html, "value='1300'", "value='" + (d.loyer || 1300) + "'");
+  html = srep(html, "setAttribute('value', 1300)", "setAttribute('value', " + (d.loyer || 1300) + ')');
+
+  // Address (the template may have it as literal string in JS)
+  html = srep(html, "5 Rue de l'Arpajonnais", d.adresse);
+
+  // Reference
+  html = srep(html, 'ex91-lg001', d.ref);
+
+  // Price string in JS parseFloat calls: parseFloat("260 000"...)
+  html = srep(html, '"260 000"', '"' + prixFmt + '"');
+  html = srep(html, "'260 000'", "'" + prixFmt + "'");
+
+  // Charges in calcBudget: parseFloat("253")
+  if (chargesCopro > 0) {
+    html = srep(html, 'parseFloat("253")', 'parseFloat("' + chargesCopro + '")');
+  }
+
+  // Agent brand colors — replace template defaults
+  if (d.agentPrimary) {
+    html = srep(html, '--dark:#141414', '--dark:' + d.agentPrimary);
+  }
+  if (d.agentAccent) {
+    html = srep(html, '--gold:#b8923a', '--gold:' + d.agentAccent);
+    html = srep(html, '--gold2:#d4a956', '--gold2:' + d.agentAccent);
+  }
+
+  if (d.agentPhoto) {
+    html = html.split('id="agent-photo" src=""').join('id="agent-photo" src="' + d.agentPhoto + '"');
+  }
+
+  // ── PHASE 2 : DOM manipulation ──
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+
+  function q(sel)  { return doc.querySelector(sel); }
+  function qa(sel) { return doc.querySelectorAll(sel); }
+  function id(i)   { return doc.getElementById(i); }
+  function setText(sel, txt) { var e = q(sel); if (e) e.textContent = txt; }
+
+  // ── Document ──
+  doc.title = d.adresse + ' · Espace Acheteur Privé · Expertimo';
+
+  // ── Header ──
+  var badge = q('.hbadge');
+  if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo · Réf. ' + d.ref;
+
+  var htitle = q('.htitle');
+  if (htitle) htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;">' + esc(d.quartier) + '</span>';
+
+  var hsub = q('.hsub');
+  if (hsub) hsub.textContent = d.description;
+
+  var pamount = q('.pamount');
+  if (pamount) pamount.textContent = prixFmt + ' €';
+
+  if (d.dpe) setText('#h-dpe', d.dpe);
+  setText('#h-score', d.score.toString().replace('.', ',') + '/10');
+
+  // ── Tab : Le Bien ──
+  var piecesLabel = d.pieces ? d.pieces + ' pièce' + (parseInt(d.pieces) > 1 ? 's' : '') : '';
+  var stitle = q('.stitle');
+  if (stitle) stitle.textContent = d.adresse + (piecesLabel ? ' · ' + piecesLabel : '') + (d.etage ? ' · ' + d.etage : '');
+
+  var ssub = q('.ssub');
+  if (ssub) ssub.textContent = d.description;
+
+  // Gallery images
+  var imgs = qa('.gallery img');
+  if (imgs[0] && d.photo1) { imgs[0].src = d.photo1; imgs[0].alt = d.adresse + ' - Vue principale'; }
+  if (imgs[1] && d.photo2) { imgs[1].src = d.photo2; imgs[1].alt = d.adresse; }
+  if (imgs[2] && d.photo3) { imgs[2].src = d.photo3; imgs[2].alt = d.adresse; }
+  var galleryEl = q('.gallery');
+  if (galleryEl && galleryEl.nextElementSibling) {
+    var nPh = [d.photo1, d.photo2, d.photo3].filter(Boolean).length;
+    galleryEl.nextElementSibling.textContent = "📷 Cliquez sur une photo pour l'agrandir · " + nPh + " photos disponibles";
+  }
+
+  // Score box
+  var scoreNum = q('.score-num');
+  if (scoreNum) scoreNum.textContent = d.score.toString().replace('.', ',');
+  var scoreDesc = q('.score-box > p');
+  if (scoreDesc) scoreDesc.textContent = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePos(d.prixm2, d.mediane) + '.';
+
+  var slines = qa('.sline');
+  if (slines.length >= 4) {
+    updSline(slines[0], d.scorePrest);
+    updSline(slines[1], d.scoreSecteur);
+    updSline(slines[2], d.scoreQP);
+    updSline(slines[3], d.scoreEtat);
+  }
+
+  // Points forts & vigilances
+  // Template may not have the pts-grid block — insert it if absent, then populate.
+  if (!id('pts-grid-section')) {
+    // Inject CSS
+    var ptsCss = doc.createElement('style');
+    ptsCss.textContent = '.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}'
+      + '.pb{border-radius:12px;padding:15px;}'
+      + '.pb.green{background:#f0f7f3;border:1px solid #c3dece;}'
+      + '.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}'
+      + '.pb h4{font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}'
+      + '.pb.green h4{color:#2d6a4f;}'
+      + '.pb.amber h4{color:#8a6820;}'
+      + '.pb ul{list-style:none;}'
+      + '.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}';
+    if (doc.head) doc.head.appendChild(ptsCss);
+    // Insert HTML block before .score-box
+    var scoreBox = q('.score-box');
+    if (scoreBox) {
+      var ptsDiv = doc.createElement('div');
+      ptsDiv.className = 'pts-grid';
+      ptsDiv.id = 'pts-grid-section';
+      ptsDiv.innerHTML = '<div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>—</li></ul></div>'
+        + '<div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>—</li></ul></div>';
+      scoreBox.parentNode.insertBefore(ptsDiv, scoreBox);
+    }
+  }
+  var ptsGreen = id('pf-list') || q('.pb.green ul');
+  if (ptsGreen) {
+    var forts = [d.fort1, d.fort2, d.fort3].filter(Boolean);
+    if (forts.length) ptsGreen.innerHTML = forts.map(function(f) { return '<li>' + esc(f) + '</li>'; }).join('');
+  }
+  var ptsAmber = id('vg-list') || q('.pb.amber ul');
+  if (ptsAmber) {
+    var vigs = [d.vig1, d.vig2, d.vig3].filter(Boolean);
+    if (vigs.length) ptsAmber.innerHTML = vigs.map(function(v) { return '<li>' + esc(v) + '</li>'; }).join('');
+  }
+
+  // ── Tab : Analyse ──
+  var kpis = qa('.kpi');
+  if (kpis[0] && d.prixm2) kpis[0].querySelector('.kv').textContent = fmtNum(d.prixm2) + ' €';
+  if (kpis[1] && d.mediane) kpis[1].querySelector('.kv').textContent = fmtNum(d.mediane) + ' €';
+  if (kpis[2]) kpis[2].querySelector('.kv').textContent = d.tension;
+  if (kpis[3]) kpis[3].querySelector('.kv').textContent = d.delai;
+
+  // DVF table
+  var dvfTbody = q('.dvft tbody');
+  if (dvfTbody && d.dvf.length) {
+    dvfTbody.innerHTML = d.dvf.map(function(r) {
+      return '<tr class="dvf-row" data-date="' + esc(r.date) + '">'
+        + '<td>' + esc(r.date || '—') + '</td>'
+        + '<td>' + esc(r.adresse || '—') + '</td>'
+        + '<td class="mono">' + (r.surface || '—') + ' m²</td>'
+        + '<td class="mono">' + (r.prix ? fmtNum(r.prix) + ' €' : '—') + '</td>'
+        + '<td class="mono">' + (r.prixm2 ? fmtNum(r.prixm2) + ' €' : '—') + '</td>'
+        + '</tr>';
+    }).join('');
+  }
+
+  // DPE alert
+  if (d.dpe) {
+    var dpeTitle = id('dpe-alert-title');
+    if (dpeTitle) dpeTitle.textContent = '📋 DPE ' + d.dpe;
+    var dpeTxt = id('dpe-alert-txt');
+    if (dpeTxt) dpeTxt.textContent = dpeDesc(d.dpe);
+  }
+
+  // Loibox — surface mention
+  var loibox = q('.loibox p');
+  if (loibox && d.surface > 0) {
+    var vol = Math.round(d.surface * 2.80);
+    var sc = d.surfCarrez || d.surface;
+    loibox.innerHTML = sc.toLocaleString('fr-FR') + ' m² × ~2,80 m ≈ <strong>' + vol + ' m³</strong> → conforme au seuil légal de 20 m³. À confirmer par géomètre.';
+  }
+
+  // Loyer info
+  var loyerInfo = id('renta-loyer-info');
+  if (loyerInfo && d.loyer) loyerInfo.textContent = 'Bien libre. Loyer estimé : ' + fmtNum(d.loyer) + ' € nu. Simulez votre rentabilité ci-dessous.';
+
+  // Sliders — critical: sets initial values so template's calc() runs correctly on load
+  var pSlider = id('prix');
+  if (pSlider) {
+    var pMin = d.fourchetBasse || Math.round(d.prix * 0.6);
+    var pMax = d.fourchetHaute || Math.round(d.prix * 1.1);
+    pSlider.setAttribute('min', pMin);
+    pSlider.setAttribute('max', pMax);
+    pSlider.setAttribute('value', d.prix);
+    var vPrix = id('v-prix');
+    if (vPrix) vPrix.textContent = prixFmt + ' €';
+  }
+  var lSlider = id('loyer');
+  if (lSlider) {
+    var loyerVal = d.loyer || 1300;
+    lSlider.setAttribute('value', loyerVal);
+    lSlider.setAttribute('min', Math.round(loyerVal * 0.5));
+    lSlider.setAttribute('max', Math.round(loyerVal * 2.5));
+    var vLoyer = id('v-loyer');
+    if (vLoyer) vLoyer.textContent = loyerVal + ' €';
+  }
+  var cSlider = id('charges');
+  if (cSlider) {
+    cSlider.setAttribute('max', Math.max(chargesAnnuelles * 2, 9436));
+    cSlider.setAttribute('value', chargesAnnuelles);
+    var vCharges = id('v-charges');
+    if (vCharges) vCharges.textContent = chargesAnnuelles + ' €';
+  }
+
+  // Timeline — full rebuild from form data
+  function tliHtml(label, desc) {
+    return '<div class="tli"><div class="tly">' + esc(label) + '</div><div class="tlt">' + esc(desc) + '</div></div>';
+  }
+  var timeline = id('historique-timeline');
+  if (timeline) {
+    var tlHtml = '';
+    if (d.annee || d.histConstrDesc) {
+      tlHtml += tliHtml((d.annee || '?') + ' · CONSTRUCTION', d.histConstrDesc || '');
+    }
+    if (d.histEvt1Date) tlHtml += tliHtml(d.histEvt1Date, d.histEvt1Desc || '');
+    if (d.histEvt2Date) tlHtml += tliHtml(d.histEvt2Date, d.histEvt2Desc || '');
+    var venteDesc = 'Bien proposé à ' + prixFmt + ' €'
+      + (d.dpe ? ' · DPE ' + d.dpe : '')
+      + ' · Libre à la vente'
+      + (chargesCopro > 0 ? ' · Charges ' + chargesCopro + ' €/mois' : '') + '.';
+    tlHtml += tliHtml((d.histVenteDate || '2025') + ' · MISE EN VENTE', venteDesc);
+    timeline.innerHTML = tlHtml;
+  }
+
+  // Diagnostics grid — full rebuild
+  var diagGrid = q('.diag-grid');
+  if (diagGrid && d.diags && d.diags.length) {
+    var statusToClass = { favorable: 'diag-ok', attention: 'diag-attention', defavorable: 'diag-alerte', 'non-soumis': 'diag-' };
+    diagGrid.innerHTML = d.diags.map(function(diag) {
+      var cls = statusToClass[diag.status] || 'diag-ok';
+      return '<div class="diag-card ' + cls + '">'
+        + '<div class="diag-icon">' + diag.icon + '</div>'
+        + '<div class="diag-name">' + esc(diag.name) + '</div>'
+        + '<div class="diag-result">' + esc(diag.result) + '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // Documents tab — charges & taxe mentions
+  qa('.dc').forEach(function(dc) {
+    var dcn = dc.querySelector('.dcn');
+    var dcm = dc.querySelector('.dcm');
+    if (!dcn || !dcm) return;
+    var nm = dcn.textContent || '';
+    if (nm.indexOf('Appels de charges') !== -1 && chargesCopro > 0) {
+      dcm.textContent = 'Relevé annuel · ' + chargesCopro + ' €/mois';
+    }
+    if ((nm.indexOf('taxe foncière') !== -1 || nm.indexOf('Taxe foncière') !== -1) && d.taxeFonciere > 0) {
+      dcm.textContent = Math.round(d.taxeFonciere) + ' € / an';
+    }
+  });
+
+  // Offer tab
+  var offerAmt = id('offer-amount');
+  if (offerAmt) offerAmt.setAttribute('value', d.prix);
+  var offerDisp = id('offer-display');
+  if (offerDisp) offerDisp.textContent = prixFmt + ' €';
+  var offerDiff = id('offer-diff');
+  if (offerDiff) offerDiff.textContent = 'Prix affiché : ' + prixFmt + ' €';
+
+  // Agent photo
+  if (d.agentPhoto) {
+    // Injecter dans tous les éléments id="agent-photo"
+    var photos = doc.querySelectorAll('#agent-photo, [id="agent-photo"]');
+    photos.forEach(function(el) {
+      el.setAttribute('src', d.agentPhoto);
+      el.setAttribute('style',
+        'width:80px;height:80px;border-radius:50%;'
+        + 'object-fit:cover;object-position:top center;'
+        + 'border:2px solid var(--gold);display:block;'
+        + 'margin:0 auto 12px auto;');
+    });
+    // Masquer les avatars initiales à côté
+    var avatars = doc.querySelectorAll('.cons-avatar, .agent-avatar');
+    avatars.forEach(function(el) { el.style.display = 'none'; });
+  }
+
+  return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+}
+
+function srep(str, find, rep) { return str.split(find).join(rep); }
+
+// Replace a _sp_ variable declaration: var _sp_xxx = "old" → var _sp_xxx = "new"
+// Uses regex so the template value doesn't need to be known in advance.
+function replaceSp(html, varName, value) {
+  var safe = (value === null || value === undefined ? '' : String(value))
+    .replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  return html.replace(
+    new RegExp('(var\\s+' + varName + '\\s*=\\s*")[^"]*"'),
+    '$1' + safe + '"'
+  );
+}
+
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function updSline(sline, score) {
+  if (!sline) return;
+  var strong = sline.querySelector('strong');
+  if (strong) strong.textContent = score + '/10';
+  var fill = sline.querySelector('.sbar-fill');
+  if (fill) fill.style.width = Math.min(100, Math.round(parseFloat(score) / 10 * 100)) + '%';
+}
+
+function pricePos(pm2, med) {
+  if (!med || !pm2) return 'Prix à confirmer';
+  if (pm2 > med * 1.1) return 'Prix au-dessus du marché';
+  if (pm2 < med * 0.9) return 'Prix sous le marché';
+  return 'Prix dans le marché';
+}
+
+function dpeDesc(dpe) {
+  return {
+    A: 'Bien très économe en énergie — consommation < 70 kWh/m².an.',
+    B: 'Bien économe en énergie — consommation 70–110 kWh/m².an.',
+    C: 'Bien bien isolé — consommation 110–180 kWh/m².an.',
+    D: 'Bien classé D — vérifiez les obligations réglementaires en vigueur.',
+    E: 'Bien classé E — interdit à la location dès 2025. Travaux à prévoir.',
+    F: 'Passoire thermique — interdit à la location dès 2023. Décote significative.',
+    G: 'Passoire thermique sévère — interdit à la location. Décote importante.'
+  }[dpe] || 'Vérifiez le DPE et les obligations réglementaires en vigueur.';
+}
+
+function fmtDVFDate(ds) {
+  if (!ds) return '';
+  var p = ds.split('-');
+  if (p.length < 2) return ds;
+  var mois = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  return (mois[parseInt(p[1], 10) - 1] || p[1]) + ' ' + p[0];
+}
+
+function downloadHTML(html, filename) {
+  var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(function() { document.body.removeChild(a); URL.revokeObjectURL(a.href); }, 200);
+}
+
+function toBase64UTF8(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+
+// ═══════════════════════════════════════
+// END COPIED FROM generateur.html
+// ═══════════════════════════════════════
+
+function fetchDVF() {
+  var result=document.getElementById('dvf_result'), cp=getV('dvf_cp'), type=getV('dvf_type');
+  if (!cp||cp.length!==5) { showToast('⚠️ Code postal invalide (5 chiffres)', true); return; }
+  result.innerHTML='<div class="dvf-box"><p style="color:#f0c040;text-align:center;padding:10px;">⏳ Chargement DVF…</p></div>';
+  var url='https://api.data.gouv.fr/api/dvf/1.0/geomutations/?code_postal='+cp+'&nature_mutation=Vente&type_local='+encodeURIComponent(type)+'&rows=50';
+  fetch(url).then(function(r){return r.json();}).then(function(data) {
+    var items=(data.features||[]);
+    var vals=items.map(function(f) {
+      var p=f.properties||{}, surf=parseFloat(p.surface_reelle_bati)||0, prix=parseFloat(p.valeur_fonciere)||0;
+      return {date:p.date_mutation,adresse:p.adresse_nom_voie||p.nom_commune,surf:Math.round(surf),prix:Math.round(prix),pm2:surf>0&&prix>0?Math.round(prix/surf):0};
+    }).filter(function(v){return v.surf>0&&v.prix>0;});
+    if (!vals.length) { result.innerHTML='<div class="dvf-box"><p style="color:#f0c040;text-align:center;padding:20px;">Aucune transaction trouvée.</p></div>'; return; }
+    var pm2s=vals.map(function(v){return v.pm2;}).sort(function(a,b){return a-b;});
+    var median=pm2s[Math.floor(pm2s.length/2)], min=pm2s[0], max=pm2s[pm2s.length-1];
+    _dvfCache={transactions:vals,median:median,fourchetteBasse:min,fourchetteHaute:max};
+    setV('bien_mediane', Math.round(median));
+    var mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+    vals.slice(0,6).forEach(function(v,i) {
+      var row=i+1, dateFmt='';
+      if (v.date) { var p=v.date.split('-'); dateFmt=(mois[parseInt(p[1],10)-1]||p[1])+' '+p[0]; }
+      setV('dvf_ed_date_'+row,dateFmt); setV('dvf_ed_adr_'+row,v.adresse||'');
+      setV('dvf_ed_surf_'+row,v.surf||''); setV('dvf_ed_prix_'+row,v.prix||''); setV('dvf_ed_pm2_'+row,v.pm2||'');
+    });
+    result.innerHTML='<div class="dvf-box"><h3>📊 Marché '+escAttr(cp)+' — '+escAttr(type)+'</h3>'+
+      '<div class="dvf-stats"><div class="dvf-stat"><div class="val">'+fmtNum(median)+'</div><div class="lbl">€/m² médian</div></div>'+
+      '<div class="dvf-stat"><div class="val">'+fmtNum(min)+'</div><div class="lbl">€/m² min</div></div>'+
+      '<div class="dvf-stat"><div class="val">'+fmtNum(max)+'</div><div class="lbl">€/m² max</div></div></div>'+
+      '<table class="dvf-tbl"><thead><tr><th>Date</th><th>Adresse</th><th>m²</th><th>Prix</th><th>€/m²</th></tr></thead><tbody>'+
+      vals.slice(0,10).map(function(v){return '<tr><td>'+escAttr(v.date||'')+'</td><td>'+escAttr(v.adresse||'')+'</td><td>'+v.surf+'</td><td>'+fmtNum(v.prix)+' €</td><td>'+fmtNum(v.pm2)+'</td></tr>';}).join('')+
+      '</tbody></table></div>';
+  }).catch(function() {
+    result.innerHTML='<div class="dvf-box"><p style="color:#f0c040;text-align:center;padding:10px;">📊 DVF indisponible.<br><a href="https://app.dvf.etalab.gouv.fr" target="_blank" style="color:#f0c040;">app.dvf.etalab.gouv.fr</a></p></div>';
+  });
+}
+
+function calcDVFm2Edit(row) {
+  var surf=parseFloat(getV('dvf_ed_surf_'+row))||0, prix=parseFloat(getV('dvf_ed_prix_'+row))||0;
+  if (surf&&prix) setV('dvf_ed_pm2_'+row, Math.round(prix/surf));
+}
+function getDVFEditRows() {
+  var rows=[];
+  for (var i=1;i<=6;i++) {
+    var date=getV('dvf_ed_date_'+i),adr=getV('dvf_ed_adr_'+i),prix=getV('dvf_ed_prix_'+i);
+    if (date||adr||prix) rows.push({date:date,adresse:adr,surface:getV('dvf_ed_surf_'+i),prix:parseFloat(prix)||0,prixm2:parseFloat(getV('dvf_ed_pm2_'+i))||0});
+  }
+  return rows;
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — CREDIT
+// ═══════════════════════════════════════════════════════
+function calcCreditStep2() {
+  var prix=parseFloat(getV('prix_vente')||getV('prix_vente_t'))||0;
+  var el=document.getElementById('credit-preview-step2');
+  if (!prix||!el){if(el)el.style.display='none';return;}
+  var duree=parseInt(getV('bien_credit_duree'))||20, apport=parseFloat(getV('bien_credit_apport'))||10;
+  var t1=parseFloat(getV('bien_credit_taux_haut'))||5, t2=parseFloat(getV('bien_credit_taux_moyen'))||3.4, t3=parseFloat(getV('bien_credit_taux_bas'))||2.5;
+  var capital=prix*1.075*(1-apport/100);
+  function mens(cap,taux,an){var r=taux/100/12,n=an*12;return r===0?cap/n:cap*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);}
+  function row(taux,m){return taux.toFixed(2)+'% → <strong>'+fmtNum(Math.round(m))+' €/mois</strong> · coût : '+fmtNum(Math.round(m*duree*12-capital))+' €';}
+  el.style.display='block';
+  el.innerHTML='<strong>Capital : '+fmtNum(Math.round(capital))+' € sur '+duree+' ans (apport '+apport+'%)</strong><br>'+row(t1,mens(capital,t1,duree))+'<br>'+row(t2,mens(capital,t2,duree))+'<br>'+row(t3,mens(capital,t3,duree));
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — MAP
+// ═══════════════════════════════════════════════════════
+var _ficheMap=null, _ficheMapMarkers={transport:[],parc:[],commerce:[],ecole:[]};
+
+function initFicheMap() {
+  var adresse=getV('adresse');
+  if (!adresse){showToast("Entrez d'abord l'adresse",true);return;}
+  var mapDiv=document.getElementById('fiche-map');
+  mapDiv.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);">⏳ Géolocalisation…</div>';
+  document.getElementById('btn-geolocate').disabled=true;
+  fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(adresse)+'&limit=1')
+    .then(function(r){return r.json();})
+    .then(function(data) {
+      if (!data||!data[0]) throw new Error('Adresse introuvable');
+      var lat=parseFloat(data[0].lat), lng=parseFloat(data[0].lon);
+      document.getElementById('geo-status').textContent='📍 '+data[0].display_name.slice(0,60)+'…';
+      buildFicheMap(lat,lng,adresse);
+      var cp=adresse.match(/\b(\d{5})\b/); if(cp) setV('dvf_cp',cp[1]);
+    })
+    .catch(function(e){mapDiv.innerHTML='<div style="color:var(--danger);padding:20px;">❌ '+e.message+'</div>';document.getElementById('btn-geolocate').disabled=false;});
+}
+
+function buildFicheMap(lat,lng,adresse) {
+  var mapDiv=document.getElementById('fiche-map'); mapDiv.innerHTML='';
+  if (_ficheMap){_ficheMap.remove();_ficheMap=null;}
+  _ficheMap=L.map('fiche-map').setView([lat,lng],15);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(_ficheMap);
+  var iconBien=L.divIcon({className:'',html:'<div style="background:#1a3a5c;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.4);border:3px solid #c9a84c;">🏠</div>',iconSize:[32,32],iconAnchor:[16,16]});
+  L.marker([lat,lng],{icon:iconBien}).addTo(_ficheMap).bindPopup('<strong>Le bien</strong><br>'+adresse).openPopup();
+  loadPOI(lat, lng);
+  document.getElementById('btn-geolocate').disabled=false;
+}
+
+function haversineM(lat1, lng1, lat2, lng2) {
+  var R = 6371000;
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLng = (lng2 - lng1) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2)
+        + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180)
+        * Math.sin(dLng/2) * Math.sin(dLng/2);
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+function loadPOI(lat, lng) {
+  var query = '[out:json][timeout:25];('
+    + 'node[amenity=school](around:800,' + lat + ',' + lng + ');'
+    + 'node[shop=supermarket](around:800,' + lat + ',' + lng + ');'
+    + 'node[amenity=pharmacy](around:800,' + lat + ',' + lng + ');'
+    + 'node[public_transport=station](around:800,' + lat + ',' + lng + ');'
+    + 'node[railway=station](around:800,' + lat + ',' + lng + ');'
+    + 'node[leisure=park](around:800,' + lat + ',' + lng + ');'
+    + 'node[amenity=restaurant](around:800,' + lat + ',' + lng + ');'
+    + ');out body 20;';
+
+  var overpassUrls = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+  ];
+
+  var catMap = {
+    school:      { emoji: '🏫', label: 'École' },
+    supermarket: { emoji: '🛒', label: 'Commerce' },
+    pharmacy:    { emoji: '💊', label: 'Pharmacie' },
+    station:     { emoji: '🚉', label: 'Transport' },
+    park:        { emoji: '🌳', label: 'Parc' },
+    restaurant:  { emoji: '🍽️', label: 'Restaurant' }
+  };
+
+  function tryOverpass(urls) {
+    if (!urls.length) {
+      console.warn('Overpass indisponible — fallback Nominatim');
+      loadPOIFallback(lat, lng);
+      return;
+    }
+    var url = urls[0];
+    var rest = urls.slice(1);
+    fetch(url, {
+      method: 'POST',
+      body: query,
+      signal: AbortSignal.timeout(8000)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      data.elements.forEach(function(el) {
+        var tag = el.tags || {};
+        var type = tag.amenity || tag.shop || tag.public_transport || tag.railway || tag.leisure;
+        var meta = catMap[type] || { emoji: '📍', label: type };
+        var nom = tag.name || meta.label;
+        var dist = haversineM(lat, lng, el.lat, el.lon);
+        var distStr = dist < 1000
+          ? dist + ' m (~' + Math.round(dist/80) + ' min à pied)'
+          : (dist/1000).toFixed(1) + ' km';
+        L.marker([el.lat, el.lon])
+          .bindPopup('<strong>' + meta.emoji + ' ' + nom + '</strong>'
+            + '<br><span style="color:#666;font-size:12px;">📍 ' + distStr + '</span>')
+          .addTo(_ficheMap);
+      });
+    })
+    .catch(function() {
+      console.warn('Overpass échoué sur ' + url + ' — essai suivant');
+      tryOverpass(rest);
+    });
+  }
+
+  tryOverpass(overpassUrls);
+}
+
+function loadPOIFallback(lat, lng) {
+  var categories = [
+    { q: 'school',      emoji: '🏫', label: 'École' },
+    { q: 'supermarket', emoji: '🛒', label: 'Commerce' },
+    { q: 'station',     emoji: '🚌', label: 'Transport' },
+    { q: 'park',        emoji: '🌳', label: 'Parc' }
+  ];
+  categories.forEach(function(cat) {
+    var url = 'https://nominatim.openstreetmap.org/search?format=json&limit=3&q='
+      + cat.q + '&viewbox='
+      + (lng-0.05) + ',' + (lat+0.05) + ','
+      + (lng+0.05) + ',' + (lat-0.05)
+      + '&bounded=1';
+    fetch(url)
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        data.forEach(function(item) {
+          var dist = haversineM(lat, lng,
+            parseFloat(item.lat), parseFloat(item.lon));
+          var distStr = dist < 1000
+            ? dist + ' m (~' + Math.round(dist/80) + ' min à pied)'
+            : (dist/1000).toFixed(1) + ' km';
+          L.marker([parseFloat(item.lat), parseFloat(item.lon)])
+            .bindPopup('<strong>' + cat.emoji + ' '
+              + item.display_name.split(',')[0] + '</strong>'
+              + '<br><span style="color:#666;font-size:12px;">📍 ' + distStr + '</span>')
+            .addTo(_ficheMap);
+        });
+      })
+      .catch(function(err) { console.error('Fallback POI:', err); });
+  });
+}
+
+function filterFicheMap(cat) {
+  if(!_ficheMap) return;
+  ['transport','parc','commerce','ecole'].forEach(function(c){(_ficheMapMarkers[c]||[]).forEach(function(mk){if(cat==='all'||cat===c)mk.addTo(_ficheMap);else mk.remove();});});
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — INIT
+// ═══════════════════════════════════════════════════════
+function initStep2() {
+  initDVFTable();
+  buildCheckGrid('pieces_utiles_grid',  PIECES_UTILES,   'pu');
+  buildCheckGrid('defauts_grid',        DEFAUTS_LIST,    'defaut');
+  buildCheckGrid('vigilances_grid',     VIGILANCES_LIST, 'vigi');
+  buildCheckGrid('equip_general_grid',  EQUIP_GENERAL,   'eg');
+  buildCheckGrid('equip_cuisine_grid',  EQUIP_CUISINE,   'ec');
+  buildCheckGrid('exterieur_grid',      EXTERIEUR_ITEMS, 'ext');
+  buildCheckGrid('risques_terrain_grid',RISQUES_TERRAIN, 'risque');
+  buildCheckGroup('toit_type_group',    TOIT_TYPES,       'toit_type',    true);
+  buildCheckGroup('facade_type_group',  FACADE_TYPES,     'facade_type',  true);
+  buildCheckGroup('sols_type_group',    SOLS_TYPES,       'sols_type',    true);
+  buildCheckGroup('vitrage_type_group', VITRAGE_TYPES,    'vitrage_type', false);
+  buildCheckGroup('vitrage_materiau_group', VITRAGE_MAT,  'vitrage_mat',  true);
+  buildCheckGroup('chauf_type_group',   CHAUF_TYPES,      'chauf_type',   false);
+  buildCheckGroup('chauf_energie_group',CHAUF_ENERGIES,   'chauf_energie',true);
+  buildCheckGroup('chauf_diffusion_group',CHAUF_DIFFUSIONS,'chauf_diffusion',true);
+  buildCheckGroup('ecs_group',          ECS_TYPES,        'ecs',          false);
+  buildCheckGroup('exposition_group',   EXPOSITIONS,      'exposition',   true);
+  buildCheckGroup('transport_group',    TRANSPORTS,       'transport',    true);
+  var es=document.getElementById('expo_sonore_group');
+  if (es) EXPO_SONORE.forEach(function(v){var lbl=document.createElement('label');lbl.className='radio-item';lbl.innerHTML='<input type="radio" name="expo_sonore" value="'+v+'"> '+v;es.appendChild(lbl);});
+  buildRatingGroup('toit_etat_group',    'toit_etat');
+  buildRatingGroup('facade_etat_group',  'facade_etat');
+  buildRatingGroup('sols_etat_group',    'sols_etat');
+  buildRatingGroup('etat_general_group', 'etat_general');
+  buildDPEGrid('dpe_grid','dpe');
+  buildDPEGrid('ges_grid','ges');
+  buildViabGrid();
+  buildPiecesTable();
+  document.getElementById('date_r1').valueAsDate = new Date();
+  document.querySelectorAll('input[name=utilisation]').forEach(function(r) {
+    r.addEventListener('change', function() { document.getElementById('loyer_group').style.display=(r.value==='location'&&r.checked)?'block':'none'; });
+  });
+  document.getElementById('page-2').addEventListener('input',  function(){ scheduleDraftSave(); });
+  document.getElementById('page-2').addEventListener('change', function(){ scheduleDraftSave(); });
+  switchType('appart');
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — DRAFT AUTO-SAVE / RESTORE
+// ═══════════════════════════════════════════════════════
+function scheduleDraftSave() { clearTimeout(_draftTimer); _draftTimer = setTimeout(saveDraftBien, 800); }
+
+function saveDraftBien() {
+  try {
+    var draft = collectRawFormState();
+    localStorage.setItem('_draft_bien', JSON.stringify(draft));
+    var badge=document.getElementById('draft-saved-badge');
+    if (badge){badge.style.display='inline';setTimeout(function(){badge.style.display='none';},2000);}
+  } catch(e) {}
+}
+
+function loadDraftBien() {
+  var raw=localStorage.getItem('_draft_bien');
+  if (!raw) return;
+  try { restoreRawFormState(JSON.parse(raw)); } catch(e) {}
+}
+
+function collectRawFormState() {
+  var state={type:currentType,photos:_photos};
+  document.querySelectorAll('#page-2 input[id], #page-2 select[id], #page-2 textarea[id]').forEach(function(el){
+    if(el.type==='radio'||el.type==='checkbox'||el.type==='file') return;
+    state[el.id]=el.value;
+  });
+  document.querySelectorAll('#page-2 input[type=radio][name]').forEach(function(r){if(r.checked)state['radio_'+r.name]=r.value;});
+  document.querySelectorAll('#page-2 input[type=checkbox][id]').forEach(function(cb){state['cb_'+cb.id]=cb.checked;});
+  document.querySelectorAll('#page-2 .rating-badge.sel').forEach(function(b){state['rating_'+b.dataset.name]=b.dataset.val;});
+  document.querySelectorAll('#page-2 .dpe-btn.sel').forEach(function(b){state['dpe_'+b.dataset.group]=b.dataset.letter;});
+  var rows=[];
+  document.querySelectorAll('#pieces_tbody tr').forEach(function(tr){
+    rows.push(Array.from(tr.querySelectorAll('td input[type=text],td input[type=number]')).map(function(c){return c.value;}));
+  });
+  state._pieces_table=rows;
+  return state;
+}
+
+function restoreRawFormState(d) {
+  if (d.type) switchType(d.type);
+  setTimeout(function() {
+    Object.keys(d).forEach(function(k) {
+      if (k==='type'||k==='photos'||k==='_pieces_table'||k.startsWith('radio_')||k.startsWith('cb_')||k.startsWith('rating_')||k.startsWith('dpe_')) return;
+      var el=document.getElementById(k); if(el&&el.type!=='radio'&&el.type!=='checkbox'&&el.type!=='file') el.value=d[k];
+    });
+    Object.keys(d).filter(function(k){return k.startsWith('radio_');}).forEach(function(k){
+      var r=document.querySelector('#page-2 input[type=radio][name="'+k.replace('radio_','')+'"][value="'+d[k]+'"]');
+      if(r){r.checked=true;r.dispatchEvent(new Event('change'));}
+    });
+    Object.keys(d).filter(function(k){return k.startsWith('cb_');}).forEach(function(k){var cb=document.getElementById(k.replace('cb_',''));if(cb)cb.checked=d[k];});
+    Object.keys(d).filter(function(k){return k.startsWith('rating_');}).forEach(function(k){
+      document.querySelectorAll('#page-2 .rating-badge[data-name="'+k.replace('rating_','')+'"]').forEach(function(b){b.classList.toggle('sel',b.dataset.val===d[k]);});
+    });
+    Object.keys(d).filter(function(k){return k.startsWith('dpe_');}).forEach(function(k){
+      document.querySelectorAll('#page-2 .dpe-btn[data-group="'+k.replace('dpe_','')+'"]').forEach(function(b){b.classList.toggle('sel',b.dataset.letter===d[k]);});
+    });
+    if(d.photos){_photos=d.photos;renderPhotos();}
+    if(d._pieces_table){
+      var rows=document.querySelectorAll('#pieces_tbody tr');
+      d._pieces_table.forEach(function(rowData,ri){
+        if(rows[ri]){var cells=rows[ri].querySelectorAll('td input[type=text],td input[type=number]');rowData.forEach(function(val,ci){if(cells[ci])cells[ci].value=val;});}
+      });
+    }
+  }, 100);
+}
+
+// ═══════════════════════════════════════════════════════
+// SHARED FORMAT HELPERS
+// ═══════════════════════════════════════════════════════
+function fmtNum(n) {
+  if(n===null||n===undefined||n==='') return '—';
+  var s=Math.round(Number(n)).toString(),r='';
+  for(var i=0;i<s.length;i++){if(i>0&&(s.length-i)%3===0)r+=' ';r+=s[i];}
+  return r;
+}
+function slugify(str) {
+  return (str||'adresse').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,60);
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — collectBienData() → window._bienData
+// ═══════════════════════════════════════════════════════
+function collectBienData() {
+  var dpeBtn=document.querySelector('#page-2 .dpe-btn[data-group="dpe"].sel');
+  var dpe=dpeBtn?dpeBtn.dataset.letter:'';
+  var surface=parseFloat(getV('surface_hab'))||0, surfCarrez=parseFloat(getV('surface_carrez'))||0;
+  var prix=parseFloat(getV('prix_vente')||getV('prix_vente_t'))||0;
+  var prixm2=(surface&&prix)?Math.round(prix/surface):0;
+  var annee=getV('annee_construction')||getV('annee_construction_m')||'';
+  var chargesCopro=parseFloat(getV('charges_copro'))||0;
+  var taxeFonciere=parseFloat(getV('taxe_fonciere')||getV('taxe_fonciere_t'))||0;
+  var photo1=getV('bien_photo1_url')||(_photos[0]?_photos[0].dataUrl:'');
+  var photo2=getV('bien_photo2_url')||(_photos[1]?_photos[1].dataUrl:'');
+  var photo3=getV('bien_photo3_url')||(_photos[2]?_photos[2].dataUrl:'');
+  var fb=parseFloat(getV('bien_fourchette_basse'))||(prix?Math.round(prix*.9):0);
+  var fh=parseFloat(getV('bien_fourchette_haute'))||(prix?Math.round(prix*1.1):0);
+  var typeLabel=currentType==='appart'?'Appartement':currentType==='maison'?'Maison':'Terrain';
+  var pieces=getV('nb_pieces'), etage=getV('etage');
+  var desc=[typeLabel,pieces?pieces+' pièce'+(parseInt(pieces)>1?'s':''):'',surface?'de '+surface.toLocaleString('fr-FR')+' m²':'',etage?'· '+etage:'',dpe?'· DPE '+dpe:''].filter(Boolean).join(' ');
+  var agent=loadProfile()||{};
+  return {
+    ref:           getV('ref_mandat')||'ref-mandat',
+    type:          currentType,
+    etage:         etage,
+    adresse:       getV('adresse'),
+    quartier:      getV('quartier'),
+    annee:         annee,
+    description:   desc,
+    surface:       surface, surfCarrez:    surfCarrez,
+    pieces:        pieces,  dpe:           dpe,
+    prix:          prix,    prixm2:        prixm2,
+    mediane:       parseFloat(getV('bien_mediane'))||0,
+    tension:       getV('bien_tension')||'Très forte',
+    delai:         getV('bien_delai')||'21 jours',
+    loyer:         parseFloat(getV('loyer')||getV('bien_loyer_estime'))||0,
+    chargesCopro:  chargesCopro,
+    chargesDetail: getV('charges_detail'),
+    taxeFonciere:  taxeFonciere,
+    score:         getV('bien_score')||'9',
+    scorePrest:    getV('bien_score_prest')||'8',
+    scoreSecteur:  getV('bien_score_secteur')||'8',
+    scoreQP:       getV('bien_score_qp')||'8',
+    scoreEtat:     getV('bien_score_etat')||'8',
+    fort1:getV('bien_fort1'), fort2:getV('bien_fort2'), fort3:getV('bien_fort3'),
+    vig1: getV('bien_vig1'),  vig2: getV('bien_vig2'),  vig3: getV('bien_vig3'),
+    photo1:photo1, photo2:photo2, photo3:photo3,
+    dvf:           getDVFRows(),
+    fourchetBasse: fb, fourchetHaute: fh,
+    creditDuree:   parseInt(getV('bien_credit_duree'))||20,
+    creditApport:  parseFloat(getV('bien_credit_apport'))||10,
+    creditHaut:    parseFloat(getV('bien_credit_taux_haut'))||5,
+    creditMoyen:   parseFloat(getV('bien_credit_taux_moyen'))||3.4,
+    creditBas:     parseFloat(getV('bien_credit_taux_bas'))||2.5,
+    histConstrDesc:getV('hist_constr_desc'),
+    histEvt1Date:  getV('hist_evt1_date'), histEvt1Desc: getV('hist_evt1_desc'),
+    histEvt2Date:  getV('hist_evt2_date'), histEvt2Desc: getV('hist_evt2_desc'),
+    histVenteDate: getV('hist_vente_date')||'2025',
+    diags:[
+      {icon:'🧱',name:'Amiante',        status:getV('diag_amiante_status'),     result:getV('diag_amiante_result')},
+      {icon:'🔬',name:'Plomb (CREP)',   status:getV('diag_plomb_status'),       result:getV('diag_plomb_result')},
+      {icon:'🪲',name:'Termites',       status:getV('diag_termites_status'),    result:getV('diag_termites_result')},
+      {icon:'⚡',name:'Électricité',    status:getV('diag_electricite_status'), result:getV('diag_electricite_result')},
+      {icon:'🔥',name:'Gaz',            status:getV('diag_gaz_status'),         result:getV('diag_gaz_result')},
+      {icon:'💧',name:'Assainissement', status:getV('diag_assain_status'),      result:getV('diag_assain_result')}
+    ],
+    agentNom:   [agent.prenom,agent.nom].filter(Boolean).join(' '),
+    agentTel:   agent.tel||'',
+    agentEmail: agent.email||'',
+    agentRdvUrl:agent.rdv_url||'',
+    agentPrimary: agent.primary || '#141414',
+    agentAccent:  agent.accent  || '#b8923a',
+    agentPhoto:   agent.photo_url || '',
+    renovations: (function(){
+      var rows=[];
+      for(var i=1;i<=5;i++){
+        var annee=getV('renov_annee_'+i), desc=getV('renov_desc_'+i);
+        if(annee||desc) rows.push({annee:annee, montant:parseFloat(getV('renov_montant_'+i))||0, desc:desc});
+      }
+      return rows;
+    })()
+  };
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — onAdresseChange : geocoding + DVF auto-fill
+// ═══════════════════════════════════════════════════════
+var _adresseTimer = null;
+function onAdresseChange(val) {
+  window._adresse = val;
+  clearTimeout(_adresseTimer);
+  if (!val || val.length < 8) return;
+  _adresseTimer = setTimeout(function() {
+    // 1. Extract code postal and pre-fill DVF field
+    var cpMatch = val.match(/\b(\d{5})\b/);
+    if (cpMatch) setV('dvf_cp', cpMatch[1]);
+    // 2. If Leaflet map already built, re-center on new address
+    if (_ficheMap) {
+      fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(val) + '&limit=1')
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (!data || !data[0]) return;
+          var lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
+          _ficheMap.setView([lat, lng], 15);
+        })
+        .catch(function() {});
+    }
+  }, 700);
+}
+
+function continuerVersGeneration() {
+  var adresse=getV('adresse');
+  if (!adresse){showToast('⚠️ L\'adresse du bien est obligatoire.', true);return;}
+  try {
+    window._bienData=collectBienData();
+    saveDraftBien();
+    _stepsComplete[2]=true;
+    showToast('✅ Données collectées !');
+    setTimeout(function(){goToStep(3);},600);
+  } catch(e) { showToast('❌ Erreur : '+e.message, true); console.error(e); }
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 3 — GÉNÉRATION & APERÇU
+// ═══════════════════════════════════════════════════════
+function refreshStep3Summary() {
+  var d = window._bienData;
+  if (!d) { d = collectBienData(); }
+  var el = document.getElementById('step3-summary');
+  if (!el) return;
+  var agent = loadProfile() || {};
+  el.innerHTML =
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;font-size:13px;">'
+    + '<div><span style="color:var(--muted)">Adresse</span><br><strong>'
+    + esc(d.adresse||'—') + '</strong></div>'
+    + '<div><span style="color:var(--muted)">Prix</span><br><strong>'
+    + (d.prix ? fmtNum(d.prix)+' €' : '—') + '</strong></div>'
+    + '<div><span style="color:var(--muted)">DPE</span><br><strong>'
+    + (d.dpe||'—') + '</strong></div>'
+    + '<div><span style="color:var(--muted)">Score</span><br><strong>'
+    + (d.score||'—') + '/10</strong></div>'
+    + '<div><span style="color:var(--muted)">Agent</span><br><strong>'
+    + esc([agent.prenom,agent.nom].filter(Boolean).join(' ')||'—') + '</strong></div>'
+    + '<div><span style="color:var(--muted)">Réseau</span><br><strong>'
+    + esc(agent.reseau||'—') + '</strong></div>'
+    + '</div>';
+}
+
+function generatePreview() {
+  window._bienData = collectBienData();
+  var doGenerate = function(tmpl) {
+    var d = window._bienData;
+    if (!d.adresse) {
+      showToast('⚠️ Adresse obligatoire — retournez à l\'étape 2.', true);
+      return;
+    }
+    try {
+      var out = injectData(tmpl, d);
+      _lastGeneratedHTML = out;
+      _lastGeneratedSlug = slugify(d.adresse);
+      var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
+      document.getElementById('preview-iframe').src = URL.createObjectURL(blob);
+      document.getElementById('btn-download-fiche').disabled = false;
+      var btnC = document.getElementById('btn-step3-continue');
+      if (btnC) btnC.disabled = false;
+      _stepsComplete[3] = true;
+      updateStepperTabs();
+      document.getElementById('step3-status').innerHTML =
+        '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>';
+      showToast('✅ Aperçu généré !');
+    } catch(err) {
+      document.getElementById('step3-status').textContent = '❌ ' + err.message;
+      console.error(err);
+    }
+  };
+
+  // Toujours recharger le template depuis le disque
+  fetch('./index.html?nocache=' + Date.now())
+    .then(function(r) { return r.text(); })
+    .then(function(tmpl) {
+      _templateHTML = tmpl;
+      doGenerate(tmpl);
+    })
+    .catch(function(err) {
+      if (_templateHTML) {
+        showToast('⚠️ Rechargement template échoué — utilisation cache.', true);
+        doGenerate(_templateHTML);
+      } else {
+        showToast('⚠️ Template non chargé. Servir via npx serve .', true);
+      }
+    });
+
+  return; // doGenerate s'exécute en async
+}
+
+function downloadFiche() {
+  if (!_lastGeneratedHTML) return;
+  downloadHTML(_lastGeneratedHTML, _lastGeneratedSlug + '-FINAL.html');
+}
+
+function continuerVersPublication() {
+  if (!_lastGeneratedHTML) {
+    showToast('⚠️ Générez d\'abord l\'aperçu.', true);
+    return;
+  }
+  _stepsComplete[3] = true;
+  goToStep(4);
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 4 — PUBLICATION GITHUB
+// ═══════════════════════════════════════════════════════
+function pushToGitHub() {
+  var token = localStorage.getItem('_gh_token');
+  if (!token) {
+    document.getElementById('gh-push-status').textContent =
+      '⚠️ Aucun token GitHub — saisissez-le ci-dessus.';
+    return;
+  }
+  if (!_lastGeneratedHTML || !_lastGeneratedSlug) {
+    document.getElementById('gh-push-status').textContent =
+      '⚠️ Générez d\'abord la fiche (étape 3).';
+    return;
+  }
+  var btn = document.getElementById('gh-push-btn');
+  var status = document.getElementById('gh-push-status');
+  btn.disabled = true;
+  status.textContent = '⏳ Push en cours…';
+
+  var path = 'fiches/' + _lastGeneratedSlug + '-FINAL.html';
+  var apiUrl = 'https://api.github.com/repos/olivierloison84-sketch/Expertimo/contents/' + path;
+  var headers = {
+    'Authorization': 'token ' + token,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  };
+
+  fetch(apiUrl, { headers: headers })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(existing) {
+      var body = {
+        message: 'feat: fiche acquereur ' + _lastGeneratedSlug,
+        content: toBase64UTF8(_lastGeneratedHTML),
+        branch: 'main'
+      };
+      if (existing && existing.sha) body.sha = existing.sha;
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body)
+      });
+    })
+    .then(function(r) {
+      return r.json().then(function(data) {
+        return { ok: r.ok, status: r.status, data: data };
+      });
+    })
+    .then(function(res) {
+      btn.disabled = false;
+      if (res.ok) {
+        var pageUrl = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/'
+          + _lastGeneratedSlug + '-FINAL.html';
+        status.innerHTML = '✅ Publié avec succès !';
+        var linkArea = document.getElementById('gh-link-area');
+        linkArea.style.display = 'block';
+        linkArea.innerHTML =
+          '<a id="gh-page-url" href="' + pageUrl + '" target="_blank"'
+          + ' style="color:var(--primary);font-weight:700;word-break:break-all;">'
+          + pageUrl + '</a>'
+          + '<br><button class="btn btn-outline" style="margin-top:8px;"'
+          + ' onclick="copyGhLink()">📋 Copier le lien</button>';
+        _stepsComplete[4] = true;
+        updateStepperTabs();
+        showToast('✅ Fiche publiée !');
+      } else {
+        status.textContent = '❌ Erreur ' + res.status + ' : '
+          + (res.data.message || JSON.stringify(res.data));
+      }
+    })
+    .catch(function(err) {
+      btn.disabled = false;
+      status.textContent = '❌ ' + (err && err.message ? err.message : String(err));
+    });
+}
+
+function saveGhToken() {
+  var k = document.getElementById('gh-token-input').value.trim();
+  if (!k) return;
+  localStorage.setItem('_gh_token', k);
+  showToast('✅ Token GitHub sauvegardé.');
+  refreshTokenUI();
+}
+
+function clearGhToken() {
+  localStorage.removeItem('_gh_token');
+  document.getElementById('gh-token-input').value = '';
+  refreshTokenUI();
+}
+
+function refreshTokenUI() {
+  var token = localStorage.getItem('_gh_token');
+  var inp = document.getElementById('gh-token-input');
+  var lbl = document.getElementById('gh-token-status');
+  var saveBtn = document.getElementById('gh-token-save-btn');
+  if (!inp || !lbl) return;
+  if (token) {
+    inp.style.display = 'none';
+    if (saveBtn) saveBtn.style.display = 'none';
+    lbl.innerHTML = '✅ Token enregistré &nbsp;'
+      + '<button class="btn btn-outline"'
+      + ' style="font-size:11px;padding:2px 8px;"'
+      + ' onclick="clearGhToken()">Modifier</button>';
+  } else {
+    inp.style.display = '';
+    if (saveBtn) saveBtn.style.display = '';
+    lbl.textContent = '';
+  }
+}
+
+function copyGhLink() {
+  var link = document.getElementById('gh-page-url');
+  if (!link) return;
+  navigator.clipboard.writeText(link.href)
+    .then(function() { showToast('📋 Lien copié !'); })
+    .catch(function() { showToast('⚠️ Copie manuelle : ' + link.href, true); });
+}
+
+function refreshStep4Summary() {
+  var el = document.getElementById('step4-summary');
+  if (!el) return;
+  if (!_lastGeneratedSlug) {
+    el.textContent = '⚠️ Aucune fiche générée — revenez à l\'étape 3.';
+    return;
+  }
+  el.innerHTML =
+    '<div style="font-size:13px;line-height:2;">'
+    + '<div><span style="color:var(--muted)">Fichier</span> : '
+    + '<code>' + esc(_lastGeneratedSlug) + '-FINAL.html</code></div>'
+    + '<div><span style="color:var(--muted)">Dépôt</span> : '
+    + '<code>olivierloison84-sketch/Expertimo</code></div>'
+    + '<div><span style="color:var(--muted)">Branche</span> : '
+    + '<code>main → /fiches/</code></div>'
+    + '</div>';
+}
+</script>
+</body>
+</html>
