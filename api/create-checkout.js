@@ -33,7 +33,7 @@ module.exports = async function handler(req, res) {
           quantity: 1
         }
       ],
-      success_url: 'https://expertimo-phi.vercel.app/dashboard.html',
+      success_url: 'https://expertimo-phi.vercel.app/app.html',
       cancel_url: 'https://expertimo-phi.vercel.app/login.html',
       customer_email: email,
       client_reference_id: user_id
