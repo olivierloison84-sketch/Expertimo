@@ -385,25 +385,47 @@ textarea { resize: vertical; min-height: 60px; }
   const authClient = supabase.createClient(AUTH_SUPABASE_URL, AUTH_SUPABASE_KEY);
   window.privencyAuth = authClient;
 
-  authClient.auth.getSession().then(({ data: { session } }) => {
-    if (!session || (session.expires_at && session.expires_at * 1000 < Date.now())) {
-      window.location.replace('/login.html');
-      return;
-    }
-    // Session valide : on retire le voile (une règle !important en feuille de
-    // style ne peut pas être surpassée par un style inline, donc on supprime
-    // la balise <style> au lieu de poser display:block).
-    const reveal = () => {
-      const hide = document.getElementById('auth-guard-hide');
-      if (hide) hide.remove();
-      if (document.body) document.body.style.display = 'block';
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', reveal);
-    } else {
+  // resolved : une seule décision (révéler ou rediriger), quel que soit le
+  // premier signal arrivé (onAuthStateChange, getSession ou timeout).
+  let resolved = false;
+
+  function reveal() {
+    if (resolved) return;
+    resolved = true;
+    // Une règle !important en feuille de style ne peut pas être surpassée
+    // par un style inline : on supprime la balise <style> du voile.
+    const hide = document.getElementById('auth-guard-hide');
+    if (hide) hide.remove();
+    if (document.body) document.body.style.display = 'block';
+  }
+
+  function denied() {
+    if (resolved) return;
+    resolved = true;
+    window.location.replace('/login.html');
+  }
+
+  // Signal principal : onAuthStateChange émet INITIAL_SESSION au chargement
+  // une fois la session restaurée (ou confirmée absente) depuis le storage.
+  authClient.auth.onAuthStateChange((event, session) => {
+    if (session) {
       reveal();
+    } else {
+      denied();
     }
   });
+
+  // Fallback : getSession() en parallèle, et couperet à 3 secondes si
+  // aucun des deux signaux n'a confirmé de session d'ici là.
+  authClient.auth.getSession().then(({ data: { session } }) => {
+    if (session) {
+      reveal();
+    } else {
+      denied();
+    }
+  }).catch(denied);
+
+  setTimeout(() => { denied(); }, 3000);
 
   document.addEventListener('DOMContentLoaded', () => {
     const btn = document.createElement('button');
