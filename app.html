@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style id="auth-guard-hide">body { display: none !important; }</style>
 <title>Expertimo · Générateur Fiche Acheteur</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -387,6 +388,20 @@ textarea { resize: vertical; min-height: 60px; }
   authClient.auth.getSession().then(({ data: { session } }) => {
     if (!session || (session.expires_at && session.expires_at * 1000 < Date.now())) {
       window.location.replace('/login.html');
+      return;
+    }
+    // Session valide : on retire le voile (une règle !important en feuille de
+    // style ne peut pas être surpassée par un style inline, donc on supprime
+    // la balise <style> au lieu de poser display:block).
+    const reveal = () => {
+      const hide = document.getElementById('auth-guard-hide');
+      if (hide) hide.remove();
+      if (document.body) document.body.style.display = 'block';
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', reveal);
+    } else {
+      reveal();
     }
   });
 
