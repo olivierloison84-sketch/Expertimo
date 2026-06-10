@@ -390,8 +390,6 @@ textarea { resize: vertical; min-height: 60px; }
   let resolved = false;
 
   function reveal() {
-    if (resolved) return;
-    resolved = true;
     // Une règle !important en feuille de style ne peut pas être surpassée
     // par un style inline : on supprime la balise <style> du voile.
     const hide = document.getElementById('auth-guard-hide');
@@ -405,11 +403,32 @@ textarea { resize: vertical; min-height: 60px; }
     window.location.replace('/login.html');
   }
 
+  // Session confirmée : on vérifie l'abonnement avant de révéler la page.
+  // Connecté mais pas abonné → /dashboard.html (pas /login.html).
+  async function checkSubscription(session) {
+    if (resolved) return;
+    resolved = true;
+    try {
+      const { data, error } = await authClient
+        .from('agents')
+        .select('subscription_status')
+        .eq('id', session.user.id)
+        .single();
+      if (error || !data || data.subscription_status !== 'active') {
+        window.location.replace('/dashboard.html');
+        return;
+      }
+      reveal();
+    } catch (e) {
+      window.location.replace('/dashboard.html');
+    }
+  }
+
   // Signal principal : onAuthStateChange émet INITIAL_SESSION au chargement
   // une fois la session restaurée (ou confirmée absente) depuis le storage.
   authClient.auth.onAuthStateChange((event, session) => {
     if (session) {
-      reveal();
+      checkSubscription(session);
     } else {
       denied();
     }
@@ -419,7 +438,7 @@ textarea { resize: vertical; min-height: 60px; }
   // aucun des deux signaux n'a confirmé de session d'ici là.
   authClient.auth.getSession().then(({ data: { session } }) => {
     if (session) {
-      reveal();
+      checkSubscription(session);
     } else {
       denied();
     }
