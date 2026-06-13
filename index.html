@@ -57,6 +57,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);over
 .header-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:flex-start;gap:48px;position:relative;z-index:2;}
 .hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(184,146,58,.35);border-radius:99px;background:rgba(184,146,58,.08);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
 .hbadge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulseBtn{0%,100%{box-shadow:0 4px 24px rgba(184,146,58,.5)}50%{box-shadow:0 4px 40px rgba(184,146,58,.9)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .htitle{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.5vw,42px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
 .hsub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.8;max-width:540px;font-weight:300;margin-top:8px;}
@@ -309,7 +310,7 @@ textarea.field{min-height:95px;resize:vertical;}
 <header class="header">
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
-      <div class="hbadge">Espace Acheteur Privé · Expertimo · Réf. ex91-lg001</div>
+      <div class="hbadge"><svg viewBox="0 0 28 22" width="14" height="11" style="display:inline-block;vertical-align:middle;margin-right:4px;"><polygon points="14,0 28,11 14,22 0,11" fill="none" stroke="#b8923a" stroke-width="1.2"/><polygon points="14,5 23,11 14,17 5,11" fill="#b8923a" opacity="0.15"/><text x="14" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="8" fill="#b8923a" letter-spacing="1">PV</text></svg>PRIVENCY · Votre Espace Acheteur Privé</div>
       <h1 class="htitle">5 Rue de l'Arpajonnais<br><span style="color:var(--gold);font-style:italic;">Longjumeau , centre ville</span></h1>
       <p class="hsub">Appartement 3 pièces de 76,87 m² · 2ème et dernier étage · DPE D</p>
     </div>
@@ -726,6 +727,7 @@ textarea.field{min-height:95px;resize:vertical;}
 </section>
 
 <div class="pfooter">
+  <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;"><svg viewBox="0 0 60 46" width="40" height="31" style="display:inline-block;"><polygon points="30,0 60,23 30,46 0,23" fill="none" stroke="#b8923a" stroke-width="1.5"/><polygon points="30,10 48,23 30,36 12,23" fill="#b8923a" opacity="0.12"/><text x="30" y="27" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="400" fill="#b8923a" letter-spacing="1.5">PV</text></svg><span style="font-family:'Cormorant Garamond',serif;font-size:42px;color:#b8923a;font-weight:300;letter-spacing:.06em;">Privency</span></div>
   <h2>Espace Acheteur Privé<br><span style="color:var(--gold);font-style:italic;">une expérience immobilière nouvelle génération</span></h2>
   <p>Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.</p>
 </div>
@@ -1248,8 +1250,8 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ═══ ASSISTANT IA ═══ -->
-<div id="ai-btn" onclick="toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--dark);color:var(--gold);border:none;border-radius:99px;padding:14px 20px;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;gap:8px;">
-  <span style="font-size:16px;">💬</span> Poser une question
+<div id="ai-btn" onclick="toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--gold);color:var(--dark);border:none;border-radius:99px;padding:14px 22px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 24px rgba(184,146,58,.5);display:flex;align-items:center;animation:pulseBtn 2s infinite;">
+  Tout savoir sur ce bien
 </div>
 
 <div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;z-index:1001;width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
