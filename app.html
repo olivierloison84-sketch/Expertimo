@@ -2768,7 +2768,7 @@ function refreshStep3Summary() {
 
 function generatePreview() {
   window._bienData = collectBienData();
-  var doGenerate = function(tmpl) {
+  var doGenerate = async function(tmpl) {
     var d = window._bienData;
     if (!d.adresse) {
       showToast('⚠️ Adresse obligatoire — retournez à l\'étape 2.', true);
@@ -2776,6 +2776,50 @@ function generatePreview() {
     }
     try {
       var out = injectData(tmpl, d);
+
+      // Pré-calcul POI : géocodage puis requête Overpass côté agent
+      try {
+        var geoRes = await fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(d.adresse) + '&limit=1');
+        var geoData = await geoRes.json();
+        if (geoData && geoData[0]) {
+          var lat = parseFloat(geoData[0].lat), lng = parseFloat(geoData[0].lon);
+          // Injecter lat/lng dans le template
+          out = out.replace('parseFloat("") || 0;', 'parseFloat("' + lat + '") || 0;')
+                   .replace('parseFloat("") || 0;', 'parseFloat("' + lng + '") || 0;');
+          // Fetcher les POI
+          var poiProxies = [
+            'https://overpass.kumi.systems/api/interpreter',
+            'https://overpass.private.coffee/api/interpreter',
+            'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+          ];
+          var poiQuery = '[out:json][timeout:15];('
+            + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
+            + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
+            + 'node["amenity"="bus_station"](around:800,' + lat + ',' + lng + ');'
+            + 'node["leisure"="park"](around:800,' + lat + ',' + lng + ');'
+            + 'node["leisure"="garden"](around:800,' + lat + ',' + lng + ');'
+            + 'node["shop"="supermarket"](around:800,' + lat + ',' + lng + ');'
+            + 'node["shop"="bakery"](around:800,' + lat + ',' + lng + ');'
+            + 'node["amenity"="pharmacy"](around:800,' + lat + ',' + lng + ');'
+            + 'node["amenity"="school"](around:800,' + lat + ',' + lng + ');'
+            + 'node["amenity"="kindergarten"](around:800,' + lat + ',' + lng + ');'
+            + ');out body;';
+          var poiData = null;
+          for (var pi = 0; pi < poiProxies.length && !poiData; pi++) {
+            try {
+              var pr = await fetch(poiProxies[pi], { method: 'POST', body: 'data=' + encodeURIComponent(poiQuery) });
+              if (pr.ok) poiData = await pr.json();
+            } catch(e2) {}
+          }
+          if (poiData && poiData.elements) {
+            var poiScript = '<script>window._poiData=' + JSON.stringify(poiData.elements) + ';<\/script>';
+            out = out.replace('</head>', poiScript + '</head>');
+          }
+        }
+      } catch(geoErr) {
+        console.warn('Pré-calcul POI échoué (non bloquant) :', geoErr);
+      }
+
       _lastGeneratedHTML = out;
       _lastGeneratedSlug = slugify(d.adresse);
       var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
