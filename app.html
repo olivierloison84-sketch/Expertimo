@@ -1860,7 +1860,9 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
   html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
-  html = replaceSp(html, '_sp_reseau',   d.agentReseau || 'Expertimo');
+  var reseauVal = d.agentReseau || 'Expertimo';
+  html = replaceSp(html, '_sp_reseau', reseauVal);
+  html = html.replace(/_sp_reseau/g, reseauVal);
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
 
   // Loyer slider — replace hardcoded 1300 in template JS
@@ -2097,9 +2099,17 @@ function injectData(html, d) {
         + '</div>';
     }).join('');
   }
-  // Loi Carrez
-  var carrezEl = doc.getElementById('diag-carrez-result');
-  if (carrezEl && d.diagCarrez) carrezEl.textContent = d.diagCarrez;
+  // Loi Carrez — append after grid rebuild (innerHTML wipes static card)
+  if (diagGrid && d.diagCarrez) {
+    var carrezCard = doc.createElement('div');
+    carrezCard.className = 'diag-card diag-ok';
+    carrezCard.id = 'diag-carrez';
+    carrezCard.innerHTML = '<div class="diag-icon">📐</div><div class="diag-name">Loi Carrez</div><div class="diag-result" id="diag-carrez-result">' + esc(d.diagCarrez) + '</div>';
+    diagGrid.appendChild(carrezCard);
+  } else if (!diagGrid && d.diagCarrez) {
+    var carrezEl = doc.getElementById('diag-carrez-result');
+    if (carrezEl) carrezEl.textContent = d.diagCarrez;
+  }
 
   // Documents tab — charges & taxe mentions
   qa('.dc').forEach(function(dc) {
@@ -2159,21 +2169,28 @@ function injectData(html, d) {
   var caption = doc.getElementById('gallery-caption');
   if (caption) caption.textContent = '📷 Cliquez sur une photo pour l\'agrandir · ' + photoCount + ' photos disponibles';
 
-  // Vidéo
+  // Vidéo — thumbnail cliquable (évite le blocage des iframes YouTube)
   if (d.videoUrl) {
     var mediaBloc = doc.getElementById('media-bloc');
     var videoContainer = doc.getElementById('video-container');
     var videoEmbed = doc.getElementById('video-embed');
     if (mediaBloc && videoContainer && videoEmbed) {
-      var embedUrl = (function(url) {
-        var ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-        if (ytMatch) return 'https://www.youtube.com/embed/' + ytMatch[1];
-        var viMatch = url.match(/vimeo\.com\/(\d+)/);
-        if (viMatch) return 'https://player.vimeo.com/video/' + viMatch[1];
-        return url;
-      })(d.videoUrl);
-      videoEmbed.innerHTML = '<iframe src="' + embedUrl + '" frameborder="0" allowfullscreen'
-        + ' style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;"></iframe>';
+      var ytMatch = d.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      if (ytMatch) {
+        var ytId = ytMatch[1];
+        var thumbUrl = 'https://img.youtube.com/vi/' + ytId + '/hqdefault.jpg';
+        videoEmbed.style.cssText = 'position:relative;border-radius:12px;overflow:hidden;display:block;';
+        videoEmbed.innerHTML = '<a href="' + esc(d.videoUrl) + '" target="_blank" rel="noopener" style="display:block;position:relative;">'
+          + '<img src="' + thumbUrl + '" style="width:100%;display:block;border-radius:12px;" alt="Vidéo du bien">'
+          + '<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:rgba(0,0,0,.65);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
+          + '<svg viewBox="0 0 24 24" width="28" height="28" fill="white"><polygon points="9,7 19,12 9,17"/></svg>'
+          + '</span></a>';
+      } else {
+        var viMatch = d.videoUrl.match(/vimeo\.com\/(\d+)/);
+        var videoLink = viMatch ? 'https://vimeo.com/' + viMatch[1] : d.videoUrl;
+        videoEmbed.style.cssText = 'border-radius:12px;overflow:hidden;display:block;';
+        videoEmbed.innerHTML = '<a href="' + esc(videoLink) + '" target="_blank" rel="noopener" class="btn-rdv" style="display:inline-block;margin:8px 0;">▶ Voir la vidéo</a>';
+      }
       videoContainer.style.display = 'block';
       mediaBloc.style.display = 'block';
     }
