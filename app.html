@@ -3394,110 +3394,119 @@ async function modifierFiche(filename, sha, downloadUrl) {
       };
     }
 
-    // Signal edit mode so loadDraftBien() won't overwrite our injected values
+    // 1. Activate edit mode BEFORE navigating so loadDraftBien() is blocked
     window._editMode = true;
 
-    // Clear draft so navigation to step 2 doesn't restore stale data
+    // 2. Clear draft so goToStep(2) doesn't restore stale localStorage data
     localStorage.removeItem('_draft_bien');
     localStorage.removeItem('privency_draft');
     localStorage.removeItem('privency_last_fiche');
 
-    // Reset all step-2 fields before filling
-    document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) {
-      el.value = '';
-    });
-
-    // Switch to correct type
-    var type = data.type || 'appart';
-    switchType(type);
-    document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
-    var typeTab = document.getElementById('tab-' + type);
-    if (typeTab) typeTab.classList.add('active');
-
-    // Fill form fields
-    setV('adresse',          data.adresse || '');
-    setV('quartier',         data.quartier || '');
-    setV('surface_hab',      data.surface  || '');
-    setV('surface_carrez',   data.surfCarrez || '');
-    setV('prix_vente',       data.prix     || '');
-    setV('prix_vente_t',     data.prix     || '');
-    setV('charges_copro',    data.chargesCopro || '');
-    setV('taxe_fonciere',    data.taxeFonciere || '');
-    setV('taxe_fonciere_t',  data.taxeFonciere || '');
-    setV('nb_pieces',        data.pieces   || '');
-    setV('etage',            data.etage    || '');
-    setV('annee_construction', data.annee  || '');
-    setV('ref_mandat',       data.ref      || '');
-    setV('bien_score',       data.score    || '');
-    setV('bien_score_prest', data.scorePrest   || '');
-    setV('bien_score_secteur',data.scoreSecteur || '');
-    setV('bien_score_qp',    data.scoreQP  || '');
-    setV('bien_score_etat',  data.scoreEtat || '');
-    setV('bien_fort1',       data.fort1    || '');
-    setV('bien_fort2',       data.fort2    || '');
-    setV('bien_fort3',       data.fort3    || '');
-    setV('bien_vig1',        data.vig1     || '');
-    setV('bien_vig2',        data.vig2     || '');
-    setV('bien_vig3',        data.vig3     || '');
-    setV('loyer',            data.loyer    || '');
-    setV('bien_loyer_estime',data.loyer    || '');
-    setV('bien_mediane',     data.mediane  || '');
-    setV('bien_tension',     data.tension  || '');
-    setV('bien_delai',       data.delai    || '');
-    setV('bien_fourchette_basse', data.fourchetBasse || '');
-    setV('bien_fourchette_haute', data.fourchetHaute || '');
-    setV('bien_credit_duree',data.creditDuree  || '');
-    setV('bien_credit_apport',data.creditApport || '');
-    setV('bien_credit_taux_haut',   data.creditHaut   || '');
-    setV('bien_credit_taux_moyen',  data.creditMoyen  || '');
-    setV('bien_credit_taux_bas',    data.creditBas    || '');
-    setV('historique_libre', data.historiqueLibre || '');
-    setV('facture1_url',     data.facture1Url || '');
-    setV('facture2_url',     data.facture2Url || '');
-    setV('facture3_url',     data.facture3Url || '');
-    setV('bien_photo1_url',  data.photo1 || '');
-    setV('bien_photo2_url',  data.photo2 || '');
-    setV('bien_photo3_url',  data.photo3 || '');
-    setV('bien_photo4_url',  data.photo4 || '');
-    setV('bien_photo5_url',  data.photo5 || '');
-    setV('video_url',        data.videoUrl  || '');
-    setV('visite_url',       data.visiteUrl || '');
-    setV('charges_detail',   data.chargesDetail || '');
-
-    // DPE button
-    if (data.dpe) {
-      document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]').forEach(function(b) {
-        b.classList.remove('sel');
-        if (b.dataset.letter === data.dpe) b.classList.add('sel');
-      });
-    }
-
-    // Diagnostics
-    if (data.diags && Array.isArray(data.diags)) {
-      var diagKeys = ['amiante','plomb','termites','electricite','gaz','assain'];
-      data.diags.forEach(function(diag, i) {
-        var key = diagKeys[i];
-        if (!key) return;
-        setV('diag_' + key + '_status', diag.status || '');
-        setV('diag_' + key + '_result', diag.result || '');
-      });
-    }
-    setV('diag_carrez', data.diagCarrez || '');
-
-    // Renovations
-    if (data.renovations && Array.isArray(data.renovations)) {
-      data.renovations.forEach(function(row, i) {
-        setV('renov_annee_'   + (i+1), row.annee   || '');
-        setV('renov_montant_' + (i+1), row.montant || '');
-        setV('renov_desc_'    + (i+1), row.desc    || '');
-      });
-    }
-
-    // Remember which fiche we're editing
+    // 3. Remember which fiche we're editing
     _editingFiche = { filename: filename, sha: sha };
     _stepsComplete[2] = true;
-    showToast('✅ Fiche chargée — modifiez et régénérez.');
+
+    // 4. Navigate first — goToStep(2) triggers initStep2() + loadDraftBien() (blocked)
+    //    Any page re-rendering happens here, before we inject values.
     goToStep(2);
+
+    // 5. Inject values AFTER navigation, in a setTimeout so the DOM is fully settled
+    setTimeout(function() {
+      // Reset all step-2 fields
+      document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) {
+        el.value = '';
+      });
+
+      // Switch to correct type
+      var type = data.type || 'appart';
+      switchType(type);
+      document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
+      var typeTab = document.getElementById('tab-' + type);
+      if (typeTab) typeTab.classList.add('active');
+
+      // Fill form fields
+      setV('adresse',          data.adresse || '');
+      setV('quartier',         data.quartier || '');
+      setV('surface_hab',      data.surface  || '');
+      setV('surface_carrez',   data.surfCarrez || '');
+      setV('prix_vente',       data.prix     || '');
+      setV('prix_vente_t',     data.prix     || '');
+      setV('charges_copro',    data.chargesCopro || '');
+      setV('taxe_fonciere',    data.taxeFonciere || '');
+      setV('taxe_fonciere_t',  data.taxeFonciere || '');
+      setV('nb_pieces',        data.pieces   || '');
+      setV('etage',            data.etage    || '');
+      setV('annee_construction', data.annee  || '');
+      setV('ref_mandat',       data.ref      || '');
+      setV('bien_score',       data.score    || '');
+      setV('bien_score_prest', data.scorePrest   || '');
+      setV('bien_score_secteur',data.scoreSecteur || '');
+      setV('bien_score_qp',    data.scoreQP  || '');
+      setV('bien_score_etat',  data.scoreEtat || '');
+      setV('bien_fort1',       data.fort1    || '');
+      setV('bien_fort2',       data.fort2    || '');
+      setV('bien_fort3',       data.fort3    || '');
+      setV('bien_vig1',        data.vig1     || '');
+      setV('bien_vig2',        data.vig2     || '');
+      setV('bien_vig3',        data.vig3     || '');
+      setV('loyer',            data.loyer    || '');
+      setV('bien_loyer_estime',data.loyer    || '');
+      setV('bien_mediane',     data.mediane  || '');
+      setV('bien_tension',     data.tension  || '');
+      setV('bien_delai',       data.delai    || '');
+      setV('bien_fourchette_basse', data.fourchetBasse || '');
+      setV('bien_fourchette_haute', data.fourchetHaute || '');
+      setV('bien_credit_duree',data.creditDuree  || '');
+      setV('bien_credit_apport',data.creditApport || '');
+      setV('bien_credit_taux_haut',   data.creditHaut   || '');
+      setV('bien_credit_taux_moyen',  data.creditMoyen  || '');
+      setV('bien_credit_taux_bas',    data.creditBas    || '');
+      setV('historique_libre', data.historiqueLibre || '');
+      setV('facture1_url',     data.facture1Url || '');
+      setV('facture2_url',     data.facture2Url || '');
+      setV('facture3_url',     data.facture3Url || '');
+      setV('bien_photo1_url',  data.photo1 || '');
+      setV('bien_photo2_url',  data.photo2 || '');
+      setV('bien_photo3_url',  data.photo3 || '');
+      setV('bien_photo4_url',  data.photo4 || '');
+      setV('bien_photo5_url',  data.photo5 || '');
+      setV('video_url',        data.videoUrl  || '');
+      setV('visite_url',       data.visiteUrl || '');
+      setV('charges_detail',   data.chargesDetail || '');
+
+      // DPE button
+      if (data.dpe) {
+        document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]').forEach(function(b) {
+          b.classList.remove('sel');
+          if (b.dataset.letter === data.dpe) b.classList.add('sel');
+        });
+      }
+
+      // Diagnostics
+      if (data.diags && Array.isArray(data.diags)) {
+        var diagKeys = ['amiante','plomb','termites','electricite','gaz','assain'];
+        data.diags.forEach(function(diag, i) {
+          var key = diagKeys[i];
+          if (!key) return;
+          setV('diag_' + key + '_status', diag.status || '');
+          setV('diag_' + key + '_result', diag.result || '');
+        });
+      }
+      setV('diag_carrez', data.diagCarrez || '');
+
+      // Renovations
+      if (data.renovations && Array.isArray(data.renovations)) {
+        data.renovations.forEach(function(row, i) {
+          setV('renov_annee_'   + (i+1), row.annee   || '');
+          setV('renov_montant_' + (i+1), row.montant || '');
+          setV('renov_desc_'    + (i+1), row.desc    || '');
+        });
+      }
+
+      // 6. Release edit mode AFTER injection is complete
+      window._editMode = false;
+      showToast('✅ Fiche chargée — modifiez et régénérez.');
+    }, 100);
   } catch(err) {
     showToast('❌ Erreur chargement fiche : ' + err.message, true);
     console.error(err);
