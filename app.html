@@ -2111,9 +2111,14 @@ function injectData(html, d) {
         + 'border:2px solid var(--gold);display:block;'
         + 'margin:0 auto 12px auto;');
     });
-    // Masquer les avatars initiales à côté
+    // Remplacer les avatars initiales par la photo agent
     var avatars = doc.querySelectorAll('.cons-avatar, .agent-avatar');
-    avatars.forEach(function(el) { el.style.display = 'none'; });
+    avatars.forEach(function(el) {
+      el.textContent = '';
+      el.style.backgroundImage = 'url(' + d.agentPhoto + ')';
+      el.style.backgroundSize = 'cover';
+      el.style.backgroundPosition = 'top center';
+    });
   }
 
   return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
@@ -2746,11 +2751,11 @@ async function publierFiche() {
   status.textContent = '⏳ Upload en cours…';
 
   var filename = _lastGeneratedSlug + '-' + Date.now() + '.html';
-  var blob = new Blob([_lastGeneratedHTML], { type: 'text/html' });
+  var blob = new Blob([_lastGeneratedHTML], { type: 'text/html; charset=utf-8' });
 
   var { data, error } = await window.privencyAuth.storage
     .from('Fiches')
-    .upload(filename, blob, { contentType: 'text/html', upsert: true });
+    .upload(filename, blob, { contentType: 'text/html; charset=utf-8', upsert: true });
 
   if (error) {
     btn.disabled = false;
