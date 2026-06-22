@@ -3424,76 +3424,93 @@ async function modifierFiche(filename, sha, downloadUrl) {
       var typeTab = document.getElementById('tab-' + type);
       if (typeTab) typeTab.classList.add('active');
 
-      // Fill form fields
-      (function dbgSet(id, val) {
+      // Helper: setV + console.log
+      function dbgSet(id, val) {
         var el = document.getElementById(id);
-        console.log('[inject]', id, '— el:', el ? 'FOUND' : 'NOT FOUND', '— value:', JSON.stringify(val));
+        console.log('[inject]', id, '—', el ? 'FOUND' : 'NOT FOUND', '— value:', JSON.stringify(val == null ? '' : val));
         if (el) el.value = (val == null ? '' : val);
-      });
-
-      setV('adresse',          data.adresse || '');
-      console.log('[inject] adresse field:', document.getElementById('adresse'), '— value set:', data.adresse);
-      setV('quartier',         data.quartier || '');
-      setV('surface_hab',      data.surface  || '');
-      console.log('[inject] surface_hab field:', document.getElementById('surface_hab'), '— value set:', data.surface);
-      setV('surface_carrez',   data.surfCarrez || '');
-      setV('prix_vente',       data.prix     || '');
-      console.log('[inject] prix_vente field:', document.getElementById('prix_vente'), '— value set:', data.prix);
-      setV('prix_vente_t',     data.prix     || '');
-      setV('charges_copro',    data.chargesCopro || '');
-      setV('taxe_fonciere',    data.taxeFonciere || '');
-      setV('taxe_fonciere_t',  data.taxeFonciere || '');
-      setV('nb_pieces',        data.pieces   || '');
-      setV('etage',            data.etage    || '');
-      setV('annee_construction', data.annee  || '');
-      setV('ref_mandat',       data.ref      || '');
-      setV('bien_score',       data.score    || '');
-      setV('bien_score_prest', data.scorePrest   || '');
-      setV('bien_score_secteur',data.scoreSecteur || '');
-      setV('bien_score_qp',    data.scoreQP  || '');
-      setV('bien_score_etat',  data.scoreEtat || '');
-      setV('bien_fort1',       data.fort1    || '');
-      console.log('[inject] bien_fort1 field:', document.getElementById('bien_fort1'), '— value set:', data.fort1);
-      setV('bien_fort2',       data.fort2    || '');
-      console.log('[inject] bien_fort2 field:', document.getElementById('bien_fort2'), '— value set:', data.fort2);
-      setV('bien_fort3',       data.fort3    || '');
-      console.log('[inject] bien_fort3 field:', document.getElementById('bien_fort3'), '— value set:', data.fort3);
-      setV('bien_vig1',        data.vig1     || '');
-      setV('bien_vig2',        data.vig2     || '');
-      setV('bien_vig3',        data.vig3     || '');
-      setV('loyer',            data.loyer    || '');
-      setV('bien_loyer_estime',data.loyer    || '');
-      setV('bien_mediane',     data.mediane  || '');
-      setV('bien_tension',     data.tension  || '');
-      setV('bien_delai',       data.delai    || '');
-      setV('bien_fourchette_basse', data.fourchetBasse || '');
-      setV('bien_fourchette_haute', data.fourchetHaute || '');
-      setV('bien_credit_duree',data.creditDuree  || '');
-      setV('bien_credit_apport',data.creditApport || '');
-      setV('bien_credit_taux_haut',   data.creditHaut   || '');
-      setV('bien_credit_taux_moyen',  data.creditMoyen  || '');
-      setV('bien_credit_taux_bas',    data.creditBas    || '');
-      setV('historique_libre', data.historiqueLibre || '');
-      setV('facture1_url',     data.facture1Url || '');
-      setV('facture2_url',     data.facture2Url || '');
-      setV('facture3_url',     data.facture3Url || '');
-      setV('bien_photo1_url',  data.photo1 || '');
-      setV('bien_photo2_url',  data.photo2 || '');
-      setV('bien_photo3_url',  data.photo3 || '');
-      setV('bien_photo4_url',  data.photo4 || '');
-      setV('bien_photo5_url',  data.photo5 || '');
-      setV('video_url',        data.videoUrl  || '');
-      setV('visite_url',       data.visiteUrl || '');
-      setV('charges_detail',   data.chargesDetail || '');
-
-      // DPE button
-      console.log('[inject] dpe value:', data.dpe, '— buttons found:', document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]').length);
-      if (data.dpe) {
-        document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]').forEach(function(b) {
-          b.classList.remove('sel');
-          if (b.dataset.letter === data.dpe) { b.classList.add('sel'); console.log('[inject] DPE button selected:', b.dataset.letter); }
-        });
       }
+
+      // Adresse & localisation
+      dbgSet('adresse',      data.adresse    || '');
+      dbgSet('quartier',     data.quartier   || '');
+
+      // Surfaces
+      dbgSet('surface_hab',  data.surface    || '');
+      dbgSet('surface_carrez', data.surfCarrez || '');
+
+      // Prix (appartement/maison + terrain)
+      dbgSet('prix_vente',   data.prix       || '');
+      dbgSet('prix_vente_t', data.prix       || '');
+
+      // Charges & fiscalité
+      dbgSet('charges_copro',   data.chargesCopro  || '');
+      dbgSet('taxe_fonciere',   data.taxeFonciere  || '');
+      dbgSet('taxe_fonciere_t', data.taxeFonciere  || '');
+      dbgSet('charges_detail',  data.chargesDetail || '');
+
+      // Caractéristiques
+      dbgSet('nb_pieces',          data.pieces || '');
+      dbgSet('etage',              data.etage  || '');
+      dbgSet('annee_construction', data.annee  || '');
+      dbgSet('ref_mandat',         data.ref    || '');
+
+      // DPE : cliquer le bon bouton via data-letter (créés dynamiquement par initStep2)
+      var dpeBtns = document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]');
+      console.log('[inject] dpe value:', data.dpe, '— buttons found:', dpeBtns.length);
+      if (data.dpe) {
+        var dpeTarget = document.querySelector('#page-2 .dpe-btn[data-group="dpe"][data-letter="' + data.dpe + '"]');
+        console.log('[inject] dpe target button:', dpeTarget);
+        if (dpeTarget) dpeTarget.click();
+      }
+
+      // Scores
+      dbgSet('bien_score',        data.score       || '');
+      dbgSet('bien_score_prest',  data.scorePrest  || '');
+      dbgSet('bien_score_secteur',data.scoreSecteur || '');
+      dbgSet('bien_score_qp',     data.scoreQP     || '');
+      dbgSet('bien_score_etat',   data.scoreEtat   || '');
+
+      // Points forts
+      dbgSet('bien_fort1', data.fort1 || '');
+      dbgSet('bien_fort2', data.fort2 || '');
+      dbgSet('bien_fort3', data.fort3 || '');
+
+      // Vigilances (IDs réels : bien_vig1/2/3)
+      dbgSet('bien_vig1', data.vig1 || '');
+      dbgSet('bien_vig2', data.vig2 || '');
+      dbgSet('bien_vig3', data.vig3 || '');
+
+      // Loyer & marché
+      dbgSet('loyer',             data.loyer    || '');
+      dbgSet('bien_loyer_estime', data.loyer    || '');
+      dbgSet('bien_mediane',      data.mediane  || '');
+      dbgSet('bien_tension',      data.tension  || '');
+      dbgSet('bien_delai',        data.delai    || '');
+
+      // Fourchette & crédit
+      dbgSet('bien_fourchette_basse',   data.fourchetBasse  || '');
+      dbgSet('bien_fourchette_haute',   data.fourchetHaute  || '');
+      dbgSet('bien_credit_duree',       data.creditDuree    || '');
+      dbgSet('bien_credit_apport',      data.creditApport   || '');
+      dbgSet('bien_credit_taux_haut',   data.creditHaut     || '');
+      dbgSet('bien_credit_taux_moyen',  data.creditMoyen    || '');
+      dbgSet('bien_credit_taux_bas',    data.creditBas      || '');
+
+      // Historique & documents
+      dbgSet('historique_libre', data.historiqueLibre || '');
+      dbgSet('facture1_url',     data.facture1Url    || '');
+      dbgSet('facture2_url',     data.facture2Url    || '');
+      dbgSet('facture3_url',     data.facture3Url    || '');
+
+      // Photos & médias
+      dbgSet('bien_photo1_url', data.photo1    || '');
+      dbgSet('bien_photo2_url', data.photo2    || '');
+      dbgSet('bien_photo3_url', data.photo3    || '');
+      dbgSet('bien_photo4_url', data.photo4    || '');
+      dbgSet('bien_photo5_url', data.photo5    || '');
+      dbgSet('video_url',       data.videoUrl  || '');
+      dbgSet('visite_url',      data.visiteUrl || '');
 
       // Diagnostics
       if (data.diags && Array.isArray(data.diags)) {
@@ -3501,18 +3518,18 @@ async function modifierFiche(filename, sha, downloadUrl) {
         data.diags.forEach(function(diag, i) {
           var key = diagKeys[i];
           if (!key) return;
-          setV('diag_' + key + '_status', diag.status || '');
-          setV('diag_' + key + '_result', diag.result || '');
+          dbgSet('diag_' + key + '_status', diag.status || '');
+          dbgSet('diag_' + key + '_result', diag.result || '');
         });
       }
-      setV('diag_carrez', data.diagCarrez || '');
+      dbgSet('diag_carrez', data.diagCarrez || '');
 
       // Renovations
       if (data.renovations && Array.isArray(data.renovations)) {
         data.renovations.forEach(function(row, i) {
-          setV('renov_annee_'   + (i+1), row.annee   || '');
-          setV('renov_montant_' + (i+1), row.montant || '');
-          setV('renov_desc_'    + (i+1), row.desc    || '');
+          dbgSet('renov_annee_'   + (i+1), row.annee   || '');
+          dbgSet('renov_montant_' + (i+1), row.montant || '');
+          dbgSet('renov_desc_'    + (i+1), row.desc    || '');
         });
       }
 
