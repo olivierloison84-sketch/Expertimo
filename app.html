@@ -2748,7 +2748,7 @@ async function publierFiche() {
   var filename = _lastGeneratedSlug + '-' + Date.now() + '.html';
   var blob = new Blob([_lastGeneratedHTML], { type: 'text/html' });
 
-  var { data, error } = await authClient.storage
+  var { data, error } = await window.privencyAuth.storage
     .from('fiches')
     .upload(filename, blob, { contentType: 'text/html', upsert: true });
 
@@ -2758,7 +2758,7 @@ async function publierFiche() {
     return;
   }
 
-  var { data: urlData } = authClient.storage
+  var { data: urlData } = window.privencyAuth.storage
     .from('fiches')
     .getPublicUrl(filename);
 
