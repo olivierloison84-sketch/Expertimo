@@ -40,6 +40,32 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<!-- Google Analytics 4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-FR3DQQ8VSH');
+
+  var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
+  gtag('set', 'user_properties', { client_nom: clientId });
+
+  window.addEventListener('load', function() {
+    gtag('event', 'fiche_ouverte', {
+      client: clientId,
+      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
+    });
+    setInterval(function() {
+      gtag('event', 'temps_page', {
+        secondes: Math.round(performance.now() / 1000),
+        client: clientId
+      });
+    }, 30000);
+  });
+</script>
+<!-- /GA4 -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Espace Acheteur Privé · Expertimo</title>
@@ -57,15 +83,15 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);over
 .header-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:flex-start;gap:48px;position:relative;z-index:2;}
 .hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(184,146,58,.35);border-radius:99px;background:rgba(184,146,58,.08);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
 .hbadge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
-@keyframes pulseBtn{0%,100%{box-shadow:0 4px 24px rgba(184,146,58,.5)}50%{box-shadow:0 4px 40px rgba(184,146,58,.9)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes pulseBtn{0%,100%{box-shadow:0 4px 24px rgba(184,146,58,.5)}50%{box-shadow:0 4px 40px rgba(184,146,58,.9)}}
 .htitle{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.5vw,42px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
-.hsub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.8;max-width:540px;font-weight:300;margin-top:8px;}
+.hsub{font-size:18px;color:rgba(255,255,255,.5);line-height:1.8;max-width:540px;font-weight:400;margin-top:8px;}
 .price-card{background:rgba(255,255,255,.06);border:1px solid rgba(184,146,58,.25);border-radius:20px;padding:32px 36px;min-width:320px;max-width:380px;flex-shrink:0;}
 .plabel{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
 .pamount{font-family:'Cormorant Garamond',serif;font-size:64px;color:var(--gold);font-weight:300;line-height:1;margin-bottom:4px;}
 .pmeta{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08);}
-.hkpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:0;}
+.hkpis{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0;padding:4px;}
 .hkpi{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;}
 .hkpi .hl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
 .hkpi .hv{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:300;line-height:1;}
@@ -310,7 +336,7 @@ textarea.field{min-height:95px;resize:vertical;}
 <header class="header">
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
-      <div class="hbadge"><svg viewBox="0 0 28 22" width="20" height="16" style="display:inline-block;vertical-align:middle;margin-right:6px;"><polygon points="14,0 28,11 14,22 0,11" fill="none" stroke="#b8923a" stroke-width="1.2"/><polygon points="14,5 23,11 14,17 5,11" fill="#b8923a" opacity="0.15"/><text x="14" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="8" fill="#b8923a" letter-spacing="1">PV</text></svg>PRIVENCY · Votre Espace Acheteur Privé</div>
+      <div class="hbadge"><svg viewBox="0 0 28 22" width="14" height="11" style="display:inline-block;vertical-align:middle;margin-right:4px;"><polygon points="14,0 28,11 14,22 0,11" fill="none" stroke="#b8923a" stroke-width="1.2"/><polygon points="14,5 23,11 14,17 5,11" fill="#b8923a" opacity="0.15"/><text x="14" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="8" fill="#b8923a" letter-spacing="1">PV</text></svg>PRIVENCY · Votre Espace Acheteur Privé</div>
       <h1 class="htitle">5 Rue de l'Arpajonnais<br><span style="color:var(--gold);font-style:italic;">Longjumeau , centre ville</span></h1>
       <p class="hsub">Appartement 3 pièces de 76,87 m² · 2ème et dernier étage · DPE D</p>
     </div>
@@ -318,7 +344,7 @@ textarea.field{min-height:95px;resize:vertical;}
       <div class="plabel">Prix affiché</div>
       <div class="pamount">260 000 €</div>
       <div class="pmeta">Frais d'agence inclus · Données temps réel</div>
-      <div class="hkpis" style="grid-template-columns:1fr 1fr;">
+      <div class="hkpis">
         <div class="hkpi"><div class="hl">Score qualité</div><div class="hv" id="h-score" style="font-size:32px;">9,3/10</div></div>
         <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe" style="font-size:32px;">D</div></div>
       </div>
@@ -329,6 +355,8 @@ textarea.field{min-height:95px;resize:vertical;}
 <nav class="nav" id="main-nav">
   <button class="active" onclick="showTab('bien',this)">🏠 Le Bien</button>
   <button onclick="showTab('analyse',this)">📊 Analyse &amp; Chiffres</button>
+  <button onclick="showTab('historique',this)">🏛️ Historique</button>
+  <button onclick="showTab('diagnostics',this)">📋 Diagnostics</button>
   <button onclick="showTab('budget',this)">💰 Mon Budget</button>
   <button onclick="showTab('quartier',this);initMapQuartier()">🗺️ Quartier</button>
   <button onclick="showTab('documents',this)">📁 Documents</button>
@@ -345,12 +373,23 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="lbl">Le bien</div>
     <h2 class="stitle">5 Rue de l'Arpajonnais · 3 pièces · 2ème étage</h2>
     <p class="ssub">Appartement 3 pièces de 76,87 m² · 2ème et dernier étage · DPE D</p>
-    <div class="gallery">
-    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951050/TorresSalaun_OlivierLoison-OlivierReynes-20_ylci3n.jpg" alt="5 Rue de l'Arpajonnais - Vue principale" class="gm" onclick="openLightbox(this.src)">
-    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951049/TorresSalaun_OlivierLoison-OlivierReynes-15_u5kaok.jpg" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
-    <img src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951044/TorresSalaun_OlivierLoison-OlivierReynes-14_zsnz81.jpg" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <div class="gallery" id="main-gallery">
+    <img id="gallery-photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951050/TorresSalaun_OlivierLoison-OlivierReynes-20_ylci3n.jpg" alt="Vue principale" class="gm" onclick="openLightbox(this.src)">
+    <img id="gallery-photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951049/TorresSalaun_OlivierLoison-OlivierReynes-15_u5kaok.jpg" alt="Photo 2" onclick="openLightbox(this.src)">
+    <img id="gallery-photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951044/TorresSalaun_OlivierLoison-OlivierReynes-14_zsnz81.jpg" alt="Photo 3" onclick="openLightbox(this.src)">
+    <img id="gallery-photo4" src="" alt="Photo 4" onclick="openLightbox(this.src)" style="display:none;">
+    <img id="gallery-photo5" src="" alt="Photo 5" onclick="openLightbox(this.src)" style="display:none;">
   </div>
-  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:.06em;">📷 Cliquez sur une photo pour l'agrandir · 3 photos disponibles</div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:.06em;" id="gallery-caption">📷 Cliquez sur une photo pour l'agrandir · 3 photos disponibles</div>
+  <div id="media-bloc" style="display:none;margin-bottom:18px;">
+    <div id="video-container" style="display:none;margin-bottom:12px;">
+      <div class="lbl">Vidéo du bien</div>
+      <div id="video-embed" style="position:relative;padding-bottom:56.25%;height:0;border-radius:12px;overflow:hidden;"></div>
+    </div>
+    <div id="visite-container" style="display:none;">
+      <a id="visite-btn" href="#" target="_blank" class="btn-rdv" style="display:inline-flex;align-items:center;gap:8px;width:auto;">🔍 Visite virtuelle 360°</a>
+    </div>
+  </div>
   <div class="score-box">
   <div class="lbl" style="color:#6a6358;">Score Qualité du Bien</div>
   <div class="score-num">9,3</div>
@@ -364,7 +403,7 @@ textarea.field{min-height:95px;resize:vertical;}
 <div><div class="cons-card">
   <div class="cons-avatar">OL</div>
   <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-role">Mandataire immobilier · _sp_reseau</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 06 85 68 46 13</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
@@ -383,8 +422,6 @@ textarea.field{min-height:95px;resize:vertical;}
   <div class="sub-tabs" id="sub-nav">
     <button class="active" onclick="showSub('marche',this)">📊 Marché</button>
     <button onclick="showSub('rentabilite',this)">💰 Rentabilité</button>
-    <button onclick="showSub('patrimoine',this)">🏛️ Historique du bien</button>
-    <button onclick="showSub('diagnostics',this)">📋 Diagnostics</button>
   </div>
 
   <div id="sub-marche" class="sub-panel active">
@@ -450,92 +487,11 @@ textarea.field{min-height:95px;resize:vertical;}
     </div>
   </div>
 
-  <div id="sub-patrimoine" class="sub-panel">
-    <div class="card">
-      <div class="lbl">Historique patrimonial</div>
-      <h2 class="stitle">Chronologie du bien</h2>
-      <div class="tl" style="margin-top:13px;" id="historique-timeline">
-        <div class="tli"><div class="tly">2003 · CONSTRUCTION</div><div class="tlt">Appartement entièrement rénové : sols, murs, cuisine, salle de bains, installation électrique complète.</div></div>
-        <div class="tli"><div class="tly">Rénovation totale de l'appartement 2015 : sols, murs, cuisine, salle de bains, installation électrique complète etc...</div><div class="tlt"></div></div>
-        <div class="tli"><div class="tly">2025 · MISE EN VENTE</div><div class="tlt">Bien proposé à 260 000 € · DPE D · Libre à la vente · Charges 253 €/mois.</div></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="lbl">Projection patrimoniale — scénarios</div>
-      <!-- CSS PROJECTION CHART -->
-      <div style="display:flex;align-items:flex-end;gap:8px;height:150px;margin:14px 0;padding-bottom:4px;border-bottom:1px solid var(--border);">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-          <div id="proj-bar-lbl-1" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);">—</div>
-          <div id="proj-bar-1" style="width:100%;background:rgba(184,146,58,.3);border-radius:3px 3px 0 0;height:46%;"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);">Basse</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-          <div id="proj-bar-lbl-2" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);">—</div>
-          <div id="proj-bar-2" style="width:100%;background:var(--gold);border-radius:3px 3px 0 0;height:97%;"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);font-weight:600;">Médiane</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-          <div id="proj-bar-lbl-3" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--vert);">—</div>
-          <div id="proj-bar-3" style="width:100%;background:var(--vert);border-radius:3px 3px 0 0;height:100%;"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--vert);">Haute</div>
-        </div>
-        <div style="writing-mode:vertical-rl;font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-orientation:mixed;transform:rotate(180deg);padding-bottom:10px;">Plus-value sur 10 ans</div>
-      </div>
-      <table class="pt">
-        <thead><tr><th>Horizon</th><th>Hyp. basse (+1%/an)</th><th>Hyp. médiane (+2%/an)</th><th>Hyp. haute (+3%/an)</th></tr></thead>
-        <tbody>
-          <tr><td><strong>3 ans</strong></td><td class="mono"><span id="proj-1-3">—</span></td><td class="mono"><span id="proj-2-3">—</span></td><td class="mono"><span id="proj-3-3">—</span></td></tr>
-          <tr><td><strong>5 ans</strong></td><td class="mono"><span id="proj-1-5">—</span></td><td class="mono txt-vert"><span id="proj-2-5">—</span></td><td class="mono"><span id="proj-3-5">—</span></td></tr>
-          <tr><td><strong>10 ans</strong></td><td class="mono"><span id="proj-1-10">—</span></td><td class="mono txt-vert"><span id="proj-2-10">—</span></td><td class="mono"><span id="proj-3-10">—</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div id="sub-diagnostics" class="sub-panel">
-    <div class="card">
-      <div class="lbl">Diagnostics réglementaires</div>
-      <h2 class="stitle">Diagnostics Techniques</h2>
-      <p class="ssub">Résultats officiels des diagnostics réglementaires</p>
-      <div class="diag-grid" id="diag-grid">
-        <div class="diag-card" id="diag-amiante">
-          <div class="diag-icon">🧱</div>
-          <div class="diag-name">Amiante</div>
-          <div class="diag-result" id="diag-amiante-result">—</div>
-        </div>
-        <div class="diag-card" id="diag-electricite">
-          <div class="diag-icon">⚡</div>
-          <div class="diag-name">Électricité</div>
-          <div class="diag-result" id="diag-electricite-result">—</div>
-        </div>
-        <div class="diag-card" id="diag-gaz">
-          <div class="diag-icon">🔥</div>
-          <div class="diag-name">Gaz</div>
-          <div class="diag-result" id="diag-gaz-result">—</div>
-        </div>
-        <div class="diag-card" id="diag-carrez">
-          <div class="diag-icon">📐</div>
-          <div class="diag-name">Loi Carrez</div>
-          <div class="diag-result" id="diag-carrez-result">—</div>
-        </div>
-        <div class="diag-card" id="diag-assainissement">
-          <div class="diag-icon">💧</div>
-          <div class="diag-name">Assainissement</div>
-          <div class="diag-result" id="diag-assainissement-result">—</div>
-        </div>
-        <div class="diag-card" id="diag-erp">
-          <div class="diag-icon">🏛️</div>
-          <div class="diag-name">ERP</div>
-          <div class="diag-result" id="diag-erp-result">—</div>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 <div><div class="cons-card">
   <div class="cons-avatar">OL</div>
   <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-role">Mandataire immobilier · _sp_reseau</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 06 85 68 46 13</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
@@ -544,6 +500,41 @@ textarea.field{min-height:95px;resize:vertical;}
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
   <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
+</div>
+</section>
+
+<!-- ═══════════ ONGLET : HISTORIQUE ═══════════ -->
+<section id="historique" class="tab">
+<div class="pg">
+  <div class="card">
+    <div class="lbl">Historique du bien</div>
+    <h2 class="stitle">Chronologie &amp; travaux</h2>
+    <div id="historique-libre" style="font-size:13px;line-height:1.9;font-weight:300;white-space:pre-line;color:var(--ink);padding:8px 0;">—</div>
+    <div id="factures-bloc" style="margin-top:20px;display:none;">
+      <div class="lbl">Factures &amp; devis travaux</div>
+      <div id="factures-liens" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════ ONGLET : DIAGNOSTICS ═══════════ -->
+<section id="diagnostics" class="tab">
+<div class="pg">
+<div>
+  <div class="card">
+    <div class="lbl">Diagnostics réglementaires</div>
+    <h2 class="stitle">Diagnostics Techniques</h2>
+    <p class="ssub">Résultats officiels des diagnostics réglementaires</p>
+    <div class="diag-grid" id="diag-grid">
+      <div class="diag-card diag-" id="diag-amiante"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result" id="diag-amiante-result">—</div></div>
+      <div class="diag-card diag-" id="diag-electricite"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result" id="diag-electricite-result">—</div></div>
+      <div class="diag-card diag-" id="diag-gaz"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result" id="diag-gaz-result">—</div></div>
+      <div class="diag-card diag-" id="diag-carrez"><div class="diag-icon">📐</div><div class="diag-name">Loi Carrez</div><div class="diag-result" id="diag-carrez-result">—</div></div>
+      <div class="diag-card diag-" id="diag-assainissement"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result" id="diag-assainissement-result">—</div></div>
+      <div class="diag-card diag-" id="diag-erp"><div class="diag-icon">🏛️</div><div class="diag-name">ERP</div><div class="diag-result" id="diag-erp-result">—</div></div>
+    </div>
+  </div>
 </div>
 </section>
 
@@ -622,6 +613,10 @@ textarea.field{min-height:95px;resize:vertical;}
     </div>
     <div id="doc-content" style="display:none;">
       <div id="doc-success" class="alert vert" style="margin-top:13px;margin-bottom:14px;"><h4>✅ Accès déverrouillé</h4><p>Votre demande a été transmise. Le conseiller vous contactera dans les 24h avec les documents complets.</p></div>
+      <div id="factures-section" style="display:none;margin-bottom:14px;">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Factures travaux</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;" id="factures-buttons"></div>
+      </div>
       <div class="dg">
         <div class="dc"><div class="dci">📄</div><div class="dcn">PV Assemblée Générale</div><div class="dcm">Dernière AG copropriété</div><div class="dlck">🔓 Disponible</div></div>
         <div class="dc"><div class="dci">📊</div><div class="dcn">Appels de charges</div><div class="dcm">Relevé annuel · 253 €/mois</div><div class="dlck">🔓 Disponible</div></div>
@@ -636,7 +631,7 @@ textarea.field{min-height:95px;resize:vertical;}
 <div><div class="cons-card">
   <div class="cons-avatar">OL</div>
   <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-role">Mandataire immobilier · _sp_reseau</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 06 85 68 46 13</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
@@ -711,7 +706,7 @@ textarea.field{min-height:95px;resize:vertical;}
   <div class="cons-card">
   <div class="cons-avatar">OL</div>
   <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-role">Mandataire immobilier · _sp_reseau</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 06 85 68 46 13</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
@@ -725,7 +720,14 @@ textarea.field{min-height:95px;resize:vertical;}
 </section>
 
 <div class="pfooter">
-  <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;"><svg viewBox="0 0 60 46" width="40" height="31" style="display:inline-block;"><polygon points="30,0 60,23 30,46 0,23" fill="none" stroke="#b8923a" stroke-width="1.5"/><polygon points="30,10 48,23 30,36 12,23" fill="#b8923a" opacity="0.12"/><text x="30" y="27" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="400" fill="#b8923a" letter-spacing="1.5">PV</text></svg><span style="font-family:'Cormorant Garamond',serif;font-size:42px;color:#b8923a;font-weight:300;letter-spacing:.06em;">Privency</span></div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;">
+  <svg viewBox="0 0 60 46" width="40" height="31" style="display:inline-block;">
+    <polygon points="30,0 60,23 30,46 0,23" fill="none" stroke="#b8923a" stroke-width="1.5"/>
+    <polygon points="30,10 48,23 30,36 12,23" fill="#b8923a" opacity="0.12"/>
+    <text x="30" y="27" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="400" fill="#b8923a" letter-spacing="1.5">PV</text>
+  </svg>
+  <span style="font-family:'Cormorant Garamond',serif;font-size:42px;color:#b8923a;font-weight:300;letter-spacing:.06em;">Privency</span>
+</div>
   <h2>Espace Acheteur Privé<br><span style="color:var(--gold);font-style:italic;">une expérience immobilière nouvelle génération</span></h2>
   <p>Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.</p>
 </div>
@@ -735,6 +737,7 @@ textarea.field{min-height:95px;resize:vertical;}
 <script>
 // ═══ NAV ═══
 function showTab(id, btn) {
+  if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('#main-nav button').forEach(function(b) { b.classList.remove('active'); });
@@ -743,7 +746,7 @@ function showTab(id, btn) {
 }
 
 function showTabById(id) {
-  var navMap = {bien: 0, analyse: 1, budget: 2, quartier: 3, documents: 4, offre: 5};
+  var navMap = {bien: 0, analyse: 1, historique: 2, diagnostics: 3, budget: 4, quartier: 5, documents: 6, offre: 7};
   var navBtns = document.querySelectorAll('#main-nav button');
   showTab(id, navBtns[navMap[id]]);
 }
@@ -754,7 +757,7 @@ function showSub(id, btn) {
   document.getElementById('sub-' + id).classList.add('active');
   document.querySelectorAll('#sub-nav button').forEach(function(b) { b.classList.remove('active'); });
   if (btn) btn.classList.add('active');
-  if (id === 'patrimoine') { setTimeout(function(){ try{ calcProjection(); }catch(e){} }, 50); }
+  if (id === 'patrimoine') { /* projection supprimée */ }
 }
 
 function showSub2(id) {
@@ -790,50 +793,10 @@ function mensualite(cap, ta, da) {
 }
 
 // ═══ CALCULATEUR RENTABILITÉ ═══
-function calcProjection() {
-  try {
-    var prixEl = document.getElementById('prix');
-    var prixBase = parseFloat("260 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
-    var prix = prixEl ? parseFloat(prixEl.value) : prixBase;
-    if (!prix || isNaN(prix)) return;
-    var taux = [0.01, 0.02, 0.03];
-    var ans  = [3, 5, 10];
-    var pvMax = 0;
-    // Calcul des valeurs et plus-values
-    taux.forEach(function(t, ti) {
-      ans.forEach(function(a) {
-        var valeur = prix * Math.pow(1 + t, a);
-        var pv = valeur - prix;
-        if (pv > pvMax) pvMax = pv;
-        var el = document.getElementById('proj-' + (ti+1) + '-' + a);
-        if (el) el.textContent = Math.round(valeur).toLocaleString('fr-FR') + ' €';
-      });
-    });
-    // Mise à jour des barres du graphique (basée sur plus-value à 10 ans)
-    var pvBarre = [
-      prix * Math.pow(1.01, 10) - prix,
-      prix * Math.pow(1.02, 10) - prix,
-      prix * Math.pow(1.03, 10) - prix
-    ];
-    var pvRef = pvBarre[2] || 1;
-    var lblEl1 = document.getElementById('proj-bar-lbl-1');
-    var lblEl2 = document.getElementById('proj-bar-lbl-2');
-    var lblEl3 = document.getElementById('proj-bar-lbl-3');
-    var barEl1 = document.getElementById('proj-bar-1');
-    var barEl2 = document.getElementById('proj-bar-2');
-    var barEl3 = document.getElementById('proj-bar-3');
-    function fmtK(v) { return '+' + (v >= 1000 ? (Math.round(v/100)/10).toFixed(1) + 'k€' : Math.round(v) + '€'); }
-    if (lblEl1) lblEl1.textContent = fmtK(pvBarre[0]);
-    if (lblEl2) lblEl2.textContent = fmtK(pvBarre[1]);
-    if (lblEl3) lblEl3.textContent = fmtK(pvBarre[2]);
-    if (barEl1) barEl1.style.height = Math.round(pvBarre[0] / pvRef * 100) + '%';
-    if (barEl2) barEl2.style.height = Math.round(pvBarre[1] / pvRef * 100) + '%';
-    if (barEl3) barEl3.style.height = '100%';
-  } catch(e) { console.error('[calcProjection]', e); }
-}
 
 function calc() {
-  try { _calc(); calcProjection(); } catch(e) { console.error('[calc]', e); }
+  if(typeof gtag!=='undefined') gtag('event','simulation_credit',{client:clientId});
+  try { _calc(); } catch(e) { console.error('[calc]', e); }
 }
 function _calc() {
   var prix = parseFloat(document.getElementById('prix').value);
@@ -904,6 +867,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function submitOffer() {
   var montant = document.getElementById('offer-amount').value;
+  if(typeof gtag!=='undefined') gtag('event','offre_initiee',{client:clientId,montant:montant});
   var financement = (document.getElementById('offer-financement') || {}).value || '';
   var apport = document.getElementById('offer-apport').value;
   var delai = (document.getElementById('offer-delai') || {}).value || '';
@@ -1158,6 +1122,7 @@ var _sp_vigi2     = "—";
 var _sp_loyer     = "1300";
 var _sp_agent     = "Olivier LOISON";
 var _sp_tel       = "06 85 68 46 13";
+var _sp_reseau    = "Expertimo";
 
 function toggleAI() {
   _aiOpen = !_aiOpen;
@@ -1188,27 +1153,37 @@ function sendAI() {
   var input = document.getElementById('ai-input');
   var q = input.value.trim();
   if (!q) return;
+  if(typeof gtag!=='undefined') gtag('event','chatbot_question',{client:clientId});
   input.value = '';
   addAIMsg(q, 'user');
   _aiMessages.push({role:'user',content:q});
   var loadDiv = addAIMsg('…', 'assistant');
-  var systemPrompt = "Tu es l'assistant virtuel dedie a ce bien immobilier. Tu reponds UNIQUEMENT aux questions sur ce bien en francais, de facon concise et professionnelle."
-    + " Informations du bien :"
-    + " Adresse: " + _sp_adresse
-    + " | Prix: " + _sp_prix + " euros"
-    + " | Surface: " + _sp_surface + " m2"
-    + " | Etage: " + _sp_etage
-    + " | DPE: " + _sp_dpe
-    + " | Charges: " + _sp_charges + " euros/mois (" + _sp_detail + ")"
-    + " | Taxe fonciere: " + _sp_tf + " euros/an"
-    + " | Points forts: " + _sp_pf1 + ", " + _sp_pf2 + ", " + _sp_pf3
-    + " | Points vigilance: " + _sp_vigi1 + ", " + _sp_vigi2
-    + " | Loyer estime: " + _sp_loyer + " euros/mois"
-    + " | Agent: " + _sp_agent + ", tel: " + _sp_tel
-    + ". Si question hors sujet reponds: Je suis specialise sur ce bien uniquement. Contactez " + _sp_agent + " au " + _sp_tel + "."
-    + " Ne donne jamais de conseil juridique ou financier ferme.";
+  var systemPrompt =
+    "Tu es un assistant immobilier expert, spécialisé sur le bien situé au " + _sp_adresse + ". "
+  + "Tu réponds en français, de façon claire et concise. "
+  + "Tu as accès aux informations suivantes sur ce bien : "
+  + "Prix : " + _sp_prix + " € | Surface : " + _sp_surface + " m² | Étage : " + _sp_etage
+  + " | DPE : " + _sp_dpe + " | Charges : " + _sp_charges + " €/mois"
+  + " | Taxe foncière : " + _sp_tf + " € | Loyer estimé : " + _sp_loyer + " €/mois"
+  + " | Points forts : " + _sp_pf1 + ", " + _sp_pf2 + ", " + _sp_pf3
+  + " | Points de vigilance : " + _sp_vigi1 + ", " + _sp_vigi2
+  + ". "
+  + "Tu peux répondre sur TROIS domaines : "
+  + "1) Les caractéristiques et détails de CE bien (surface, DPE, charges, équipements, points forts, vigilances, rentabilité). "
+  + "2) Le quartier et ses commodités (transports, écoles, commerces, parcs à proximité — utilise tes connaissances générales sur la ville et le secteur). "
+  + "3) Le processus d'achat immobilier en France : étapes après acceptation d'offre (compromis de vente, délai de rétractation 10 jours, financement bancaire, délai obtention prêt 45-60 jours, acte authentique chez le notaire, délais typiques 3-4 mois). "
+  + "Pour les questions sur le financement, oriente vers un courtier ou conseiller bancaire. "
+  + "Pour les questions juridiques complexes, oriente vers un notaire. "
+  + "Agent : " + _sp_agent + " — " + _sp_tel + ". "
+  + "Si une question sort complètement du domaine immobilier, réponds poliment que tu es spécialisé immobilier."
+  + " STYLE DE RÉPONSE OBLIGATOIRE : "
+  + "Réponds toujours en texte fluide et naturel, comme un conseiller immobilier bienveillant qui parle à son client. "
+  + "N'utilise jamais de titres markdown (##, ###), jamais de listes à puces (- ou *), jamais de texte en gras (**). "
+  + "Donne des réponses chaleureuses, rassurantes et pédagogiques avec des délais et chiffres concrets quand c'est pertinent. "
+  + "Tes réponses doivent faire 3 à 5 phrases maximum — concises mais complètes. "
+  + "Termine toujours par une invitation naturelle à contacter le vendeur ou à poser une autre question.";
   var msgs = _aiMessages.filter(function(m,i){return i>1;});
-  fetch('/api/chat', {
+  fetch('https://expertimo-phi.vercel.app/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ system: systemPrompt, messages: msgs })
@@ -1238,7 +1213,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
     try{ calc(); }catch(e){ console.error('[init calc]', e); }
     try{ calcBank(); }catch(e){ console.error('[init calcBank]', e); }
-    setTimeout(function(){ try{ calcProjection(); }catch(e){ console.error('[init calcProjection]', e); } }, 500);
     // Masquer lignes DVF vides
     document.querySelectorAll('.dvf-row').forEach(function(row) {
         var d = row.dataset.date || '';
@@ -1248,7 +1222,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ═══ ASSISTANT IA ═══ -->
-<div id="ai-btn" onclick="toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--gold);color:var(--dark);border:none;border-radius:99px;padding:14px 22px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 24px rgba(184,146,58,.5);display:flex;align-items:center;animation:pulseBtn 2s infinite;">
+<div id="ai-btn" onclick="toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--gold);color:var(--dark);border:none;border-radius:99px;padding:14px 22px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 24px rgba(184,146,58,.5);display:flex;align-items:center;gap:10px;animation:pulseBtn 2s infinite;">
   Tout savoir sur ce bien
 </div>
 

@@ -2063,8 +2063,8 @@ function injectData(html, d) {
   }
 
   // Factures travaux
-  var facturesSection = doc.getElementById('factures-section');
-  var facturesBtns = doc.getElementById('factures-buttons');
+  var facturesSection = doc.getElementById('factures-bloc');
+  var facturesBtns = doc.getElementById('factures-liens');
   if (facturesSection && facturesBtns) {
     var factures = [d.facture1Url, d.facture2Url, d.facture3Url].filter(Boolean);
     if (factures.length) {
@@ -2079,7 +2079,7 @@ function injectData(html, d) {
   }
 
   // Historique texte libre
-  var histTxt = id('historique-texte');
+  var histTxt = doc.getElementById('historique-libre');
   if (histTxt) {
     histTxt.textContent = d.historiqueLibre || '';
   }
@@ -2161,24 +2161,29 @@ function injectData(html, d) {
 
   // Vidéo
   if (d.videoUrl) {
-    var videoEl = doc.getElementById('media-video');
-    var iframeEl = doc.getElementById('media-video-iframe');
-    if (videoEl && iframeEl) {
+    var mediaBloc = doc.getElementById('media-bloc');
+    var videoContainer = doc.getElementById('video-container');
+    var videoEmbed = doc.getElementById('video-embed');
+    if (mediaBloc && videoContainer && videoEmbed) {
       var embedUrl = d.videoUrl
         .replace('watch?v=', 'embed/')
         .replace('youtu.be/', 'www.youtube.com/embed/')
         .replace('vimeo.com/', 'player.vimeo.com/video/');
-      iframeEl.src = embedUrl;
-      videoEl.style.display = 'block';
+      videoEmbed.innerHTML = '<iframe src="' + embedUrl + '" frameborder="0" allowfullscreen'
+        + ' style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;"></iframe>';
+      videoContainer.style.display = 'block';
+      mediaBloc.style.display = 'block';
     }
   }
   // Visite virtuelle
   if (d.visiteUrl) {
-    var visiteEl = doc.getElementById('media-visite');
-    var visiteLinkEl = doc.getElementById('media-visite-link');
-    if (visiteEl && visiteLinkEl) {
-      visiteLinkEl.href = d.visiteUrl;
-      visiteEl.style.display = 'block';
+    var mediaBloc2 = doc.getElementById('media-bloc');
+    var visiteContainer = doc.getElementById('visite-container');
+    var visiteBtn = doc.getElementById('visite-btn');
+    if (visiteContainer && visiteBtn) {
+      visiteBtn.href = d.visiteUrl;
+      visiteContainer.style.display = 'block';
+      if (mediaBloc2) mediaBloc2.style.display = 'block';
     }
   }
 
