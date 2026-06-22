@@ -1009,7 +1009,11 @@ function initMapQuartier() {
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#141414;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #b8923a;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
     L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>5 Rue de l'Arpajonnais").openPopup();
-    var overpassUrl = 'https://expertimo-phi.vercel.app/api/overpass';
+    var overpassProxies = [
+      'https://overpass.kumi.systems/api/interpreter',
+      'https://overpass.private.coffee/api/interpreter',
+      'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+    ];
     var query = '[out:json][timeout:10];('
       + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
       + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
@@ -1033,9 +1037,22 @@ function initMapQuartier() {
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
-    setTimeout(function() { fetch(overpassUrl, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'data=' + encodeURIComponent(query)})
-      .then(function(r){return r.json();})
-      .then(function(data){
+    async function tryOverpass(q, proxies) {
+      for (var i = 0; i < proxies.length; i++) {
+        try {
+          var r = await fetch(proxies[i], {
+            method: 'POST',
+            body: 'data=' + encodeURIComponent(q)
+          });
+          if (r.ok) return await r.json();
+        } catch(e) {}
+      }
+      return null;
+    }
+
+    setTimeout(async function() {
+      var data = await tryOverpass(query, overpassProxies);
+      if (data) {
         (data.elements||[]).forEach(function(el) {
           var cat;
           var tags = el.tags || {};
@@ -1058,7 +1075,8 @@ function initMapQuartier() {
         document.getElementById('cnt-vert').textContent = counts.vert;
         document.getElementById('cnt-commerce').textContent = counts.commerce;
         document.getElementById('cnt-ecole').textContent = counts.ecole;
-      }).catch(function(){}); }, 1000);
+      }
+    }, 1000);
   }
 
   if (latFallback && lngFallback) {
