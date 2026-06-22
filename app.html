@@ -3410,6 +3410,13 @@ async function modifierFiche(filename, sha, downloadUrl) {
     //    Any page re-rendering happens here, before we inject values.
     goToStep(2);
 
+    // Helper shared by both setTimeouts
+    function dbgSet(id, val) {
+      var el = document.getElementById(id);
+      console.log('[inject]', id, '—', el ? 'FOUND' : 'NOT FOUND', '— value:', JSON.stringify(val == null ? '' : val));
+      if (el) el.value = (val == null ? '' : val);
+    }
+
     // 5. Inject values AFTER navigation, in a setTimeout so the DOM is fully settled
     setTimeout(function() {
       // Reset all step-2 fields
@@ -3423,13 +3430,6 @@ async function modifierFiche(filename, sha, downloadUrl) {
       document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
       var typeTab = document.getElementById('tab-' + type);
       if (typeTab) typeTab.classList.add('active');
-
-      // Helper: setV + console.log
-      function dbgSet(id, val) {
-        var el = document.getElementById(id);
-        console.log('[inject]', id, '—', el ? 'FOUND' : 'NOT FOUND', '— value:', JSON.stringify(val == null ? '' : val));
-        if (el) el.value = (val == null ? '' : val);
-      }
 
       // Adresse & localisation
       dbgSet('adresse',      data.adresse    || '');
@@ -3537,6 +3537,28 @@ async function modifierFiche(filename, sha, downloadUrl) {
       window._editMode = false;
       showToast('✅ Fiche chargée — modifiez et régénérez.');
     }, 500);
+
+    // Second injection at 800ms to detect post-injection overwrites
+    setTimeout(function() {
+      console.log('[inject x2] Deuxième injection à 800ms — vérification anti-écrasement');
+      dbgSet('adresse',      data.adresse    || '');
+      dbgSet('surface_hab',  data.surface    || '');
+      dbgSet('prix_vente',   data.prix       || '');
+      dbgSet('prix_vente_t', data.prix       || '');
+      dbgSet('charges_copro',   data.chargesCopro  || '');
+      dbgSet('taxe_fonciere',   data.taxeFonciere  || '');
+      dbgSet('bien_fort1', data.fort1 || '');
+      dbgSet('bien_fort2', data.fort2 || '');
+      dbgSet('bien_fort3', data.fort3 || '');
+      dbgSet('bien_vig1',  data.vig1  || '');
+      dbgSet('bien_vig2',  data.vig2  || '');
+      if (data.dpe) {
+        var dpeTarget2 = document.querySelector('#page-2 .dpe-btn[data-group="dpe"][data-letter="' + data.dpe + '"]');
+        console.log('[inject x2] DPE target:', dpeTarget2, '— sel avant click:', dpeTarget2 && dpeTarget2.classList.contains('sel'));
+        if (dpeTarget2 && !dpeTarget2.classList.contains('sel')) dpeTarget2.click();
+      }
+      console.log('[inject x2] Terminé.');
+    }, 800);
   } catch(err) {
     showToast('❌ Erreur chargement fiche : ' + err.message, true);
     console.error(err);
