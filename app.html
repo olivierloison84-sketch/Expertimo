@@ -3813,13 +3813,13 @@ document.addEventListener('DOMContentLoaded', function() {
   btnNF.textContent = '✚ Nouvelle fiche';
   btnNF.style.cssText = 'position:fixed;top:10px;right:160px;z-index:10000;background:#b8923a;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
   btnNF.onclick = function() {
-    _editMode = false;
-    _editingFiche = null;
-    _lastGeneratedHTML = null;
-    _lastGeneratedSlug = null;
-    _stepsComplete[3] = false;
+    window._editMode = false;
+    window._editingFiche = null;
+    window._lastGeneratedHTML = null;
+    window._lastGeneratedSlug = null;
+    window._stepsComplete[3] = false;
     document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) { el.value = ''; });
-    goToStep(1);
+    window.goToStep(1);
   };
   document.body.appendChild(btnNF);
 });
