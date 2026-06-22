@@ -3066,11 +3066,25 @@ async function publierFiche() {
   btn.disabled = true;
 
   var filename = _editingFiche ? _editingFiche.filename : _lastGeneratedSlug + '-FINAL.html';
-  var sha      = _editingFiche ? _editingFiche.sha      : undefined;
   var isUpdate = !!_editingFiche;
   status.textContent = '⏳ ' + (isUpdate ? 'Mise à jour' : 'Publication') + ' en cours…';
 
   try {
+    // Always fetch the current SHA before PUT to avoid 409 conflicts with stale sha
+    var sha = undefined;
+    var shaRes = await fetch('https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename), {
+      headers: { Authorization: 'token ' + _GH_TOKEN, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (shaRes.ok) {
+      var shaData = await shaRes.json();
+      sha = shaData.sha;
+      console.log('[publier] sha actuel récupéré:', sha);
+    } else if (shaRes.status === 404) {
+      console.log('[publier] fichier inexistant — nouvelle fiche');
+    } else {
+      console.warn('[publier] impossible de récupérer le sha:', shaRes.status);
+    }
+
     // base64-encode HTML (UTF-8 safe)
     var encoded = btoa(unescape(encodeURIComponent(_lastGeneratedHTML)));
     var body = {
