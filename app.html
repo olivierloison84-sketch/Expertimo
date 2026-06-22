@@ -447,19 +447,6 @@ textarea { resize: vertical; min-height: 60px; }
   setTimeout(() => { denied(); }, 3000);
 
   document.addEventListener('DOMContentLoaded', () => {
-    // Bouton "Nouvelle fiche"
-    const btnNF = document.createElement('button');
-    btnNF.id = 'btn-nouvelle-fiche';
-    btnNF.textContent = '✚ Nouvelle fiche';
-    btnNF.style.cssText = 'position:fixed;top:10px;right:160px;z-index:10000;background:#b8923a;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;';
-    btnNF.onclick = function() {
-      window._editMode = false;
-      window._editingFiche = null;
-      window._lastGeneratedHTML = null;
-      if (typeof window.goToStep === 'function') window.goToStep(1);
-    };
-    document.body.appendChild(btnNF);
-
     // Bouton "Déconnexion"
     const btn = document.createElement('button');
     btn.id = 'logout-btn';
@@ -3819,6 +3806,23 @@ function refreshStep4Summary() {
     + '<code>fiches</code> (Supabase Storage)</div>'
     + '</div>';
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  var btnNF = document.createElement('button');
+  btnNF.id = 'nouvelle-fiche-btn';
+  btnNF.textContent = '✚ Nouvelle fiche';
+  btnNF.style.cssText = 'position:fixed;top:10px;right:160px;z-index:10000;background:#b8923a;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
+  btnNF.onclick = function() {
+    _editMode = false;
+    _editingFiche = null;
+    _lastGeneratedHTML = null;
+    _lastGeneratedSlug = null;
+    _stepsComplete[3] = false;
+    document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) { el.value = ''; });
+    goToStep(1);
+  };
+  document.body.appendChild(btnNF);
+});
 </script>
 </body>
 </html>
