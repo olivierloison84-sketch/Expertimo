@@ -1909,7 +1909,7 @@ function injectData(html, d) {
 
   // ── Header ──
   var badge = q('.hbadge');
-  if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo · Réf. ' + d.ref;
+  if (badge) badge.innerHTML = '<svg viewBox="0 0 28 22" width="20" height="16" style="display:inline-block;vertical-align:middle;margin-right:6px;"><polygon points="14,0 28,11 14,22 0,11" fill="none" stroke="#b8923a" stroke-width="1.2"/><polygon points="14,5 23,11 14,17 5,11" fill="#b8923a" opacity="0.15"/><text x="14" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="8" fill="#b8923a" letter-spacing="1">PV</text></svg>PRIVENCY · Votre Espace Acheteur Privé';
 
   var htitle = q('.htitle');
   if (htitle) htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;">' + esc(d.quartier) + '</span>';
@@ -2165,10 +2165,13 @@ function injectData(html, d) {
     var videoContainer = doc.getElementById('video-container');
     var videoEmbed = doc.getElementById('video-embed');
     if (mediaBloc && videoContainer && videoEmbed) {
-      var embedUrl = d.videoUrl
-        .replace('watch?v=', 'embed/')
-        .replace('youtu.be/', 'www.youtube.com/embed/')
-        .replace('vimeo.com/', 'player.vimeo.com/video/');
+      var embedUrl = (function(url) {
+        var ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+        if (ytMatch) return 'https://www.youtube.com/embed/' + ytMatch[1];
+        var viMatch = url.match(/vimeo\.com\/(\d+)/);
+        if (viMatch) return 'https://player.vimeo.com/video/' + viMatch[1];
+        return url;
+      })(d.videoUrl);
       videoEmbed.innerHTML = '<iframe src="' + embedUrl + '" frameborder="0" allowfullscreen'
         + ' style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;"></iframe>';
       videoContainer.style.display = 'block';
