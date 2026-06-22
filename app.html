@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<script>if(location.search.indexOf('new=1')!==-1){['_draft_bien','privency_draft','privency_last_fiche'].forEach(function(k){localStorage.removeItem(k);});}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style id="auth-guard-hide">body { display: none !important; }</style>
@@ -506,7 +507,7 @@ textarea { resize: vertical; min-height: 60px; }
     <span class="step-num" style="background:var(--muted);font-size:14px;">📂</span>
     <span class="step-label">Mes fiches</span>
   </div>
-  <a href="/app.html" style="display:flex;align-items:center;gap:10px;padding:15px 24px;background:#b8923a;color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;margin-left:auto;">✚ Nouvelle fiche</a>
+  <a href="/app.html?new=1" style="display:flex;align-items:center;gap:10px;padding:15px 24px;background:#b8923a;color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;margin-left:auto;">✚ Nouvelle fiche</a>
 </nav>
 
 <!-- ══════════════════════════════════════════════════════
