@@ -332,6 +332,15 @@ textarea.field{min-height:95px;resize:vertical;}
   <img id="lb-img" src="" alt="">
 </div>
 
+<button id="btn-partager"
+  onclick="ouvrirPartage()"
+  style="position:fixed;top:12px;right:16px;z-index:9999;
+         background:var(--gold);color:#1a1714;border:none;
+         border-radius:20px;padding:8px 16px;font-size:12px;
+         font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3);">
+  🔗 Partager cette fiche
+</button>
+
 <header class="header">
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
@@ -388,8 +397,12 @@ textarea.field{min-height:95px;resize:vertical;}
   <div class="sline"><span>État général</span><div><strong>10/10</strong><div class="sbar"><div class="sbar-fill" style="width:100%"></div></div></div></div>
 </div>
 </div>
-<div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
+<div><div class="cons-card" style="text-align:center;">
+  <img id="agent-photo" src="" alt="Photo agent"
+    style="width:80px;height:80px;border-radius:50%;
+           object-fit:cover;object-position:top center;
+           border:2px solid var(--gold);display:none;
+           margin:0 auto 12px auto;">
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
@@ -458,7 +471,7 @@ textarea.field{min-height:95px;resize:vertical;}
       <div class="lbl">Simulateur investisseur temps réel</div>
       <h2 class="stitle">Rentabilité interactive</h2>
       <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 300 € nu / 1 400 € meublé. Simulez votre rentabilité ci-dessous.</div>
-      <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="156000" max="286000" value="260000" step="500" oninput="calc()"><div class="sval" id="v-prix">260 000 €</div></div>
+      <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="156000" max="286000" value="260000" step="100" oninput="calc()"><div class="sval" id="v-prix">260 000 €</div></div>
       <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="300" max="5000" value="1300" step="10" oninput="calc()"><div class="sval" id="v-loyer">1300 €</div></div>
       <div class="srow"><div class="slbl">Apport<small>% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
       <div class="srow"><div class="slbl">Taux crédit<small>Oct. 2025 : 3,22%</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
@@ -559,8 +572,12 @@ textarea.field{min-height:95px;resize:vertical;}
     </div>
   </div>
 </div>
-<div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
+<div><div class="cons-card" style="text-align:center;">
+  <img id="agent-photo" src="" alt="Photo agent"
+    style="width:80px;height:80px;border-radius:50%;
+           object-fit:cover;object-position:top center;
+           border:2px solid var(--gold);display:none;
+           margin:0 auto 12px auto;">
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
@@ -660,8 +677,12 @@ textarea.field{min-height:95px;resize:vertical;}
     </div>
   </div>
 </div>
-<div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
+<div><div class="cons-card" style="text-align:center;">
+  <img id="agent-photo" src="" alt="Photo agent"
+    style="width:80px;height:80px;border-radius:50%;
+           object-fit:cover;object-position:top center;
+           border:2px solid var(--gold);display:none;
+           margin:0 auto 12px auto;">
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
@@ -1074,7 +1095,7 @@ function initMapQuartier() {
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#141414;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #b8923a;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
     L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>5 Rue de l'Arpajonnais").openPopup();
-    var overpassUrl = 'https://overpass-api.de/api/interpreter';
+    var overpassUrl = 'https://overpass.kumi.systems/api/interpreter';
     var query = '[out:json][timeout:10];('
       + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
       + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
@@ -1098,32 +1119,7 @@ function initMapQuartier() {
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
-    setTimeout(function() { fetch(overpassUrl, {method:'POST', body:'data=' + encodeURIComponent(query)})
-      .then(function(r){return r.json();})
-      .then(function(data){
-        (data.elements||[]).forEach(function(el) {
-          var cat;
-          var tags = el.tags || {};
-          if (tags.public_transport || tags.railway === 'station' || tags.amenity === 'bus_station') { cat = 'transport'; }
-          else if (tags.leisure === 'park' || tags.leisure === 'garden') { cat = 'vert'; }
-          else if (tags.shop === 'supermarket' || tags.shop === 'bakery' || tags.amenity === 'pharmacy') { cat = 'commerce'; }
-          else if (tags.amenity === 'school' || tags.amenity === 'kindergarten') { cat = 'ecole'; }
-          else return;
-          counts[cat]++;
-          var meta = catMeta[cat];
-          var icon = L.divIcon({className:'', html:'<div style="background:'+meta.color+';border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid white;">'+meta.emoji+'</div>', iconSize:[28,28], iconAnchor:[14,14]});
-          var dist = Math.round(map.distance([lat,lng],[el.lat,el.lon]));
-          var mins = Math.ceil(dist / 80);
-          var name = tags.name || tags['name:fr'] || meta.label;
-          var popup = '<strong>'+name+'</strong><br>'+meta.emoji+' '+meta.label+'<br>'+dist+' m · ~'+mins+' min à pied';
-          var marker = L.marker([el.lat,el.lon],{icon:icon}).addTo(map).bindPopup(popup);
-          window._mapMarkers[cat].push(marker);
-        });
-        document.getElementById('cnt-transport').textContent = counts.transport;
-        document.getElementById('cnt-vert').textContent = counts.vert;
-        document.getElementById('cnt-commerce').textContent = counts.commerce;
-        document.getElementById('cnt-ecole').textContent = counts.ecole;
-      }).catch(function(){}); }, 1000);
+    loadPOIQuartier(lat, lng, map);
   }
 
   if (latFallback && lngFallback) {
@@ -1141,6 +1137,109 @@ function initMapQuartier() {
         if (latFallback && lngFallback) buildMap(latFallback, lngFallback);
       });
   }
+}
+
+function haversineM(lat1, lng1, lat2, lng2) {
+  var R = 6371000;
+  var dLat = (lat2 - lat1) * Math.PI / 180;
+  var dLng = (lng2 - lng1) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2)
+        + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180)
+        * Math.sin(dLng/2) * Math.sin(dLng/2);
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+function loadPOIQuartier(lat, lng, map) {
+  var query = '[out:json][timeout:25];('
+    + 'node[amenity=school](around:800,' + lat + ',' + lng + ');'
+    + 'node[shop=supermarket](around:800,' + lat + ',' + lng + ');'
+    + 'node[amenity=pharmacy](around:800,' + lat + ',' + lng + ');'
+    + 'node[public_transport=station](around:800,' + lat + ',' + lng + ');'
+    + 'node[railway=station](around:800,' + lat + ',' + lng + ');'
+    + 'node[leisure=park](around:800,' + lat + ',' + lng + ');'
+    + ');out body 20;';
+
+  var overpassUrls = [
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
+  ];
+
+  var catMap = {
+    school:      { emoji: '🏫', label: 'École' },
+    supermarket: { emoji: '🛒', label: 'Commerce' },
+    pharmacy:    { emoji: '💊', label: 'Pharmacie' },
+    station:     { emoji: '🚉', label: 'Transport' },
+    park:        { emoji: '🌳', label: 'Parc' }
+  };
+
+  function tryOverpass(urls) {
+    if (!urls.length) {
+      fallbackNominatim(lat, lng, map);
+      return;
+    }
+    fetch(urls[0], {
+      method: 'POST',
+      body: query,
+      signal: AbortSignal.timeout(8000)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      data.elements.forEach(function(el) {
+        var tag = el.tags || {};
+        var type = tag.amenity || tag.shop
+          || tag.public_transport || tag.railway || tag.leisure;
+        var meta = catMap[type] || { emoji: '📍', label: type };
+        var nom = tag.name || meta.label;
+        var dist = haversineM(lat, lng, el.lat, el.lon);
+        var distStr = dist < 1000
+          ? dist + ' m (~' + Math.round(dist/80) + ' min à pied)'
+          : (dist/1000).toFixed(1) + ' km';
+        L.marker([el.lat, el.lon])
+          .bindPopup('<strong>' + meta.emoji + ' ' + nom + '</strong>'
+            + '<br><span style="color:#666;font-size:12px;">📍 '
+            + distStr + '</span>')
+          .addTo(map);
+      });
+    })
+    .catch(function() { tryOverpass(urls.slice(1)); });
+  }
+
+  function fallbackNominatim(lat, lng, map) {
+    var cats = [
+      { q: 'school',      emoji: '🏫' },
+      { q: 'supermarket', emoji: '🛒' },
+      { q: 'station',     emoji: '🚌' },
+      { q: 'park',        emoji: '🌳' }
+    ];
+    cats.forEach(function(cat) {
+      var url = 'https://nominatim.openstreetmap.org/search'
+        + '?format=json&limit=3&q=' + cat.q
+        + '&viewbox=' + (lng-0.05) + ',' + (lat+0.05)
+        + ',' + (lng+0.05) + ',' + (lat-0.05)
+        + '&bounded=1';
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          data.forEach(function(item) {
+            var mlat = parseFloat(item.lat);
+            var mlng = parseFloat(item.lon);
+            var dist = haversineM(lat, lng, mlat, mlng);
+            var distStr = dist < 1000
+              ? dist + ' m (~' + Math.round(dist/80) + ' min à pied)'
+              : (dist/1000).toFixed(1) + ' km';
+            L.marker([mlat, mlng])
+              .bindPopup('<strong>' + cat.emoji + ' '
+                + item.display_name.split(',')[0] + '</strong>'
+                + '<br><span style="color:#666;font-size:12px;">📍 '
+                + distStr + '</span>')
+              .addTo(map);
+          });
+        });
+    });
+  }
+
+  tryOverpass(overpassUrls);
 }
 
 // ═══ FILTRE CARTE ═══
@@ -1353,6 +1452,99 @@ document.addEventListener('DOMContentLoaded', function(){
   var hDpe = document.getElementById('h-dpe');
   if(hDpe){ hDpe.style.color = colors[dpe] || 'var(--gold)'; }
 
+})();
+
+function ouvrirPartage() {
+  var nom = prompt('Prénom du client (pour le suivi) :', '');
+  if (!nom) return;
+  var slug = nom.trim()
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  var url = window.location.href.split('?')[0] + '?client=' + slug;
+
+  // Afficher modal avec URL + bouton copier
+  var modal = document.getElementById('modal-partage');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'modal-partage';
+    modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+      + 'background:rgba(0,0,0,.5);z-index:99999;display:flex;'
+      + 'align-items:center;justify-content:center;';
+    modal.innerHTML =
+      '<div style="background:#fff;border-radius:12px;padding:28px;'
+      + 'max-width:520px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,.3);">'
+      + '<div style="font-weight:700;font-size:16px;margin-bottom:12px;">'
+      + '🔗 Lien personnalisé</div>'
+      + '<div style="font-size:12px;color:#666;margin-bottom:8px;">'
+      + 'Envoyez ce lien à votre client — la visite sera tracée dans Google Analytics.</div>'
+      + '<div id="partage-url-box" style="background:#f5f5f5;border-radius:8px;'
+      + 'padding:10px 14px;font-size:12px;word-break:break-all;'
+      + 'color:#1a1714;margin-bottom:14px;border:1px solid #ddd;"></div>'
+      + '<div style="display:flex;gap:10px;">'
+      + '<button onclick="copierLienPartage()" '
+      + 'style="flex:1;background:var(--gold);color:#1a1714;border:none;'
+      + 'border-radius:8px;padding:10px;font-weight:700;cursor:pointer;">'
+      + '📋 Copier le lien</button>'
+      + '<button onclick="document.getElementById(\'modal-partage\').style.display=\'none\'" '
+      + 'style="background:#eee;border:none;border-radius:8px;'
+      + 'padding:10px 16px;cursor:pointer;">Fermer</button>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+  }
+
+  document.getElementById('partage-url-box').textContent = url;
+  modal.style.display = 'flex';
+  window._partageUrl = url;
+
+  if (typeof gtag === 'function') {
+    gtag('event', 'partage_fiche', {
+      'event_category': 'fiche',
+      'event_label': slug
+    });
+  }
+}
+
+function copierLienPartage() {
+  var url = window._partageUrl;
+  if (!url) return;
+  navigator.clipboard.writeText(url)
+    .then(function() {
+      afficherToastPartage('📋 Lien copié !');
+      document.getElementById('modal-partage').style.display = 'none';
+    })
+    .catch(function() {
+      afficherToastPartage('Copiez manuellement : ' + url);
+    });
+}
+
+function afficherToastPartage(msg) {
+  var t = document.getElementById('toast-partage');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast-partage';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);'
+      + 'background:#1a1714;color:#fff;padding:10px 20px;border-radius:20px;'
+      + 'font-size:13px;z-index:99999;box-shadow:0 4px 12px rgba(0,0,0,.4);'
+      + 'max-width:90vw;text-align:center;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(function() { t.style.display = 'none'; }, 4000);
+}
+
+// Tracker la visite si ?client= présent dans l'URL
+(function() {
+  var params = new URLSearchParams(window.location.search);
+  var client = params.get('client');
+  if (client && typeof gtag === 'function') {
+    gtag('event', 'visite_fiche', {
+      'event_category': 'fiche',
+      'event_label': client
+    });
+  }
 })();
 </script>
 
