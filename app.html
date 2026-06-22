@@ -1347,10 +1347,11 @@ textarea { resize: vertical; min-height: 60px; }
         <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
           <input type="text" id="pub-url-input" readonly
                  style="flex:1;min-width:200px;font-size:13px;
-                        background:var(--surface);border:1px solid var(--border);
+                        background:var(--light);border:1px solid var(--border);
                         border-radius:var(--radius);padding:8px 12px;color:var(--text);">
-          <button class="btn btn-outline" onclick="copierLienFiche()">📋 Copier le lien</button>
-          <a id="pub-url-link" href="#" target="_blank" class="btn btn-outline">🔗 Ouvrir</a>
+          <button class="btn btn-outline" onclick="copierLienFiche()">📋 Copier</button>
+          <a id="pub-url-link" href="#" target="_blank" rel="noopener" class="btn btn-outline">🔗 Ouvrir</a>
+          <button class="btn btn-primary" id="btn-partager" onclick="partagerFiche()" style="display:none">📤 Partager</button>
         </div>
         <div class="section-title">QR Code</div>
         <img id="pub-qr" src="" alt="QR Code"
@@ -3122,6 +3123,8 @@ async function publierFiche() {
     document.getElementById('pub-qr').src =
       'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(publicUrl);
     document.getElementById('pub-result').style.display = 'block';
+    var btnPartager = document.getElementById('btn-partager');
+    if (btnPartager && navigator.share) btnPartager.style.display = 'inline-flex';
     _stepsComplete[4] = true;
     updateStepperTabs();
     showToast('✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !'));
@@ -3130,6 +3133,13 @@ async function publierFiche() {
     status.textContent = '❌ ' + err.message;
     showToast('❌ ' + err.message, true);
   }
+}
+
+function partagerFiche() {
+  var url = document.getElementById('pub-url-input').value;
+  if (!url || !navigator.share) return;
+  navigator.share({ title: 'Votre fiche acheteur', url: url })
+    .catch(function() {});
 }
 
 function copierLienFiche() {
