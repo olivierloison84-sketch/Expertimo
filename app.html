@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<script>if(location.search.indexOf('new=1')!==-1){['_draft_bien','privency_draft','privency_last_fiche'].forEach(function(k){localStorage.removeItem(k);});}</script>
+<script>
+if(location.search.indexOf('new=1')!==-1){
+  ['_draft_bien','privency_draft','privency_last_fiche'].forEach(function(k){localStorage.removeItem(k);});
+  document.addEventListener('DOMContentLoaded',function(){
+    var defaults={
+      diag_amiante_status:'non-soumis', diag_amiante_result:'Non soumis — bâtiment après 1997',
+      diag_plomb_status:'favorable',    diag_plomb_result:'Absence de plomb détectée',
+      diag_termites_status:'favorable', diag_termites_result:'Absence de termites constatée',
+      diag_electricite_status:'favorable', diag_electricite_result:'Installation intérieure sans anomalie',
+      diag_gaz_status:'favorable',      diag_gaz_result:'Installation sans anomalie',
+      diag_assain_status:'favorable',   diag_assain_result:'Raccordement au réseau collectif conforme',
+      diag_carrez:''
+    };
+    Object.keys(defaults).forEach(function(id){
+      var el=document.getElementById(id); if(el) el.value=defaults[id];
+    });
+  });
+}
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style id="auth-guard-hide">body { display: none !important; }</style>
