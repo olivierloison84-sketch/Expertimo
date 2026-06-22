@@ -2735,6 +2735,11 @@ function restoreRawFormState(d) {
     Object.keys(d).filter(function(k){return k.startsWith('dpe_');}).forEach(function(k){
       document.querySelectorAll('#page-2 .dpe-btn[data-group="'+k.replace('dpe_','')+'"]').forEach(function(b){b.classList.toggle('sel',b.dataset.letter===d[k]);});
     });
+    Object.keys(d).filter(function(k){return k.startsWith('multi_');}).forEach(function(k){
+      var gid=k.replace('multi_',''); var c=document.getElementById(gid); if(!c) return;
+      var vals=d[k];
+      c.querySelectorAll('input[type=checkbox]').forEach(function(cb){ cb.checked=vals.indexOf(cb.value)!==-1; });
+    });
     if(d.photos){_photos=d.photos;renderPhotos();}
     if(d._pieces_table){
       var rows=document.querySelectorAll('#pieces_tbody tr');
@@ -2861,6 +2866,7 @@ function collectBienData() {
     travaux_ag_detail:        getV('travaux_ag_detail'),
     travaux_recents_immeuble: getV('travaux_recents_immeuble'),
     travaux_recents:          getV('travaux_recents'),
+    chauf_annee:              getV('chauf_annee'),
     taxe_hab:           parseFloat(getV('taxe_hab'))            || 0,
     charges_mensuelles: parseFloat(getV('charges_mensuelles'))  || 0,
     plus_appartement:   getV('plus_appartement'),
@@ -2908,6 +2914,11 @@ function collectBienData() {
       var s = {};
       document.querySelectorAll('#page-2 input[type=radio][name]').forEach(function(r){ if(r.checked) s['radio_'+r.name]=r.value; });
       document.querySelectorAll('#page-2 input[type=checkbox][id]').forEach(function(cb){ if(cb.checked) s['cb_'+cb.id]=true; });
+      ['toit_type_group','facade_type_group','sols_type_group','vitrage_materiau_group','chauf_energie_group','chauf_diffusion_group','exposition_group','transport_group'].forEach(function(gid){
+        var c=document.getElementById(gid); if(!c) return;
+        var vals=[]; c.querySelectorAll('input[type=checkbox]:checked').forEach(function(cb){ vals.push(cb.value); });
+        if(vals.length) s['multi_'+gid]=vals;
+      });
       document.querySelectorAll('#page-2 .rating-badge.sel').forEach(function(b){ s['rating_'+b.dataset.name]=b.dataset.val; });
       document.querySelectorAll('#page-2 .dpe-btn.sel').forEach(function(b){ s['dpe_'+b.dataset.group]=b.dataset.letter; });
       document.querySelectorAll('#page-2 input[id$="_m2"]').forEach(function(el){ if(el.value) s[el.id]=el.value; });
@@ -3680,6 +3691,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
       dbgSet('travaux_ag_detail',        data.travaux_ag_detail        || '');
       dbgSet('travaux_recents_immeuble', data.travaux_recents_immeuble || '');
       dbgSet('travaux_recents',          data.travaux_recents          || '');
+      dbgSet('chauf_annee',              data.chauf_annee              || '');
       dbgSet('taxe_hab',           data.taxe_hab           || '');
       dbgSet('charges_mensuelles', data.charges_mensuelles || '');
       dbgSet('plus_appartement',   data.plus_appartement   || '');
