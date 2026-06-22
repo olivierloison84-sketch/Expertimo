@@ -3341,6 +3341,11 @@ async function modifierFiche(filename, sha, downloadUrl) {
       };
     }
 
+    // Reset all step-2 fields before filling
+    document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) {
+      el.value = '';
+    });
+
     // Switch to correct type
     var type = data.type || 'appart';
     switchType(type);
