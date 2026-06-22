@@ -2834,8 +2834,9 @@ function collectBienData() {
     agentTel:   agent.tel||'',
     agentEmail: agent.email||'',
     agentRdvUrl:agent.rdv_url||'',
-    agentPrimary: agent.primary || '#141414',
-    agentAccent:  agent.accent  || '#b8923a',
+    agentSecteur: agent.secteur||'',
+    agentPrimary: agent.color_primary || '#141414',
+    agentAccent:  agent.color_accent  || '#b8923a',
     agentPhoto:   agent.photo_url || '',
     renovations: (function(){
       var rows=[];
@@ -2844,6 +2845,78 @@ function collectBienData() {
         if(annee||desc) rows.push({annee:annee, montant:parseFloat(getV('renov_montant_'+i))||0, desc:desc});
       }
       return rows;
+    })(),
+    // ── Caractéristiques complémentaires ──
+    nb_chambres:  getV('nb_chambres'),
+    nb_sdb:       getV('nb_sdb'),
+    nb_sde:       getV('nb_sde'),
+    nb_wc:        getV('nb_wc'),
+    nb_wc_sep:    getV('nb_wc_sep'),
+    nb_etages:    getV('nb_etages') || getV('nb_etages_m'),
+    annee_construction_m: getV('annee_construction_m'),
+    standard_general: getV('standard_general'),
+    surface_terrain: getV('surface_terrain') || getV('surface_terrain_m'),
+    syndic_nom:   getV('syndic_nom'),
+    syndic_copro: getV('syndic_copro'),
+    travaux_ag_detail:        getV('travaux_ag_detail'),
+    travaux_recents_immeuble: getV('travaux_recents_immeuble'),
+    travaux_recents:          getV('travaux_recents'),
+    taxe_hab:           parseFloat(getV('taxe_hab'))            || 0,
+    charges_mensuelles: parseFloat(getV('charges_mensuelles'))  || 0,
+    plus_appartement:   getV('plus_appartement'),
+    fourchetMilieu:     parseFloat(getV('bien_fourchette_milieu')) || 0,
+    dpeValeur:  parseFloat(getV('dpe_valeur'))  || 0,
+    gesLettre:  (function(){ var b=document.querySelector('#page-2 .dpe-btn[data-group="ges"].sel'); return b?b.dataset.letter:''; })(),
+    gesValeur:  parseFloat(getV('ges_valeur'))  || 0,
+    parking_int: parseInt(getV('parking_int'))  || 0,
+    parking_ext: parseInt(getV('parking_ext'))  || 0,
+    parking_box: parseInt(getV('parking_box'))  || 0,
+    equip_autre:       getV('equip_autre'),
+    vigilances_texte:  getV('vigilances_texte'),
+    services_prox:     getV('services_prox'),
+    voisinage:         getV('voisinage'),
+    // ── Propriétaire (notes internes) ──
+    proprio_prenom:   getV('proprio_prenom'),
+    proprio_nom:      getV('proprio_nom'),
+    date_r1:          getV('date_r1'),
+    tel_fixe:         getV('tel_fixe'),
+    tel_mobile:       getV('tel_mobile'),
+    email_proprio:    getV('email_proprio'),
+    raison_vente:     getV('raison_vente'),
+    vente_depuis:     getV('vente_depuis'),
+    delai_vente_prop: getV('delai_vente'),
+    cles_chez:        getV('cles_chez'),
+    agences:          getV('agences'),
+    annee_achat:      getV('annee_achat'),
+    prix_achat:       getV('prix_achat'),
+    nb_visites:       getV('nb_visites'),
+    nb_offres:        getV('nb_offres'),
+    prix_offres:      getV('prix_offres'),
+    scenario_montant: getV('scenario_montant'),
+    scenario_reponse: getV('scenario_reponse'),
+    // ── Terrain ──
+    zone_plu:               getV('zone_plu'),
+    superficie_totale:      getV('superficie_totale'),
+    superficie_constructible: getV('superficie_constructible'),
+    forme_terrain:          getV('forme_terrain'),
+    acces_terrain:          getV('acces_terrain'),
+    cos_ces:                getV('cos_ces'),
+    hauteur_max:            getV('hauteur_max'),
+    projet_terrain:         getV('projet_terrain'),
+    // ── Widgets complexes (radios, checkboxes, ratings, DPE/GES, plan pièces) ──
+    _rawState: (function(){
+      var s = {};
+      document.querySelectorAll('#page-2 input[type=radio][name]').forEach(function(r){ if(r.checked) s['radio_'+r.name]=r.value; });
+      document.querySelectorAll('#page-2 input[type=checkbox][id]').forEach(function(cb){ if(cb.checked) s['cb_'+cb.id]=true; });
+      document.querySelectorAll('#page-2 .rating-badge.sel').forEach(function(b){ s['rating_'+b.dataset.name]=b.dataset.val; });
+      document.querySelectorAll('#page-2 .dpe-btn.sel').forEach(function(b){ s['dpe_'+b.dataset.group]=b.dataset.letter; });
+      document.querySelectorAll('#page-2 input[id$="_m2"]').forEach(function(el){ if(el.value) s[el.id]=el.value; });
+      var rows=[];
+      document.querySelectorAll('#pieces_tbody tr').forEach(function(tr){
+        rows.push(Array.from(tr.querySelectorAll('td input')).map(function(c){return c.value;}));
+      });
+      s._pieces_table=rows;
+      return s;
     })()
   };
 }
@@ -3576,6 +3649,92 @@ async function modifierFiche(filename, sha, downloadUrl) {
           dbgSet('renov_montant_' + (i+1), row.montant || '');
           dbgSet('renov_desc_'    + (i+1), row.desc    || '');
         });
+      }
+
+      // DVF rows (collected but previously never re-injected)
+      if (data.dvf && Array.isArray(data.dvf)) {
+        data.dvf.forEach(function(row, i) {
+          var n = i + 1; if (n > 6) return;
+          dbgSet('dvf-date-'    + n, row.date    || '');
+          dbgSet('dvf-adresse-' + n, row.adresse || '');
+          dbgSet('dvf-surface-' + n, row.surface || '');
+          dbgSet('dvf-prix-'    + n, row.prix    || '');
+          if (row.surface && row.prix) calcDVFm2(n);
+        });
+      }
+
+      // Caractéristiques complémentaires
+      dbgSet('nb_chambres',  data.nb_chambres  || '');
+      dbgSet('nb_sdb',       data.nb_sdb       || '');
+      dbgSet('nb_sde',       data.nb_sde       || '');
+      dbgSet('nb_wc',        data.nb_wc        || '');
+      dbgSet('nb_wc_sep',    data.nb_wc_sep    || '');
+      dbgSet('nb_etages',    data.nb_etages    || '');
+      dbgSet('nb_etages_m',  data.nb_etages    || '');
+      dbgSet('annee_construction_m', data.annee_construction_m || data.annee || '');
+      dbgSet('standard_general',     data.standard_general     || '');
+      dbgSet('surface_terrain',   data.surface_terrain || '');
+      dbgSet('surface_terrain_m', data.surface_terrain || '');
+      dbgSet('syndic_nom',   data.syndic_nom   || '');
+      dbgSet('syndic_copro', data.syndic_copro || '');
+      dbgSet('travaux_ag_detail',        data.travaux_ag_detail        || '');
+      dbgSet('travaux_recents_immeuble', data.travaux_recents_immeuble || '');
+      dbgSet('travaux_recents',          data.travaux_recents          || '');
+      dbgSet('taxe_hab',           data.taxe_hab           || '');
+      dbgSet('charges_mensuelles', data.charges_mensuelles || '');
+      dbgSet('plus_appartement',   data.plus_appartement   || '');
+      dbgSet('bien_fourchette_milieu', data.fourchetMilieu  || '');
+      dbgSet('dpe_valeur',  data.dpeValeur  || '');
+      dbgSet('ges_valeur',  data.gesValeur  || '');
+      dbgSet('parking_int', data.parking_int || '');
+      dbgSet('parking_ext', data.parking_ext || '');
+      dbgSet('parking_box', data.parking_box || '');
+      dbgSet('equip_autre',      data.equip_autre      || '');
+      dbgSet('vigilances_texte', data.vigilances_texte || '');
+      dbgSet('services_prox',    data.services_prox    || '');
+      dbgSet('voisinage',        data.voisinage        || '');
+
+      // Propriétaire (notes internes)
+      dbgSet('proprio_prenom',  data.proprio_prenom  || '');
+      dbgSet('proprio_nom',     data.proprio_nom     || '');
+      dbgSet('date_r1',         data.date_r1         || '');
+      dbgSet('tel_fixe',        data.tel_fixe        || '');
+      dbgSet('tel_mobile',      data.tel_mobile      || '');
+      dbgSet('email_proprio',   data.email_proprio   || '');
+      dbgSet('raison_vente',    data.raison_vente    || '');
+      dbgSet('vente_depuis',    data.vente_depuis    || '');
+      dbgSet('delai_vente',     data.delai_vente_prop || '');
+      dbgSet('cles_chez',       data.cles_chez       || '');
+      dbgSet('agences',         data.agences         || '');
+      dbgSet('annee_achat',     data.annee_achat     || '');
+      dbgSet('prix_achat',      data.prix_achat      || '');
+      dbgSet('nb_visites',      data.nb_visites      || '');
+      dbgSet('nb_offres',       data.nb_offres       || '');
+      dbgSet('prix_offres',     data.prix_offres     || '');
+      dbgSet('scenario_montant', data.scenario_montant || '');
+      dbgSet('scenario_reponse', data.scenario_reponse || '');
+
+      // Terrain
+      dbgSet('zone_plu',                data.zone_plu                || '');
+      dbgSet('superficie_totale',       data.superficie_totale       || '');
+      dbgSet('superficie_constructible',data.superficie_constructible|| '');
+      dbgSet('forme_terrain',           data.forme_terrain           || '');
+      dbgSet('acces_terrain',           data.acces_terrain           || '');
+      dbgSet('cos_ces',                 data.cos_ces                 || '');
+      dbgSet('hauteur_max',             data.hauteur_max             || '');
+      dbgSet('projet_terrain',          data.projet_terrain          || '');
+
+      // GES button (same mechanism as DPE)
+      if (data.gesLettre) {
+        var gesTarget = document.querySelector('#page-2 .dpe-btn[data-group="ges"][data-letter="' + data.gesLettre + '"]');
+        if (gesTarget) gesTarget.click();
+      }
+
+      // Widgets complexes : radios, checkboxes, ratings, DPE/GES, plan des pièces
+      // _rawState is saved by collectBienData() from new fiches.
+      // restoreRawFormState handles checkboxes, radios, ratings, DPE-buttons and the pieces table.
+      if (data._rawState) {
+        restoreRawFormState(data._rawState);
       }
 
       // 6. Release edit mode AFTER injection is complete
