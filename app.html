@@ -2786,7 +2786,7 @@ function collectBienData() {
   var pieces=getV('nb_pieces'), etage=getV('etage');
   var desc=[typeLabel,pieces?pieces+' pièce'+(parseInt(pieces)>1?'s':''):'',surface?'de '+surface.toLocaleString('fr-FR')+' m²':'',etage?'· '+etage:'',dpe?'· DPE '+dpe:''].filter(Boolean).join(' ');
   var agent=loadProfile()||{};
-  return {
+  var _d = {
     ref:           getV('ref_mandat')||'ref-mandat',
     type:          currentType,
     etage:         etage,
@@ -2930,6 +2930,8 @@ function collectBienData() {
       return s;
     })()
   };
+  console.log('[collectBienData] data complet :', JSON.parse(JSON.stringify(_d)));
+  return _d;
 }
 
 // ═══════════════════════════════════════════════════════
