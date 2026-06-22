@@ -695,17 +695,12 @@ textarea { resize: vertical; min-height: 60px; }
 
 <!-- ── Historique du bien ── -->
 <div class="card">
-  <div class="card-header">📅 Historique du bien (timeline fiche acheteur)</div>
+  <div class="card-header">📅 Historique du bien</div>
   <div class="card-body">
-    <div class="grid-2">
-      <div class="form-group"><label>Construction — description</label><input type="text" id="hist_constr_desc" placeholder="Immeuble résidentiel récent, bonne qualité de construction"></div>
-      <div class="form-group"><label>Événement 1 — date · label</label><input type="text" id="hist_evt1_date" placeholder="2015 · RÉNOVATION"></div>
-      <div class="form-group"><label>Événement 1 — description</label><input type="text" id="hist_evt1_desc" placeholder="Rénovation complète : sols, murs, cuisine, salle de bains…"></div>
-      <div class="form-group"><label>Événement 2 — date · label (optionnel)</label><input type="text" id="hist_evt2_date" placeholder=""></div>
-      <div class="form-group"><label>Événement 2 — description (optionnel)</label><input type="text" id="hist_evt2_desc" placeholder=""></div>
-      <div class="form-group"><label>Année de mise en vente</label><input type="text" id="hist_vente_date" value="2025" placeholder="2025"></div>
+    <div class="form-group">
+      <label>Historique libre (10-15 lignes max)</label>
+      <textarea id="historique_libre" rows="12" placeholder="Décrivez l'historique du bien : année de construction, travaux réalisés, rénovations..."></textarea>
     </div>
-    <p class="hint">Laisser vide les événements non utilisés — ils ne seront pas affichés dans la fiche acheteur.</p>
     <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
@@ -742,6 +737,19 @@ textarea { resize: vertical; min-height: 60px; }
         </tr>
       </tbody>
     </table>
+  </div>
+</div>
+
+<!-- ── Factures travaux ── -->
+<div class="card">
+  <div class="card-header">🧾 Factures travaux (liens PDF)</div>
+  <div class="card-body">
+    <p class="hint" style="margin-bottom:8px">Ajoutez des liens Google Drive, Dropbox ou Notion. Ils apparaîtront sous forme de boutons dans l'espace Documents de la fiche acheteur.</p>
+    <div class="grid-3">
+      <div class="form-group"><label>Facture 1</label><input type="url" id="facture1_url" placeholder="URL facture 1 (Google Drive, Dropbox...)"></div>
+      <div class="form-group"><label>Facture 2 (optionnel)</label><input type="url" id="facture2_url" placeholder="URL facture 2 (optionnel)"></div>
+      <div class="form-group"><label>Facture 3 (optionnel)</label><input type="url" id="facture3_url" placeholder="URL facture 3 (optionnel)"></div>
+    </div>
   </div>
 </div>
 
@@ -1032,12 +1040,18 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
     <div class="photo-grid" id="photo_grid"></div>
-    <div class="section-title mt-16">URLs photos pour la fiche acheteur (3 premières)</div>
+    <div class="section-title mt-16">URLs photos pour la fiche acheteur</div>
     <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
     <div class="grid-3">
       <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
       <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
       <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
+      <div class="form-group"><label>Photo 4 (optionnel)</label><input type="url" id="bien_photo4_url" placeholder="https://…"></div>
+      <div class="form-group"><label>Photo 5 (optionnel)</label><input type="url" id="bien_photo5_url" placeholder="https://…"></div>
+    </div>
+    <div class="grid-2 mt-8">
+      <div class="form-group"><label>Vidéo (YouTube / Vimeo — optionnel)</label><input type="url" id="video_url" placeholder="https://youtube.com/watch?v=…"></div>
+      <div class="form-group"><label>Visite virtuelle (Matterport / Nodalview — optionnel)</label><input type="url" id="visite_url" placeholder="https://my.matterport.com/…"></div>
     </div>
   </div>
 </div>
@@ -1098,6 +1112,10 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
     </div>
     <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
+    <div class="form-group mt-8">
+      <label>Loi Carrez — résultat certifié</label>
+      <input type="text" id="diag_carrez" placeholder="ex: 76,87 m² certifiés Loi Carrez">
+    </div>
   </div>
 </div>
 
@@ -1842,6 +1860,7 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
   html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
+  html = replaceSp(html, '_sp_reseau',   d.agentReseau || 'Expertimo');
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
 
   // Loyer slider — replace hardcoded 1300 in template JS
@@ -1890,7 +1909,7 @@ function injectData(html, d) {
 
   // ── Header ──
   var badge = q('.hbadge');
-  if (badge) badge.innerHTML = '<svg viewBox="0 0 28 22" width="14" height="11" style="display:inline-block;vertical-align:middle;margin-right:4px;"><polygon points="14,0 28,11 14,22 0,11" fill="none" stroke="#b8923a" stroke-width="1.2"/><polygon points="14,5 23,11 14,17 5,11" fill="#b8923a" opacity="0.15"/><text x="14" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="8" fill="#b8923a" letter-spacing="1">PV</text></svg>PRIVENCY · Votre Espace Acheteur Privé';
+  if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo · Réf. ' + d.ref;
 
   var htitle = q('.htitle');
   if (htitle) htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;">' + esc(d.quartier) + '</span>';
@@ -2043,24 +2062,26 @@ function injectData(html, d) {
     if (vCharges) vCharges.textContent = chargesAnnuelles + ' €';
   }
 
-  // Timeline — full rebuild from form data
-  function tliHtml(label, desc) {
-    return '<div class="tli"><div class="tly">' + esc(label) + '</div><div class="tlt">' + esc(desc) + '</div></div>';
-  }
-  var timeline = id('historique-timeline');
-  if (timeline) {
-    var tlHtml = '';
-    if (d.annee || d.histConstrDesc) {
-      tlHtml += tliHtml((d.annee || '?') + ' · CONSTRUCTION', d.histConstrDesc || '');
+  // Factures travaux
+  var facturesSection = doc.getElementById('factures-section');
+  var facturesBtns = doc.getElementById('factures-buttons');
+  if (facturesSection && facturesBtns) {
+    var factures = [d.facture1Url, d.facture2Url, d.facture3Url].filter(Boolean);
+    if (factures.length) {
+      facturesSection.style.display = 'block';
+      facturesBtns.innerHTML = factures.map(function(url, i) {
+        return '<a href="' + url + '" target="_blank" rel="noopener" '
+          + 'style="display:inline-flex;align-items:center;gap:6px;background:var(--dark);color:var(--gold);'
+          + 'padding:8px 16px;border-radius:8px;font-family:\'DM Mono\',monospace;font-size:11px;'
+          + 'text-decoration:none;letter-spacing:.06em;">📄 Télécharger facture ' + (i+1) + '</a>';
+      }).join('');
     }
-    if (d.histEvt1Date) tlHtml += tliHtml(d.histEvt1Date, d.histEvt1Desc || '');
-    if (d.histEvt2Date) tlHtml += tliHtml(d.histEvt2Date, d.histEvt2Desc || '');
-    var venteDesc = 'Bien proposé à ' + prixFmt + ' €'
-      + (d.dpe ? ' · DPE ' + d.dpe : '')
-      + ' · Libre à la vente'
-      + (chargesCopro > 0 ? ' · Charges ' + chargesCopro + ' €/mois' : '') + '.';
-    tlHtml += tliHtml((d.histVenteDate || '2025') + ' · MISE EN VENTE', venteDesc);
-    timeline.innerHTML = tlHtml;
+  }
+
+  // Historique texte libre
+  var histTxt = id('historique-texte');
+  if (histTxt) {
+    histTxt.textContent = d.historiqueLibre || '';
   }
 
   // Diagnostics grid — full rebuild
@@ -2076,6 +2097,9 @@ function injectData(html, d) {
         + '</div>';
     }).join('');
   }
+  // Loi Carrez
+  var carrezEl = doc.getElementById('diag-carrez-result');
+  if (carrezEl && d.diagCarrez) carrezEl.textContent = d.diagCarrez;
 
   // Documents tab — charges & taxe mentions
   qa('.dc').forEach(function(dc) {
@@ -2119,6 +2143,43 @@ function injectData(html, d) {
       el.style.backgroundSize = 'cover';
       el.style.backgroundPosition = 'top center';
     });
+  }
+
+  // Photos 4 & 5 : injection conditionnelle + adaptation du grid
+  var gallery = doc.getElementById('main-gallery');
+  var photoCount = [d.photo1, d.photo2, d.photo3, d.photo4, d.photo5].filter(Boolean).length;
+  var p4el = doc.getElementById('gallery-photo4');
+  var p5el = doc.getElementById('gallery-photo5');
+  if (p4el && d.photo4) { p4el.src = d.photo4; p4el.style.display = ''; }
+  if (p5el && d.photo5) { p5el.src = d.photo5; p5el.style.display = ''; }
+  if (gallery && photoCount >= 4) {
+    gallery.style.gridTemplateColumns = '2fr 1fr 1fr';
+    gallery.style.gridTemplateRows = '190px 190px';
+  }
+  var caption = doc.getElementById('gallery-caption');
+  if (caption) caption.textContent = '📷 Cliquez sur une photo pour l\'agrandir · ' + photoCount + ' photos disponibles';
+
+  // Vidéo
+  if (d.videoUrl) {
+    var videoEl = doc.getElementById('media-video');
+    var iframeEl = doc.getElementById('media-video-iframe');
+    if (videoEl && iframeEl) {
+      var embedUrl = d.videoUrl
+        .replace('watch?v=', 'embed/')
+        .replace('youtu.be/', 'www.youtube.com/embed/')
+        .replace('vimeo.com/', 'player.vimeo.com/video/');
+      iframeEl.src = embedUrl;
+      videoEl.style.display = 'block';
+    }
+  }
+  // Visite virtuelle
+  if (d.visiteUrl) {
+    var visiteEl = doc.getElementById('media-visite');
+    var visiteLinkEl = doc.getElementById('media-visite-link');
+    if (visiteEl && visiteLinkEl) {
+      visiteLinkEl.href = d.visiteUrl;
+      visiteEl.style.display = 'block';
+    }
   }
 
   return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
@@ -2541,6 +2602,8 @@ function collectBienData() {
   var photo1=getV('bien_photo1_url')||(_photos[0]?_photos[0].dataUrl:'');
   var photo2=getV('bien_photo2_url')||(_photos[1]?_photos[1].dataUrl:'');
   var photo3=getV('bien_photo3_url')||(_photos[2]?_photos[2].dataUrl:'');
+  var photo4=getV('bien_photo4_url')||(_photos[3]?_photos[3].dataUrl:'');
+  var photo5=getV('bien_photo5_url')||(_photos[4]?_photos[4].dataUrl:'');
   var fb=parseFloat(getV('bien_fourchette_basse'))||(prix?Math.round(prix*.9):0);
   var fh=parseFloat(getV('bien_fourchette_haute'))||(prix?Math.round(prix*1.1):0);
   var typeLabel=currentType==='appart'?'Appartement':currentType==='maison'?'Maison':'Terrain';
@@ -2572,7 +2635,9 @@ function collectBienData() {
     scoreEtat:     getV('bien_score_etat')||'8',
     fort1:getV('bien_fort1'), fort2:getV('bien_fort2'), fort3:getV('bien_fort3'),
     vig1: getV('bien_vig1'),  vig2: getV('bien_vig2'),  vig3: getV('bien_vig3'),
-    photo1:photo1, photo2:photo2, photo3:photo3,
+    photo1:photo1, photo2:photo2, photo3:photo3, photo4:photo4, photo5:photo5,
+    videoUrl:  getV('video_url'),
+    visiteUrl: getV('visite_url'),
     dvf:           getDVFRows(),
     fourchetBasse: fb, fourchetHaute: fh,
     creditDuree:   parseInt(getV('bien_credit_duree'))||20,
@@ -2580,10 +2645,10 @@ function collectBienData() {
     creditHaut:    parseFloat(getV('bien_credit_taux_haut'))||5,
     creditMoyen:   parseFloat(getV('bien_credit_taux_moyen'))||3.4,
     creditBas:     parseFloat(getV('bien_credit_taux_bas'))||2.5,
-    histConstrDesc:getV('hist_constr_desc'),
-    histEvt1Date:  getV('hist_evt1_date'), histEvt1Desc: getV('hist_evt1_desc'),
-    histEvt2Date:  getV('hist_evt2_date'), histEvt2Desc: getV('hist_evt2_desc'),
-    histVenteDate: getV('hist_vente_date')||'2025',
+    historiqueLibre: getV('historique_libre'),
+    facture1Url: getV('facture1_url'),
+    facture2Url: getV('facture2_url'),
+    facture3Url: getV('facture3_url'),
     diags:[
       {icon:'🧱',name:'Amiante',        status:getV('diag_amiante_status'),     result:getV('diag_amiante_result')},
       {icon:'🔬',name:'Plomb (CREP)',   status:getV('diag_plomb_status'),       result:getV('diag_plomb_result')},
@@ -2592,7 +2657,9 @@ function collectBienData() {
       {icon:'🔥',name:'Gaz',            status:getV('diag_gaz_status'),         result:getV('diag_gaz_result')},
       {icon:'💧',name:'Assainissement', status:getV('diag_assain_status'),      result:getV('diag_assain_result')}
     ],
+    diagCarrez: getV('diag_carrez'),
     agentNom:   [agent.prenom,agent.nom].filter(Boolean).join(' '),
+    agentReseau: agent.reseau || 'Expertimo',
     agentTel:   agent.tel||'',
     agentEmail: agent.email||'',
     agentRdvUrl:agent.rdv_url||'',
