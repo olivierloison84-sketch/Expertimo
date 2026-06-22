@@ -1009,7 +1009,7 @@ function initMapQuartier() {
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#141414;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #b8923a;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
     L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>5 Rue de l'Arpajonnais").openPopup();
-    var overpassUrl = 'https://overpass-api.de/api/interpreter';
+    var overpassUrl = 'https://expertimo-phi.vercel.app/api/overpass';
     var query = '[out:json][timeout:10];('
       + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
       + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
