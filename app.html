@@ -3440,9 +3440,20 @@ async function modifierFiche(filename, sha, downloadUrl) {
     _editingFiche = { filename: filename, sha: sha };
     _stepsComplete[2] = true;
 
+    // Reset step 3 so the user must regenerate from the fresh template before publishing.
+    // Without this, _lastGeneratedHTML from a previous generation would remain valid and
+    // the "Continuer →" button would stay enabled, allowing stale HTML to be published.
+    _lastGeneratedHTML = null;
+    _lastGeneratedSlug = null;
+    _stepsComplete[3] = false;
+
     // 4. Navigate first — goToStep(2) triggers initStep2() + loadDraftBien() (blocked)
     //    Any page re-rendering happens here, before we inject values.
     goToStep(2);
+
+    // Disable the step-3 continue button so the user is forced to regenerate.
+    var btnContinue = document.getElementById('btn-step3-continue');
+    if (btnContinue) btnContinue.disabled = true;
 
     // Helper shared by both setTimeouts
     function dbgSet(id, val) {
