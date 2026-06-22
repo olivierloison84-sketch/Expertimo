@@ -2740,22 +2740,22 @@ function continuerVersPublication() {
 // ═══════════════════════════════════════════════════════
 async function publierFiche() {
   if (!_lastGeneratedHTML || !_lastGeneratedSlug) {
-    document.getElementById('pub-status').textContent =
-      '⚠️ Générez d\'abord la fiche (étape 3).';
+    document.getElementById('pub-status').textContent = '⚠️ Générez d\'abord la fiche (étape 3).';
     return;
   }
-
-  var btn    = document.getElementById('pub-btn');
+  var btn = document.getElementById('pub-btn');
   var status = document.getElementById('pub-status');
   btn.disabled = true;
-  status.textContent = '⏳ Upload en cours…';
+  status.textContent = '⏳ Publication en cours…';
 
-  var filename = _lastGeneratedSlug + '-' + Date.now() + '.html';
-  var blob = new Blob([_lastGeneratedHTML], { type: 'text/html; charset=utf-8' });
+  var user = await window.privencyAuth.auth.getUser();
+  var agentId = user.data.user.id;
 
-  var { data, error } = await window.privencyAuth.storage
-    .from('Fiches')
-    .upload(filename, blob, { contentType: 'text/html; charset=utf-8', upsert: true });
+  var { data, error } = await window.privencyAuth
+    .from('fiches')
+    .insert({ slug: _lastGeneratedSlug, html: _lastGeneratedHTML, agent_id: agentId })
+    .select('id')
+    .single();
 
   if (error) {
     btn.disabled = false;
@@ -2763,11 +2763,7 @@ async function publierFiche() {
     return;
   }
 
-  var { data: urlData } = window.privencyAuth.storage
-    .from('Fiches')
-    .getPublicUrl(filename);
-
-  var publicUrl = urlData.publicUrl;
+  var publicUrl = 'https://expertimo-phi.vercel.app/api/fiche/' + data.id;
 
   btn.disabled = false;
   status.textContent = '✅ Publié avec succès !';
@@ -2779,8 +2775,7 @@ async function publierFiche() {
   urlLink.href = publicUrl;
 
   var qrImg = document.getElementById('pub-qr');
-  qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data='
-    + encodeURIComponent(publicUrl);
+  qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(publicUrl);
 
   document.getElementById('pub-result').style.display = 'block';
   _stepsComplete[4] = true;
