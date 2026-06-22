@@ -3047,6 +3047,16 @@ function continuerVersPublication() {
 // STEP 4 — PUBLICATION (GitHub Pages)
 // ═══════════════════════════════════════════════════════
 async function publierFiche() {
+  console.log('[publier] données utilisées:', {
+    adresse:     document.getElementById('adresse')     ? document.getElementById('adresse').value     : undefined,
+    prix:        document.getElementById('prix_vente')  ? document.getElementById('prix_vente').value  : undefined,
+    surface:     document.getElementById('surface_hab') ? document.getElementById('surface_hab').value : undefined,
+    photo1:      document.getElementById('bien_photo1_url') ? document.getElementById('bien_photo1_url').value : undefined,
+    photo2:      document.getElementById('bien_photo2_url') ? document.getElementById('bien_photo2_url').value : undefined,
+    photo3:      document.getElementById('bien_photo3_url') ? document.getElementById('bien_photo3_url').value : undefined,
+    comparable1: document.getElementById('comp1_adresse')   ? document.getElementById('comp1_adresse').value   : undefined,
+    score:       document.getElementById('bien_score')      ? document.getElementById('bien_score').value      : undefined
+  });
   if (!_lastGeneratedHTML || !_lastGeneratedSlug) {
     document.getElementById('pub-status').textContent = '⚠️ Générez d\'abord la fiche (étape 3).';
     return;
