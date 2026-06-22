@@ -2692,6 +2692,7 @@ function saveDraftBien() {
 }
 
 function loadDraftBien() {
+  if (window._editMode) return;
   var raw=localStorage.getItem('_draft_bien');
   if (!raw) return;
   try { restoreRawFormState(JSON.parse(raw)); } catch(e) {}
@@ -3340,6 +3341,14 @@ async function modifierFiche(filename, sha, downloadUrl) {
         loyer: parseFloat(xsp('_sp_loyer')) || 0
       };
     }
+
+    // Signal edit mode so loadDraftBien() won't overwrite our injected values
+    window._editMode = true;
+
+    // Clear draft so navigation to step 2 doesn't restore stale data
+    localStorage.removeItem('_draft_bien');
+    localStorage.removeItem('privency_draft');
+    localStorage.removeItem('privency_last_fiche');
 
     // Reset all step-2 fields before filling
     document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) {
