@@ -448,12 +448,17 @@ textarea { resize: vertical; min-height: 60px; }
 
   document.addEventListener('DOMContentLoaded', () => {
     // Bouton "Nouvelle fiche"
-    const btnNew = document.createElement('button');
-    btnNew.id = 'btn-nouvelle-fiche';
-    btnNew.textContent = '✚ Nouvelle fiche';
-    btnNew.style.cssText = 'position:fixed;top:10px;right:130px;z-index:10000;background:#b8923a;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;';
-    btnNew.onclick = function() { window._nouvelleFiche && window._nouvelleFiche(); };
-    document.body.appendChild(btnNew);
+    const btnNF = document.createElement('button');
+    btnNF.id = 'btn-nouvelle-fiche';
+    btnNF.textContent = '✚ Nouvelle fiche';
+    btnNF.style.cssText = 'position:fixed;top:10px;right:160px;z-index:10000;background:#b8923a;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;';
+    btnNF.onclick = function() {
+      window._editMode = false;
+      window._editingFiche = null;
+      window._lastGeneratedHTML = null;
+      if (typeof window.goToStep === 'function') window.goToStep(1);
+    };
+    document.body.appendChild(btnNF);
 
     // Bouton "Déconnexion"
     const btn = document.createElement('button');
@@ -1514,6 +1519,7 @@ function goToStep(n) {
   if (n === 6) { loadFiches(); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+window.goToStep = goToStep;
 
 function updateStepperTabs() {
   [1,2,3,4,5,6].forEach(function(i) {
@@ -1717,8 +1723,6 @@ goToStep = function(n) {
   if (n === 2 && !_step2Inited) {
     initStep2();
     _step2Inited = true;
-    // Reset step 2 on first load so no stale data appears
-    if (!window._editMode && !window._editingFiche) resetStep2();
   }
   if (n === 2) loadDraftBien();
   if (n === 2 && !_ficheMap) { if (getV('adresse')) initFicheMap(); }
@@ -2704,49 +2708,6 @@ function saveDraftBien() {
     var badge=document.getElementById('draft-saved-badge');
     if (badge){badge.style.display='inline';setTimeout(function(){badge.style.display='none';},2000);}
   } catch(e) {}
-}
-
-// ═══════════════════════════════════════════════════════
-// NOUVELLE FICHE — reset step 2 and go to step 1
-// ═══════════════════════════════════════════════════════
-window._nouvelleFiche = function nouvelleFiche() {
-  window._editMode = false;
-  window._editingFiche = null;
-  if (typeof resetStep2 === 'function') resetStep2();
-  _lastGeneratedHTML = null;
-  _lastGeneratedSlug = null;
-  _stepsComplete[3] = false;
-  var btnContinue = document.getElementById('btn-step3-continue');
-  if (btnContinue) btnContinue.disabled = true;
-  updateStepperTabs();
-  goToStep(1);
-  showToast('✅ Nouveau formulaire prêt.');
-}
-
-function resetStep2() {
-  // Reset all text/number/select/textarea values
-  document.querySelectorAll('#page-2 input:not([type=radio]):not([type=checkbox]):not([type=file]), #page-2 select, #page-2 textarea').forEach(function(el) {
-    el.value = '';
-  });
-  // Uncheck all radios and checkboxes (re-check "Non" defaults for buildCheckGrid)
-  document.querySelectorAll('#page-2 input[type=radio]').forEach(function(el) {
-    el.checked = (el.value === 'non');
-  });
-  document.querySelectorAll('#page-2 input[type=checkbox]').forEach(function(el) {
-    el.checked = false;
-  });
-  // Clear rating badges and DPE/GES buttons
-  document.querySelectorAll('#page-2 .rating-badge').forEach(function(b) { b.classList.remove('sel'); });
-  document.querySelectorAll('#page-2 .dpe-btn').forEach(function(b) { b.classList.remove('sel'); });
-  // Clear defaut-item oui highlights
-  document.querySelectorAll('#page-2 .defaut-item').forEach(function(d) { d.classList.remove('oui'); });
-  // Reset DVF table
-  document.querySelectorAll('#dvf-tbody input').forEach(function(el) { el.value = ''; });
-  // Reset photos
-  _photos = [];
-  renderPhotos();
-  // Reset pieces table
-  document.querySelectorAll('#pieces_tbody td input').forEach(function(el) { el.value = ''; });
 }
 
 function loadDraftBien() {
