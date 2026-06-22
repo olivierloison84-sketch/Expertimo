@@ -447,6 +447,15 @@ textarea { resize: vertical; min-height: 60px; }
   setTimeout(() => { denied(); }, 3000);
 
   document.addEventListener('DOMContentLoaded', () => {
+    // Bouton "Nouvelle fiche"
+    const btnNew = document.createElement('button');
+    btnNew.id = 'btn-nouvelle-fiche';
+    btnNew.textContent = '✚ Nouvelle fiche';
+    btnNew.style.cssText = 'position:fixed;top:10px;right:130px;z-index:10000;background:#b8923a;color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;font-weight:700;cursor:pointer;';
+    btnNew.addEventListener('click', () => { if(typeof nouvelleFiche==='function') nouvelleFiche(); });
+    document.body.appendChild(btnNew);
+
+    // Bouton "Déconnexion"
     const btn = document.createElement('button');
     btn.id = 'logout-btn';
     btn.textContent = 'Déconnexion';
@@ -474,14 +483,8 @@ textarea { resize: vertical; min-height: 60px; }
       <p id="header-sub">Générateur Fiche Acheteur</p>
     </div>
   </div>
-  <div class="header-right" style="display:flex;align-items:center;gap:12px;">
-    <span style="font-size:11px;opacity:.7;">Import → Saisie → Génération → Publication</span>
-    <button id="btn-nouvelle-fiche" onclick="nouvelleFiche()"
-            style="background:var(--accent);color:#fff;border:none;cursor:pointer;
-                   font-size:12px;padding:8px 16px;border-radius:20px;font-weight:700;
-                   letter-spacing:.3px;white-space:nowrap;flex-shrink:0;">
-      ✚ Nouvelle fiche
-    </button>
+  <div class="header-right">
+    Import → Saisie → Génération → Publication
   </div>
 </header>
 
