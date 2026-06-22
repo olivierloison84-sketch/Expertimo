@@ -3322,23 +3322,75 @@ async function modifierFiche(filename, sha, downloadUrl) {
       try { data = JSON.parse(jsonMatch[1]); } catch(e) {}
     }
 
-    // 2. Fallback: extract _sp_ vars via regex (old fiches)
+    // 2. Fallback: extract from old fiches (no expertimo-data block)
     if (!data) {
+      console.log('[modifierFiche] No expertimo-data block — falling back to _sp_ + DOM extraction');
+
+      // Parse DOM for selector-based extraction
+      var fdoc = new DOMParser().parseFromString(html, 'text/html');
+
+      // Concatenate all script text for regex searches
+      var allScripts = Array.from(fdoc.querySelectorAll('script')).map(function(s) { return s.textContent; }).join('\n');
+
+      // Extract a _sp_ variable: var _sp_xxx = "value"  (handles \" inside value)
       function xsp(name) {
-        var m = html.match(new RegExp('var ' + name + '\\s*=\\s*"((?:[^"\\\\]|\\\\.)*)"'));
-        return m ? m[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\') : '';
+        var m = allScripts.match(new RegExp('var\\s+' + name + '\\s*=\\s*"((?:[^"\\\\]|\\\\.)*)"'));
+        var val = m ? m[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\') : '';
+        console.log('[modifierFiche] xsp(' + name + ') =', JSON.stringify(val));
+        return val;
       }
-      var prixStr = xsp('_sp_prix').replace(/\s/g, '');
+
+      // Extract a DOM text node, first match wins
+      function xdom() {
+        for (var i = 0; i < arguments.length; i++) {
+          var el = fdoc.querySelector(arguments[i]);
+          if (el && el.textContent.trim()) {
+            var v = el.textContent.trim();
+            console.log('[modifierFiche] xdom(' + arguments[i] + ') =', JSON.stringify(v));
+            return v;
+          }
+        }
+        return '';
+      }
+
+      var prixStr  = xsp('_sp_prix').replace(/\s/g, '');
+      var surfStr  = xsp('_sp_surface').replace(',', '.');
+      var adresse  = xsp('_sp_adresse');
+      var dpe      = xsp('_sp_dpe') || xsp('dpe');
+      var charges  = parseFloat(xsp('_sp_charges')) || 0;
+      var tf       = parseFloat(xsp('_sp_tf'))       || 0;
+      var loyer    = parseFloat(xsp('_sp_loyer'))     || 0;
+      var fort1    = xsp('_sp_pf1');
+      var fort2    = xsp('_sp_pf2');
+      var fort3    = xsp('_sp_pf3');
+      var vig1     = xsp('_sp_vigi1');
+      var vig2     = xsp('_sp_vigi2');
+      var reseau   = xsp('_sp_reseau');
+
+      // Agent name & phone: try _sp_ first, then DOM selectors
+      var agentNom = xsp('_sp_agent') || xdom('.cons-name', '.agent-name', '[class*="agent"] h3', '[class*="cons"] h3');
+      var agentTel = xsp('_sp_tel')   || xdom('.cons-contact', '.agent-tel', '[class*="agent"] .tel', '[href^="tel"]');
+
+      // Address fallback: DOM title or .htitle
+      if (!adresse) adresse = xdom('.htitle', '.stitle') || fdoc.title.replace(/·.*/, '').trim();
+
+      console.log('[modifierFiche] Résumé extraction —', {
+        adresse, prix: prixStr, surface: surfStr, dpe, charges, tf, loyer,
+        fort1, fort2, fort3, vig1, vig2, agentNom, agentTel, reseau
+      });
+
       data = {
-        adresse:   xsp('_sp_adresse'),
-        prix:      parseFloat(prixStr) || 0,
-        surface:   parseFloat(xsp('_sp_surface').replace(',', '.')) || 0,
-        dpe:       xsp('_sp_dpe'),
-        chargesCopro: parseFloat(xsp('_sp_charges')) || 0,
-        taxeFonciere: parseFloat(xsp('_sp_tf')) || 0,
-        fort1: xsp('_sp_pf1'), fort2: xsp('_sp_pf2'), fort3: xsp('_sp_pf3'),
-        vig1:  xsp('_sp_vigi1'), vig2: xsp('_sp_vigi2'),
-        loyer: parseFloat(xsp('_sp_loyer')) || 0
+        adresse:      adresse,
+        prix:         parseFloat(prixStr) || 0,
+        surface:      parseFloat(surfStr) || 0,
+        dpe:          dpe,
+        chargesCopro: charges,
+        taxeFonciere: tf,
+        loyer:        loyer,
+        fort1: fort1, fort2: fort2, fort3: fort3,
+        vig1:  vig1,  vig2:  vig2,
+        agentNom:    agentNom,
+        agentReseau: reseau
       };
     }
 
