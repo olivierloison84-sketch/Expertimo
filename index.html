@@ -1051,9 +1051,15 @@ function initMapQuartier() {
     }
 
     setTimeout(async function() {
-      var data = await tryOverpass(query, overpassProxies);
-      if (data) {
-        (data.elements||[]).forEach(function(el) {
+      var elements = null;
+      if (window._poiData && window._poiData.length) {
+        elements = window._poiData;
+      } else {
+        var data = await tryOverpass(query, overpassProxies);
+        if (data) elements = data.elements || [];
+      }
+      if (elements) {
+        elements.forEach(function(el) {
           var cat;
           var tags = el.tags || {};
           if (tags.public_transport || tags.railway === 'station' || tags.amenity === 'bus_station') { cat = 'transport'; }
