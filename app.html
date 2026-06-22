@@ -3536,7 +3536,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
       // 6. Release edit mode AFTER injection is complete
       window._editMode = false;
       showToast('✅ Fiche chargée — modifiez et régénérez.');
-    }, 100);
+    }, 500);
   } catch(err) {
     showToast('❌ Erreur chargement fiche : ' + err.message, true);
     console.error(err);
