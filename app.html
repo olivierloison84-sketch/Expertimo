@@ -66,6 +66,7 @@ header {
   border-bottom: 2px solid var(--border);
   padding: 0 24px;
   display: flex;
+  align-items: center;
   gap: 0;
   overflow-x: auto;
 }
@@ -504,6 +505,12 @@ textarea { resize: vertical; min-height: 60px; }
   <div class="step-tab" id="tab-6" onclick="goToStep(6)">
     <span class="step-num" style="background:var(--muted);font-size:14px;">📂</span>
     <span class="step-label">Mes fiches</span>
+  </div>
+  <div style="margin-left:auto;padding:0 8px;flex-shrink:0;">
+    <button class="btn btn-primary" id="btn-nouvelle-fiche" onclick="nouvelleFiche()"
+            style="background:var(--accent);color:#fff;font-size:12px;padding:7px 14px;border-radius:20px;font-weight:700;letter-spacing:.3px;">
+      ✚ Nouvelle fiche
+    </button>
   </div>
 </nav>
 
@@ -1705,7 +1712,12 @@ function resetProfile() {
 var _origGoToStep = goToStep;
 goToStep = function(n) {
   _origGoToStep(n);
-  if (n === 2 && !_step2Inited) { initStep2(); _step2Inited = true; }
+  if (n === 2 && !_step2Inited) {
+    initStep2();
+    _step2Inited = true;
+    // Reset step 2 on first load so no stale data appears
+    if (!window._editMode && !window._editingFiche) resetStep2();
+  }
   if (n === 2) loadDraftBien();
   if (n === 2 && !_ficheMap) { if (getV('adresse')) initFicheMap(); }
 };
@@ -2690,6 +2702,49 @@ function saveDraftBien() {
     var badge=document.getElementById('draft-saved-badge');
     if (badge){badge.style.display='inline';setTimeout(function(){badge.style.display='none';},2000);}
   } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════
+// NOUVELLE FICHE — reset step 2 and go to step 1
+// ═══════════════════════════════════════════════════════
+function nouvelleFiche() {
+  resetStep2();
+  window._editMode = false;
+  window._editingFiche = null;
+  _lastGeneratedHTML = null;
+  _lastGeneratedSlug = null;
+  _stepsComplete[3] = false;
+  var btnContinue = document.getElementById('btn-step3-continue');
+  if (btnContinue) btnContinue.disabled = true;
+  updateStepperTabs();
+  goToStep(1);
+  showToast('✅ Nouveau formulaire prêt.');
+}
+
+function resetStep2() {
+  // Reset all text/number/select/textarea values
+  document.querySelectorAll('#page-2 input:not([type=radio]):not([type=checkbox]):not([type=file]), #page-2 select, #page-2 textarea').forEach(function(el) {
+    el.value = '';
+  });
+  // Uncheck all radios and checkboxes (re-check "Non" defaults for buildCheckGrid)
+  document.querySelectorAll('#page-2 input[type=radio]').forEach(function(el) {
+    el.checked = (el.value === 'non');
+  });
+  document.querySelectorAll('#page-2 input[type=checkbox]').forEach(function(el) {
+    el.checked = false;
+  });
+  // Clear rating badges and DPE/GES buttons
+  document.querySelectorAll('#page-2 .rating-badge').forEach(function(b) { b.classList.remove('sel'); });
+  document.querySelectorAll('#page-2 .dpe-btn').forEach(function(b) { b.classList.remove('sel'); });
+  // Clear defaut-item oui highlights
+  document.querySelectorAll('#page-2 .defaut-item').forEach(function(d) { d.classList.remove('oui'); });
+  // Reset DVF table
+  document.querySelectorAll('#dvf-tbody input').forEach(function(el) { el.value = ''; });
+  // Reset photos
+  _photos = [];
+  renderPhotos();
+  // Reset pieces table
+  document.querySelectorAll('#pieces_tbody td input').forEach(function(el) { el.value = ''; });
 }
 
 function loadDraftBien() {
