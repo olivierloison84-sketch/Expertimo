@@ -3236,7 +3236,7 @@ async function publierFiche() {
       'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(publicUrl);
     document.getElementById('pub-result').style.display = 'block';
     var btnPartager = document.getElementById('btn-partager');
-    if (btnPartager && navigator.share) btnPartager.style.display = 'inline-flex';
+    if (btnPartager) btnPartager.style.display = 'inline-flex';
     _stepsComplete[4] = true;
     updateStepperTabs();
     showToast('✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !'));
@@ -3249,9 +3249,12 @@ async function publierFiche() {
 
 function partagerFiche() {
   var url = document.getElementById('pub-url-input').value;
-  if (!url || !navigator.share) return;
-  navigator.share({ title: 'Votre fiche acheteur', url: url })
-    .catch(function() {});
+  if (!url) return;
+  if (navigator.share) {
+    navigator.share({ title: 'Votre fiche acheteur', url: url }).catch(function() {});
+  } else {
+    copierLienFiche();
+  }
 }
 
 function copierLienFiche() {
