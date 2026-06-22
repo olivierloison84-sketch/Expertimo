@@ -2800,7 +2800,7 @@ function collectBienData() {
     mediane:       parseFloat(getV('bien_mediane'))||0,
     tension:       getV('bien_tension')||'Très forte',
     delai:         getV('bien_delai')||'21 jours',
-    loyer:         parseFloat(getV('loyer')||getV('bien_loyer_estime'))||0,
+    loyer:         (function(){ var v=0; document.querySelectorAll('[id="loyer"]').forEach(function(el){var n=parseFloat(el.value);if(n)v=n;}); return v||parseFloat(getV('bien_loyer_estime'))||0; })(),
     chargesCopro:  chargesCopro,
     chargesDetail: getV('charges_detail'),
     taxeFonciere:  taxeFonciere,
@@ -3437,7 +3437,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
     // 1. Try embedded JSON block (new fiches)
     var jsonMatch = html.match(/<script[^>]*id="expertimo-data"[^>]*type="application\/json"[^>]*>([\s\S]*?)<\/script>/);
     if (jsonMatch) {
-      try { data = JSON.parse(jsonMatch[1]); } catch(e) {}
+      try { data = JSON.parse(jsonMatch[1]); console.log('[modifierFiche] expertimo-data parsé :', data); } catch(e) {}
     }
 
     // 2. Fallback: extract from old fiches (no expertimo-data block)
@@ -3548,9 +3548,12 @@ async function modifierFiche(filename, sha, downloadUrl) {
 
     // 5. Inject values AFTER navigation, in a setTimeout so the DOM is fully settled
     setTimeout(function() {
-      // Reset all step-2 fields
+      // Reset all step-2 fields (text values + checked states)
       document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) {
         el.value = '';
+      });
+      document.querySelectorAll('#page-2 input[type=radio], #page-2 input[type=checkbox]').forEach(function(el) {
+        el.checked = false;
       });
 
       // Switch to correct type
@@ -3610,8 +3613,8 @@ async function modifierFiche(filename, sha, downloadUrl) {
       dbgSet('bien_vig2', data.vig2 || '');
       dbgSet('bien_vig3', data.vig3 || '');
 
-      // Loyer & marché
-      dbgSet('loyer',             data.loyer    || '');
+      // Loyer & marché (deux inputs partagent id="loyer" — injecter tous)
+      document.querySelectorAll('[id="loyer"]').forEach(function(el){ el.value = data.loyer || ''; });
       dbgSet('bien_loyer_estime', data.loyer    || '');
       dbgSet('bien_mediane',      data.mediane  || '');
       dbgSet('bien_tension',      data.tension  || '');
