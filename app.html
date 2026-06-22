@@ -2858,16 +2858,41 @@ function generatePreview() {
     try {
       var out = injectData(tmpl, d);
 
-      // Pré-calcul POI : géocodage puis requête Overpass côté agent
-      try {
-        var geoRes = await fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(d.adresse) + '&limit=1');
-        var geoData = await geoRes.json();
-        if (geoData && geoData[0]) {
+      // Indicateur visuel carte en cours dans la fiche
+      var mapLoadingScript = '<script>document.addEventListener("DOMContentLoaded",function(){'
+        + 'var mapEl=document.getElementById("map")||document.querySelector(".map-wrap")||document.querySelector("[id*=\'map\']");'
+        + 'if(mapEl&&!mapEl.querySelector("#map-loading-ov")){'
+        + 'mapEl.style.position="relative";'
+        + 'var ov=document.createElement("div");ov.id="map-loading-ov";'
+        + 'ov.style.cssText="position:absolute;inset:0;background:rgba(244,246,249,.88);display:flex;align-items:center;justify-content:center;z-index:999;font-size:13px;color:#6b7a8d;border-radius:6px;pointer-events:none;";'
+        + 'ov.textContent="🗺️ Chargement de la carte…";'
+        + 'mapEl.appendChild(ov);}'
+        + '});<\/script>';
+      out = out.replace('</head>', mapLoadingScript + '</head>');
+
+      // Affichage immédiat sans attendre géocodage
+      _lastGeneratedHTML = out;
+      _lastGeneratedSlug = slugify(d.adresse);
+      var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
+      document.getElementById('preview-iframe').src = URL.createObjectURL(blob);
+      document.getElementById('btn-download-fiche').disabled = false;
+      var btnC = document.getElementById('btn-step3-continue');
+      if (btnC) btnC.disabled = false;
+      _stepsComplete[3] = true;
+      updateStepperTabs();
+      document.getElementById('step3-status').innerHTML =
+        '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>'
+        + ' <span id="map-loading-hint" style="color:var(--muted);font-size:12px;">🗺️ Carte en cours…</span>';
+      showToast('✅ Aperçu généré !');
+
+      // Géocodage + POI en arrière-plan (non bloquant)
+      (async function() {
+        try {
+          var geoRes = await fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(d.adresse) + '&limit=1');
+          var geoData = await geoRes.json();
+          if (!geoData || !geoData[0]) return;
           var lat = parseFloat(geoData[0].lat), lng = parseFloat(geoData[0].lon);
-          // Injecter lat/lng dans le template
-          out = out.replace('parseFloat("") || 0;', 'parseFloat("' + lat + '") || 0;')
-                   .replace('parseFloat("") || 0;', 'parseFloat("' + lng + '") || 0;');
-          // Fetcher les POI
+
           var poiProxies = [
             'https://overpass.kumi.systems/api/interpreter',
             'https://overpass.private.coffee/api/interpreter',
@@ -2885,6 +2910,7 @@ function generatePreview() {
             + 'node["amenity"="school"](around:800,' + lat + ',' + lng + ');'
             + 'node["amenity"="kindergarten"](around:800,' + lat + ',' + lng + ');'
             + ');out body;';
+
           var poiData = null;
           for (var pi = 0; pi < poiProxies.length && !poiData; pi++) {
             try {
@@ -2892,27 +2918,28 @@ function generatePreview() {
               if (pr.ok) poiData = await pr.json();
             } catch(e2) {}
           }
+
+          // Reconstruire la fiche avec lat/lng + POI et recharger l'iframe
+          var outFinal = injectData(tmpl, d);
+          outFinal = outFinal.replace('parseFloat("") || 0;', 'parseFloat("' + lat + '") || 0;')
+                             .replace('parseFloat("") || 0;', 'parseFloat("' + lng + '") || 0;');
           if (poiData && poiData.elements) {
             var poiScript = '<script>window._poiData=' + JSON.stringify(poiData.elements) + ';<\/script>';
-            out = out.replace('</head>', poiScript + '</head>');
+            outFinal = outFinal.replace('</head>', poiScript + '</head>');
           }
-        }
-      } catch(geoErr) {
-        console.warn('Pré-calcul POI échoué (non bloquant) :', geoErr);
-      }
 
-      _lastGeneratedHTML = out;
-      _lastGeneratedSlug = slugify(d.adresse);
-      var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
-      document.getElementById('preview-iframe').src = URL.createObjectURL(blob);
-      document.getElementById('btn-download-fiche').disabled = false;
-      var btnC = document.getElementById('btn-step3-continue');
-      if (btnC) btnC.disabled = false;
-      _stepsComplete[3] = true;
-      updateStepperTabs();
-      document.getElementById('step3-status').innerHTML =
-        '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>';
-      showToast('✅ Aperçu généré !');
+          _lastGeneratedHTML = outFinal;
+          var blob2 = new Blob([outFinal], { type: 'text/html;charset=utf-8' });
+          document.getElementById('preview-iframe').src = URL.createObjectURL(blob2);
+          var hint = document.getElementById('map-loading-hint');
+          if (hint) hint.remove();
+        } catch(geoErr) {
+          console.warn('Pré-calcul POI échoué :', geoErr);
+          var hint = document.getElementById('map-loading-hint');
+          if (hint) hint.remove();
+        }
+      })();
+
     } catch(err) {
       document.getElementById('step3-status').textContent = '❌ ' + err.message;
       console.error(err);
