@@ -1033,7 +1033,7 @@ function initMapQuartier() {
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
-    setTimeout(function() { fetch(overpassUrl, {method:'POST', body:'data=' + encodeURIComponent(query)})
+    setTimeout(function() { fetch(overpassUrl, {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'data=' + encodeURIComponent(query)})
       .then(function(r){return r.json();})
       .then(function(data){
         (data.elements||[]).forEach(function(el) {
