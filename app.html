@@ -501,6 +501,10 @@ textarea { resize: vertical; min-height: 60px; }
     <span class="step-num" style="background:var(--muted);font-size:14px;">📊</span>
     <span class="step-label">Mes stats</span>
   </div>
+  <div class="step-tab" id="tab-6" onclick="goToStep(6)">
+    <span class="step-num" style="background:var(--muted);font-size:14px;">📂</span>
+    <span class="step-label">Mes fiches</span>
+  </div>
 </nav>
 
 <!-- ══════════════════════════════════════════════════════
@@ -1401,6 +1405,53 @@ textarea { resize: vertical; min-height: 60px; }
 </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════
+     PAGE 6 — MES FICHES (GitHub)
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-6">
+<div class="container">
+  <div class="card">
+    <div class="card-header">
+      📂 Mes fiches publiées
+      <div style="margin-left:auto">
+        <button class="btn btn-sm" style="background:var(--accent);color:#fff" onclick="loadFiches()">🔄 Actualiser</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <!-- Token GitHub (stocké en localStorage, jamais dans le code) -->
+      <div id="gh-token-bloc" style="margin-bottom:16px;padding:12px 16px;background:#f8fafc;border:1.5px solid var(--border);border-radius:var(--radius);">
+        <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px;">🔑 Token GitHub (stocké localement)</label>
+        <div style="display:flex;gap:8px;align-items:center;">
+          <input type="password" id="gh-token-input" placeholder="ghp_…" style="flex:1;font-size:13px;"
+                 oninput="document.getElementById('gh-token-save').disabled=!this.value.trim()">
+          <button id="gh-token-save" class="btn btn-sm btn-primary" onclick="saveGhToken()" disabled>Enregistrer</button>
+        </div>
+        <p id="gh-token-status" class="hint" style="margin-top:5px;"></p>
+      </div>
+      <div id="fiches-status" style="font-size:13px;color:var(--muted);margin-bottom:12px;">Chargement…</div>
+      <div id="fiches-table-wrap" style="display:none;overflow-x:auto;">
+        <table id="fiches-table" style="width:100%;border-collapse:collapse;font-size:13px;">
+          <thead>
+            <tr style="background:var(--primary);color:#fff;">
+              <th style="padding:9px 14px;text-align:left;font-weight:600;">Bien</th>
+              <th style="padding:9px 14px;text-align:left;font-weight:600;">Dernière modif.</th>
+              <th style="padding:9px 14px;text-align:center;font-weight:600;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="fiches-tbody"></tbody>
+        </table>
+      </div>
+      <div id="fiches-empty" style="display:none;text-align:center;padding:32px;color:var(--muted);">
+        Aucune fiche publiée.
+      </div>
+    </div>
+  </div>
+  <div class="action-row">
+    <button class="btn btn-outline" onclick="goToStep(4)">← Retour</button>
+  </div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1409,6 +1460,10 @@ textarea { resize: vertical; min-height: 60px; }
 // ═══════════════════════════════════════════════════════
 var _currentStep   = 1;
 var _stepsComplete = { 1: false, 2: false, 3: false, 4: false };
+var _editingFiche  = null; // { filename, sha } when overwriting an existing fiche
+var _GH_TOKEN      = localStorage.getItem('expertimo_gh_token') || '';
+var _GH_REPO       = 'olivierloison84-sketch/Expertimo';
+var _GH_PAGES_BASE = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/';
 var _step2Inited   = false;
 var _draftTimer    = null;
 window._bienData   = null;
@@ -1435,7 +1490,7 @@ function goToStep(n) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + n).classList.add('active');
   // Update tabs
-  [1,2,3,4,5].forEach(function(i) {
+  [1,2,3,4,5,6].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
@@ -1446,11 +1501,12 @@ function goToStep(n) {
   if (n === 3) { refreshStep3Summary(); }
   if (n === 4) { refreshStep4Summary(); }
   if (n === 5) { loadAnalytics(); }
+  if (n === 6) { loadFiches(); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateStepperTabs() {
-  [1,2,3,4,5].forEach(function(i) {
+  [1,2,3,4,5,6].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
@@ -2252,6 +2308,13 @@ function injectData(html, d) {
     }
   }
 
+  // Embed original data as JSON for future extraction (editing)
+  var dataEmbed = doc.createElement('script');
+  dataEmbed.id = 'expertimo-data';
+  dataEmbed.type = 'application/json';
+  dataEmbed.textContent = JSON.stringify(d);
+  doc.body.appendChild(dataEmbed);
+
   // Tracking script injected before </body>
   var trackScript = doc.createElement('script');
   trackScript.textContent = [
@@ -2980,51 +3043,68 @@ function continuerVersPublication() {
 }
 
 // ═══════════════════════════════════════════════════════
-// STEP 4 — PUBLICATION SUPABASE STORAGE
+// STEP 4 — PUBLICATION (GitHub Pages)
 // ═══════════════════════════════════════════════════════
 async function publierFiche() {
   if (!_lastGeneratedHTML || !_lastGeneratedSlug) {
     document.getElementById('pub-status').textContent = '⚠️ Générez d\'abord la fiche (étape 3).';
     return;
   }
-  var btn = document.getElementById('pub-btn');
+  var btn    = document.getElementById('pub-btn');
   var status = document.getElementById('pub-status');
   btn.disabled = true;
-  status.textContent = '⏳ Publication en cours…';
 
-  var user = await window.privencyAuth.auth.getUser();
-  var agentId = user.data.user.id;
+  var filename = _editingFiche ? _editingFiche.filename : _lastGeneratedSlug + '-FINAL.html';
+  var sha      = _editingFiche ? _editingFiche.sha      : undefined;
+  var isUpdate = !!_editingFiche;
+  status.textContent = '⏳ ' + (isUpdate ? 'Mise à jour' : 'Publication') + ' en cours…';
 
-  var { data, error } = await window.privencyAuth
-    .from('fiches')
-    .insert({ slug: _lastGeneratedSlug, html: _lastGeneratedHTML, agent_id: agentId })
-    .select('id')
-    .single();
+  try {
+    // base64-encode HTML (UTF-8 safe)
+    var encoded = btoa(unescape(encodeURIComponent(_lastGeneratedHTML)));
+    var body = {
+      message: (isUpdate ? 'maj' : 'add') + ' fiche: ' + filename,
+      content: encoded
+    };
+    if (sha) body.sha = sha;
 
-  if (error) {
+    var r = await fetch('https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename), {
+      method: 'PUT',
+      headers: {
+        Authorization: 'token ' + _GH_TOKEN,
+        'Content-Type': 'application/json',
+        Accept: 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!r.ok) {
+      var errData = await r.json().catch(function() { return {}; });
+      throw new Error('GitHub ' + r.status + ' : ' + (errData.message || 'erreur inconnue'));
+    }
+
+    var result = await r.json();
+    var newSha  = result.content && result.content.sha;
+    if (_editingFiche && newSha) _editingFiche.sha = newSha;
+    else if (newSha) _editingFiche = { filename: filename, sha: newSha };
+
+    var publicUrl = _GH_PAGES_BASE + filename;
     btn.disabled = false;
-    status.textContent = '❌ ' + error.message;
-    return;
+    status.textContent = '✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !');
+
+    document.getElementById('pub-url-input').value = publicUrl;
+    document.getElementById('pub-url-link').href   = publicUrl;
+    document.getElementById('pub-qr').src =
+      'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(publicUrl);
+    document.getElementById('pub-result').style.display = 'block';
+    _stepsComplete[4] = true;
+    updateStepperTabs();
+    showToast('✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !'));
+  } catch(err) {
+    btn.disabled = false;
+    status.textContent = '❌ ' + err.message;
+    showToast('❌ ' + err.message, true);
   }
-
-  var publicUrl = 'https://expertimo-phi.vercel.app/api/fiche/' + data.id;
-
-  btn.disabled = false;
-  status.textContent = '✅ Publié avec succès !';
-
-  var urlInput = document.getElementById('pub-url-input');
-  urlInput.value = publicUrl;
-
-  var urlLink = document.getElementById('pub-url-link');
-  urlLink.href = publicUrl;
-
-  var qrImg = document.getElementById('pub-qr');
-  qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(publicUrl);
-
-  document.getElementById('pub-result').style.display = 'block';
-  _stepsComplete[4] = true;
-  updateStepperTabs();
-  showToast('✅ Fiche publiée !');
 }
 
 function copierLienFiche() {
@@ -3132,6 +3212,229 @@ async function loadAnalytics() {
     wrap.style.display   = 'block';
   } catch(err) {
     status.textContent = '❌ Erreur chargement : ' + err.message;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// PAGE 6 — MES FICHES (GitHub)
+// ═══════════════════════════════════════════════════════
+function saveGhToken() {
+  var t = document.getElementById('gh-token-input').value.trim();
+  if (!t) return;
+  localStorage.setItem('expertimo_gh_token', t);
+  _GH_TOKEN = t;
+  document.getElementById('gh-token-status').textContent = '✅ Token enregistré.';
+  document.getElementById('gh-token-status').style.color = 'var(--success)';
+  loadFiches();
+}
+
+async function loadFiches() {
+  // Init token display
+  var inp = document.getElementById('gh-token-input');
+  var tokenStatus = document.getElementById('gh-token-status');
+  if (inp && _GH_TOKEN) {
+    inp.placeholder = '••••••••••••••••••••• (configuré)';
+    tokenStatus.textContent = '✅ Token configuré.';
+    tokenStatus.style.color = 'var(--success)';
+  }
+  var status = document.getElementById('fiches-status');
+  var wrap   = document.getElementById('fiches-table-wrap');
+  var tbody  = document.getElementById('fiches-tbody');
+  var empty  = document.getElementById('fiches-empty');
+  status.textContent = '⏳ Chargement depuis GitHub…';
+  status.style.display = 'block';
+  wrap.style.display   = 'none';
+  empty.style.display  = 'none';
+
+  try {
+    var r = await fetch('https://api.github.com/repos/' + _GH_REPO + '/contents/fiches', {
+      headers: { Authorization: 'token ' + _GH_TOKEN, Accept: 'application/vnd.github.v3+json' }
+    });
+    if (!r.ok) throw new Error('GitHub API : HTTP ' + r.status);
+    var files = await r.json();
+    if (!Array.isArray(files)) throw new Error('Réponse inattendue');
+
+    var htmlFiles = files.filter(function(f) { return f.name.endsWith('.html'); });
+    if (htmlFiles.length === 0) {
+      status.style.display = 'none';
+      empty.style.display  = 'block';
+      return;
+    }
+
+    tbody.innerHTML = '';
+    htmlFiles.forEach(function(f, idx) {
+      var label = f.name
+        .replace(/-FINAL\.html$/, '')
+        .replace(/\.html$/, '')
+        .replace(/-/g, ' ');
+      var tr = document.createElement('tr');
+      tr.style.background = idx % 2 === 0 ? '#fff' : '#f8fafc';
+      tr.innerHTML =
+        '<td style="padding:10px 14px;font-weight:600;">' + esc(label) + '</td>'
+        + '<td id="fiche-date-' + idx + '" style="padding:10px 14px;color:var(--muted);font-size:12px;">—</td>'
+        + '<td style="padding:10px 14px;text-align:center;white-space:nowrap;">'
+        +   '<a href="' + _GH_PAGES_BASE + encodeURIComponent(f.name) + '" target="_blank" rel="noopener" '
+        +      'class="btn btn-sm btn-outline" style="margin-right:6px;">👁️ Voir</a>'
+        +   '<button class="btn btn-sm" style="background:var(--accent);color:#fff" '
+        +           'onclick="modifierFiche(\'' + f.name.replace(/'/g, "\\'") + '\',\'' + f.sha + '\',\'' + (f.download_url||'').replace(/'/g, "\\'") + '\')">'
+        +     '✏️ Modifier'
+        +   '</button>'
+        + '</td>';
+      tbody.appendChild(tr);
+
+      // Load commit date asynchronously
+      (function(fidx, fname) {
+        fetch('https://api.github.com/repos/' + _GH_REPO + '/commits?path=fiches/' + encodeURIComponent(fname) + '&per_page=1', {
+          headers: { Authorization: 'token ' + _GH_TOKEN, Accept: 'application/vnd.github.v3+json' }
+        }).then(function(cr) { return cr.json(); }).then(function(commits) {
+          if (commits && commits[0] && commits[0].commit) {
+            var d = commits[0].commit.committer.date;
+            var cell = document.getElementById('fiche-date-' + fidx);
+            if (cell) {
+              try { cell.textContent = new Date(d).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+              catch(e) { cell.textContent = d; }
+            }
+          }
+        }).catch(function() {});
+      })(idx, f.name);
+    });
+
+    status.style.display = 'none';
+    wrap.style.display   = 'block';
+  } catch(err) {
+    status.textContent = '❌ ' + err.message;
+  }
+}
+
+async function modifierFiche(filename, sha, downloadUrl) {
+  showToast('⏳ Chargement de la fiche…');
+  try {
+    var r = await fetch(downloadUrl + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    var html = await r.text();
+
+    var data = null;
+
+    // 1. Try embedded JSON block (new fiches)
+    var jsonMatch = html.match(/<script[^>]*id="expertimo-data"[^>]*type="application\/json"[^>]*>([\s\S]*?)<\/script>/);
+    if (jsonMatch) {
+      try { data = JSON.parse(jsonMatch[1]); } catch(e) {}
+    }
+
+    // 2. Fallback: extract _sp_ vars via regex (old fiches)
+    if (!data) {
+      function xsp(name) {
+        var m = html.match(new RegExp('var ' + name + '\\s*=\\s*"((?:[^"\\\\]|\\\\.)*)"'));
+        return m ? m[1].replace(/\\"/g, '"').replace(/\\\\/g, '\\') : '';
+      }
+      var prixStr = xsp('_sp_prix').replace(/\s/g, '');
+      data = {
+        adresse:   xsp('_sp_adresse'),
+        prix:      parseFloat(prixStr) || 0,
+        surface:   parseFloat(xsp('_sp_surface').replace(',', '.')) || 0,
+        dpe:       xsp('_sp_dpe'),
+        chargesCopro: parseFloat(xsp('_sp_charges')) || 0,
+        taxeFonciere: parseFloat(xsp('_sp_tf')) || 0,
+        fort1: xsp('_sp_pf1'), fort2: xsp('_sp_pf2'), fort3: xsp('_sp_pf3'),
+        vig1:  xsp('_sp_vigi1'), vig2: xsp('_sp_vigi2'),
+        loyer: parseFloat(xsp('_sp_loyer')) || 0
+      };
+    }
+
+    // Switch to correct type
+    var type = data.type || 'appart';
+    switchType(type);
+    document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
+    var typeTab = document.getElementById('tab-' + type);
+    if (typeTab) typeTab.classList.add('active');
+
+    // Fill form fields
+    setV('adresse',          data.adresse || '');
+    setV('quartier',         data.quartier || '');
+    setV('surface_hab',      data.surface  || '');
+    setV('surface_carrez',   data.surfCarrez || '');
+    setV('prix_vente',       data.prix     || '');
+    setV('prix_vente_t',     data.prix     || '');
+    setV('charges_copro',    data.chargesCopro || '');
+    setV('taxe_fonciere',    data.taxeFonciere || '');
+    setV('taxe_fonciere_t',  data.taxeFonciere || '');
+    setV('nb_pieces',        data.pieces   || '');
+    setV('etage',            data.etage    || '');
+    setV('annee_construction', data.annee  || '');
+    setV('ref_mandat',       data.ref      || '');
+    setV('bien_score',       data.score    || '');
+    setV('bien_score_prest', data.scorePrest   || '');
+    setV('bien_score_secteur',data.scoreSecteur || '');
+    setV('bien_score_qp',    data.scoreQP  || '');
+    setV('bien_score_etat',  data.scoreEtat || '');
+    setV('bien_fort1',       data.fort1    || '');
+    setV('bien_fort2',       data.fort2    || '');
+    setV('bien_fort3',       data.fort3    || '');
+    setV('bien_vig1',        data.vig1     || '');
+    setV('bien_vig2',        data.vig2     || '');
+    setV('bien_vig3',        data.vig3     || '');
+    setV('loyer',            data.loyer    || '');
+    setV('bien_loyer_estime',data.loyer    || '');
+    setV('bien_mediane',     data.mediane  || '');
+    setV('bien_tension',     data.tension  || '');
+    setV('bien_delai',       data.delai    || '');
+    setV('bien_fourchette_basse', data.fourchetBasse || '');
+    setV('bien_fourchette_haute', data.fourchetHaute || '');
+    setV('bien_credit_duree',data.creditDuree  || '');
+    setV('bien_credit_apport',data.creditApport || '');
+    setV('bien_credit_taux_haut',   data.creditHaut   || '');
+    setV('bien_credit_taux_moyen',  data.creditMoyen  || '');
+    setV('bien_credit_taux_bas',    data.creditBas    || '');
+    setV('historique_libre', data.historiqueLibre || '');
+    setV('facture1_url',     data.facture1Url || '');
+    setV('facture2_url',     data.facture2Url || '');
+    setV('facture3_url',     data.facture3Url || '');
+    setV('bien_photo1_url',  data.photo1 || '');
+    setV('bien_photo2_url',  data.photo2 || '');
+    setV('bien_photo3_url',  data.photo3 || '');
+    setV('bien_photo4_url',  data.photo4 || '');
+    setV('bien_photo5_url',  data.photo5 || '');
+    setV('video_url',        data.videoUrl  || '');
+    setV('visite_url',       data.visiteUrl || '');
+    setV('charges_detail',   data.chargesDetail || '');
+
+    // DPE button
+    if (data.dpe) {
+      document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]').forEach(function(b) {
+        b.classList.remove('sel');
+        if (b.dataset.letter === data.dpe) b.classList.add('sel');
+      });
+    }
+
+    // Diagnostics
+    if (data.diags && Array.isArray(data.diags)) {
+      var diagKeys = ['amiante','plomb','termites','electricite','gaz','assain'];
+      data.diags.forEach(function(diag, i) {
+        var key = diagKeys[i];
+        if (!key) return;
+        setV('diag_' + key + '_status', diag.status || '');
+        setV('diag_' + key + '_result', diag.result || '');
+      });
+    }
+    setV('diag_carrez', data.diagCarrez || '');
+
+    // Renovations
+    if (data.renovations && Array.isArray(data.renovations)) {
+      data.renovations.forEach(function(row, i) {
+        setV('renov_annee_'   + (i+1), row.annee   || '');
+        setV('renov_montant_' + (i+1), row.montant || '');
+        setV('renov_desc_'    + (i+1), row.desc    || '');
+      });
+    }
+
+    // Remember which fiche we're editing
+    _editingFiche = { filename: filename, sha: sha };
+    _stepsComplete[2] = true;
+    showToast('✅ Fiche chargée — modifiez et régénérez.');
+    goToStep(2);
+  } catch(err) {
+    showToast('❌ Erreur chargement fiche : ' + err.message, true);
+    console.error(err);
   }
 }
 
