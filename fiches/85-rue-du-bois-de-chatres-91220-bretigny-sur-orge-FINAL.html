@@ -28,12 +28,12 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>85 rue du Bois de Châtres 91220 Bretigny sur Orge  · Espace Acheteur Privé · Expertimo</title>
+<title>286 avenue aristide briand 92220 Bagneux · Espace Acheteur Privé · Expertimo</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&amp;family=DM+Sans:wght@300;400;500&amp;family=DM+Mono:wght@300;400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#f4f1ea;--card:#fff;--ink:#111;--gold:#b8923a;--gold2:#b8923a;--cream:#ede9df;--muted:#888880;--border:#ddd8cc;--vert:#2d6a4f;--rouge:#c0392b;--dark:#141414;}
+:root{--bg:#f4f1ea;--card:#fff;--ink:#111;--gold:#c9a84c;--gold2:#c9a84c;--cream:#ede9df;--muted:#888880;--border:#ddd8cc;--vert:#2d6a4f;--rouge:#c0392b;--dark:#1a3a5c;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
@@ -284,7 +284,7 @@ textarea.field{min-height:95px;resize:vertical;}
   .ptrack{gap:0;}
 }
 </style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style></head>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script>document.addEventListener("DOMContentLoaded",function(){var mapEl=document.getElementById("map")||document.querySelector(".map-wrap")||document.querySelector("[id*='map']");if(mapEl&&!mapEl.querySelector("#map-loading-ov")){mapEl.style.position="relative";var ov=document.createElement("div");ov.id="map-loading-ov";ov.style.cssText="position:absolute;inset:0;background:rgba(244,246,249,.88);display:flex;align-items:center;justify-content:center;z-index:999;font-size:13px;color:#6b7a8d;border-radius:6px;pointer-events:none;";ov.textContent="🗺️ Chargement de la carte…";mapEl.appendChild(ov);}});</script></head>
 <body>
 
 
@@ -293,19 +293,28 @@ textarea.field{min-height:95px;resize:vertical;}
   <img id="lb-img" src="" alt="">
 </div>
 
-<header class="header">
-  <div class="header-inner">
+<header class="header" style="position:relative;">
+  <!-- Logo Privency top-left -->
+  <div style="position:absolute;top:14px;left:20px;display:flex;align-items:center;gap:8px;z-index:10;">
+    <svg viewBox="0 0 60 46" width="24" height="18" style="display:inline-block;">
+      <polygon points="30,0 60,23 30,46 0,23" fill="none" stroke="#b8923a" stroke-width="1.5"></polygon>
+      <polygon points="30,10 48,23 30,36 12,23" fill="#b8923a" opacity="0.12"></polygon>
+      <text x="30" y="27" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="400" fill="#b8923a" letter-spacing="1.5">PV</text>
+    </svg>
+    <span style="font-family:'Cormorant Garamond',serif;font-size:20px;color:#b8923a;font-weight:300;letter-spacing:.06em;">Privency</span>
+  </div>
+  <div class="header-inner" style="padding-top:40px;">
     <div style="flex:1;max-width:55%;">
-      <div class="hbadge">Espace Acheteur Privé · Expertimo · Réf. ref-mandat</div>
-      <h1 class="htitle">85 rue du Bois de Châtres 91220 Bretigny sur Orge <br><span style="color:var(--gold);font-style:italic;"></span></h1>
-      <p class="hsub">Maison de 250 m² · DPE F</p>
+      <div class="hbadge"><svg viewBox="0 0 28 22" width="20" height="16" style="display:inline-block;vertical-align:middle;margin-right:6px;"><polygon points="14,0 28,11 14,22 0,11" fill="none" stroke="#b8923a" stroke-width="1.2"></polygon><polygon points="14,5 23,11 14,17 5,11" fill="#b8923a" opacity="0.15"></polygon><text x="14" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="8" fill="#b8923a" letter-spacing="1">PV</text></svg>PRIVENCY · Votre Espace Acheteur Privé</div>
+      <h1 class="htitle">286 avenue aristide briand 92220 Bagneux<br><span style="color:var(--gold);font-style:italic;"></span></h1>
+      <p class="hsub">Appartement de 250 m² · DPE F</p>
     </div>
     <div class="price-card">
       <div class="plabel">Prix affiché</div>
       <div class="pamount">1 200 000 €</div>
       <div class="pmeta">Frais d'agence inclus · Données temps réel</div>
       <div class="hkpis">
-        <div class="hkpi"><div class="hl">Score qualité</div><div class="hv" id="h-score" style="font-size:32px;">9,3/10</div></div>
+        <div class="hkpi"><div class="hl">Score qualité</div><div class="hv" id="h-score" style="font-size:32px;">9/10</div></div>
         <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe" style="font-size:32px;">F</div></div>
       </div>
     </div>
@@ -331,8 +340,8 @@ textarea.field{min-height:95px;resize:vertical;}
 <div>
   <div class="card">
     <div class="lbl">Le bien</div>
-    <h2 class="stitle">85 rue du Bois de Châtres 91220 Bretigny sur Orge </h2>
-    <p class="ssub">Maison de 250 m² · DPE F</p>
+    <h2 class="stitle">286 avenue aristide briand 92220 Bagneux</h2>
+    <p class="ssub">Appartement de 250 m² · DPE F</p>
     <div class="gallery" id="main-gallery">
     <img id="gallery-photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951050/TorresSalaun_OlivierLoison-OlivierReynes-20_ylci3n.jpg" alt="Vue principale" class="gm" onclick="openLightbox(this.src)">
     <img id="gallery-photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951049/TorresSalaun_OlivierLoison-OlivierReynes-15_u5kaok.jpg" alt="Photo 2" onclick="openLightbox(this.src)">
@@ -352,18 +361,18 @@ textarea.field{min-height:95px;resize:vertical;}
   </div>
   <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>—</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>—</li></ul></div></div><div class="score-box">
   <div class="lbl" style="color:#6a6358;">Score Qualité du Bien</div>
-  <div class="score-num">9,3</div>
-  <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;">Score 9,3/10. DPE F. Prix à confirmer.</p>
-  <div class="sline"><span>Prestations &amp; standing</span><div><strong>10/10</strong><div class="sbar"><div class="sbar-fill" style="width:100%"></div></div></div></div>
-  <div class="sline"><span>Secteur &amp; environnement</span><div><strong>9/10</strong><div class="sbar"><div class="sbar-fill" style="width:90%"></div></div></div></div>
+  <div class="score-num">9</div>
+  <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;">Score 9/10. DPE F. Prix à confirmer.</p>
+  <div class="sline"><span>Prestations &amp; standing</span><div><strong>8/10</strong><div class="sbar"><div class="sbar-fill" style="width: 80%;"></div></div></div></div>
+  <div class="sline"><span>Secteur &amp; environnement</span><div><strong>8/10</strong><div class="sbar"><div class="sbar-fill" style="width: 80%;"></div></div></div></div>
   <div class="sline"><span>Rapport qualité/prix</span><div><strong>8/10</strong><div class="sbar"><div class="sbar-fill" style="width:80%"></div></div></div></div>
-  <div class="sline"><span>État général</span><div><strong>10/10</strong><div class="sbar"><div class="sbar-fill" style="width:100%"></div></div></div></div>
+  <div class="sline"><span>État général</span><div><strong>8/10</strong><div class="sbar"><div class="sbar-fill" style="width: 80%;"></div></div></div></div>
 </div>
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
+  <div class="cons-avatar" style="background-image: url(&quot;https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg&quot;); background-size: cover; background-position: center top;"></div>
   <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · _sp_reseau</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 06 85 68 46 13</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
@@ -449,9 +458,9 @@ textarea.field{min-height:95px;resize:vertical;}
 
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
+  <div class="cons-avatar" style="background-image: url(&quot;https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg&quot;); background-size: cover; background-position: center top;"></div>
   <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · _sp_reseau</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 06 85 68 46 13</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
@@ -469,7 +478,7 @@ textarea.field{min-height:95px;resize:vertical;}
   <div class="card">
     <div class="lbl">Historique du bien</div>
     <h2 class="stitle">Chronologie &amp; travaux</h2>
-    <div id="historique-libre" style="font-size:13px;line-height:1.9;font-weight:300;white-space:pre-line;color:var(--ink);padding:8px 0;">—</div>
+    <div id="historique-libre" style="font-size:13px;line-height:1.9;font-weight:300;white-space:pre-line;color:var(--ink);padding:8px 0;"></div>
     <div id="factures-bloc" style="margin-top:20px;display:none;">
       <div class="lbl">Factures &amp; devis travaux</div>
       <div id="factures-liens" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
@@ -486,7 +495,7 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="lbl">Diagnostics réglementaires</div>
     <h2 class="stitle">Diagnostics Techniques</h2>
     <p class="ssub">Résultats officiels des diagnostics réglementaires</p>
-    <div class="diag-grid" id="diag-grid"><div class="diag-card diag-"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">Non soumis — bâtiment après 1997</div></div><div class="diag-card diag-ok"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Absence de plomb détectée</div></div><div class="diag-card diag-ok"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Absence de termites constatée</div></div><div class="diag-card diag-ok"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">Installation intérieure sans anomalie</div></div><div class="diag-card diag-ok"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Installation sans anomalie</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Raccordement au réseau collectif conforme</div></div></div>
+    <div class="diag-grid" id="diag-grid"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result"></div></div><div class="diag-card diag-ok"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result"></div></div><div class="diag-card diag-ok"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result"></div></div><div class="diag-card diag-ok"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result"></div></div><div class="diag-card diag-ok"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result"></div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result"></div></div></div>
   </div>
 </div>
 </div></section>
@@ -582,9 +591,9 @@ textarea.field{min-height:95px;resize:vertical;}
   </div>
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar">OL</div>
+  <div class="cons-avatar" style="background-image: url(&quot;https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg&quot;); background-size: cover; background-position: center top;"></div>
   <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · _sp_reseau</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 06 85 68 46 13</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
@@ -657,9 +666,9 @@ textarea.field{min-height:95px;resize:vertical;}
     </div>
   </div>
   <div class="cons-card">
-  <div class="cons-avatar">OL</div>
+  <div class="cons-avatar" style="background-image: url(&quot;https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg&quot;); background-size: cover; background-position: center top;"></div>
   <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role">Mandataire immobilier · _sp_reseau</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 06 85 68 46 13</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
@@ -844,7 +853,7 @@ function submitOffer() {
     method: 'POST',
     headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
     body: JSON.stringify({
-      _subject: "Offre d'achat — 85 rue du Bois de Châtres 91220 Bretigny sur Orge  — " + montant + ' €',
+      _subject: "Offre d'achat — 286 avenue aristide briand 92220 Bagneux — " + montant + ' €',
       montant: montant + ' €',
       financement: financement,
       apport: apport + ' €',
@@ -852,7 +861,7 @@ function submitOffer() {
       nom: nom,
       email: email,
       message: msg,
-      bien: "85 rue du Bois de Châtres 91220 Bretigny sur Orge ",
+      bien: "286 avenue aristide briand 92220 Bagneux",
       reference: "ref-mandat",
       prix_affiche: "260 000 €"
     })
@@ -888,10 +897,10 @@ function unlockDocs() {
       method: 'POST',
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
       body: JSON.stringify({
-        _subject: "Demande de documents — 85 rue du Bois de Châtres 91220 Bretigny sur Orge ",
+        _subject: "Demande de documents — 286 avenue aristide briand 92220 Bagneux",
         nom: nom,
         email: email,
-        bien: "85 rue du Bois de Châtres 91220 Bretigny sur Orge ",
+        bien: "286 avenue aristide briand 92220 Bagneux",
         reference: "ref-mandat",
         demande: "Acces aux documents du bien"
       })
@@ -951,9 +960,9 @@ var _mapInit = false;
 function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
-  var adresse = "85 rue du Bois de Châtres 91220 Bretigny sur Orge ";
-  var latFallback = parseFloat("") || 0;
-  var lngFallback = parseFloat("") || 0;
+  var adresse = "286 avenue aristide briand 92220 Bagneux";
+  var latFallback = parseFloat("_sp_lat") || 0;
+  var lngFallback = parseFloat("_sp_lng") || 0;
 
   function buildMap(lat, lng) {
     var map = L.map('map-quartier', {cursor:'default'}).setView([lat, lng], 15);
@@ -961,7 +970,7 @@ function initMapQuartier() {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#141414;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #b8923a;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
-    L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>85 rue du Bois de Châtres 91220 Bretigny sur Orge ").openPopup();
+    L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>286 avenue aristide briand 92220 Bagneux").openPopup();
     var overpassProxies = [
       'https://overpass.kumi.systems/api/interpreter',
       'https://overpass.private.coffee/api/interpreter',
@@ -1083,7 +1092,7 @@ function filterMap(cat, btn) {
 var _aiOpen = false;
 var _aiMessages = [];
 var _aiInit = false;
-var _sp_adresse   = "85 rue du Bois de Châtres 91220 Bretigny sur Orge ";
+var _sp_adresse   = "286 avenue aristide briand 92220 Bagneux";
 var _sp_prix      = "1 200 000";
 var _sp_surface   = "250";
 var _sp_etage     = "";
@@ -1097,9 +1106,11 @@ var _sp_pf3       = "";
 var _sp_vigi1     = "";
 var _sp_vigi2     = "";
 var _sp_loyer     = "10000";
+var _sp_lat       = "";
+var _sp_lng       = "";
 var _sp_agent     = "Olivier LOISON";
 var _sp_tel       = "06 85 68 46 13";
-var _sp_reseau    = "Expertimo";
+var Expertimo    = "Expertimo";
 
 function toggleAI() {
   _aiOpen = !_aiOpen;
@@ -1203,11 +1214,11 @@ document.addEventListener('DOMContentLoaded', function(){
   Tout savoir sur ce bien
 </div>
 
-<div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;z-index:1001;width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
+<div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;left:24px;z-index:1001;width:calc(100vw - 48px);max-width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
   <div style="background:var(--dark);color:var(--gold);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
     <div>
       <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;">Assistant</div>
-      <div style="font-size:13px;font-weight:500;margin-top:2px;">85 rue du Bois de Châtres 91220 Bretigny sur Orge </div>
+      <div style="font-size:13px;font-weight:500;margin-top:2px;">286 avenue aristide briand 92220 Bagneux</div>
     </div>
     <button onclick="toggleAI()" style="background:none;border:none;color:var(--gold);font-size:20px;cursor:pointer;line-height:1;">×</button>
   </div>
@@ -1221,9 +1232,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <!-- ═══ FOOTER NVP+ ═══ -->
 <footer style="text-align:center;padding:24px 20px;background:#141414;border-top:1px solid rgba(184,146,58,.15);">
-  <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#b8923a;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">_sp_reseau</div>
+  <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#b8923a;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
   <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;">L'immobilier avec l'expertise d'un professionnel</div>
-  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'DM Sans',sans-serif;" id="footer-agent-credit">Analyse réalisée par Olivier Loison · Mandataire _sp_reseau · olivier.loison@expertimo.com</div>
+  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'DM Sans',sans-serif;" id="footer-agent-credit">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</div>
 </footer>
 
 
@@ -1269,4 +1280,33 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 
-</body></html>
+<script id="expertimo-data" type="application/json">{"ref":"ref-mandat","type":"appart","etage":"","adresse":"286 avenue aristide briand 92220 Bagneux","quartier":"","annee":"","description":"Appartement de 250 m² · DPE F","surface":250,"surfCarrez":0,"pieces":"","dpe":"F","prix":1200000,"prixm2":4800,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":10000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":0,"score":"9","scorePrest":"8","scoreSecteur":"8","scoreQP":"8","scoreEtat":"8","fort1":"","fort2":"","fort3":"","vig1":"","vig2":"","vig3":"","photo1":"","photo2":"","photo3":"","photo4":"","photo5":"","videoUrl":"","visiteUrl":"","dvf":[],"fourchetBasse":1080000,"fourchetHaute":1320000,"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","facture1Url":"","facture2Url":"","facture3Url":"","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"diagCarrez":"","agentNom":"Olivier LOISON","agentReseau":"Expertimo","agentTel":"06 85 68 46 13","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"https://calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSecteur":"Essonne 91","agentPrimary":"#1a3a5c","agentAccent":"#c9a84c","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","renovations":[],"nb_chambres":"","nb_sdb":"","nb_sde":"","nb_wc":"","nb_wc_sep":"","nb_etages":"","annee_construction_m":"","standard_general":"","surface_terrain":"","syndic_nom":"","syndic_copro":"","travaux_ag_detail":"","travaux_recents_immeuble":"","travaux_recents":"","chauf_annee":"","taxe_hab":0,"charges_mensuelles":0,"plus_appartement":"","fourchetMilieu":0,"dpeValeur":0,"gesLettre":"","gesValeur":0,"parking_int":0,"parking_ext":0,"parking_box":0,"equip_autre":"","vigilances_texte":"","services_prox":"","voisinage":"","proprio_prenom":"","proprio_nom":"","date_r1":"","tel_fixe":"","tel_mobile":"","email_proprio":"","raison_vente":"","vente_depuis":"","delai_vente_prop":"","cles_chez":"","agences":"","annee_achat":"","prix_achat":"","nb_visites":"","nb_offres":"","prix_offres":"","scenario_montant":"","scenario_reponse":"","zone_plu":"","superficie_totale":"","superficie_constructible":"","forme_terrain":"","acces_terrain":"","cos_ces":"","hauteur_max":"","projet_terrain":"","_rawState":{"dpe_dpe":"F","_pieces_table":[["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""]]}}</script><script>(function() {
+  var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
+  var params = new URLSearchParams(window.location.search);
+  var client = params.get('client') || 'inconnu';
+  var adresse = document.title || window.location.pathname;
+  function track(evenement) {
+    fetch(SUPABASE_URL + '/rest/v1/fiche_views', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      },
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement })
+    });
+  }
+  track('fiche_ouverte');
+  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
+    });
+  });
+  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
+    el.addEventListener('click', function() { track('credit_simule'); });
+  });
+  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
+    el.addEventListener('click', function() { track('offre_soumise'); });
+  });
+})();</script></body></html>
