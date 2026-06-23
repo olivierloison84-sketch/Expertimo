@@ -3483,7 +3483,7 @@ async function loadFiches() {
         +     '✏️ Modifier'
         +   '</button>'
         +   '<button class="btn btn-sm" style="background:#c0392b;color:#fff;" '
-        +           'onclick="supprimerFiche(\'' + f.name.replace(/'/g, "\\'") + '\',\'' + f.sha + '\')">'
+        +           'onclick="supprimerFiche(\'' + f.name.replace(/'/g, "\\'") + '\')">'
         +     '🗑️ Supprimer'
         +   '</button>'
         + '</td>';
@@ -3513,22 +3513,22 @@ async function loadFiches() {
   }
 }
 
-async function supprimerFiche(filename, sha) {
+async function supprimerFiche(filename) {
   if (!confirm('⚠️ Supprimer cette fiche ? Cette action la supprime de GitHub Pages définitivement.')) return;
   if (!_GH_TOKEN) { alert('Token GitHub manquant.'); return; }
+  var apiUrl = 'https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename);
+  var headers = { Authorization: 'token ' + _GH_TOKEN, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
   try {
-    var r = await fetch('https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename), {
+    // 1. Fetch SHA actuel
+    var shaRes = await fetch(apiUrl, { headers: headers });
+    if (!shaRes.ok) throw new Error('Fichier introuvable sur GitHub (HTTP ' + shaRes.status + ')');
+    var shaData = await shaRes.json();
+    var currentSha = shaData.sha;
+    // 2. Supprimer avec le SHA frais
+    var r = await fetch(apiUrl, {
       method: 'DELETE',
-      headers: {
-        Authorization: 'token ' + _GH_TOKEN,
-        Accept: 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        message: 'suppr: fiche ' + filename,
-        sha: sha,
-        branch: 'main'
-      })
+      headers: headers,
+      body: JSON.stringify({ message: 'suppr: fiche ' + filename, sha: currentSha, branch: 'main' })
     });
     if (r.ok) {
       showToast('✅ Fiche supprimée de GitHub.');
@@ -3538,7 +3538,7 @@ async function supprimerFiche(filename, sha) {
       alert('❌ Erreur ' + r.status + ' : ' + (err.message || 'inconnue'));
     }
   } catch(e) {
-    alert('❌ Erreur réseau : ' + e.message);
+    alert('❌ Erreur : ' + e.message);
   }
 }
 
