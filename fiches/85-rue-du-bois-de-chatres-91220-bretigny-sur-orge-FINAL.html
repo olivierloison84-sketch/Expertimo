@@ -427,9 +427,9 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="card">
       <div class="lbl">Simulateur investisseur temps réel</div>
       <h2 class="stitle">Rentabilité interactive</h2>
-      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 300 € nu / 1 400 € meublé. Simulez votre rentabilité ci-dessous.</div>
+      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 10 000 € nu. Simulez votre rentabilité ci-dessous.</div>
       <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="1080000" max="1320000" value="1200000" step="500" oninput="calc()"><div class="sval" id="v-prix">1 200 000 €</div></div>
-      <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="650" max="3250" value="1300" step="10" oninput="calc()"><div class="sval" id="v-loyer">1300 €</div></div>
+      <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="5000" max="25000" value="10000" step="10" oninput="calc()"><div class="sval" id="v-loyer">10000 €</div></div>
       <div class="srow"><div class="slbl">Apport<small>% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
       <div class="srow"><div class="slbl">Taux crédit<small>Oct. 2025 : 3,22%</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
       <div class="srow"><div class="slbl">Durée<small>Années</small></div><input type="range" id="duree" min="5" max="25" value="20" step="1" oninput="calc()"><div class="sval" id="v-duree">20 ans</div></div>
@@ -1096,7 +1096,7 @@ var _sp_pf2       = "";
 var _sp_pf3       = "";
 var _sp_vigi1     = "";
 var _sp_vigi2     = "";
-var _sp_loyer     = "0";
+var _sp_loyer     = "10000";
 var _sp_agent     = "Olivier LOISON";
 var _sp_tel       = "06 85 68 46 13";
 var _sp_reseau    = "Expertimo";
