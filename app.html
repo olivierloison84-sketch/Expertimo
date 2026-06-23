@@ -3514,9 +3514,7 @@ async function loadFiches() {
 }
 
 async function supprimerFiche(filename, sha) {
-  if (!confirm('⚠️ Supprimer "' + filename + '" ?
-
-Cette action supprime la fiche de GitHub Pages définitivement.')) return;
+  if (!confirm('⚠️ Supprimer cette fiche ? Cette action la supprime de GitHub Pages définitivement.')) return;
   if (!_GH_TOKEN) { alert('Token GitHub manquant.'); return; }
   try {
     var r = await fetch('https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename), {
