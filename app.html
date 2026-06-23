@@ -278,7 +278,8 @@ textarea { resize: vertical; min-height: 60px; }
 ═══════════════════════════════════════ */
 @media(max-width: 700px) {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
-  .step-tab span.step-label { display: none; }
+  .step-tab span.step-label { display: block; font-size: 9px; margin-top: 2px; }
+  .step-tab span.step-label-full { display: none; }
   .agent-preview { flex-direction: column; text-align: center; }
 }
 @media(max-width: 480px) {
@@ -504,27 +505,27 @@ textarea { resize: vertical; min-height: 60px; }
 <nav class="stepper" id="stepper">
   <div class="step-tab active" id="tab-1" onclick="goToStep(1)">
     <span class="step-num">1</span>
-    <span class="step-label">Profil agent</span>
+    <span class="step-label">Profil</span>
   </div>
   <div class="step-tab" id="tab-2" onclick="goToStep(2)">
     <span class="step-num">2</span>
-    <span class="step-label">Saisie du bien</span>
+    <span class="step-label">Bien</span>
   </div>
   <div class="step-tab" id="tab-3" onclick="goToStep(3)">
     <span class="step-num">3</span>
-    <span class="step-label">Génération</span>
+    <span class="step-label">Générer</span>
   </div>
   <div class="step-tab" id="tab-4" onclick="goToStep(4)">
     <span class="step-num">4</span>
-    <span class="step-label">Publication</span>
+    <span class="step-label">Publier</span>
   </div>
   <div class="step-tab" id="tab-5" onclick="goToStep(5)">
     <span class="step-num" style="background:var(--muted);font-size:14px;">📊</span>
-    <span class="step-label">Mes stats</span>
+    <span class="step-label">Stats</span>
   </div>
   <div class="step-tab" id="tab-6" onclick="goToStep(6)">
     <span class="step-num" style="background:var(--muted);font-size:14px;">📂</span>
-    <span class="step-label">Mes fiches</span>
+    <span class="step-label">Fiches</span>
   </div>
   <a href="/app.html?new=1" style="display:flex;align-items:center;gap:10px;padding:15px 24px;background:#b8923a;color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;margin-left:auto;">✚ Nouvelle fiche</a>
 </nav>
