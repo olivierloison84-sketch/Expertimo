@@ -869,34 +869,19 @@ function generate() {
   if (!templateHTML) { alert('Charger d\'abord le template FINAL.html (étape 3).'); return; }
   var d = getFormData();
   if (!d.adresse) { alert('L\'adresse est obligatoire (étape 2).'); return; }
-  // Fetch GPS coords then generate
-  fetchGPS(d.adresse, function() {
-    try {
-      var out = injectData(templateHTML, d);
-      _lastGeneratedHTML = out;
-      _lastGeneratedSlug = slugify(d.adresse);
-      downloadHTML(out, _lastGeneratedSlug + '-FINAL.html');
-      var pushArea = document.getElementById('gh-push-area');
-      pushArea.style.display = 'flex';
-      document.getElementById('gh-push-status').innerHTML = '';
-      document.getElementById('gh-push-btn').disabled = false;
-    } catch(err) {
-      alert('Erreur génération :\n' + err.message);
-      console.error(err);
-    }
-  });
-}
-
-function fetchGPS(adresse, cb) {
-  if (window._gpsCache && window._gpsCache.adresse === adresse) { cb(); return; }
-  fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(adresse) + '&limit=1')
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      if (data && data[0]) {
-        window._gpsCache = { adresse: adresse, lat: data[0].lat, lng: data[0].lon };
-      }
-      cb();
-    }).catch(function(){ cb(); });
+  try {
+    var out = injectData(templateHTML, d);
+    _lastGeneratedHTML = out;
+    _lastGeneratedSlug = slugify(d.adresse);
+    downloadHTML(out, _lastGeneratedSlug + '-FINAL.html');
+    var pushArea = document.getElementById('gh-push-area');
+    pushArea.style.display = 'flex';
+    document.getElementById('gh-push-status').innerHTML = '';
+    document.getElementById('gh-push-btn').disabled = false;
+  } catch(err) {
+    alert('Erreur génération :\n' + err.message);
+    console.error(err);
+  }
 }
 
 function previewOutput() {
