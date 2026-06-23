@@ -869,19 +869,34 @@ function generate() {
   if (!templateHTML) { alert('Charger d\'abord le template FINAL.html (étape 3).'); return; }
   var d = getFormData();
   if (!d.adresse) { alert('L\'adresse est obligatoire (étape 2).'); return; }
-  try {
-    var out = injectData(templateHTML, d);
-    _lastGeneratedHTML = out;
-    _lastGeneratedSlug = slugify(d.adresse);
-    downloadHTML(out, _lastGeneratedSlug + '-FINAL.html');
-    var pushArea = document.getElementById('gh-push-area');
-    pushArea.style.display = 'flex';
-    document.getElementById('gh-push-status').innerHTML = '';
-    document.getElementById('gh-push-btn').disabled = false;
-  } catch(err) {
-    alert('Erreur génération :\n' + err.message);
-    console.error(err);
-  }
+  // Fetch GPS coords then generate
+  fetchGPS(d.adresse, function() {
+    try {
+      var out = injectData(templateHTML, d);
+      _lastGeneratedHTML = out;
+      _lastGeneratedSlug = slugify(d.adresse);
+      downloadHTML(out, _lastGeneratedSlug + '-FINAL.html');
+      var pushArea = document.getElementById('gh-push-area');
+      pushArea.style.display = 'flex';
+      document.getElementById('gh-push-status').innerHTML = '';
+      document.getElementById('gh-push-btn').disabled = false;
+    } catch(err) {
+      alert('Erreur génération :\n' + err.message);
+      console.error(err);
+    }
+  });
+}
+
+function fetchGPS(adresse, cb) {
+  if (window._gpsCache && window._gpsCache.adresse === adresse) { cb(); return; }
+  fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(adresse) + '&limit=1')
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      if (data && data[0]) {
+        window._gpsCache = { adresse: adresse, lat: data[0].lat, lng: data[0].lon };
+      }
+      cb();
+    }).catch(function(){ cb(); });
 }
 
 function previewOutput() {
@@ -927,6 +942,10 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
   html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
+  // GPS coordinates (pre-fetched and cached)
+  var gps = window._gpsCache || {};
+  html = replaceSp(html, '_sp_lat', gps.lat || '');
+  html = replaceSp(html, '_sp_lng', gps.lng || '');
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
 
   // Address (the template may have it as literal string in JS)
