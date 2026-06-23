@@ -1066,13 +1066,14 @@ textarea { resize: vertical; min-height: 60px; }
   <div class="card-header">📸 Photos du bien</div>
   <div class="card-body">
     <div class="photo-drop" onclick="document.getElementById('photo_input').click()">
-      📁 Cliquez pour ajouter des photos (JPEG, PNG, HEIC…)
-      <br><span class="text-sm mt-8" style="display:block">Vous pouvez sélectionner plusieurs fichiers à la fois</span>
+      📁 Cliquez pour ajouter des photos depuis votre ordinateur (JPEG, PNG, HEIC…)
+      <br><span class="text-sm mt-8" style="display:block">Les photos sont uploadées automatiquement · Vous pouvez aussi coller des URLs ci-dessous</span>
     </div>
     <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
+    <div id="photo_upload_status" style="font-size:12px;color:var(--muted);margin-top:8px;display:none;"></div>
     <div class="photo-grid" id="photo_grid"></div>
     <div class="section-title mt-16">URLs photos pour la fiche acheteur</div>
-    <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
+    <p class="hint" style="margin-bottom:8px">Remplies automatiquement après upload · Vous pouvez aussi coller des URLs Cloudinary directement.</p>
     <div class="grid-3">
       <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
       <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
@@ -1903,23 +1904,72 @@ function switchType(type) {
 // ═══════════════════════════════════════════════════════
 // STEP 2 — PHOTOS
 // ═══════════════════════════════════════════════════════
+// ── Cloudinary config ──
+var _CLD_CLOUD  = 'dif0ikaj1';
+var _CLD_PRESET = 'privency_upload';
+
 function addPhotos(input) {
-  Array.from(input.files).forEach(function(f) {
-    var reader=new FileReader();
-    reader.onload=function(e) { _photos.push({dataUrl:e.target.result,caption:''}); renderPhotos(); };
+  var files = Array.from(input.files);
+  input.value = '';
+  if (!files.length) return;
+  var statusEl = document.getElementById('photo_upload_status');
+  statusEl.style.display = 'block';
+  statusEl.textContent = '⏳ Upload en cours… 0/' + files.length;
+  var done = 0;
+  files.forEach(function(f) {
+    // Aperçu immédiat
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var idx = _photos.length;
+      _photos.push({ dataUrl: e.target.result, url: '', caption: '' });
+      renderPhotos();
+      // Upload Cloudinary
+      var fd = new FormData();
+      fd.append('file', f);
+      fd.append('upload_preset', _CLD_PRESET);
+      fd.append('folder', 'privency');
+      fetch('https://api.cloudinary.com/v1_1/' + _CLD_CLOUD + '/image/upload', {
+        method: 'POST', body: fd
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.secure_url) {
+          _photos[idx].url = data.secure_url;
+          // Remplir le prochain champ URL libre
+          for (var n = 1; n <= 5; n++) {
+            var el = document.getElementById('bien_photo' + n + '_url');
+            if (el && !el.value) { el.value = data.secure_url; break; }
+          }
+        }
+        done++;
+        statusEl.textContent = done < files.length
+          ? '⏳ Upload en cours… ' + done + '/' + files.length
+          : '✅ ' + done + ' photo(s) uploadée(s) sur Cloudinary';
+        scheduleDraftSave();
+      })
+      .catch(function() {
+        done++;
+        statusEl.textContent = '⚠️ Erreur upload photo ' + (idx+1);
+      });
+    };
     reader.readAsDataURL(f);
-  }); input.value='';
+  });
 }
+
 function escAttr(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function renderPhotos() {
-  var grid=document.getElementById('photo_grid'); if(!grid) return; grid.innerHTML='';
-  _photos.forEach(function(p,i) {
-    var div=document.createElement('div'); div.className='photo-thumb';
-    div.innerHTML='<img src="'+p.dataUrl+'" alt="Photo '+(i+1)+'">'+'<button class="del-photo" onclick="removePhoto('+i+')">✕</button>'+'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" oninput="_photos['+i+'].caption=this.value"></div>';
+  var grid = document.getElementById('photo_grid'); if (!grid) return; grid.innerHTML = '';
+  _photos.forEach(function(p, i) {
+    var src = p.url || p.dataUrl || '';
+    var div = document.createElement('div'); div.className = 'photo-thumb';
+    div.innerHTML = '<img src="' + src + '" alt="Photo ' + (i+1) + '">'
+      + (p.url ? '<span style="position:absolute;bottom:28px;left:4px;background:#2e7d32;color:#fff;font-size:9px;padding:1px 5px;border-radius:4px;">☁ Cloudinary</span>' : '<span style="position:absolute;bottom:28px;left:4px;background:#e65100;color:#fff;font-size:9px;padding:1px 5px;border-radius:4px;">⏳ upload…</span>')
+      + '<button class="del-photo" onclick="removePhoto(' + i + ')">✕</button>'
+      + '<div class="photo-caption"><input type="text" value="' + escAttr(p.caption) + '" placeholder="Légende…" oninput="_photos[' + i + '].caption=this.value"></div>';
     grid.appendChild(div);
   }); scheduleDraftSave();
 }
-function removePhoto(i) { _photos.splice(i,1); renderPhotos(); }
+function removePhoto(i) { _photos.splice(i, 1); renderPhotos(); }
 
 // ═══════════════════════════════════════════════════════
 // STEP 2 — DVF API
