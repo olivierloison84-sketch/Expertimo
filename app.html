@@ -1445,9 +1445,11 @@ textarea { resize: vertical; min-height: 60px; }
       <div id="gh-token-bloc" style="margin-bottom:16px;padding:12px 16px;background:#f8fafc;border:1.5px solid var(--border);border-radius:var(--radius);">
         <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px;">🔑 Token GitHub (stocké localement)</label>
         <div style="display:flex;gap:8px;align-items:center;">
-          <input type="password" id="gh-token-input" placeholder="ghp_…" style="flex:1;font-size:13px;"
-                 oninput="document.getElementById('gh-token-save').disabled=!this.value.trim()">
-          <button id="gh-token-save" class="btn btn-sm btn-primary" onclick="saveGhToken()" disabled>Enregistrer</button>
+          <input type="text" id="gh-token-input" placeholder="ghp_…" style="flex:1;font-size:13px;"
+                 oninput="document.getElementById('gh-token-save').disabled=!this.value.trim()"
+                 onpaste="setTimeout(function(){document.getElementById('gh-token-save').disabled=!document.getElementById('gh-token-input').value.trim();},100)"
+                 onchange="document.getElementById('gh-token-save').disabled=!this.value.trim()">
+          <button id="gh-token-save" class="btn btn-sm btn-primary" onclick="saveGhToken()">Enregistrer</button>
         </div>
         <p id="gh-token-status" class="hint" style="margin-top:5px;"></p>
       </div>
