@@ -4088,8 +4088,12 @@ async function remplirFormulaireAvecData(data) {
 
   // Restore checkboxes/radios/ratings LAST — after all DOM resets are done
   setTimeout(function() {
-    if (data._rawState) restoreRawFormState(data._rawState);
-  }, 1000);
+    console.log('[remplir] _rawState présent ?', !!data._rawState, '— nb clés:', data._rawState ? Object.keys(data._rawState).length : 0);
+    if (data._rawState) {
+      restoreRawFormState(data._rawState);
+      console.log('[remplir] restoreRawFormState appelé');
+    }
+  }, 1500);
 }
 
 function refreshStep4Summary() {
