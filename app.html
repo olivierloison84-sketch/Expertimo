@@ -3581,8 +3581,8 @@ async function supprimerFiche(filename) {
       body: JSON.stringify({ message: 'suppr: fiche ' + filename, sha: currentSha, branch: 'main' })
     });
     if (r.ok) {
-      showToast('✅ Fiche supprimée de GitHub.');
-      loadFiches();
+      showToast('✅ Fiche supprimée — actualisation dans 3 secondes…');
+      setTimeout(function() { loadFiches(); }, 3000);
     } else {
       var err = await r.json();
       alert('❌ Erreur ' + r.status + ' : ' + (err.message || 'inconnue'));
