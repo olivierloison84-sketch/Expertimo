@@ -3178,8 +3178,7 @@ async function loadFiches() {
         +           'onclick="modifierFiche(\'' + f.name.replace(/'/g, "\\'") + '\',\'' + f.sha + '\',\'' + (f.download_url||'').replace(/'/g, "\\'") + '\')">'
         +     '✏️ Modifier'
         +   '</button>'
-        +   '<button class="btn btn-sm" style="background:#c0392b;color:#fff;margin-left:6px;" '
-        +           'onclick="supprimerFiche(' + JSON.stringify(f.name) + ')">' 
+        +   '<button class="btn btn-sm" style="background:#c0392b;color:#fff;margin-left:6px;" onclick="supprimerFiche(this)" data-fname="' + esc(f.name) + '">'
         +     '🗑️ Supprimer'
         +   '</button>'
         + '</td>';
@@ -3209,7 +3208,8 @@ async function loadFiches() {
   }
 }
 
-async function supprimerFiche(filename) {
+async function supprimerFiche(btn) {
+  var filename = btn.getAttribute('data-fname');
   if (!confirm('Supprimer la fiche "' + filename + '" ? Cette action est irréversible.')) return;
   var token = _GH_TOKEN || localStorage.getItem('expertimo_gh_token');
   if (!token) { showToast('⚠️ Token GitHub manquant.', true); return; }
