@@ -3178,6 +3178,10 @@ async function loadFiches() {
         +           'onclick="modifierFiche(\'' + f.name.replace(/'/g, "\\'") + '\',\'' + f.sha + '\',\'' + (f.download_url||'').replace(/'/g, "\\'") + '\')">'
         +     '✏️ Modifier'
         +   '</button>'
+        +   '<button class="btn btn-sm" style="background:#c0392b;color:#fff;margin-left:6px;" '
+        +           'onclick="supprimerFiche(\'" + f.name.replace(/\'/g, "\\\'") + "\')" >'
+        +     '🗑️ Supprimer'
+        +   '</button>'
         + '</td>';
       tbody.appendChild(tr);
 
@@ -3202,6 +3206,33 @@ async function loadFiches() {
     wrap.style.display   = 'block';
   } catch(err) {
     status.textContent = '❌ ' + err.message;
+  }
+}
+
+async function supprimerFiche(filename) {
+  if (!confirm('Supprimer la fiche "' + filename + '" ? Cette action est irréversible.')) return;
+  var token = _GH_TOKEN || localStorage.getItem('expertimo_gh_token');
+  if (!token) { showToast('⚠️ Token GitHub manquant.', true); return; }
+  var apiUrl = 'https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename);
+  var headers = { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' };
+  try {
+    var r = await fetch(apiUrl, { headers: headers });
+    if (!r.ok) { showToast('❌ Fiche introuvable sur GitHub.', true); return; }
+    var data = await r.json();
+    var sha = data.sha;
+    var del = await fetch(apiUrl, {
+      method: 'DELETE',
+      headers: Object.assign({}, headers, { 'Content-Type': 'application/json' }),
+      body: JSON.stringify({ message: 'suppr: ' + filename, sha: sha, branch: 'main' })
+    });
+    if (del.ok) {
+      showToast('✅ Fiche supprimée — actualisation dans 3 secondes…');
+      setTimeout(function() { loadFiches(); }, 3000);
+    } else {
+      showToast('❌ Erreur lors de la suppression.', true);
+    }
+  } catch(e) {
+    showToast('❌ ' + e.message, true);
   }
 }
 
