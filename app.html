@@ -1525,6 +1525,15 @@ var _lastGeneratedSlug = null;
 
 refreshTokenUI();
 
+// Handle ?new=1 — clear draft so a fresh form loads
+if (new URLSearchParams(window.location.search).get('new') === '1') {
+  localStorage.removeItem('_draft_bien');
+  localStorage.removeItem('privency_draft');
+  localStorage.removeItem('privency_last_fiche');
+  // Remove the param from the URL without reloading
+  history.replaceState(null, '', window.location.pathname);
+}
+
 fetch('./index.html')
   .then(function(r) { return r.text(); })
   .then(function(html) { _templateHTML = html; })
@@ -2907,7 +2916,7 @@ function continuerVersPublication() {
 // STEP 4 — PUBLICATION GITHUB
 // ═══════════════════════════════════════════════════════
 function pushToGitHub() {
-  var token = localStorage.getItem('_gh_token');
+  var token = _GH_TOKEN || localStorage.getItem('expertimo_gh_token');
   if (!token) {
     document.getElementById('gh-push-status').textContent =
       '⚠️ Aucun token GitHub — saisissez-le ci-dessus.';
