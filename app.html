@@ -2987,7 +2987,28 @@ function collectBienData() {
     acces_terrain:          getV('acces_terrain'),
     cos_ces:                getV('cos_ces'),
     hauteur_max:            getV('hauteur_max'),
-    projet_terrain:         getV('projet_terrain'),
+   projet_terrain:         getV('projet_terrain'),
+    // ── Questions de découverte ──
+    q1:               getV('q1'),
+    q2:               getV('q2'),
+    q3:               getV('q3'),
+    q4:               getV('q4'),
+    q5:               getV('q5'),
+    notes_libres:     getV('notes_libres'),
+    prochaines_etapes: getV('prochaines_etapes'),
+    date_r2:          getV('date_r2'),
+    // ── Financement & Relogement ──
+    loyer_proprio:       getV('loyer'),
+    capital_restant:     getV('capital_restant'),
+    dette_montant:       getV('dette_montant'),
+    dette_echeance:      getV('dette_echeance'),
+    banque:              getV('banque'),
+    taux_pret:           getV('taux_pret'),
+    reloge_budget:       getV('reloge_budget'),
+    reloge_type:         getV('reloge_type'),
+    reloge_delai:        getV('reloge_delai'),
+    reloge_zone:         getV('reloge_zone'),
+    reloge_pieces:       getV('reloge_pieces'),
     // ── Widgets complexes (radios, checkboxes, ratings, DPE/GES, plan pièces) ──
     _rawState: (function(){
       var s = {};
@@ -3904,7 +3925,27 @@ async function modifierFiche(filename, sha, downloadUrl) {
       dbgSet('cos_ces',                 data.cos_ces                 || '');
       dbgSet('hauteur_max',             data.hauteur_max             || '');
       dbgSet('projet_terrain',          data.projet_terrain          || '');
-
+// Questions de découverte
+      dbgSet('q1',               data.q1               || '');
+      dbgSet('q2',               data.q2               || '');
+      dbgSet('q3',               data.q3               || '');
+      dbgSet('q4',               data.q4               || '');
+      dbgSet('q5',               data.q5               || '');
+      dbgSet('notes_libres',     data.notes_libres     || '');
+      dbgSet('prochaines_etapes',data.prochaines_etapes|| '');
+      dbgSet('date_r2',          data.date_r2          || '');
+      // Financement & Relogement
+      dbgSet('loyer',            data.loyer_proprio    || '');
+      dbgSet('capital_restant',  data.capital_restant  || '');
+      dbgSet('dette_montant',    data.dette_montant    || '');
+      dbgSet('dette_echeance',   data.dette_echeance   || '');
+      dbgSet('banque',           data.banque           || '');
+      dbgSet('taux_pret',        data.taux_pret        || '');
+      dbgSet('reloge_budget',    data.reloge_budget    || '');
+      dbgSet('reloge_type',      data.reloge_type      || '');
+      dbgSet('reloge_delai',     data.reloge_delai     || '');
+      dbgSet('reloge_zone',      data.reloge_zone      || '');
+      dbgSet('reloge_pieces',    data.reloge_pieces    || '');
       // GES button (same mechanism as DPE)
       if (data.gesLettre) {
         var gesTarget = document.querySelector('#page-2 .dpe-btn[data-group="ges"][data-letter="' + data.gesLettre + '"]');
