@@ -3280,6 +3280,35 @@ async function publierFiche() {
     else if (newSha) _editingFiche = { filename: filename, sha: newSha };
 
     var publicUrl = _GH_PAGES_BASE + filename;
+
+    // ── Sauvegarde complète dans Supabase ──
+    try {
+      var bienData = window._bienData || collectBienData();
+      var slug = filename.replace('-FINAL.html', '').replace('.html', '');
+      var session = await authClient.auth.getSession();
+      var userId = session && session.data && session.data.session && session.data.session.user ? session.data.session.user.id : null;
+      var supaPayload = {
+        slug: slug,
+        updated_at: new Date().toISOString(),
+        data: bienData
+      };
+      if (userId) supaPayload.user_id = userId;
+      // Upsert par slug
+      await fetch('https://hhqcumnatnslfjpsrmgb.supabase.co/rest/v1/fiches?on_conflict=slug', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY',
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY',
+          'Prefer': 'resolution=merge-duplicates'
+        },
+        body: JSON.stringify(supaPayload)
+      });
+      console.log('[publier] données sauvegardées dans Supabase');
+    } catch(supaErr) {
+      console.warn('[publier] erreur Supabase (non bloquant):', supaErr);
+    }
+
     btn.disabled = false;
     status.textContent = '✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !');
 
@@ -3545,6 +3574,26 @@ async function supprimerFiche(filename) {
 async function modifierFiche(filename, sha, downloadUrl) {
   showToast('⏳ Chargement de la fiche…');
   try {
+    // ── Essai lecture depuis Supabase en priorité ──
+    var slug = filename.replace('-FINAL.html', '').replace('.html', '');
+    var supaRes = await fetch('https://hhqcumnatnslfjpsrmgb.supabase.co/rest/v1/fiches?slug=eq.' + encodeURIComponent(slug) + '&select=data', {
+      headers: {
+        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY'
+      }
+    });
+    if (supaRes.ok) {
+      var supaData = await supaRes.json();
+      if (supaData && supaData[0] && supaData[0].data) {
+        console.log('[modifierFiche] données récupérées depuis Supabase');
+        var data = supaData[0].data;
+        _editingFiche = { filename: filename, sha: sha };
+        await remplirFormulaireAvecData(data);
+        return;
+      }
+    }
+    console.log('[modifierFiche] pas de données Supabase — lecture HTML');
+
     var r = await fetch(downloadUrl + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
     var html = await r.text();
@@ -3899,6 +3948,103 @@ async function modifierFiche(filename, sha, downloadUrl) {
     showToast('❌ Erreur chargement fiche : ' + err.message, true);
     console.error(err);
   }
+}
+
+async function remplirFormulaireAvecData(data) {
+  // Active edit mode
+  window._editMode = true;
+  localStorage.removeItem('_draft_bien');
+  localStorage.removeItem('privency_draft');
+  localStorage.removeItem('privency_last_fiche');
+  _stepsComplete[2] = true;
+  _lastGeneratedHTML = null;
+  _lastGeneratedSlug = null;
+  _stepsComplete[3] = false;
+  goToStep(2);
+  var btnContinue = document.getElementById('btn-step3-continue');
+  if (btnContinue) btnContinue.disabled = true;
+
+  function dbgSet(id, val) {
+    var el = document.getElementById(id);
+    if (el) el.value = (val == null ? '' : val);
+  }
+
+  setTimeout(function() {
+    document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) { el.value = ''; });
+    document.querySelectorAll('#page-2 input[type=radio], #page-2 input[type=checkbox]').forEach(function(el) { el.checked = false; });
+    var type = data.type || 'appart';
+    switchType(type);
+    document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
+    var typeTab = document.getElementById('tab-' + type);
+    if (typeTab) typeTab.classList.add('active');
+
+    // Inject all fields from data object
+    var fields = {
+      'adresse': data.adresse, 'quartier': data.quartier,
+      'surface_hab': data.surface, 'surface_carrez': data.surfCarrez,
+      'prix_vente': data.prix, 'prix_vente_t': data.prix,
+      'charges_copro': data.chargesCopro, 'taxe_fonciere': data.taxeFonciere,
+      'taxe_fonciere_t': data.taxeFonciere, 'charges_detail': data.chargesDetail,
+      'nb_pieces': data.pieces, 'nb_chambres': data.chambres,
+      'nb_sdb': data.sdb, 'nb_wc': data.wc, 'nb_etages': data.etages,
+      'etage': data.etage, 'annee_construction': data.anneeConstruction,
+      'loyer_estime': data.loyerEstime,
+      'bien_photo1_url': data.photo1, 'bien_photo2_url': data.photo2,
+      'bien_photo3_url': data.photo3, 'bien_photo4_url': data.photo4, 'bien_photo5_url': data.photo5,
+      'video_url': data.videoUrl, 'visite_url': data.visiteUrl,
+      'bien_fort1': data.fort1, 'bien_fort2': data.fort2, 'bien_fort3': data.fort3,
+      'bien_vig1': data.vig1, 'bien_vig2': data.vig2,
+      'plus_bien': data.plusBien, 'bien_score': data.score,
+      'score_prest': data.scorePrest, 'score_secteur': data.scoreSecteur,
+      'score_qp': data.scoreQP, 'score_etat': data.scoreEtat,
+      'raison_vente': data.raisonVente, 'annee_achat': data.anneeAchat,
+      'prix_achat': data.prixAchat, 'travaux_realises': data.travauxRealises,
+      'travaux_prevus': data.travauxPrevus, 'nb_visites': data.nbVisites,
+      'nb_offres': data.nbOffres, 'prix_offres': data.prixOffres,
+      'hist_constr': data.histConstr, 'hist_achat': data.histAchat,
+      'hist_evt1': data.histEvt1, 'hist_evt2': data.histEvt2,
+      'hist_evt3': data.histEvt3, 'hist_evt4': data.histEvt4,
+      'scenario_montant': data.scenarioMontant, 'scenario_delai': data.scenarioDelai,
+      'comp1_adresse': data.comp1Adresse, 'comp1_prix': data.comp1Prix,
+      'comp1_surface': data.comp1Surface, 'comp1_date': data.comp1Date,
+      'comp2_adresse': data.comp2Adresse, 'comp2_prix': data.comp2Prix,
+      'comp2_surface': data.comp2Surface, 'comp2_date': data.comp2Date,
+      'comp3_adresse': data.comp3Adresse, 'comp3_prix': data.comp3Prix,
+      'comp3_surface': data.comp3Surface, 'comp3_date': data.comp3Date
+    };
+    Object.keys(fields).forEach(function(id) { if (fields[id] != null) dbgSet(id, fields[id]); });
+
+    if (data.dpe) {
+      var dpeTarget = document.querySelector('#page-2 .dpe-btn[data-group="dpe"][data-letter="' + data.dpe + '"]');
+      if (dpeTarget) dpeTarget.click();
+    }
+    if (data.gesLettre) {
+      var gesTarget = document.querySelector('#page-2 .dpe-btn[data-group="ges"][data-letter="' + data.gesLettre + '"]');
+      if (gesTarget) gesTarget.click();
+    }
+    if (data._rawState) restoreRawFormState(data._rawState);
+
+    window._editMode = false;
+    showToast('✅ Fiche chargée depuis Supabase — modifiez et régénérez.');
+  }, 500);
+
+  setTimeout(function() {
+    function dbgSet2(id, val) { var el = document.getElementById(id); if (el) el.value = (val == null ? '' : val); }
+    dbgSet2('adresse', data.adresse || '');
+    dbgSet2('surface_hab', data.surface || '');
+    dbgSet2('prix_vente', data.prix || '');
+    dbgSet2('prix_vente_t', data.prix || '');
+    dbgSet2('charges_copro', data.chargesCopro || '');
+    dbgSet2('taxe_fonciere', data.taxeFonciere || '');
+    dbgSet2('bien_fort1', data.fort1 || '');
+    dbgSet2('bien_fort2', data.fort2 || '');
+    dbgSet2('bien_fort3', data.fort3 || '');
+    dbgSet2('bien_vig1', data.vig1 || '');
+    dbgSet2('bien_vig2', data.vig2 || '');
+    dbgSet2('raison_vente', data.raisonVente || '');
+    dbgSet2('annee_achat', data.anneeAchat || '');
+    dbgSet2('prix_achat', data.prixAchat || '');
+  }, 800);
 }
 
 function refreshStep4Summary() {
