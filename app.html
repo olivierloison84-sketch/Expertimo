@@ -3179,7 +3179,7 @@ async function loadFiches() {
         +     '✏️ Modifier'
         +   '</button>'
         +   '<button class="btn btn-sm" style="background:#c0392b;color:#fff;margin-left:6px;" '
-        +           'onclick="supprimerFiche(\'" + f.name.replace(/\'/g, "\\\'") + "\')" >'
+        +           'onclick="supprimerFiche(' + JSON.stringify(f.name) + ')">' 
         +     '🗑️ Supprimer'
         +   '</button>'
         + '</td>';
