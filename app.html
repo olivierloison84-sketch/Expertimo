@@ -4063,8 +4063,6 @@ async function remplirFormulaireAvecData(data) {
       var gesTarget = document.querySelector('#page-2 .dpe-btn[data-group="ges"][data-letter="' + data.gesLettre + '"]');
       if (gesTarget) gesTarget.click();
     }
-    if (data._rawState) restoreRawFormState(data._rawState);
-
     window._editMode = false;
     showToast('✅ Fiche chargée depuis Supabase — modifiez et régénérez.');
   }, 500);
@@ -4086,6 +4084,11 @@ async function remplirFormulaireAvecData(data) {
     dbgSet2('annee_achat', data.anneeAchat || '');
     dbgSet2('prix_achat', data.prixAchat || '');
   }, 800);
+
+  // Restore checkboxes/radios/ratings LAST — after all DOM resets are done
+  setTimeout(function() {
+    if (data._rawState) restoreRawFormState(data._rawState);
+  }, 1000);
 }
 
 function refreshStep4Summary() {
