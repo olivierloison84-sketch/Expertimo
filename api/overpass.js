@@ -1,37 +1,39 @@
-export const config = {
-  api: { bodyParser: false }
-};
+export const config = { runtime: 'edge' };
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-
-  if (req.method === 'OPTIONS') return res.status(200).end();
-  if (req.method !== 'POST') return res.status(405).end();
+export default async function handler(req) {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+    });
+  }
 
   try {
-    const chunks = [];
-    await new Promise((resolve, reject) => {
-      req.on('data', c => chunks.push(c));
-      req.on('end', resolve);
-      req.on('error', reject);
-    });
-    const raw = Buffer.concat(chunks).toString();
+    const { query } = await req.json();
+    if (!query) return new Response('Missing query', { status: 400 });
 
-    // raw contient "data=..." — on l'envoie tel quel à Overpass
-    const r = await fetch('https://overpass-api.de/api/interpreter', {
+    const res = await fetch('https://overpass-api.de/api/interpreter', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'User-Agent': 'Privency/1.0'
-      },
-      body: raw
+      body: 'data=' + encodeURIComponent(query),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     });
 
-    const text = await r.text();
-
-    res.setHeader('Content-Type', 'application/json');
-    res.status(r.status).send(text);
-  } catch (e) {
-    res.status(500).json({ error: e.message });
+    const data = await res.text();
+    return new Response(data, {
+      status: res.status,
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+      },
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
+    });
   }
 }
