@@ -2797,7 +2797,6 @@ function collectRawFormState() {
 }
 
 function restoreRawFormState(d) {
-  if (d.type) switchType(d.type);
   setTimeout(function() {
     Object.keys(d).forEach(function(k) {
       if (k==='type'||k==='photos'||k==='_pieces_table'||k.startsWith('radio_')||k.startsWith('cb_')||k.startsWith('rating_')||k.startsWith('dpe_')) return;
@@ -4088,12 +4087,8 @@ async function remplirFormulaireAvecData(data) {
 
   // Restore checkboxes/radios/ratings LAST — after all DOM resets are done
   setTimeout(function() {
-    console.log('[remplir] _rawState présent ?', !!data._rawState, '— nb clés:', data._rawState ? Object.keys(data._rawState).length : 0);
-    if (data._rawState) {
-      restoreRawFormState(data._rawState);
-      console.log('[remplir] restoreRawFormState appelé');
-    }
-  }, 1500);
+    if (data._rawState) restoreRawFormState(data._rawState);
+  }, 1000);
 }
 
 function refreshStep4Summary() {
