@@ -2479,7 +2479,7 @@ function loadPOI(lat, lng) {
     fetch(url, {
       method: 'POST',
       body: query,
-      signal: AbortSignal.timeout(8000)
+      signal: AbortSignal.timeout(3000)
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
@@ -2937,7 +2937,7 @@ function pushToGitHub() {
       if (res.ok) {
         var pageUrl = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/'
           + _lastGeneratedSlug + '-FINAL.html';
-        status.innerHTML = '✅ Publié avec succès !';
+        status.innerHTML = '✅ Publié avec succès ! <span style="color:var(--muted);font-size:12px;">(La page sera accessible dans 1-2 minutes)</span>';
         var linkArea = document.getElementById('gh-link-area');
         linkArea.style.display = 'block';
         linkArea.innerHTML =
