@@ -3254,7 +3254,10 @@ async function publierFiche() {
 
   var filename = _editingFiche ? _editingFiche.filename : _lastGeneratedSlug + '-FINAL.html';
   var isUpdate = !!_editingFiche;
-  status.textContent = '⏳ ' + (isUpdate ? 'Mise à jour' : 'Publication') + ' en cours…';
+  var _pubMsgs = ['⏳ Connexion à GitHub…','⏳ Vérification du fichier…','⏳ Envoi de la fiche en cours…','⏳ Presque terminé…'];
+  var _pubMsgIdx = 0;
+  status.textContent = _pubMsgs[0];
+  var _pubMsgTimer = setInterval(function() { _pubMsgIdx++; if (_pubMsgIdx < _pubMsgs.length) status.textContent = _pubMsgs[_pubMsgIdx]; }, 2000);
 
   try {
     // Always fetch the current SHA before PUT to avoid 409 conflicts with stale sha
@@ -3330,6 +3333,7 @@ async function publierFiche() {
       console.warn('[publier] erreur Supabase (non bloquant):', supaErr);
     }
 
+    clearInterval(_pubMsgTimer);
     btn.disabled = false;
     status.textContent = '✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !');
 
@@ -3344,6 +3348,7 @@ async function publierFiche() {
     updateStepperTabs();
     showToast('✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !'));
   } catch(err) {
+    clearInterval(_pubMsgTimer);
     btn.disabled = false;
     status.textContent = '❌ ' + err.message;
     showToast('❌ ' + err.message, true);
@@ -3581,8 +3586,8 @@ async function supprimerFiche(filename) {
       body: JSON.stringify({ message: 'suppr: fiche ' + filename, sha: currentSha, branch: 'main' })
     });
     if (r.ok) {
-      showToast('✅ Fiche supprimée — actualisation dans 3 secondes…');
-      setTimeout(function() { loadFiches(); }, 3000);
+      showToast('✅ Fiche supprimée de GitHub.');
+      loadFiches();
     } else {
       var err = await r.json();
       alert('❌ Erreur ' + r.status + ' : ' + (err.message || 'inconnue'));
