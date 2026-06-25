@@ -1,26 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<script>
-if(location.search.indexOf('new=1')!==-1){
-  ['_draft_bien','privency_draft','privency_last_fiche'].forEach(function(k){localStorage.removeItem(k);});
-  document.addEventListener('DOMContentLoaded',function(){
-    document.getElementById('diag_amiante_status').value='non-soumis';
-    document.getElementById('diag_amiante_result').value='';
-    document.getElementById('diag_plomb_status').value='favorable';
-    document.getElementById('diag_plomb_result').value='';
-    document.getElementById('diag_termites_status').value='favorable';
-    document.getElementById('diag_termites_result').value='';
-    document.getElementById('diag_electricite_status').value='favorable';
-    document.getElementById('diag_electricite_result').value='';
-    document.getElementById('diag_gaz_status').value='favorable';
-    document.getElementById('diag_gaz_result').value='';
-    document.getElementById('diag_assain_status').value='favorable';
-    document.getElementById('diag_assain_result').value='';
-    document.getElementById('diag_carrez').value='';
-  });
-}
-</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style id="auth-guard-hide">body { display: none !important; }</style>
@@ -278,12 +258,85 @@ textarea { resize: vertical; min-height: 60px; }
 ═══════════════════════════════════════ */
 @media(max-width: 700px) {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
-  .step-tab span.step-label { display: block; font-size: 9px; margin-top: 2px; }
-  .step-tab span.step-label-full { display: none; }
+  .step-tab span.step-label { display: none; }
   .agent-preview { flex-direction: column; text-align: center; }
 }
 @media(max-width: 480px) {
   .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE MOBILE — 768px
+═══════════════════════════════════════ */
+@media(max-width: 768px) {
+  /* Stepper : scroll horizontal sans coupure */
+  .stepper {
+    padding: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+  }
+  .stepper::-webkit-scrollbar { display: none; }
+  .step-tab {
+    padding: 12px 14px;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .step-tab .step-label { display: none; }
+  /* Bouton Nouvelle fiche : compact */
+  .stepper > a {
+    padding: 12px 12px !important;
+    font-size: 12px !important;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* Header */
+  .header-right { display: none; }
+  .header-brand h1 { font-size: 15px; }
+
+  /* DVF table → cartes empilées */
+  .dvf-edit-table thead { display: none; }
+  .dvf-edit-table, .dvf-edit-table tbody,
+  .dvf-edit-table tr, .dvf-edit-table td {
+    display: block;
+    width: 100%;
+  }
+  .dvf-edit-table tr {
+    margin-bottom: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #fff;
+  }
+  .dvf-edit-table td {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+    gap: 8px;
+  }
+  .dvf-edit-table td:last-child { border-bottom: none; }
+  .dvf-edit-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: 10px;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+  .dvf-edit-table td input { flex: 1; }
+
+  /* Score grid */
+  .score-grid { grid-template-columns: repeat(3, 1fr); }
+
+  /* Action row */
+  .action-row { flex-direction: column; align-items: stretch; }
+  .action-row .spacer { display: none; }
+  .action-row .btn { width: 100%; justify-content: center; }
 }
 
 /* ═══════════════════════════════════════
@@ -468,7 +521,6 @@ textarea { resize: vertical; min-height: 60px; }
   setTimeout(() => { denied(); }, 3000);
 
   document.addEventListener('DOMContentLoaded', () => {
-    // Bouton "Déconnexion"
     const btn = document.createElement('button');
     btn.id = 'logout-btn';
     btn.textContent = 'Déconnexion';
@@ -505,27 +557,27 @@ textarea { resize: vertical; min-height: 60px; }
 <nav class="stepper" id="stepper">
   <div class="step-tab active" id="tab-1" onclick="goToStep(1)">
     <span class="step-num">1</span>
-    <span class="step-label">Profil</span>
+    <span class="step-label">Profil agent</span>
   </div>
   <div class="step-tab" id="tab-2" onclick="goToStep(2)">
     <span class="step-num">2</span>
-    <span class="step-label">Bien</span>
+    <span class="step-label">Saisie du bien</span>
   </div>
   <div class="step-tab" id="tab-3" onclick="goToStep(3)">
     <span class="step-num">3</span>
-    <span class="step-label">Générer</span>
+    <span class="step-label">Génération</span>
   </div>
   <div class="step-tab" id="tab-4" onclick="goToStep(4)">
     <span class="step-num">4</span>
-    <span class="step-label">Publier</span>
+    <span class="step-label">Publication</span>
   </div>
   <div class="step-tab" id="tab-5" onclick="goToStep(5)">
     <span class="step-num" style="background:var(--muted);font-size:14px;">📊</span>
-    <span class="step-label">Stats</span>
+    <span class="step-label">Mes stats</span>
   </div>
   <div class="step-tab" id="tab-6" onclick="goToStep(6)">
     <span class="step-num" style="background:var(--muted);font-size:14px;">📂</span>
-    <span class="step-label">Fiches</span>
+    <span class="step-label">Mes fiches</span>
   </div>
   <a href="/app.html?new=1" style="display:flex;align-items:center;gap:10px;padding:15px 24px;background:#b8923a;color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;margin-left:auto;">✚ Nouvelle fiche</a>
 </nav>
@@ -726,12 +778,17 @@ textarea { resize: vertical; min-height: 60px; }
 
 <!-- ── Historique du bien ── -->
 <div class="card">
-  <div class="card-header">📅 Historique du bien</div>
+  <div class="card-header">📅 Historique du bien (timeline fiche acheteur)</div>
   <div class="card-body">
-    <div class="form-group">
-      <label>Historique libre (10-15 lignes max)</label>
-      <textarea id="historique_libre" rows="12" placeholder="Décrivez l'historique du bien : année de construction, travaux réalisés, rénovations..."></textarea>
+    <div class="grid-2">
+      <div class="form-group"><label>Construction — description</label><input type="text" id="hist_constr_desc" placeholder="Immeuble résidentiel récent, bonne qualité de construction"></div>
+      <div class="form-group"><label>Événement 1 — date · label</label><input type="text" id="hist_evt1_date" placeholder="2015 · RÉNOVATION"></div>
+      <div class="form-group"><label>Événement 1 — description</label><input type="text" id="hist_evt1_desc" placeholder="Rénovation complète : sols, murs, cuisine, salle de bains…"></div>
+      <div class="form-group"><label>Événement 2 — date · label (optionnel)</label><input type="text" id="hist_evt2_date" placeholder=""></div>
+      <div class="form-group"><label>Événement 2 — description (optionnel)</label><input type="text" id="hist_evt2_desc" placeholder=""></div>
+      <div class="form-group"><label>Année de mise en vente</label><input type="text" id="hist_vente_date" value="2025" placeholder="2025"></div>
     </div>
+    <p class="hint">Laisser vide les événements non utilisés — ils ne seront pas affichés dans la fiche acheteur.</p>
     <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
@@ -768,19 +825,6 @@ textarea { resize: vertical; min-height: 60px; }
         </tr>
       </tbody>
     </table>
-  </div>
-</div>
-
-<!-- ── Factures travaux ── -->
-<div class="card">
-  <div class="card-header">🧾 Factures travaux (liens PDF)</div>
-  <div class="card-body">
-    <p class="hint" style="margin-bottom:8px">Ajoutez des liens Google Drive, Dropbox ou Notion. Ils apparaîtront sous forme de boutons dans l'espace Documents de la fiche acheteur.</p>
-    <div class="grid-3">
-      <div class="form-group"><label>Facture 1</label><input type="url" id="facture1_url" placeholder="URL facture 1 (Google Drive, Dropbox...)"></div>
-      <div class="form-group"><label>Facture 2 (optionnel)</label><input type="url" id="facture2_url" placeholder="URL facture 2 (optionnel)"></div>
-      <div class="form-group"><label>Facture 3 (optionnel)</label><input type="url" id="facture3_url" placeholder="URL facture 3 (optionnel)"></div>
-    </div>
   </div>
 </div>
 
@@ -1066,24 +1110,17 @@ textarea { resize: vertical; min-height: 60px; }
   <div class="card-header">📸 Photos du bien</div>
   <div class="card-body">
     <div class="photo-drop" onclick="document.getElementById('photo_input').click()">
-      📁 Cliquez pour ajouter des photos depuis votre ordinateur (JPEG, PNG, HEIC…)
-      <br><span class="text-sm mt-8" style="display:block">Les photos sont uploadées automatiquement · Vous pouvez aussi coller des URLs ci-dessous</span>
+      📁 Cliquez pour ajouter des photos (JPEG, PNG, HEIC…)
+      <br><span class="text-sm mt-8" style="display:block">Vous pouvez sélectionner plusieurs fichiers à la fois</span>
     </div>
     <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
-    <div id="photo_upload_status" style="font-size:12px;color:var(--muted);margin-top:8px;display:none;"></div>
     <div class="photo-grid" id="photo_grid"></div>
-    <div class="section-title mt-16">URLs photos pour la fiche acheteur</div>
-    <p class="hint" style="margin-bottom:8px">Remplies automatiquement après upload · Vous pouvez aussi coller des URLs Cloudinary directement.</p>
+    <div class="section-title mt-16">URLs photos pour la fiche acheteur (3 premières)</div>
+    <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
     <div class="grid-3">
       <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
       <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
       <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
-      <div class="form-group"><label>Photo 4 (optionnel)</label><input type="url" id="bien_photo4_url" placeholder="https://…"></div>
-      <div class="form-group"><label>Photo 5 (optionnel)</label><input type="url" id="bien_photo5_url" placeholder="https://…"></div>
-    </div>
-    <div class="grid-2 mt-8">
-      <div class="form-group"><label>Vidéo (YouTube / Vimeo — optionnel)</label><input type="url" id="video_url" placeholder="https://youtube.com/watch?v=…"></div>
-      <div class="form-group"><label>Visite virtuelle (Matterport / Nodalview — optionnel)</label><input type="url" id="visite_url" placeholder="https://my.matterport.com/…"></div>
     </div>
   </div>
 </div>
@@ -1144,10 +1181,6 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
     </div>
     <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
-    <div class="form-group mt-8">
-      <label>Loi Carrez — résultat certifié</label>
-      <input type="text" id="diag_carrez" placeholder="ex: 76,87 m² certifiés Loi Carrez">
-    </div>
   </div>
 </div>
 
@@ -1342,13 +1375,24 @@ textarea { resize: vertical; min-height: 60px; }
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     PAGE 4 — PUBLICATION SUPABASE
+     PAGE 4 — PUBLICATION (placeholder)
 ══════════════════════════════════════════════════════ -->
 <div class="page" id="page-4">
 <div class="container">
   <div class="card">
-    <div class="card-header">📤 Publication de la fiche</div>
+    <div class="card-header">📤 Publication GitHub</div>
     <div class="card-body">
+
+      <!-- Token -->
+      <div class="section-title">Token GitHub</div>
+      <div style="margin-bottom:16px;">
+        <input type="password" id="gh-token-input" class="form-control"
+               placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
+               style="max-width:420px;margin-bottom:8px;">
+        <button class="btn btn-outline" id="gh-token-save-btn"
+                onclick="saveGhToken()">💾 Sauvegarder</button>
+        <div id="gh-token-status" style="margin-top:6px;font-size:13px;"></div>
+      </div>
 
       <!-- Résumé publication -->
       <div class="section-title">Fichier à publier</div>
@@ -1359,29 +1403,14 @@ textarea { resize: vertical; min-height: 60px; }
 
       <!-- Bouton publication -->
       <div class="section-title">Publication</div>
-      <div id="pub-status" style="margin-bottom:8px;font-size:13px;"></div>
-      <button class="btn btn-primary btn-lg" id="pub-btn"
-              onclick="publierFiche()">
-        📤 Publier la fiche
+      <div id="step3-status-pub" style="margin-bottom:8px;"></div>
+      <button class="btn btn-primary btn-lg" id="gh-push-btn"
+              onclick="pushToGitHub()">
+        📤 Publier sur GitHub Pages
       </button>
-
-      <!-- Résultat -->
-      <div id="pub-result" style="display:none;margin-top:20px;">
-        <div class="section-title">Lien public</div>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px;">
-          <input type="text" id="pub-url-input" readonly
-                 style="flex:1;min-width:200px;font-size:13px;
-                        background:var(--light);border:1px solid var(--border);
-                        border-radius:var(--radius);padding:8px 12px;color:var(--text);">
-          <button class="btn btn-outline" onclick="copierLienFiche()">📋 Copier</button>
-          <a id="pub-url-link" href="#" target="_blank" rel="noopener" class="btn btn-outline">🔗 Ouvrir</a>
-          <button class="btn btn-primary" id="btn-partager" onclick="partagerFiche()" style="display:none">📤 Partager</button>
-        </div>
-        <div class="section-title">QR Code</div>
-        <img id="pub-qr" src="" alt="QR Code"
-             style="width:150px;height:150px;border:1px solid var(--border);
-                    border-radius:var(--radius);display:block;">
-      </div>
+      <div id="gh-push-status"
+           style="margin-top:12px;font-size:13px;line-height:1.6;"></div>
+      <div id="gh-link-area" style="display:none;margin-top:12px;"></div>
 
     </div>
   </div>
@@ -1392,7 +1421,7 @@ textarea { resize: vertical; min-height: 60px; }
 </div>
 
 <!-- ══════════════════════════════════════════════════════
-     PAGE 5 — ANALYTICS
+     PAGE 5 — MES STATS
 ══════════════════════════════════════════════════════ -->
 <div class="page" id="page-5">
 <div class="container">
@@ -1443,15 +1472,12 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
     </div>
     <div class="card-body">
-      <!-- Token GitHub (stocké en localStorage, jamais dans le code) -->
       <div id="gh-token-bloc" style="margin-bottom:16px;padding:12px 16px;background:#f8fafc;border:1.5px solid var(--border);border-radius:var(--radius);">
         <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px;">🔑 Token GitHub (stocké localement)</label>
         <div style="display:flex;gap:8px;align-items:center;">
-          <input type="text" id="gh-token-input" placeholder="ghp_…" style="flex:1;font-size:13px;"
-                 oninput="document.getElementById('gh-token-save').disabled=!this.value.trim()"
-                 onpaste="setTimeout(function(){document.getElementById('gh-token-save').disabled=!document.getElementById('gh-token-input').value.trim();},100)"
-                 onchange="document.getElementById('gh-token-save').disabled=!this.value.trim()">
-          <button id="gh-token-save" class="btn btn-sm btn-primary" onclick="saveGhToken()">Enregistrer</button>
+          <input type="password" id="gh-token-input" placeholder="ghp_…" style="flex:1;font-size:13px;"
+                 oninput="document.getElementById('gh-token-save').disabled=!this.value.trim()">
+          <button id="gh-token-save" class="btn btn-sm btn-primary" onclick="saveGhToken()" disabled>Enregistrer</button>
         </div>
         <p id="gh-token-status" class="hint" style="margin-top:5px;"></p>
       </div>
@@ -1487,7 +1513,6 @@ textarea { resize: vertical; min-height: 60px; }
 // ═══════════════════════════════════════════════════════
 var _currentStep   = 1;
 var _stepsComplete = { 1: false, 2: false, 3: false, 4: false };
-var _editingFiche  = null; // { filename, sha } when overwriting an existing fiche
 var _GH_TOKEN      = localStorage.getItem('expertimo_gh_token') || '';
 var _GH_REPO       = 'olivierloison84-sketch/Expertimo';
 var _GH_PAGES_BASE = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/';
@@ -1497,6 +1522,17 @@ window._bienData   = null;
 var _templateHTML      = null;
 var _lastGeneratedHTML = null;
 var _lastGeneratedSlug = null;
+
+refreshTokenUI();
+
+// Handle ?new=1 — clear draft so a fresh form loads
+if (new URLSearchParams(window.location.search).get('new') === '1') {
+  localStorage.removeItem('_draft_bien');
+  localStorage.removeItem('privency_draft');
+  localStorage.removeItem('privency_last_fiche');
+  // Remove the param from the URL without reloading
+  history.replaceState(null, '', window.location.pathname);
+}
 
 fetch('./index.html')
   .then(function(r) { return r.text(); })
@@ -1526,12 +1562,11 @@ function goToStep(n) {
   });
   _currentStep = n;
   if (n === 3) { refreshStep3Summary(); }
-  if (n === 4) { refreshStep4Summary(); }
+  if (n === 4) { refreshStep4Summary(); refreshTokenUI(); }
   if (n === 5) { loadAnalytics(); }
   if (n === 6) { loadFiches(); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-window.goToStep = goToStep;
 
 function updateStepperTabs() {
   [1,2,3,4,5,6].forEach(function(i) {
@@ -1732,10 +1767,7 @@ function resetProfile() {
 var _origGoToStep = goToStep;
 goToStep = function(n) {
   _origGoToStep(n);
-  if (n === 2 && !_step2Inited) {
-    initStep2();
-    _step2Inited = true;
-  }
+  if (n === 2 && !_step2Inited) { initStep2(); _step2Inited = true; }
   if (n === 2) loadDraftBien();
   if (n === 2 && !_ficheMap) { if (getV('adresse')) initFicheMap(); }
 };
@@ -1904,72 +1936,23 @@ function switchType(type) {
 // ═══════════════════════════════════════════════════════
 // STEP 2 — PHOTOS
 // ═══════════════════════════════════════════════════════
-// ── Cloudinary config ──
-var _CLD_CLOUD  = 'dif0ikaj1';
-var _CLD_PRESET = 'privency_upload';
-
 function addPhotos(input) {
-  var files = Array.from(input.files);
-  input.value = '';
-  if (!files.length) return;
-  var statusEl = document.getElementById('photo_upload_status');
-  statusEl.style.display = 'block';
-  statusEl.textContent = '⏳ Upload en cours… 0/' + files.length;
-  var done = 0;
-  files.forEach(function(f) {
-    // Aperçu immédiat
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      var idx = _photos.length;
-      _photos.push({ dataUrl: e.target.result, url: '', caption: '' });
-      renderPhotos();
-      // Upload Cloudinary
-      var fd = new FormData();
-      fd.append('file', f);
-      fd.append('upload_preset', _CLD_PRESET);
-      fd.append('folder', 'privency');
-      fetch('https://api.cloudinary.com/v1_1/' + _CLD_CLOUD + '/image/upload', {
-        method: 'POST', body: fd
-      })
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (data.secure_url) {
-          _photos[idx].url = data.secure_url;
-          // Remplir le prochain champ URL libre
-          for (var n = 1; n <= 5; n++) {
-            var el = document.getElementById('bien_photo' + n + '_url');
-            if (el && !el.value) { el.value = data.secure_url; break; }
-          }
-        }
-        done++;
-        statusEl.textContent = done < files.length
-          ? '⏳ Upload en cours… ' + done + '/' + files.length
-          : '✅ ' + done + ' photo(s) uploadée(s) sur Cloudinary';
-        scheduleDraftSave();
-      })
-      .catch(function() {
-        done++;
-        statusEl.textContent = '⚠️ Erreur upload photo ' + (idx+1);
-      });
-    };
+  Array.from(input.files).forEach(function(f) {
+    var reader=new FileReader();
+    reader.onload=function(e) { _photos.push({dataUrl:e.target.result,caption:''}); renderPhotos(); };
     reader.readAsDataURL(f);
-  });
+  }); input.value='';
 }
-
 function escAttr(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function renderPhotos() {
-  var grid = document.getElementById('photo_grid'); if (!grid) return; grid.innerHTML = '';
-  _photos.forEach(function(p, i) {
-    var src = p.url || p.dataUrl || '';
-    var div = document.createElement('div'); div.className = 'photo-thumb';
-    div.innerHTML = '<img src="' + src + '" alt="Photo ' + (i+1) + '">'
-      + (p.url ? '<span style="position:absolute;bottom:28px;left:4px;background:#2e7d32;color:#fff;font-size:9px;padding:1px 5px;border-radius:4px;">☁ Cloudinary</span>' : '<span style="position:absolute;bottom:28px;left:4px;background:#e65100;color:#fff;font-size:9px;padding:1px 5px;border-radius:4px;">⏳ upload…</span>')
-      + '<button class="del-photo" onclick="removePhoto(' + i + ')">✕</button>'
-      + '<div class="photo-caption"><input type="text" value="' + escAttr(p.caption) + '" placeholder="Légende…" oninput="_photos[' + i + '].caption=this.value"></div>';
+  var grid=document.getElementById('photo_grid'); if(!grid) return; grid.innerHTML='';
+  _photos.forEach(function(p,i) {
+    var div=document.createElement('div'); div.className='photo-thumb';
+    div.innerHTML='<img src="'+p.dataUrl+'" alt="Photo '+(i+1)+'">'+'<button class="del-photo" onclick="removePhoto('+i+')">✕</button>'+'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" oninput="_photos['+i+'].caption=this.value"></div>';
     grid.appendChild(div);
   }); scheduleDraftSave();
 }
-function removePhoto(i) { _photos.splice(i, 1); renderPhotos(); }
+function removePhoto(i) { _photos.splice(i,1); renderPhotos(); }
 
 // ═══════════════════════════════════════════════════════
 // STEP 2 — DVF API
@@ -1982,11 +1965,11 @@ function initDVFTable() {
   tbody.innerHTML = '';
   for (var i = 1; i <= 6; i++) {
     tbody.innerHTML += '<tr>' +
-      '<td><input type="text" id="dvf-date-'+i+'" placeholder="01/2024"></td>' +
-      '<td><input type="text" id="dvf-adresse-'+i+'" placeholder="Rue du Marché"></td>' +
-      '<td><input type="number" id="dvf-surface-'+i+'" placeholder="65" oninput="calcDVFm2('+i+')"></td>' +
-      '<td><input type="number" id="dvf-prix-'+i+'" placeholder="180000" oninput="calcDVFm2('+i+')"></td>' +
-      '<td><input type="number" id="dvf-prixm2-'+i+'" placeholder="auto" style="background:#f0f7ff" readonly></td>' +
+      '<td data-label="Date"><input type="text" id="dvf-date-'+i+'" placeholder="01/2024"></td>' +
+      '<td data-label="Adresse"><input type="text" id="dvf-adresse-'+i+'" placeholder="Rue du Marché"></td>' +
+      '<td data-label="Surface m²"><input type="number" id="dvf-surface-'+i+'" placeholder="65" oninput="calcDVFm2('+i+')"></td>' +
+      '<td data-label="Prix €"><input type="number" id="dvf-prix-'+i+'" placeholder="180000" oninput="calcDVFm2('+i+')"></td>' +
+      '<td data-label="€/m²"><input type="number" id="dvf-prixm2-'+i+'" placeholder="auto" style="background:#f0f7ff" readonly></td>' +
     '</tr>';
   }
 }
@@ -2041,9 +2024,6 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
   html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
-  var reseauVal = d.agentReseau || 'Expertimo';
-  html = replaceSp(html, '_sp_reseau', reseauVal);
-  html = html.replace(/_sp_reseau/g, reseauVal);
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
 
   // Loyer slider — replace hardcoded 1300 in template JS
@@ -2053,6 +2033,12 @@ function injectData(html, d) {
 
   // Address (the template may have it as literal string in JS)
   html = srep(html, "5 Rue de l'Arpajonnais", d.adresse);
+
+  // Inject geocoded coordinates into map fallback placeholders
+  if (_geoLat !== null && _geoLng !== null) {
+    html = srep(html, 'var latFallback = parseFloat("") || 0;', 'var latFallback = ' + _geoLat + ';');
+    html = srep(html, 'var lngFallback = parseFloat("") || 0;', 'var lngFallback = ' + _geoLng + ';');
+  }
 
   // Reference
   html = srep(html, 'ex91-lg001', d.ref);
@@ -2066,14 +2052,6 @@ function injectData(html, d) {
     html = srep(html, 'parseFloat("253")', 'parseFloat("' + chargesCopro + '")');
   }
 
-  // Agent brand colors — replace template defaults
-  if (d.agentPrimary) {
-    html = srep(html, '--dark:#141414', '--dark:' + d.agentPrimary);
-  }
-  if (d.agentAccent) {
-    html = srep(html, '--gold:#b8923a', '--gold:' + d.agentAccent);
-    html = srep(html, '--gold2:#d4a956', '--gold2:' + d.agentAccent);
-  }
 
   if (d.agentPhoto) {
     html = html.split('id="agent-photo" src=""').join('id="agent-photo" src="' + d.agentPhoto + '"');
@@ -2092,7 +2070,7 @@ function injectData(html, d) {
 
   // ── Header ──
   var badge = q('.hbadge');
-  if (badge) badge.innerHTML = '<svg viewBox="0 0 28 22" width="20" height="16" style="display:inline-block;vertical-align:middle;margin-right:6px;"><polygon points="14,0 28,11 14,22 0,11" fill="none" stroke="#b8923a" stroke-width="1.2"/><polygon points="14,5 23,11 14,17 5,11" fill="#b8923a" opacity="0.15"/><text x="14" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="8" fill="#b8923a" letter-spacing="1">PV</text></svg>PRIVENCY · Votre Espace Acheteur Privé';
+  if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo · Réf. ' + d.ref;
 
   var htitle = q('.htitle');
   if (htitle) htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;">' + esc(d.quartier) + '</span>';
@@ -2245,26 +2223,24 @@ function injectData(html, d) {
     if (vCharges) vCharges.textContent = chargesAnnuelles + ' €';
   }
 
-  // Factures travaux
-  var facturesSection = doc.getElementById('factures-bloc');
-  var facturesBtns = doc.getElementById('factures-liens');
-  if (facturesSection && facturesBtns) {
-    var factures = [d.facture1Url, d.facture2Url, d.facture3Url].filter(Boolean);
-    if (factures.length) {
-      facturesSection.style.display = 'block';
-      facturesBtns.innerHTML = factures.map(function(url, i) {
-        return '<a href="' + url + '" target="_blank" rel="noopener" '
-          + 'style="display:inline-flex;align-items:center;gap:6px;background:var(--dark);color:var(--gold);'
-          + 'padding:8px 16px;border-radius:8px;font-family:\'DM Mono\',monospace;font-size:11px;'
-          + 'text-decoration:none;letter-spacing:.06em;">📄 Télécharger facture ' + (i+1) + '</a>';
-      }).join('');
-    }
+  // Timeline — full rebuild from form data
+  function tliHtml(label, desc) {
+    return '<div class="tli"><div class="tly">' + esc(label) + '</div><div class="tlt">' + esc(desc) + '</div></div>';
   }
-
-  // Historique texte libre
-  var histTxt = doc.getElementById('historique-libre');
-  if (histTxt) {
-    histTxt.textContent = d.historiqueLibre || '';
+  var timeline = id('historique-timeline');
+  if (timeline) {
+    var tlHtml = '';
+    if (d.annee || d.histConstrDesc) {
+      tlHtml += tliHtml((d.annee || '?') + ' · CONSTRUCTION', d.histConstrDesc || '');
+    }
+    if (d.histEvt1Date) tlHtml += tliHtml(d.histEvt1Date, d.histEvt1Desc || '');
+    if (d.histEvt2Date) tlHtml += tliHtml(d.histEvt2Date, d.histEvt2Desc || '');
+    var venteDesc = 'Bien proposé à ' + prixFmt + ' €'
+      + (d.dpe ? ' · DPE ' + d.dpe : '')
+      + ' · Libre à la vente'
+      + (chargesCopro > 0 ? ' · Charges ' + chargesCopro + ' €/mois' : '') + '.';
+    tlHtml += tliHtml((d.histVenteDate || '2025') + ' · MISE EN VENTE', venteDesc);
+    timeline.innerHTML = tlHtml;
   }
 
   // Diagnostics grid — full rebuild
@@ -2279,17 +2255,6 @@ function injectData(html, d) {
         + '<div class="diag-result">' + esc(diag.result) + '</div>'
         + '</div>';
     }).join('');
-  }
-  // Loi Carrez — append after grid rebuild (innerHTML wipes static card)
-  if (diagGrid && d.diagCarrez) {
-    var carrezCard = doc.createElement('div');
-    carrezCard.className = 'diag-card diag-ok';
-    carrezCard.id = 'diag-carrez';
-    carrezCard.innerHTML = '<div class="diag-icon">📐</div><div class="diag-name">Loi Carrez</div><div class="diag-result" id="diag-carrez-result">' + esc(d.diagCarrez) + '</div>';
-    diagGrid.appendChild(carrezCard);
-  } else if (!diagGrid && d.diagCarrez) {
-    var carrezEl = doc.getElementById('diag-carrez-result');
-    if (carrezEl) carrezEl.textContent = d.diagCarrez;
   }
 
   // Documents tab — charges & taxe mentions
@@ -2326,110 +2291,10 @@ function injectData(html, d) {
         + 'border:2px solid var(--gold);display:block;'
         + 'margin:0 auto 12px auto;');
     });
-    // Remplacer les avatars initiales par la photo agent
+    // Masquer les avatars initiales à côté
     var avatars = doc.querySelectorAll('.cons-avatar, .agent-avatar');
-    avatars.forEach(function(el) {
-      el.textContent = '';
-      el.style.backgroundImage = 'url(' + d.agentPhoto + ')';
-      el.style.backgroundSize = 'cover';
-      el.style.backgroundPosition = 'top center';
-    });
+    avatars.forEach(function(el) { el.style.display = 'none'; });
   }
-
-  // Photos 4 & 5 : injection conditionnelle + adaptation du grid
-  var gallery = doc.getElementById('main-gallery');
-  var photoCount = [d.photo1, d.photo2, d.photo3, d.photo4, d.photo5].filter(Boolean).length;
-  var p4el = doc.getElementById('gallery-photo4');
-  var p5el = doc.getElementById('gallery-photo5');
-  if (p4el && d.photo4) { p4el.src = d.photo4; p4el.style.display = ''; }
-  if (p5el && d.photo5) { p5el.src = d.photo5; p5el.style.display = ''; }
-  if (gallery && photoCount >= 4) {
-    gallery.style.gridTemplateColumns = '2fr 1fr 1fr';
-    gallery.style.gridTemplateRows = '190px 190px';
-  }
-  var caption = doc.getElementById('gallery-caption');
-  if (caption) caption.textContent = '📷 Cliquez sur une photo pour l\'agrandir · ' + photoCount + ' photos disponibles';
-
-  // Vidéo — thumbnail cliquable (évite le blocage des iframes YouTube)
-  if (d.videoUrl) {
-    var mediaBloc = doc.getElementById('media-bloc');
-    var videoContainer = doc.getElementById('video-container');
-    var videoEmbed = doc.getElementById('video-embed');
-    if (mediaBloc && videoContainer && videoEmbed) {
-      var ytMatch = d.videoUrl.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-      if (ytMatch) {
-        var ytId = ytMatch[1];
-        var thumbUrl = 'https://img.youtube.com/vi/' + ytId + '/hqdefault.jpg';
-        videoEmbed.style.cssText = 'position:relative;border-radius:12px;overflow:hidden;display:block;';
-        videoEmbed.innerHTML = '<a href="' + esc(d.videoUrl) + '" target="_blank" rel="noopener" style="display:block;position:relative;">'
-          + '<img src="' + thumbUrl + '" style="width:100%;display:block;border-radius:12px;" alt="Vidéo du bien">'
-          + '<span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:rgba(0,0,0,.65);border-radius:50%;display:flex;align-items:center;justify-content:center;">'
-          + '<svg viewBox="0 0 24 24" width="28" height="28" fill="white"><polygon points="9,7 19,12 9,17"/></svg>'
-          + '</span></a>';
-      } else {
-        var viMatch = d.videoUrl.match(/vimeo\.com\/(\d+)/);
-        var videoLink = viMatch ? 'https://vimeo.com/' + viMatch[1] : d.videoUrl;
-        videoEmbed.style.cssText = 'border-radius:12px;overflow:hidden;display:block;';
-        videoEmbed.innerHTML = '<a href="' + esc(videoLink) + '" target="_blank" rel="noopener" class="btn-rdv" style="display:inline-block;margin:8px 0;">▶ Voir la vidéo</a>';
-      }
-      videoContainer.style.display = 'block';
-      mediaBloc.style.display = 'block';
-    }
-  }
-  // Visite virtuelle
-  if (d.visiteUrl) {
-    var mediaBloc2 = doc.getElementById('media-bloc');
-    var visiteContainer = doc.getElementById('visite-container');
-    var visiteBtn = doc.getElementById('visite-btn');
-    if (visiteContainer && visiteBtn) {
-      visiteBtn.href = d.visiteUrl;
-      visiteContainer.style.display = 'block';
-      if (mediaBloc2) mediaBloc2.style.display = 'block';
-    }
-  }
-
-  // Embed original data as JSON for future extraction (editing)
-  var dataEmbed = doc.createElement('script');
-  dataEmbed.id = 'expertimo-data';
-  dataEmbed.type = 'application/json';
-  dataEmbed.textContent = JSON.stringify(d);
-  doc.body.appendChild(dataEmbed);
-
-  // Tracking script injected before </body>
-  var trackScript = doc.createElement('script');
-  trackScript.textContent = [
-    '(function() {',
-    '  var SUPABASE_URL = \'https://hhqcumnatnslfjpsrmgb.supabase.co\';',
-    '  var SUPABASE_KEY = \'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY\';',
-    '  var params = new URLSearchParams(window.location.search);',
-    '  var client = params.get(\'client\') || \'inconnu\';',
-    '  var adresse = document.title || window.location.pathname;',
-    '  function track(evenement) {',
-    '    fetch(SUPABASE_URL + \'/rest/v1/fiche_views\', {',
-    '      method: \'POST\',',
-    '      headers: {',
-    '        \'Content-Type\': \'application/json\',',
-    '        \'apikey\': SUPABASE_KEY,',
-    '        \'Authorization\': \'Bearer \' + SUPABASE_KEY',
-    '      },',
-    '      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement })',
-    '    });',
-    '  }',
-    '  track(\'fiche_ouverte\');',
-    '  document.querySelectorAll(\'[data-tab], .tab, .nav-tab, [onclick*="tab"]\').forEach(function(el) {',
-    '    el.addEventListener(\'click\', function() {',
-    '      track(\'onglet_\' + (el.dataset.tab || el.textContent.trim().slice(0,20)));',
-    '    });',
-    '  });',
-    '  document.querySelectorAll(\'[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit\').forEach(function(el) {',
-    '    el.addEventListener(\'click\', function() { track(\'credit_simule\'); });',
-    '  });',
-    '  document.querySelectorAll(\'[onclick*="offre"], #btn-offre, .btn-offre, form\').forEach(function(el) {',
-    '    el.addEventListener(\'click\', function() { track(\'offre_soumise\'); });',
-    '  });',
-    '})();'
-  ].join('\n');
-  doc.body.appendChild(trackScript);
 
   return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
 }
@@ -2572,6 +2437,7 @@ function calcCreditStep2() {
 // STEP 2 — MAP
 // ═══════════════════════════════════════════════════════
 var _ficheMap=null, _ficheMapMarkers={transport:[],parc:[],commerce:[],ecole:[]};
+var _geoLat=null, _geoLng=null;
 
 function initFicheMap() {
   var adresse=getV('adresse');
@@ -2584,6 +2450,7 @@ function initFicheMap() {
     .then(function(data) {
       if (!data||!data[0]) throw new Error('Adresse introuvable');
       var lat=parseFloat(data[0].lat), lng=parseFloat(data[0].lon);
+      _geoLat=lat; _geoLng=lng;
       document.getElementById('geo-status').textContent='📍 '+data[0].display_name.slice(0,60)+'…';
       buildFicheMap(lat,lng,adresse);
       var cp=adresse.match(/\b(\d{5})\b/); if(cp) setV('dvf_cp',cp[1]);
@@ -2772,7 +2639,6 @@ function saveDraftBien() {
 }
 
 function loadDraftBien() {
-  if (window._editMode) return;
   var raw=localStorage.getItem('_draft_bien');
   if (!raw) return;
   try { restoreRawFormState(JSON.parse(raw)); } catch(e) {}
@@ -2797,6 +2663,7 @@ function collectRawFormState() {
 }
 
 function restoreRawFormState(d) {
+  if (d.type) switchType(d.type);
   setTimeout(function() {
     Object.keys(d).forEach(function(k) {
       if (k==='type'||k==='photos'||k==='_pieces_table'||k.startsWith('radio_')||k.startsWith('cb_')||k.startsWith('rating_')||k.startsWith('dpe_')) return;
@@ -2812,11 +2679,6 @@ function restoreRawFormState(d) {
     });
     Object.keys(d).filter(function(k){return k.startsWith('dpe_');}).forEach(function(k){
       document.querySelectorAll('#page-2 .dpe-btn[data-group="'+k.replace('dpe_','')+'"]').forEach(function(b){b.classList.toggle('sel',b.dataset.letter===d[k]);});
-    });
-    Object.keys(d).filter(function(k){return k.startsWith('multi_');}).forEach(function(k){
-      var gid=k.replace('multi_',''); var c=document.getElementById(gid); if(!c) return;
-      var vals=d[k];
-      c.querySelectorAll('input[type=checkbox]').forEach(function(cb){ cb.checked=vals.indexOf(cb.value)!==-1; });
     });
     if(d.photos){_photos=d.photos;renderPhotos();}
     if(d._pieces_table){
@@ -2856,15 +2718,13 @@ function collectBienData() {
   var photo1=getV('bien_photo1_url')||(_photos[0]?_photos[0].dataUrl:'');
   var photo2=getV('bien_photo2_url')||(_photos[1]?_photos[1].dataUrl:'');
   var photo3=getV('bien_photo3_url')||(_photos[2]?_photos[2].dataUrl:'');
-  var photo4=getV('bien_photo4_url')||(_photos[3]?_photos[3].dataUrl:'');
-  var photo5=getV('bien_photo5_url')||(_photos[4]?_photos[4].dataUrl:'');
   var fb=parseFloat(getV('bien_fourchette_basse'))||(prix?Math.round(prix*.9):0);
   var fh=parseFloat(getV('bien_fourchette_haute'))||(prix?Math.round(prix*1.1):0);
   var typeLabel=currentType==='appart'?'Appartement':currentType==='maison'?'Maison':'Terrain';
   var pieces=getV('nb_pieces'), etage=getV('etage');
   var desc=[typeLabel,pieces?pieces+' pièce'+(parseInt(pieces)>1?'s':''):'',surface?'de '+surface.toLocaleString('fr-FR')+' m²':'',etage?'· '+etage:'',dpe?'· DPE '+dpe:''].filter(Boolean).join(' ');
   var agent=loadProfile()||{};
-  var _d = {
+  return {
     ref:           getV('ref_mandat')||'ref-mandat',
     type:          currentType,
     etage:         etage,
@@ -2878,7 +2738,7 @@ function collectBienData() {
     mediane:       parseFloat(getV('bien_mediane'))||0,
     tension:       getV('bien_tension')||'Très forte',
     delai:         getV('bien_delai')||'21 jours',
-    loyer:         (function(){ var v=0; document.querySelectorAll('[id="loyer"]').forEach(function(el){var n=parseFloat(el.value);if(n)v=n;}); return v||parseFloat(getV('bien_loyer_estime'))||0; })(),
+    loyer:         parseFloat(getV('loyer')||getV('bien_loyer_estime'))||0,
     chargesCopro:  chargesCopro,
     chargesDetail: getV('charges_detail'),
     taxeFonciere:  taxeFonciere,
@@ -2889,9 +2749,7 @@ function collectBienData() {
     scoreEtat:     getV('bien_score_etat')||'8',
     fort1:getV('bien_fort1'), fort2:getV('bien_fort2'), fort3:getV('bien_fort3'),
     vig1: getV('bien_vig1'),  vig2: getV('bien_vig2'),  vig3: getV('bien_vig3'),
-    photo1:photo1, photo2:photo2, photo3:photo3, photo4:photo4, photo5:photo5,
-    videoUrl:  getV('video_url'),
-    visiteUrl: getV('visite_url'),
+    photo1:photo1, photo2:photo2, photo3:photo3,
     dvf:           getDVFRows(),
     fourchetBasse: fb, fourchetHaute: fh,
     creditDuree:   parseInt(getV('bien_credit_duree'))||20,
@@ -2899,10 +2757,10 @@ function collectBienData() {
     creditHaut:    parseFloat(getV('bien_credit_taux_haut'))||5,
     creditMoyen:   parseFloat(getV('bien_credit_taux_moyen'))||3.4,
     creditBas:     parseFloat(getV('bien_credit_taux_bas'))||2.5,
-    historiqueLibre: getV('historique_libre'),
-    facture1Url: getV('facture1_url'),
-    facture2Url: getV('facture2_url'),
-    facture3Url: getV('facture3_url'),
+    histConstrDesc:getV('hist_constr_desc'),
+    histEvt1Date:  getV('hist_evt1_date'), histEvt1Desc: getV('hist_evt1_desc'),
+    histEvt2Date:  getV('hist_evt2_date'), histEvt2Desc: getV('hist_evt2_desc'),
+    histVenteDate: getV('hist_vente_date')||'2025',
     diags:[
       {icon:'🧱',name:'Amiante',        status:getV('diag_amiante_status'),     result:getV('diag_amiante_result')},
       {icon:'🔬',name:'Plomb (CREP)',   status:getV('diag_plomb_status'),       result:getV('diag_plomb_result')},
@@ -2911,15 +2769,12 @@ function collectBienData() {
       {icon:'🔥',name:'Gaz',            status:getV('diag_gaz_status'),         result:getV('diag_gaz_result')},
       {icon:'💧',name:'Assainissement', status:getV('diag_assain_status'),      result:getV('diag_assain_result')}
     ],
-    diagCarrez: getV('diag_carrez'),
     agentNom:   [agent.prenom,agent.nom].filter(Boolean).join(' '),
-    agentReseau: agent.reseau || 'Expertimo',
     agentTel:   agent.tel||'',
     agentEmail: agent.email||'',
     agentRdvUrl:agent.rdv_url||'',
-    agentSecteur: agent.secteur||'',
-    agentPrimary: agent.color_primary || '#141414',
-    agentAccent:  agent.color_accent  || '#b8923a',
+    agentPrimary: agent.primary || '#141414',
+    agentAccent:  agent.accent  || '#b8923a',
     agentPhoto:   agent.photo_url || '',
     renovations: (function(){
       var rows=[];
@@ -2928,109 +2783,8 @@ function collectBienData() {
         if(annee||desc) rows.push({annee:annee, montant:parseFloat(getV('renov_montant_'+i))||0, desc:desc});
       }
       return rows;
-    })(),
-    // ── Caractéristiques complémentaires ──
-    nb_chambres:  getV('nb_chambres'),
-    nb_sdb:       getV('nb_sdb'),
-    nb_sde:       getV('nb_sde'),
-    nb_wc:        getV('nb_wc'),
-    nb_wc_sep:    getV('nb_wc_sep'),
-    nb_etages:    getV('nb_etages') || getV('nb_etages_m'),
-    annee_construction_m: getV('annee_construction_m'),
-    standard_general: getV('standard_general'),
-    surface_terrain: getV('surface_terrain') || getV('surface_terrain_m'),
-    syndic_nom:   getV('syndic_nom'),
-    syndic_copro: getV('syndic_copro'),
-    travaux_ag_detail:        getV('travaux_ag_detail'),
-    travaux_recents_immeuble: getV('travaux_recents_immeuble'),
-    travaux_recents:          getV('travaux_recents'),
-    chauf_annee:              getV('chauf_annee'),
-    taxe_hab:           parseFloat(getV('taxe_hab'))            || 0,
-    charges_mensuelles: parseFloat(getV('charges_mensuelles'))  || 0,
-    plus_appartement:   getV('plus_appartement'),
-    fourchetMilieu:     parseFloat(getV('bien_fourchette_milieu')) || 0,
-    dpeValeur:  parseFloat(getV('dpe_valeur'))  || 0,
-    gesLettre:  (function(){ var b=document.querySelector('#page-2 .dpe-btn[data-group="ges"].sel'); return b?b.dataset.letter:''; })(),
-    gesValeur:  parseFloat(getV('ges_valeur'))  || 0,
-    parking_int: parseInt(getV('parking_int'))  || 0,
-    parking_ext: parseInt(getV('parking_ext'))  || 0,
-    parking_box: parseInt(getV('parking_box'))  || 0,
-    equip_autre:       getV('equip_autre'),
-    vigilances_texte:  getV('vigilances_texte'),
-    services_prox:     getV('services_prox'),
-    voisinage:         getV('voisinage'),
-    // ── Propriétaire (notes internes) ──
-    proprio_prenom:   getV('proprio_prenom'),
-    proprio_nom:      getV('proprio_nom'),
-    date_r1:          getV('date_r1'),
-    tel_fixe:         getV('tel_fixe'),
-    tel_mobile:       getV('tel_mobile'),
-    email_proprio:    getV('email_proprio'),
-    raison_vente:     getV('raison_vente'),
-    vente_depuis:     getV('vente_depuis'),
-    delai_vente_prop: getV('delai_vente'),
-    cles_chez:        getV('cles_chez'),
-    agences:          getV('agences'),
-    annee_achat:      getV('annee_achat'),
-    prix_achat:       getV('prix_achat'),
-    nb_visites:       getV('nb_visites'),
-    nb_offres:        getV('nb_offres'),
-    prix_offres:      getV('prix_offres'),
-    scenario_montant: getV('scenario_montant'),
-    scenario_reponse: getV('scenario_reponse'),
-    // ── Terrain ──
-    zone_plu:               getV('zone_plu'),
-    superficie_totale:      getV('superficie_totale'),
-    superficie_constructible: getV('superficie_constructible'),
-    forme_terrain:          getV('forme_terrain'),
-    acces_terrain:          getV('acces_terrain'),
-    cos_ces:                getV('cos_ces'),
-    hauteur_max:            getV('hauteur_max'),
-   projet_terrain:         getV('projet_terrain'),
-    // ── Questions de découverte ──
-    q1:               getV('q1'),
-    q2:               getV('q2'),
-    q3:               getV('q3'),
-    q4:               getV('q4'),
-    q5:               getV('q5'),
-    notes_libres:     getV('notes_libres'),
-    prochaines_etapes: getV('prochaines_etapes'),
-    date_r2:          getV('date_r2'),
-    // ── Financement & Relogement ──
-    loyer_proprio:       getV('loyer'),
-    capital_restant:     getV('capital_restant'),
-    dette_montant:       getV('dette_montant'),
-    dette_echeance:      getV('dette_echeance'),
-    banque:              getV('banque'),
-    taux_pret:           getV('taux_pret'),
-    reloge_budget:       getV('reloge_budget'),
-    reloge_type:         getV('reloge_type'),
-    reloge_delai:        getV('reloge_delai'),
-    reloge_zone:         getV('reloge_zone'),
-    reloge_pieces:       getV('reloge_pieces'),
-    // ── Widgets complexes (radios, checkboxes, ratings, DPE/GES, plan pièces) ──
-    _rawState: (function(){
-      var s = {};
-      document.querySelectorAll('#page-2 input[type=radio][name]').forEach(function(r){ if(r.checked) s['radio_'+r.name]=r.value; });
-      document.querySelectorAll('#page-2 input[type=checkbox][id]').forEach(function(cb){ if(cb.checked) s['cb_'+cb.id]=true; });
-      ['toit_type_group','facade_type_group','sols_type_group','vitrage_materiau_group','chauf_energie_group','chauf_diffusion_group','exposition_group','transport_group'].forEach(function(gid){
-        var c=document.getElementById(gid); if(!c) return;
-        var vals=[]; c.querySelectorAll('input[type=checkbox]:checked').forEach(function(cb){ vals.push(cb.value); });
-        if(vals.length) s['multi_'+gid]=vals;
-      });
-      document.querySelectorAll('#page-2 .rating-badge.sel').forEach(function(b){ s['rating_'+b.dataset.name]=b.dataset.val; });
-      document.querySelectorAll('#page-2 .dpe-btn.sel').forEach(function(b){ s['dpe_'+b.dataset.group]=b.dataset.letter; });
-      document.querySelectorAll('#page-2 input[id$="_m2"]').forEach(function(el){ if(el.value) s[el.id]=el.value; });
-      var rows=[];
-      document.querySelectorAll('#pieces_tbody tr').forEach(function(tr){
-        rows.push(Array.from(tr.querySelectorAll('td input')).map(function(c){return c.value;}));
-      });
-      s._pieces_table=rows;
-      return s;
     })()
   };
-  console.log('[collectBienData] data complet :', JSON.parse(JSON.stringify(_d)));
-  return _d;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -3099,7 +2853,7 @@ function refreshStep3Summary() {
 
 function generatePreview() {
   window._bienData = collectBienData();
-  var doGenerate = async function(tmpl) {
+  var doGenerate = function(tmpl) {
     var d = window._bienData;
     if (!d.adresse) {
       showToast('⚠️ Adresse obligatoire — retournez à l\'étape 2.', true);
@@ -3107,20 +2861,6 @@ function generatePreview() {
     }
     try {
       var out = injectData(tmpl, d);
-
-      // Indicateur visuel carte en cours dans la fiche
-      var mapLoadingScript = '<script>document.addEventListener("DOMContentLoaded",function(){'
-        + 'var mapEl=document.getElementById("map")||document.querySelector(".map-wrap")||document.querySelector("[id*=\'map\']");'
-        + 'if(mapEl&&!mapEl.querySelector("#map-loading-ov")){'
-        + 'mapEl.style.position="relative";'
-        + 'var ov=document.createElement("div");ov.id="map-loading-ov";'
-        + 'ov.style.cssText="position:absolute;inset:0;background:rgba(244,246,249,.88);display:flex;align-items:center;justify-content:center;z-index:999;font-size:13px;color:#6b7a8d;border-radius:6px;pointer-events:none;";'
-        + 'ov.textContent="🗺️ Chargement de la carte…";'
-        + 'mapEl.appendChild(ov);}'
-        + '});<\/script>';
-      out = out.replace('</head>', mapLoadingScript + '</head>');
-
-      // Affichage immédiat sans attendre géocodage
       _lastGeneratedHTML = out;
       _lastGeneratedSlug = slugify(d.adresse);
       var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
@@ -3131,65 +2871,8 @@ function generatePreview() {
       _stepsComplete[3] = true;
       updateStepperTabs();
       document.getElementById('step3-status').innerHTML =
-        '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>'
-        + ' <span id="map-loading-hint" style="color:var(--muted);font-size:12px;">🗺️ Carte en cours…</span>';
+        '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>';
       showToast('✅ Aperçu généré !');
-
-      // Géocodage + POI en arrière-plan (non bloquant)
-      (async function() {
-        try {
-          var geoRes = await fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(d.adresse) + '&limit=1');
-          var geoData = await geoRes.json();
-          if (!geoData || !geoData[0]) return;
-          var lat = parseFloat(geoData[0].lat), lng = parseFloat(geoData[0].lon);
-
-          var poiProxies = [
-            'https://overpass.kumi.systems/api/interpreter',
-            'https://overpass.private.coffee/api/interpreter',
-            'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
-          ];
-          var poiQuery = '[out:json][timeout:15];('
-            + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
-            + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
-            + 'node["amenity"="bus_station"](around:800,' + lat + ',' + lng + ');'
-            + 'node["leisure"="park"](around:800,' + lat + ',' + lng + ');'
-            + 'node["leisure"="garden"](around:800,' + lat + ',' + lng + ');'
-            + 'node["shop"="supermarket"](around:800,' + lat + ',' + lng + ');'
-            + 'node["shop"="bakery"](around:800,' + lat + ',' + lng + ');'
-            + 'node["amenity"="pharmacy"](around:800,' + lat + ',' + lng + ');'
-            + 'node["amenity"="school"](around:800,' + lat + ',' + lng + ');'
-            + 'node["amenity"="kindergarten"](around:800,' + lat + ',' + lng + ');'
-            + ');out body;';
-
-          var poiData = null;
-          for (var pi = 0; pi < poiProxies.length && !poiData; pi++) {
-            try {
-              var pr = await fetch(poiProxies[pi], { method: 'POST', body: 'data=' + encodeURIComponent(poiQuery) });
-              if (pr.ok) poiData = await pr.json();
-            } catch(e2) {}
-          }
-
-          // Reconstruire la fiche avec lat/lng + POI et recharger l'iframe
-          var outFinal = injectData(tmpl, d);
-          outFinal = outFinal.replace('parseFloat("") || 0;', 'parseFloat("' + lat + '") || 0;')
-                             .replace('parseFloat("") || 0;', 'parseFloat("' + lng + '") || 0;');
-          if (poiData && poiData.elements) {
-            var poiScript = '<script>window._poiData=' + JSON.stringify(poiData.elements) + ';<\/script>';
-            outFinal = outFinal.replace('</head>', poiScript + '</head>');
-          }
-
-          _lastGeneratedHTML = outFinal;
-          var blob2 = new Blob([outFinal], { type: 'text/html;charset=utf-8' });
-          document.getElementById('preview-iframe').src = URL.createObjectURL(blob2);
-          var hint = document.getElementById('map-loading-hint');
-          if (hint) hint.remove();
-        } catch(geoErr) {
-          console.warn('Pré-calcul POI échoué :', geoErr);
-          var hint = document.getElementById('map-loading-hint');
-          if (hint) hint.remove();
-        }
-      })();
-
     } catch(err) {
       document.getElementById('step3-status').textContent = '❌ ' + err.message;
       console.error(err);
@@ -3230,144 +2913,143 @@ function continuerVersPublication() {
 }
 
 // ═══════════════════════════════════════════════════════
-// STEP 4 — PUBLICATION (GitHub Pages)
+// STEP 4 — PUBLICATION GITHUB
 // ═══════════════════════════════════════════════════════
-async function publierFiche() {
-  console.log('[publier] données utilisées:', {
-    adresse:     document.getElementById('adresse')     ? document.getElementById('adresse').value     : undefined,
-    prix:        document.getElementById('prix_vente')  ? document.getElementById('prix_vente').value  : undefined,
-    surface:     document.getElementById('surface_hab') ? document.getElementById('surface_hab').value : undefined,
-    photo1:      document.getElementById('bien_photo1_url') ? document.getElementById('bien_photo1_url').value : undefined,
-    photo2:      document.getElementById('bien_photo2_url') ? document.getElementById('bien_photo2_url').value : undefined,
-    photo3:      document.getElementById('bien_photo3_url') ? document.getElementById('bien_photo3_url').value : undefined,
-    comparable1: document.getElementById('comp1_adresse')   ? document.getElementById('comp1_adresse').value   : undefined,
-    score:       document.getElementById('bien_score')      ? document.getElementById('bien_score').value      : undefined
-  });
-  if (!_lastGeneratedHTML || !_lastGeneratedSlug) {
-    document.getElementById('pub-status').textContent = '⚠️ Générez d\'abord la fiche (étape 3).';
+function pushToGitHub() {
+  var token = _GH_TOKEN || localStorage.getItem('expertimo_gh_token');
+  if (!token) {
+    document.getElementById('gh-push-status').textContent =
+      '⚠️ Aucun token GitHub — saisissez-le ci-dessus.';
     return;
   }
-  var btn    = document.getElementById('pub-btn');
-  var status = document.getElementById('pub-status');
+  if (!_lastGeneratedHTML || !_lastGeneratedSlug) {
+    document.getElementById('gh-push-status').textContent =
+      '⚠️ Générez d\'abord la fiche (étape 3).';
+    return;
+  }
+  var btn = document.getElementById('gh-push-btn');
+  var status = document.getElementById('gh-push-status');
   btn.disabled = true;
 
-  var filename = _editingFiche ? _editingFiche.filename : _lastGeneratedSlug + '-FINAL.html';
-  var isUpdate = !!_editingFiche;
-  var _pubMsgs = ['⏳ Connexion à GitHub…','⏳ Vérification du fichier…','⏳ Envoi de la fiche en cours…','⏳ Presque terminé…'];
+  var _pubMsgs = ['⏳ Connexion à GitHub…', '⏳ Envoi de la fiche en cours…', '⏳ Presque terminé…'];
   var _pubMsgIdx = 0;
   status.textContent = _pubMsgs[0];
-  var _pubMsgTimer = setInterval(function() { _pubMsgIdx++; if (_pubMsgIdx < _pubMsgs.length) status.textContent = _pubMsgs[_pubMsgIdx]; }, 2000);
+  var _pubMsgTimer = setInterval(function() {
+    _pubMsgIdx = (_pubMsgIdx + 1) % _pubMsgs.length;
+    status.textContent = _pubMsgs[_pubMsgIdx];
+  }, 2000);
 
-  try {
-    // Always fetch the current SHA before PUT to avoid 409 conflicts with stale sha
-    var sha = undefined;
-    var shaRes = await fetch('https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename), {
-      headers: { Authorization: 'token ' + _GH_TOKEN, Accept: 'application/vnd.github.v3+json' }
-    });
-    if (shaRes.ok) {
-      var shaData = await shaRes.json();
-      sha = shaData.sha;
-      console.log('[publier] sha actuel récupéré:', sha);
-    } else if (shaRes.status === 404) {
-      console.log('[publier] fichier inexistant — nouvelle fiche');
-    } else {
-      console.warn('[publier] impossible de récupérer le sha:', shaRes.status);
-    }
+  var path = 'fiches/' + _lastGeneratedSlug + '-FINAL.html';
+  var apiUrl = 'https://api.github.com/repos/olivierloison84-sketch/Expertimo/contents/' + path;
+  var headers = {
+    'Authorization': 'token ' + token,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json'
+  };
 
-    // base64-encode HTML (UTF-8 safe)
-    var encoded = btoa(unescape(encodeURIComponent(_lastGeneratedHTML)));
-    var body = {
-      message: (isUpdate ? 'maj' : 'add') + ' fiche: ' + filename,
-      content: encoded
-    };
-    if (sha) body.sha = sha;
-
-    var r = await fetch('https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename), {
-      method: 'PUT',
-      headers: {
-        Authorization: 'token ' + _GH_TOKEN,
-        'Content-Type': 'application/json',
-        Accept: 'application/vnd.github.v3+json'
-      },
-      body: JSON.stringify(body)
-    });
-
-    if (!r.ok) {
-      var errData = await r.json().catch(function() { return {}; });
-      throw new Error('GitHub ' + r.status + ' : ' + (errData.message || 'erreur inconnue'));
-    }
-
-    var result = await r.json();
-    var newSha  = result.content && result.content.sha;
-    if (_editingFiche && newSha) _editingFiche.sha = newSha;
-    else if (newSha) _editingFiche = { filename: filename, sha: newSha };
-
-    var publicUrl = _GH_PAGES_BASE + filename;
-
-    // ── Sauvegarde complète dans Supabase ──
-    try {
-      var bienData = window._bienData || collectBienData();
-      var slug = filename.replace('-FINAL.html', '').replace('.html', '');
-      var supaPayload = {
-        slug: slug,
-        data: bienData
+  fetch(apiUrl, { headers: headers })
+    .then(function(r) { return r.ok ? r.json() : null; })
+    .then(function(existing) {
+      var body = {
+        message: 'feat: fiche acquereur ' + _lastGeneratedSlug,
+        content: toBase64UTF8(_lastGeneratedHTML),
+        branch: 'main'
       };
-      // Upsert par slug
-      await fetch('https://hhqcumnatnslfjpsrmgb.supabase.co/rest/v1/fiches?on_conflict=slug', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY',
-          'Prefer': 'resolution=merge-duplicates'
-        },
-        body: JSON.stringify(supaPayload)
+      if (existing && existing.sha) body.sha = existing.sha;
+      return fetch(apiUrl, {
+        method: 'PUT',
+        headers: headers,
+        body: JSON.stringify(body)
       });
-      console.log('[publier] données sauvegardées dans Supabase');
-    } catch(supaErr) {
-      console.warn('[publier] erreur Supabase (non bloquant):', supaErr);
-    }
-
-    clearInterval(_pubMsgTimer);
-    btn.disabled = false;
-    status.textContent = '✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !');
-
-    document.getElementById('pub-url-input').value = publicUrl;
-    document.getElementById('pub-url-link').href   = publicUrl;
-    document.getElementById('pub-qr').src =
-      'https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=' + encodeURIComponent(publicUrl);
-    document.getElementById('pub-result').style.display = 'block';
-    var btnPartager = document.getElementById('btn-partager');
-    if (btnPartager) btnPartager.style.display = 'inline-flex';
-    _stepsComplete[4] = true;
-    updateStepperTabs();
-    showToast('✅ ' + (isUpdate ? 'Fiche mise à jour !' : 'Fiche publiée !'));
-  } catch(err) {
-    clearInterval(_pubMsgTimer);
-    btn.disabled = false;
-    status.textContent = '❌ ' + err.message;
-    showToast('❌ ' + err.message, true);
-  }
+    })
+    .then(function(r) {
+      return r.json().then(function(data) {
+        return { ok: r.ok, status: r.status, data: data };
+      });
+    })
+    .then(function(res) {
+      clearInterval(_pubMsgTimer);
+      btn.disabled = false;
+      if (res.ok) {
+        var pageUrl = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/'
+          + _lastGeneratedSlug + '-FINAL.html';
+        status.innerHTML = '✅ Publié avec succès !';
+        var linkArea = document.getElementById('gh-link-area');
+        linkArea.style.display = 'block';
+        linkArea.innerHTML =
+          '<a id="gh-page-url" href="' + pageUrl + '" target="_blank"'
+          + ' style="color:var(--primary);font-weight:700;word-break:break-all;">'
+          + pageUrl + '</a>'
+          + '<br><button class="btn btn-outline" style="margin-top:8px;"'
+          + ' onclick="copyGhLink()">📋 Copier le lien</button>'
+          + ' <a href="' + pageUrl + '" target="_blank" class="btn btn-outline" style="margin-top:8px;">🔗 Ouvrir</a>'
+          + ' <button class="btn btn-outline" style="margin-top:8px;" onclick="navigator.share ? navigator.share({url:\'' + pageUrl + '\''+'}) : copyGhLink()">📤 Partager</button>';
+        _stepsComplete[4] = true;
+        updateStepperTabs();
+        showToast('✅ Fiche publiée !');
+      } else {
+        status.textContent = '❌ Erreur ' + res.status + ' : '
+          + (res.data.message || JSON.stringify(res.data));
+      }
+    })
+    .catch(function(err) {
+      clearInterval(_pubMsgTimer);
+      btn.disabled = false;
+      status.textContent = '❌ ' + (err && err.message ? err.message : String(err));
+    });
 }
 
-function partagerFiche() {
-  var url = document.getElementById('pub-url-input').value;
-  if (!url) return;
-  if (navigator.share) {
-    navigator.share({ title: 'Votre fiche acheteur', url: url }).catch(function() {});
+function clearGhToken() {
+  localStorage.removeItem('_gh_token');
+  document.getElementById('gh-token-input').value = '';
+  refreshTokenUI();
+}
+
+function refreshTokenUI() {
+  var token = localStorage.getItem('_gh_token');
+  var inp = document.getElementById('gh-token-input');
+  var lbl = document.getElementById('gh-token-status');
+  var saveBtn = document.getElementById('gh-token-save-btn');
+  if (!inp || !lbl) return;
+  if (token) {
+    inp.style.display = 'none';
+    if (saveBtn) saveBtn.style.display = 'none';
+    lbl.innerHTML = '✅ Token enregistré &nbsp;'
+      + '<button class="btn btn-outline"'
+      + ' style="font-size:11px;padding:2px 8px;"'
+      + ' onclick="clearGhToken()">Modifier</button>';
   } else {
-    copierLienFiche();
+    inp.style.display = '';
+    if (saveBtn) saveBtn.style.display = '';
+    lbl.textContent = '';
   }
 }
 
-function copierLienFiche() {
-  var val = document.getElementById('pub-url-input').value;
-  if (!val) return;
-  navigator.clipboard.writeText(val)
+function copyGhLink() {
+  var link = document.getElementById('gh-page-url');
+  if (!link) return;
+  navigator.clipboard.writeText(link.href)
     .then(function() { showToast('📋 Lien copié !'); })
-    .catch(function() { showToast('⚠️ Copie manuelle : ' + val, true); });
+    .catch(function() { showToast('⚠️ Copie manuelle : ' + link.href, true); });
 }
 
+function refreshStep4Summary() {
+  var el = document.getElementById('step4-summary');
+  if (!el) return;
+  if (!_lastGeneratedSlug) {
+    el.textContent = '⚠️ Aucune fiche générée — revenez à l\'étape 3.';
+    return;
+  }
+  el.innerHTML =
+    '<div style="font-size:13px;line-height:2;">'
+    + '<div><span style="color:var(--muted)">Fichier</span> : '
+    + '<code>' + esc(_lastGeneratedSlug) + '-FINAL.html</code></div>'
+    + '<div><span style="color:var(--muted)">Dépôt</span> : '
+    + '<code>olivierloison84-sketch/Expertimo</code></div>'
+    + '<div><span style="color:var(--muted)">Branche</span> : '
+    + '<code>main → /fiches/</code></div>'
+    + '</div>';
+}
 // ═══════════════════════════════════════════════════════
 // PAGE 5 — ANALYTICS
 // ═══════════════════════════════════════════════════════
@@ -3528,13 +3210,9 @@ async function loadFiches() {
         + '<td style="padding:10px 14px;text-align:center;white-space:nowrap;">'
         +   '<a href="' + _GH_PAGES_BASE + encodeURIComponent(f.name) + '" target="_blank" rel="noopener" '
         +      'class="btn btn-sm btn-outline" style="margin-right:6px;">👁️ Voir</a>'
-        +   '<button class="btn btn-sm" style="background:var(--accent);color:#fff;margin-right:6px;" '
+        +   '<button class="btn btn-sm" style="background:var(--accent);color:#fff" '
         +           'onclick="modifierFiche(\'' + f.name.replace(/'/g, "\\'") + '\',\'' + f.sha + '\',\'' + (f.download_url||'').replace(/'/g, "\\'") + '\')">'
         +     '✏️ Modifier'
-        +   '</button>'
-        +   '<button class="btn btn-sm" style="background:#c0392b;color:#fff;" '
-        +           'onclick="supprimerFiche(\'' + f.name.replace(/'/g, "\\'") + '\')">'
-        +     '🗑️ Supprimer'
         +   '</button>'
         + '</td>';
       tbody.appendChild(tr);
@@ -3563,58 +3241,9 @@ async function loadFiches() {
   }
 }
 
-async function supprimerFiche(filename) {
-  if (!confirm('⚠️ Supprimer cette fiche ? Cette action la supprime de GitHub Pages définitivement.')) return;
-  if (!_GH_TOKEN) { alert('Token GitHub manquant.'); return; }
-  var apiUrl = 'https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename);
-  var headers = { Authorization: 'token ' + _GH_TOKEN, Accept: 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
-  try {
-    // 1. Fetch SHA actuel
-    var shaRes = await fetch(apiUrl, { headers: headers });
-    if (!shaRes.ok) throw new Error('Fichier introuvable sur GitHub (HTTP ' + shaRes.status + ')');
-    var shaData = await shaRes.json();
-    var currentSha = shaData.sha;
-    // 2. Supprimer avec le SHA frais
-    var r = await fetch(apiUrl, {
-      method: 'DELETE',
-      headers: headers,
-      body: JSON.stringify({ message: 'suppr: fiche ' + filename, sha: currentSha, branch: 'main' })
-    });
-    if (r.ok) {
-      showToast('✅ Fiche supprimée de GitHub.');
-      loadFiches();
-    } else {
-      var err = await r.json();
-      alert('❌ Erreur ' + r.status + ' : ' + (err.message || 'inconnue'));
-    }
-  } catch(e) {
-    alert('❌ Erreur : ' + e.message);
-  }
-}
-
 async function modifierFiche(filename, sha, downloadUrl) {
   showToast('⏳ Chargement de la fiche…');
   try {
-    // ── Essai lecture depuis Supabase en priorité ──
-    var slug = filename.replace('-FINAL.html', '').replace('.html', '');
-    var supaRes = await fetch('https://hhqcumnatnslfjpsrmgb.supabase.co/rest/v1/fiches?slug=eq.' + encodeURIComponent(slug) + '&select=data', {
-      headers: {
-        'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY'
-      }
-    });
-    if (supaRes.ok) {
-      var supaData = await supaRes.json();
-      if (supaData && supaData[0] && supaData[0].data) {
-        console.log('[modifierFiche] données récupérées depuis Supabase');
-        var data = supaData[0].data;
-        _editingFiche = { filename: filename, sha: sha };
-        await remplirFormulaireAvecData(data);
-        return;
-      }
-    }
-    console.log('[modifierFiche] pas de données Supabase — lecture HTML');
-
     var r = await fetch(downloadUrl + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
     var html = await r.text();
@@ -3925,27 +3554,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
       dbgSet('cos_ces',                 data.cos_ces                 || '');
       dbgSet('hauteur_max',             data.hauteur_max             || '');
       dbgSet('projet_terrain',          data.projet_terrain          || '');
-// Questions de découverte
-      dbgSet('q1',               data.q1               || '');
-      dbgSet('q2',               data.q2               || '');
-      dbgSet('q3',               data.q3               || '');
-      dbgSet('q4',               data.q4               || '');
-      dbgSet('q5',               data.q5               || '');
-      dbgSet('notes_libres',     data.notes_libres     || '');
-      dbgSet('prochaines_etapes',data.prochaines_etapes|| '');
-      dbgSet('date_r2',          data.date_r2          || '');
-      // Financement & Relogement
-      dbgSet('loyer',            data.loyer_proprio    || '');
-      dbgSet('capital_restant',  data.capital_restant  || '');
-      dbgSet('dette_montant',    data.dette_montant    || '');
-      dbgSet('dette_echeance',   data.dette_echeance   || '');
-      dbgSet('banque',           data.banque           || '');
-      dbgSet('taux_pret',        data.taux_pret        || '');
-      dbgSet('reloge_budget',    data.reloge_budget    || '');
-      dbgSet('reloge_type',      data.reloge_type      || '');
-      dbgSet('reloge_delai',     data.reloge_delai     || '');
-      dbgSet('reloge_zone',      data.reloge_zone      || '');
-      dbgSet('reloge_pieces',    data.reloge_pieces    || '');
+
       // GES button (same mechanism as DPE)
       if (data.gesLettre) {
         var gesTarget = document.querySelector('#page-2 .dpe-btn[data-group="ges"][data-letter="' + data.gesLettre + '"]');
@@ -3991,106 +3600,6 @@ async function modifierFiche(filename, sha, downloadUrl) {
   }
 }
 
-async function remplirFormulaireAvecData(data) {
-  // Active edit mode
-  window._editMode = true;
-  localStorage.removeItem('_draft_bien');
-  localStorage.removeItem('privency_draft');
-  localStorage.removeItem('privency_last_fiche');
-  _stepsComplete[2] = true;
-  _lastGeneratedHTML = null;
-  _lastGeneratedSlug = null;
-  _stepsComplete[3] = false;
-  goToStep(2);
-  var btnContinue = document.getElementById('btn-step3-continue');
-  if (btnContinue) btnContinue.disabled = true;
-
-  function dbgSet(id, val) {
-    var el = document.getElementById(id);
-    if (el) el.value = (val == null ? '' : val);
-  }
-
-  setTimeout(function() {
-    document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) { el.value = ''; });
-    document.querySelectorAll('#page-2 input[type=radio], #page-2 input[type=checkbox]').forEach(function(el) { el.checked = false; });
-    var type = data.type || 'appart';
-    switchType(type);
-    document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
-    var typeTab = document.getElementById('tab-' + type);
-    if (typeTab) typeTab.classList.add('active');
-
-    // Inject all fields from data object
-    var fields = {
-      'adresse': data.adresse, 'quartier': data.quartier,
-      'surface_hab': data.surface, 'surface_carrez': data.surfCarrez,
-      'prix_vente': data.prix, 'prix_vente_t': data.prix,
-      'charges_copro': data.chargesCopro, 'taxe_fonciere': data.taxeFonciere,
-      'taxe_fonciere_t': data.taxeFonciere, 'charges_detail': data.chargesDetail,
-      'nb_pieces': data.pieces, 'nb_chambres': data.chambres,
-      'nb_sdb': data.sdb, 'nb_wc': data.wc, 'nb_etages': data.etages,
-      'etage': data.etage, 'annee_construction': data.anneeConstruction,
-      'loyer_estime': data.loyerEstime,
-      'bien_photo1_url': data.photo1, 'bien_photo2_url': data.photo2,
-      'bien_photo3_url': data.photo3, 'bien_photo4_url': data.photo4, 'bien_photo5_url': data.photo5,
-      'video_url': data.videoUrl, 'visite_url': data.visiteUrl,
-      'bien_fort1': data.fort1, 'bien_fort2': data.fort2, 'bien_fort3': data.fort3,
-      'bien_vig1': data.vig1, 'bien_vig2': data.vig2,
-      'plus_bien': data.plusBien, 'bien_score': data.score,
-      'score_prest': data.scorePrest, 'score_secteur': data.scoreSecteur,
-      'score_qp': data.scoreQP, 'score_etat': data.scoreEtat,
-      'raison_vente': data.raisonVente, 'annee_achat': data.anneeAchat,
-      'prix_achat': data.prixAchat, 'travaux_realises': data.travauxRealises,
-      'travaux_prevus': data.travauxPrevus, 'nb_visites': data.nbVisites,
-      'nb_offres': data.nbOffres, 'prix_offres': data.prixOffres,
-      'hist_constr': data.histConstr, 'hist_achat': data.histAchat,
-      'hist_evt1': data.histEvt1, 'hist_evt2': data.histEvt2,
-      'hist_evt3': data.histEvt3, 'hist_evt4': data.histEvt4,
-      'scenario_montant': data.scenarioMontant, 'scenario_delai': data.scenarioDelai,
-      'comp1_adresse': data.comp1Adresse, 'comp1_prix': data.comp1Prix,
-      'comp1_surface': data.comp1Surface, 'comp1_date': data.comp1Date,
-      'comp2_adresse': data.comp2Adresse, 'comp2_prix': data.comp2Prix,
-      'comp2_surface': data.comp2Surface, 'comp2_date': data.comp2Date,
-      'comp3_adresse': data.comp3Adresse, 'comp3_prix': data.comp3Prix,
-      'comp3_surface': data.comp3Surface, 'comp3_date': data.comp3Date
-    };
-    Object.keys(fields).forEach(function(id) { if (fields[id] != null) dbgSet(id, fields[id]); });
-
-    if (data.dpe) {
-      var dpeTarget = document.querySelector('#page-2 .dpe-btn[data-group="dpe"][data-letter="' + data.dpe + '"]');
-      if (dpeTarget) dpeTarget.click();
-    }
-    if (data.gesLettre) {
-      var gesTarget = document.querySelector('#page-2 .dpe-btn[data-group="ges"][data-letter="' + data.gesLettre + '"]');
-      if (gesTarget) gesTarget.click();
-    }
-    window._editMode = false;
-    showToast('✅ Fiche chargée depuis Supabase — modifiez et régénérez.');
-  }, 500);
-
-  setTimeout(function() {
-    function dbgSet2(id, val) { var el = document.getElementById(id); if (el) el.value = (val == null ? '' : val); }
-    dbgSet2('adresse', data.adresse || '');
-    dbgSet2('surface_hab', data.surface || '');
-    dbgSet2('prix_vente', data.prix || '');
-    dbgSet2('prix_vente_t', data.prix || '');
-    dbgSet2('charges_copro', data.chargesCopro || '');
-    dbgSet2('taxe_fonciere', data.taxeFonciere || '');
-    dbgSet2('bien_fort1', data.fort1 || '');
-    dbgSet2('bien_fort2', data.fort2 || '');
-    dbgSet2('bien_fort3', data.fort3 || '');
-    dbgSet2('bien_vig1', data.vig1 || '');
-    dbgSet2('bien_vig2', data.vig2 || '');
-    dbgSet2('raison_vente', data.raisonVente || '');
-    dbgSet2('annee_achat', data.anneeAchat || '');
-    dbgSet2('prix_achat', data.prixAchat || '');
-  }, 800);
-
-  // Restore checkboxes/radios/ratings LAST — after all DOM resets are done
-  setTimeout(function() {
-    if (data._rawState) restoreRawFormState(data._rawState);
-  }, 1000);
-}
-
 function refreshStep4Summary() {
   var el = document.getElementById('step4-summary');
   if (!el) return;
@@ -4106,6 +3615,11 @@ function refreshStep4Summary() {
     + '<code>fiches</code> (Supabase Storage)</div>'
     + '</div>';
 }
+</script>
+</body>
+</html>
+
+
 </script>
 </body>
 </html>
