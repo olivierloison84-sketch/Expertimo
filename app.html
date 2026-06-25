@@ -3309,7 +3309,7 @@ async function publierFiche() {
     try {
       var bienData = window._bienData || collectBienData();
       var slug = filename.replace('-FINAL.html', '').replace('.html', '');
-      var session = await authClient.auth.getSession();
+      var session = await window.privencyAuth.auth.getSession();
       var userId = session && session.data && session.data.session && session.data.session.user ? session.data.session.user.id : null;
       var supaPayload = {
         slug: slug,
