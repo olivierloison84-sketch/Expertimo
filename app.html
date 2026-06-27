@@ -1935,18 +1935,42 @@ function switchType(type) {
 // STEP 2 — PHOTOS
 // ═══════════════════════════════════════════════════════
 function addPhotos(input) {
+  var CL_CLOUD  = 'dif0ikaj1';
+  var CL_PRESET = 'privency_upload';
   Array.from(input.files).forEach(function(f) {
-    var reader=new FileReader();
-    reader.onload=function(e) { _photos.push({dataUrl:e.target.result,caption:''}); renderPhotos(); };
-    reader.readAsDataURL(f);
-  }); input.value='';
+    var idx = _photos.length;
+    _photos.push({ dataUrl: '', caption: '', uploading: true });
+    renderPhotos();
+    var fd = new FormData();
+    fd.append('file', f);
+    fd.append('upload_preset', CL_PRESET);
+    fetch('https://api.cloudinary.com/v1_1/' + CL_CLOUD + '/image/upload', { method: 'POST', body: fd })
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        _photos[idx].dataUrl    = data.secure_url || data.url || '';
+        _photos[idx].uploading  = false;
+        // Auto-fill the next empty URL field
+        var urlFields = ['bien_photo1_url','bien_photo2_url','bien_photo3_url','bien_photo4_url','bien_photo5_url'];
+        for (var i = 0; i < urlFields.length; i++) {
+          var el = document.getElementById(urlFields[i]);
+          if (el && !el.value) { el.value = _photos[idx].dataUrl; break; }
+        }
+        renderPhotos();
+      })
+      .catch(function() { _photos[idx].uploading = false; renderPhotos(); });
+  });
+  input.value = '';
 }
 function escAttr(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function renderPhotos() {
   var grid=document.getElementById('photo_grid'); if(!grid) return; grid.innerHTML='';
   _photos.forEach(function(p,i) {
     var div=document.createElement('div'); div.className='photo-thumb';
-    div.innerHTML='<img src="'+p.dataUrl+'" alt="Photo '+(i+1)+'">'+'<button class="del-photo" onclick="removePhoto('+i+')">✕</button>'+'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" oninput="_photos['+i+'].caption=this.value"></div>';
+    if (p.uploading) {
+      div.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:80px;color:var(--muted);font-size:12px;">⏳ Upload…</div>';
+    } else {
+      div.innerHTML='<img src="'+p.dataUrl+'" alt="Photo '+(i+1)+'">'+'<button class="del-photo" onclick="removePhoto('+i+')">✕</button>'+'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" oninput="_photos['+i+'].caption=this.value"></div>';
+    }
     grid.appendChild(div);
   }); scheduleDraftSave();
 }
