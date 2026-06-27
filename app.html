@@ -778,53 +778,16 @@ textarea { resize: vertical; min-height: 60px; }
 
 <!-- ── Historique du bien ── -->
 <div class="card">
-  <div class="card-header">📅 Historique du bien (timeline fiche acheteur)</div>
+  <div class="card-header">📅 Historique &amp; Travaux</div>
   <div class="card-body">
-    <div class="grid-2">
-      <div class="form-group"><label>Construction — description</label><input type="text" id="hist_constr_desc" placeholder="Immeuble résidentiel récent, bonne qualité de construction"></div>
-      <div class="form-group"><label>Événement 1 — date · label</label><input type="text" id="hist_evt1_date" placeholder="2015 · RÉNOVATION"></div>
-      <div class="form-group"><label>Événement 1 — description</label><input type="text" id="hist_evt1_desc" placeholder="Rénovation complète : sols, murs, cuisine, salle de bains…"></div>
-      <div class="form-group"><label>Événement 2 — date · label (optionnel)</label><input type="text" id="hist_evt2_date" placeholder=""></div>
-      <div class="form-group"><label>Événement 2 — description (optionnel)</label><input type="text" id="hist_evt2_desc" placeholder=""></div>
-      <div class="form-group"><label>Année de mise en vente</label><input type="text" id="hist_vente_date" value="2025" placeholder="2025"></div>
+    <div class="form-group">
+      <label>Historique du bien (texte libre)</label>
+      <textarea id="historique_libre" placeholder="Ex : Acquis en 2005, rénovation complète en 2018 (cuisine, salle de bains, sols), double vitrage posé en 2020…" style="min-height:100px"></textarea>
     </div>
-    <p class="hint">Laisser vide les événements non utilisés — ils ne seront pas affichés dans la fiche acheteur.</p>
-    <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <thead><tr>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:18%">Année</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Montant (€)</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Nature des travaux</th>
-      </tr></thead>
-      <tbody id="renov_tbody">
-        <tr>
-          <td><input type="number" id="renov_annee_1" placeholder="2022"></td>
-          <td><input type="number" id="renov_montant_1" placeholder="15000"></td>
-          <td><input type="text" id="renov_desc_1" placeholder="Réfection toiture"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_2" placeholder="2021"></td>
-          <td><input type="number" id="renov_montant_2"></td>
-          <td><input type="text" id="renov_desc_2"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_3"></td>
-          <td><input type="number" id="renov_montant_3"></td>
-          <td><input type="text" id="renov_desc_3"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_4"></td>
-          <td><input type="number" id="renov_montant_4"></td>
-          <td><input type="text" id="renov_desc_4"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_5"></td>
-          <td><input type="number" id="renov_montant_5"></td>
-          <td><input type="text" id="renov_desc_5"></td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="form-group">
+      <label>Travaux récents (texte libre)</label>
+      <textarea id="travaux_recents" placeholder="Cuisine rénovée 2021, salle de bains 2019…" style="min-height:60px"></textarea>
+    </div>
   </div>
 </div>
 
