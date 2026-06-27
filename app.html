@@ -2920,7 +2920,7 @@ function pushToGitHub() {
       if (res.ok) {
         var pageUrl = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/'
           + _lastGeneratedSlug + '-FINAL.html';
-        status.innerHTML = '✅ Publié avec succès ! <span style="color:var(--muted);font-size:12px;">(La page sera accessible dans 1-2 minutes)</span>';
+        status.innerHTML = '✅ Publié avec succès !';
         var linkArea = document.getElementById('gh-link-area');
         linkArea.style.display = 'block';
         linkArea.innerHTML =
@@ -2928,7 +2928,9 @@ function pushToGitHub() {
           + ' style="color:var(--primary);font-weight:700;word-break:break-all;">'
           + pageUrl + '</a>'
           + '<br><button class="btn btn-outline" style="margin-top:8px;"'
-          + ' onclick="copyGhLink()">📋 Copier le lien</button>';
+          + ' onclick="copyGhLink()">📋 Copier le lien</button>'
+          + ' <a href="' + pageUrl + '" target="_blank" class="btn btn-outline" style="margin-top:8px;">🔗 Ouvrir</a>'
+          + ' <button class="btn btn-outline" style="margin-top:8px;" onclick="navigator.share ? navigator.share({url:\'' + pageUrl + '\',title:\'Fiche Privency\'}) : copyGhLink()">📤 Partager</button>';
         _stepsComplete[4] = true;
         updateStepperTabs();
         showToast('✅ Fiche publiée !');
@@ -3159,9 +3161,6 @@ async function loadFiches() {
         +           'onclick="modifierFiche(\'' + f.name.replace(/'/g, "\\'") + '\',\'' + f.sha + '\',\'' + (f.download_url||'').replace(/'/g, "\\'") + '\')">'
         +     '✏️ Modifier'
         +   '</button>'
-        +   '<button class="btn btn-sm" style="background:#c0392b;color:#fff;margin-left:6px;" onclick="supprimerFiche(this)" data-fname="' + esc(f.name) + '">'
-        +     '🗑️ Supprimer'
-        +   '</button>'
         + '</td>';
       tbody.appendChild(tr);
 
@@ -3187,31 +3186,6 @@ async function loadFiches() {
   } catch(err) {
     status.textContent = '❌ ' + err.message;
   }
-}
-
-async function supprimerFiche(btn) {
-  var filename = btn.getAttribute('data-fname');
-  if (!confirm('Supprimer la fiche "' + filename + '" ? Cette action est irréversible.')) return;
-  var token = _GH_TOKEN || localStorage.getItem('expertimo_gh_token');
-  if (!token) { showToast('⚠️ Token GitHub manquant.'); return; }
-  var apiUrl = 'https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(filename);
-  var headers = { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json' };
-  try {
-    var r = await fetch(apiUrl, { headers: headers });
-    if (!r.ok) { showToast('❌ Fiche introuvable sur GitHub.'); return; }
-    var data = await r.json();
-    var del = await fetch(apiUrl, {
-      method: 'DELETE',
-      headers: Object.assign({}, headers, { 'Content-Type': 'application/json' }),
-      body: JSON.stringify({ message: 'suppr: ' + filename, sha: data.sha, branch: 'main' })
-    });
-    if (del.ok) {
-      showToast('✅ Fiche supprimée — actualisation dans 3 secondes…');
-      setTimeout(function() { loadFiches(); }, 3000);
-    } else {
-      showToast('❌ Erreur lors de la suppression.');
-    }
-  } catch(e) { showToast('❌ ' + e.message); }
 }
 
 async function modifierFiche(filename, sha, downloadUrl) {
