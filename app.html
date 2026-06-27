@@ -2021,7 +2021,7 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_pf3',      d.fort3 || '');
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
-  html = replaceSp(html, '_sp_loyer',    d.loyer > 0 ? String(Math.round(d.loyer)) : '0');
+  if (d.loyer > 0) html = replaceSp(html, '_sp_loyer', String(Math.round(d.loyer)));
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
 
   // Loyer slider — replace hardcoded 1300 in template JS
@@ -2729,7 +2729,7 @@ function collectBienData() {
     mediane:       parseFloat(getV('bien_mediane'))||0,
     tension:       getV('bien_tension')||'Très forte',
     delai:         getV('bien_delai')||'21 jours',
-    loyer:         parseFloat(getV('loyer')||getV('bien_loyer_estime'))||0,
+    loyer:         parseFloat(getV('bien_loyer_estime')||getV('loyer'))||0,
     chargesCopro:  chargesCopro,
     chargesDetail: getV('charges_detail'),
     taxeFonciere:  taxeFonciere,
