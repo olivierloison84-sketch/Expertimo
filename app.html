@@ -778,16 +778,49 @@ textarea { resize: vertical; min-height: 60px; }
 
 <!-- ── Historique du bien ── -->
 <div class="card">
-  <div class="card-header">📅 Historique &amp; Travaux</div>
+  <div class="card-header">📅 Historique du bien (texte libre)</div>
   <div class="card-body">
     <div class="form-group">
-      <label>Historique du bien (texte libre)</label>
-      <textarea id="historique_libre" placeholder="Ex : Acquis en 2005, rénovation complète en 2018 (cuisine, salle de bains, sols), double vitrage posé en 2020…" style="min-height:100px"></textarea>
+      <label>Historique libre (chronologie, rénovations, événements marquants…)</label>
+      <textarea id="historique_libre" style="min-height:140px" placeholder="2003 · CONSTRUCTION — Immeuble résidentiel récent.&#10;2015 · RÉNOVATION — Rénovation complète : sols, murs, cuisine, salle de bains, installation électrique.&#10;2025 · MISE EN VENTE — Bien proposé à 260 000 €, DPE D, libre à la vente."></textarea>
+      <p class="hint">Saisissez chaque événement sur une ligne. Ce texte apparaîtra dans la section Historique de la fiche acheteur.</p>
     </div>
-    <div class="form-group">
-      <label>Travaux récents (texte libre)</label>
-      <textarea id="travaux_recents" placeholder="Cuisine rénovée 2021, salle de bains 2019…" style="min-height:60px"></textarea>
-    </div>
+    <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:18%">Année</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Montant (€)</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Nature des travaux</th>
+      </tr></thead>
+      <tbody id="renov_tbody">
+        <tr>
+          <td><input type="number" id="renov_annee_1" placeholder="2022"></td>
+          <td><input type="number" id="renov_montant_1" placeholder="15000"></td>
+          <td><input type="text" id="renov_desc_1" placeholder="Réfection toiture"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_2" placeholder="2021"></td>
+          <td><input type="number" id="renov_montant_2"></td>
+          <td><input type="text" id="renov_desc_2"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_3"></td>
+          <td><input type="number" id="renov_montant_3"></td>
+          <td><input type="text" id="renov_desc_3"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_4"></td>
+          <td><input type="number" id="renov_montant_4"></td>
+          <td><input type="text" id="renov_desc_4"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_5"></td>
+          <td><input type="number" id="renov_montant_5"></td>
+          <td><input type="text" id="renov_desc_5"></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -1078,12 +1111,14 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
     <div class="photo-grid" id="photo_grid"></div>
-    <div class="section-title mt-16">URLs photos pour la fiche acheteur (3 premières)</div>
+    <div class="section-title mt-16">URLs photos pour la fiche acheteur (5 photos)</div>
     <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
     <div class="grid-3">
       <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
       <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
       <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
+      <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url" placeholder="https://…"></div>
+      <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url" placeholder="https://…"></div>
     </div>
   </div>
 </div>
@@ -2055,15 +2090,22 @@ function injectData(html, d) {
   var ssub = q('.ssub');
   if (ssub) ssub.textContent = d.description;
 
-  // Gallery images
+  // Gallery images (5 photos)
   var imgs = qa('.gallery img');
-  if (imgs[0] && d.photo1) { imgs[0].src = d.photo1; imgs[0].alt = d.adresse + ' - Vue principale'; }
-  if (imgs[1] && d.photo2) { imgs[1].src = d.photo2; imgs[1].alt = d.adresse; }
-  if (imgs[2] && d.photo3) { imgs[2].src = d.photo3; imgs[2].alt = d.adresse; }
+  var photoList = [d.photo1, d.photo2, d.photo3, d.photo4, d.photo5];
+  for (var pi = 0; pi < imgs.length && pi < photoList.length; pi++) {
+    if (photoList[pi]) {
+      imgs[pi].src = photoList[pi];
+      imgs[pi].alt = d.adresse + (pi === 0 ? ' - Vue principale' : '');
+      imgs[pi].style.display = '';
+    } else {
+      imgs[pi].style.display = 'none';
+    }
+  }
   var galleryEl = q('.gallery');
   if (galleryEl && galleryEl.nextElementSibling) {
-    var nPh = [d.photo1, d.photo2, d.photo3].filter(Boolean).length;
-    galleryEl.nextElementSibling.textContent = "📷 Cliquez sur une photo pour l'agrandir · " + nPh + " photos disponibles";
+    var nPh = photoList.filter(Boolean).length;
+    galleryEl.nextElementSibling.textContent = "📷 Cliquez sur une photo pour l'agrandir · " + nPh + " photo" + (nPh > 1 ? 's' : '') + " disponible" + (nPh > 1 ? 's' : '');
   }
 
   // Score box
@@ -2665,6 +2707,8 @@ function collectBienData() {
   var photo1=getV('bien_photo1_url')||(_photos[0]?_photos[0].dataUrl:'');
   var photo2=getV('bien_photo2_url')||(_photos[1]?_photos[1].dataUrl:'');
   var photo3=getV('bien_photo3_url')||(_photos[2]?_photos[2].dataUrl:'');
+  var photo4=getV('bien_photo4_url')||(_photos[3]?_photos[3].dataUrl:'');
+  var photo5=getV('bien_photo5_url')||(_photos[4]?_photos[4].dataUrl:'');
   var fb=parseFloat(getV('bien_fourchette_basse'))||(prix?Math.round(prix*.9):0);
   var fh=parseFloat(getV('bien_fourchette_haute'))||(prix?Math.round(prix*1.1):0);
   var typeLabel=currentType==='appart'?'Appartement':currentType==='maison'?'Maison':'Terrain';
@@ -2696,7 +2740,7 @@ function collectBienData() {
     scoreEtat:     getV('bien_score_etat')||'8',
     fort1:getV('bien_fort1'), fort2:getV('bien_fort2'), fort3:getV('bien_fort3'),
     vig1: getV('bien_vig1'),  vig2: getV('bien_vig2'),  vig3: getV('bien_vig3'),
-    photo1:photo1, photo2:photo2, photo3:photo3,
+    photo1:photo1, photo2:photo2, photo3:photo3, photo4:photo4, photo5:photo5,
     dvf:           getDVFRows(),
     fourchetBasse: fb, fourchetHaute: fh,
     creditDuree:   parseInt(getV('bien_credit_duree'))||20,
@@ -2924,13 +2968,18 @@ function pushToGitHub() {
         var linkArea = document.getElementById('gh-link-area');
         linkArea.style.display = 'block';
         linkArea.innerHTML =
-          '<a id="gh-page-url" href="' + pageUrl + '" target="_blank"'
-          + ' style="color:var(--primary);font-weight:700;word-break:break-all;">'
+          '<div style="background:#f0f7ff;border:1.5px solid #b8d4f0;border-radius:var(--radius);padding:12px 16px;margin-bottom:12px;">'
+          + '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">🔗 URL de la fiche publiée</div>'
+          + '<a id="gh-page-url" href="' + pageUrl + '" target="_blank"'
+          + ' style="color:var(--primary);font-weight:700;word-break:break-all;font-size:13px;">'
           + pageUrl + '</a>'
-          + '<br><button class="btn btn-outline" style="margin-top:8px;"'
-          + ' onclick="copyGhLink()">📋 Copier le lien</button>'
-          + ' <a href="' + pageUrl + '" target="_blank" class="btn btn-outline" style="margin-top:8px;">🔗 Ouvrir</a>'
-          + ' <button class="btn btn-outline" style="margin-top:8px;" onclick="navigator.share ? navigator.share({url:\'' + pageUrl + '\',title:\'Fiche Privency\'}) : copyGhLink()">📤 Partager</button>';
+          + '</div>'
+          + '<div style="display:flex;gap:10px;flex-wrap:wrap;">'
+          + '<a href="' + pageUrl + '" target="_blank" rel="noopener" class="btn btn-success">🌐 Ouvrir la fiche</a>'
+          + '<button class="btn btn-primary" onclick="copyGhLink()">📋 Copier le lien</button>'
+          + '<button class="btn btn-outline" onclick="partagerFiche(\'' + pageUrl.replace(/'/g,"\\'") + '\')">'
+          + '📤 Partager</button>'
+          + '</div>';
         _stepsComplete[4] = true;
         updateStepperTabs();
         showToast('✅ Fiche publiée !');
@@ -2978,6 +3027,20 @@ function copyGhLink() {
   navigator.clipboard.writeText(link.href)
     .then(function() { showToast('📋 Lien copié !'); })
     .catch(function() { showToast('⚠️ Copie manuelle : ' + link.href, true); });
+}
+
+function partagerFiche(url) {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Fiche acheteur — Expertimo',
+      text: 'Découvrez cette fiche acheteur exclusive',
+      url: url
+    }).catch(function() {});
+  } else {
+    navigator.clipboard.writeText(url)
+      .then(function() { showToast('📤 Lien copié (Web Share non disponible sur ce navigateur)'); })
+      .catch(function() { showToast('📤 URL : ' + url, true); });
+  }
 }
 
 function refreshStep4Summary() {
@@ -3151,15 +3214,23 @@ async function loadFiches() {
         .replace(/-/g, ' ');
       var tr = document.createElement('tr');
       tr.style.background = idx % 2 === 0 ? '#fff' : '#f8fafc';
+      var safeName = f.name.replace(/'/g, "\\'");
+      var safeSha  = f.sha;
+      var safeDl   = (f.download_url||'').replace(/'/g, "\\'");
       tr.innerHTML =
         '<td style="padding:10px 14px;font-weight:600;">' + esc(label) + '</td>'
         + '<td id="fiche-date-' + idx + '" style="padding:10px 14px;color:var(--muted);font-size:12px;">—</td>'
         + '<td style="padding:10px 14px;text-align:center;white-space:nowrap;">'
         +   '<a href="' + _GH_PAGES_BASE + encodeURIComponent(f.name) + '" target="_blank" rel="noopener" '
         +      'class="btn btn-sm btn-outline" style="margin-right:6px;">👁️ Voir</a>'
-        +   '<button class="btn btn-sm" style="background:var(--accent);color:#fff" '
-        +           'onclick="modifierFiche(\'' + f.name.replace(/'/g, "\\'") + '\',\'' + f.sha + '\',\'' + (f.download_url||'').replace(/'/g, "\\'") + '\')">'
+        +   '<button class="btn btn-sm" style="background:var(--accent);color:#fff;margin-right:6px;" '
+        +           'onclick="modifierFiche(\'' + safeName + '\',\'' + safeSha + '\',\'' + safeDl + '\')">'
         +     '✏️ Modifier'
+        +   '</button>'
+        +   '<button class="btn btn-sm btn-danger" '
+        +           'data-fname="' + esc(f.name) + '" data-fsha="' + esc(f.sha) + '" '
+        +           'onclick="supprimerFiche(this)">'
+        +     '🗑️ Supprimer'
         +   '</button>'
         + '</td>';
       tbody.appendChild(tr);
@@ -3185,6 +3256,36 @@ async function loadFiches() {
     wrap.style.display   = 'block';
   } catch(err) {
     status.textContent = '❌ ' + err.message;
+  }
+}
+
+async function supprimerFiche(btn) {
+  var fname = btn.getAttribute('data-fname');
+  var fsha  = btn.getAttribute('data-fsha');
+  if (!fname || !fsha) { showToast('❌ Données manquantes pour la suppression.', true); return; }
+  if (!confirm('Supprimer définitivement la fiche "' + fname + '" ?')) return;
+  var token = _GH_TOKEN || localStorage.getItem('expertimo_gh_token');
+  if (!token) { showToast('⚠️ Token GitHub manquant.', true); return; }
+  btn.disabled = true;
+  btn.textContent = '⏳…';
+  var apiUrl = 'https://api.github.com/repos/' + _GH_REPO + '/contents/fiches/' + encodeURIComponent(fname);
+  try {
+    var r = await fetch(apiUrl, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'delete: fiche ' + fname, sha: fsha, branch: 'main' })
+    });
+    if (r.ok) {
+      showToast('✅ Fiche supprimée.');
+      btn.closest('tr').remove();
+    } else {
+      var data = await r.json();
+      showToast('❌ Erreur ' + r.status + ' : ' + (data.message || ''), true);
+      btn.disabled = false; btn.textContent = '🗑️ Supprimer';
+    }
+  } catch(err) {
+    showToast('❌ ' + (err && err.message ? err.message : String(err)), true);
+    btn.disabled = false; btn.textContent = '🗑️ Supprimer';
   }
 }
 
