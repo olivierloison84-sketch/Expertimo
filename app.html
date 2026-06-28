@@ -399,7 +399,6 @@ textarea { resize: vertical; min-height: 60px; }
 .dpe-D{background:#ffef00;color:#222;} .dpe-E{background:#f7941d;color:#fff;} .dpe-F{background:#ed1c24;color:#fff;} .dpe-G{background:#9b1c1c;color:#fff;}
 .defaut-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
 .defaut-item { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border:1.5px solid var(--border); border-radius:var(--radius); font-size:13px; }
-.defaut-item.oui { border-color:var(--danger); background:#fdedec; }
 .photo-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin-top:12px; }
 .photo-thumb { position:relative; border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); }
 .photo-thumb img { width:100%; height:130px; object-fit:cover; display:block; }
@@ -1810,9 +1809,7 @@ function buildCheckGrid(containerId, items, prefix) {
       '<label class="radio-item"><input type="radio" name="'+id+'" value="non" checked> Non</label>'+
       '<label class="radio-item"><input type="radio" name="'+id+'" value="oui"> Oui</label></div>';
     c.appendChild(div);
-    div.querySelectorAll('input[type=radio]').forEach(function(r) {
-      r.addEventListener('change', function() { div.classList.toggle('oui', r.value==='oui'&&r.checked); });
-    });
+
   });
 }
 
@@ -2691,7 +2688,10 @@ function restoreRawFormState(d) {
     });
     Object.keys(d).filter(function(k){return k.startsWith('radio_');}).forEach(function(k){
       var r=document.querySelector('#page-2 input[type=radio][name="'+k.replace('radio_','')+'"][value="'+d[k]+'"]');
-      if(r){r.checked=true;r.dispatchEvent(new Event('change'));}
+      if(r){
+        r.checked=true;
+
+      }
     });
     Object.keys(d).filter(function(k){return k.startsWith('cb_');}).forEach(function(k){var cb=document.getElementById(k.replace('cb_',''));if(cb)cb.checked=d[k];});
     Object.keys(d).filter(function(k){return k.startsWith('rating_');}).forEach(function(k){
