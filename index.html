@@ -1140,7 +1140,7 @@ function initMapQuartier() {
         document.getElementById('cnt-vert').textContent = counts.vert;
         document.getElementById('cnt-commerce').textContent = counts.commerce;
         document.getElementById('cnt-ecole').textContent = counts.ecole;
-      }).catch(function(){}); }, 1000);
+      }).catch(function(err){ console.log('[Overpass] Erreur requête POI :', err); }); }, 1000);
   }
 
   if (latFallback && lngFallback) {

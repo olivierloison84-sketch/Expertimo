@@ -3640,13 +3640,6 @@ async function modifierFiche(filename, sha, downloadUrl) {
         if (gesTarget) gesTarget.click();
       }
 
-      // Widgets complexes : radios, checkboxes, ratings, DPE/GES, plan des pièces
-      // _rawState is saved by collectBienData() from new fiches.
-      // restoreRawFormState handles checkboxes, radios, ratings, DPE-buttons and the pieces table.
-      if (data._rawState) {
-        restoreRawFormState(data._rawState);
-      }
-
       // 6. Release edit mode AFTER injection is complete
       window._editMode = false;
       showToast('✅ Fiche chargée — modifiez et régénérez.');
@@ -3673,6 +3666,16 @@ async function modifierFiche(filename, sha, downloadUrl) {
       }
       console.log('[inject x2] Terminé.');
     }, 800);
+
+    // Widgets complexes : radios, checkboxes, ratings, DPE/GES, plan des pièces
+    // Appelé EN DERNIER (1000ms) pour éviter tout écrasement par les injections précédentes.
+    // restoreRawFormState handles checkboxes, radios, ratings, DPE-buttons and the pieces table.
+    if (data._rawState) {
+      setTimeout(function() {
+        restoreRawFormState(data._rawState);
+        console.log('[inject x3] restoreRawFormState appliqué à 1000ms.');
+      }, 1000);
+    }
   } catch(err) {
     showToast('❌ Erreur chargement fiche : ' + err.message, true);
     console.error(err);
