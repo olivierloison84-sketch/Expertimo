@@ -896,12 +896,12 @@ function _calc() {
   var cfAnnuel = cf * 12;
   var rnet = (apE > 0) ? (cfAnnuel / apE * 100) : ((loyer * 12 - ch) / tot * 100);
 
-  document.getElementById('r-brut').textContent = fmtPct(brut);
-  document.getElementById('r-cf').textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + ' €';
-  document.getElementById('r-mens').textContent = Math.round(mens) + ' €';
-  document.getElementById('r-prix').textContent = fmt(prix);
-  document.getElementById('r-notaire').textContent = fmt(not);
-  document.getElementById('r-apport').textContent = fmt(apE);
+  var elBrut = document.getElementById('r-brut'); if (elBrut) elBrut.textContent = fmtPct(brut);
+  var elCf = document.getElementById('r-cf'); if (elCf) elCf.textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + ' €';
+  var elMens = document.getElementById('r-mens'); if (elMens) elMens.textContent = Math.round(mens) + ' €';
+  var elRprix = document.getElementById('r-prix'); if (elRprix) elRprix.textContent = fmt(prix);
+  var elNot = document.getElementById('r-notaire'); if (elNot) elNot.textContent = fmt(not);
+  var elAp = document.getElementById('r-apport'); if (elAp) elAp.textContent = fmt(apE);
 
   var hRnet = document.getElementById('h-rnet');
   var hCf = document.getElementById('h-cf');
