@@ -2325,6 +2325,17 @@ function injectData(html, d) {
     avatars.forEach(function(el) { el.style.display = 'none'; });
   }
 
+  // Embed a machine-readable JSON block so modifierFiche() can fully restore the form.
+  var dataScript = doc.createElement('script');
+  dataScript.id = 'expertimo-data';
+  dataScript.type = 'application/json';
+  // _rawState may contain circular-unsafe values (e.g. File objects from photos upload);
+  // serialise safely by dropping non-serialisable keys.
+  var embedData = {};
+  try { embedData = JSON.parse(JSON.stringify(d)); } catch(e) { embedData = {}; }
+  dataScript.textContent = JSON.stringify(embedData);
+  if (doc.head) doc.head.appendChild(dataScript);
+
   return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
 }
 
@@ -2791,6 +2802,7 @@ function collectBienData() {
     agentPrimary: agent.primary || '#141414',
     agentAccent:  agent.accent  || '#b8923a',
     agentPhoto:   agent.photo_url || '',
+    _rawState:    collectRawFormState(),
     renovations: (function(){
       var rows=[];
       for(var i=1;i<=5;i++){
