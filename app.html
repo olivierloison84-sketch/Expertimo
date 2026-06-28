@@ -2326,17 +2326,13 @@ function injectData(html, d) {
   }
 
   // Embed a machine-readable JSON block so modifierFiche() can fully restore the form.
-  var dataScript = doc.createElement('script');
-  dataScript.id = 'expertimo-data';
-  dataScript.type = 'application/json';
-  // _rawState may contain circular-unsafe values (e.g. File objects from photos upload);
-  // serialise safely by dropping non-serialisable keys.
+  // Injected as a string (not DOM) so attribute order is always id-then-type.
   var embedData = {};
   try { embedData = JSON.parse(JSON.stringify(d)); } catch(e) { embedData = {}; }
-  dataScript.textContent = JSON.stringify(embedData);
-  if (doc.head) doc.head.appendChild(dataScript);
+  var dataTag = '<script id="expertimo-data" type="application/json">' + JSON.stringify(embedData) + '<\/script>';
 
-  return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+  var raw = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+  return raw.replace('</head>', dataTag + '\n</head>');
 }
 
 function srep(str, find, rep) { return str.split(find).join(rep); }
@@ -2826,17 +2822,16 @@ function onAdresseChange(val) {
     // 1. Extract code postal and pre-fill DVF field
     var cpMatch = val.match(/\b(\d{5})\b/);
     if (cpMatch) setV('dvf_cp', cpMatch[1]);
-    // 2. If Leaflet map already built, re-center on new address
-    if (_ficheMap) {
-      fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(val) + '&limit=1')
-        .then(function(r) { return r.json(); })
-        .then(function(data) {
-          if (!data || !data[0]) return;
-          var lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
-          _ficheMap.setView([lat, lng], 15);
-        })
-        .catch(function() {});
-    }
+    // 2. Geocode address to set _geoLat/_geoLng (used by injectData for map coordinates)
+    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(val) + '&limit=1')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data[0]) return;
+        var lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
+        _geoLat = lat; _geoLng = lng;
+        if (_ficheMap) _ficheMap.setView([lat, lng], 15);
+      })
+      .catch(function() {});
   }, 700);
 }
 
@@ -3335,7 +3330,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
     var data = null;
 
     // 1. Try embedded JSON block (new fiches)
-    var jsonMatch = html.match(/<script[^>]*id="expertimo-data"[^>]*type="application\/json"[^>]*>([\s\S]*?)<\/script>/);
+    var jsonMatch = html.match(/<script\b[^>]*\bid="expertimo-data"[^>]*>([\s\S]*?)<\/script>/i);
     if (jsonMatch) {
       try { data = JSON.parse(jsonMatch[1]); console.log('[modifierFiche] expertimo-data parsé :', data); } catch(e) {}
     }
