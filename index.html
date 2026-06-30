@@ -356,7 +356,10 @@ textarea.field{min-height:95px;resize:vertical;}
 
 <nav class="nav" id="main-nav">
   <button class="active" onclick="showTab('bien',this)">🏠 Le Bien</button>
-  <button onclick="showTab('analyse',this)">📊 Analyse &amp; Chiffres</button>
+  <button onclick="showTab('marche',this)">📊 Marché</button>
+  <button onclick="showTab('rentabilite',this)">💰 Rentabilité</button>
+  <button onclick="showTab('historique',this)">🏛️ Historique</button>
+  <button onclick="showTab('diagnostics',this)">📋 Diagnostics</button>
   <button onclick="showTab('budget',this)">💰 Mon Budget</button>
   <button onclick="showTab('quartier',this);initMapQuartier()">🗺️ Quartier</button>
   <button onclick="showTab('documents',this)">📁 Documents</button>
@@ -377,8 +380,8 @@ textarea.field{min-height:95px;resize:vertical;}
     <img id="photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951050/TorresSalaun_OlivierLoison-OlivierReynes-20_ylci3n.jpg" alt="5 Rue de l'Arpajonnais - Vue principale" class="gm" onclick="openLightbox(this.src)">
     <img id="photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951049/TorresSalaun_OlivierLoison-OlivierReynes-15_u5kaok.jpg" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
     <img id="photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951044/TorresSalaun_OlivierLoison-OlivierReynes-14_zsnz81.jpg" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
-    <img id="photo4" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)" style="display:none">
-    <img id="photo5" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)" style="display:none">
+    <img id="photo4" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo5" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
   </div>
   <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'DM Mono',monospace;letter-spacing:.06em;" id="gallery-caption">📷 Cliquez sur une photo pour l'agrandir · 3 photos disponibles</div>
   <div class="score-box">
@@ -408,17 +411,11 @@ textarea.field{min-height:95px;resize:vertical;}
 </section>
 
 <!-- ═══════════ ONGLET 2 : ANALYSE ═══════════ -->
-<section id="analyse" class="tab">
+<!-- ═══════════ ONGLET : MARCHÉ ═══════════ -->
+<section id="marche" class="tab">
 <div class="pg">
 <div>
-  <div class="sub-tabs" id="sub-nav">
-    <button class="active" onclick="showSub('marche',this)">📊 Marché</button>
-    <button onclick="showSub('rentabilite',this)">💰 Rentabilité</button>
-    <button onclick="showSub('patrimoine',this)">🏛️ Historique du bien</button>
-    <button onclick="showSub('diagnostics',this)">📋 Diagnostics</button>
-  </div>
-
-  <div id="sub-marche" class="sub-panel active">
+  <div id="sub-marche">
     <div class="kpi-grid">
       <div class="kpi"><div class="kl">Prix m² · ce bien</div><div class="kv g">3 382 €</div></div>
       <div class="kpi"><div class="kl">Médiane Longjumeau / Essonne 91</div><div class="kv">3 020 €</div></div>
@@ -456,8 +453,28 @@ textarea.field{min-height:95px;resize:vertical;}
       </div>
     </div>
   </div>
+</div>
+<div><div class="cons-card">
+  <img src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:none" alt="">
+  <div class="cons-avatar">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
+</div>
+</section>
 
-  <div id="sub-rentabilite" class="sub-panel">
+<!-- ═══════════ ONGLET : RENTABILITÉ ═══════════ -->
+<section id="rentabilite" class="tab">
+<div class="pg">
+<div>
+  <div id="sub-rentabilite">
     <div class="card">
       <div class="lbl">Simulateur investisseur temps réel</div>
       <h2 class="stitle">Rentabilité interactive</h2>
@@ -479,8 +496,28 @@ textarea.field{min-height:95px;resize:vertical;}
       <div class="rc"><div class="rcl">Mensualité crédit</div><div class="rcv" style="font-size:22px;" id="r-mens">—</div></div>
     </div>
   </div>
+</div>
+<div><div class="cons-card">
+  <img src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:none" alt="">
+  <div class="cons-avatar">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
+</div>
+</section>
 
-  <div id="sub-patrimoine" class="sub-panel">
+<!-- ═══════════ ONGLET : HISTORIQUE ═══════════ -->
+<section id="historique" class="tab">
+<div class="pg">
+<div>
+  <div id="sub-patrimoine">
     <div class="card">
       <div class="lbl">Historique patrimonial</div>
       <h2 class="stitle">Chronologie du bien</h2>
@@ -521,8 +558,28 @@ textarea.field{min-height:95px;resize:vertical;}
       </table>
     </div>
   </div>
+</div>
+<div><div class="cons-card">
+  <img src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:none" alt="">
+  <div class="cons-avatar">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
+</div>
+</section>
 
-  <div id="sub-diagnostics" class="sub-panel">
+<!-- ═══════════ ONGLET : DIAGNOSTICS ═══════════ -->
+<section id="diagnostics" class="tab">
+<div class="pg">
+<div>
+  <div id="sub-diagnostics">
     <div class="card">
       <div class="lbl">Diagnostics réglementaires</div>
       <h2 class="stitle">Diagnostics Techniques</h2>
@@ -776,27 +833,16 @@ function showTab(id, btn) {
 }
 
 function showTabById(id) {
-  var navMap = {bien: 0, analyse: 1, budget: 2, quartier: 3, documents: 4, offre: 5};
+  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, offre: 8};
   var navBtns = document.querySelectorAll('#main-nav button');
   showTab(id, navBtns[navMap[id]]);
 }
 
-// ═══ SUB TABS ═══
-function showSub(id, btn) {
-  document.querySelectorAll('.sub-panel').forEach(function(p) { p.classList.remove('active'); });
-  document.getElementById('sub-' + id).classList.add('active');
-  document.querySelectorAll('#sub-nav button').forEach(function(b) { b.classList.remove('active'); });
-  if (btn) btn.classList.add('active');
-  if (id === 'patrimoine') { setTimeout(function(){ try{ calcProjection(); }catch(e){} }, 50); }
-}
-
+// ═══ COMPAT: showSub2 redirects to main tabs ═══
 function showSub2(id) {
-  showTabById('analyse');
-  setTimeout(function() {
-    var subBtns = document.querySelectorAll('#sub-nav button');
-    var subMap = {marche: 0, rentabilite: 1, patrimoine: 2, diagnostics: 3};
-    showSub(id, subBtns[subMap[id]]);
-  }, 100);
+  var tabMap = {marche: 'marche', rentabilite: 'rentabilite', patrimoine: 'historique', diagnostics: 'diagnostics'};
+  showTabById(tabMap[id] || id);
+  if (id === 'patrimoine') { setTimeout(function(){ try{ calcProjection(); }catch(e){} }, 100); }
 }
 
 // ═══ LIGHTBOX ═══
@@ -1018,9 +1064,10 @@ function unlockDocs() {
 }
 
 // ═══ INIT — loyer slider initialisé depuis _sp_loyer ═══
+var _sp_loyer = "1300";
 (function() {
   var loyerSlider = document.getElementById('loyer');
-  if (loyerSlider && typeof _sp_loyer !== 'undefined' && _sp_loyer && parseFloat(_sp_loyer) > 0) {
+  if (loyerSlider && _sp_loyer && parseFloat(_sp_loyer) > 0) {
     var loyerVal = parseFloat(_sp_loyer);
     loyerSlider.value = loyerVal;
     loyerSlider.min   = Math.round(loyerVal * 0.5);
@@ -1091,7 +1138,7 @@ function initMapQuartier() {
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#141414;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #b8923a;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
     L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>5 Rue de l'Arpajonnais").openPopup();
-    var overpassUrl = '/api/overpass';
+    var overpassUrl = 'https://overpass-api.de/api/interpreter';
     var query = '[out:json][timeout:10];('
       + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
       + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
@@ -1115,7 +1162,7 @@ function initMapQuartier() {
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
-    setTimeout(function() { fetch(overpassUrl, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({query:query})})
+    setTimeout(function() { fetch(overpassUrl, {method:'POST', body:'data=' + encodeURIComponent(query)})
       .then(function(r){return r.json();})
       .then(function(data){
         (data.elements||[]).forEach(function(el) {
@@ -1201,7 +1248,6 @@ var _sp_pf2       = "hyper centre proche toutes commodités";
 var _sp_pf3       = "Appartement entièrement refait";
 var _sp_vigi1     = "Chaudière à gaz individuelle (frais de chauffage non prévus dans les charges de copropriété)";
 var _sp_vigi2     = "—";
-var _sp_loyer     = "1300";
 var _sp_agent     = "Olivier LOISON";
 var _sp_tel       = "06 85 68 46 13";
 
