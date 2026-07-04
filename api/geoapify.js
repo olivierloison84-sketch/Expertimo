@@ -10,7 +10,7 @@ export default async function handler(req) {
       headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
     });
   }
-  const categories = 'education.school,childcare.kindergarten,commercial.supermarket,commercial.food_and_drink.bakery,commercial.health_and_beauty.pharmacy,public_transport,leisure.park,leisure.park.garden';
+  const categories = 'education.school,childcare.kindergarten,commercial.supermarket,commercial.food_and_drink,healthcare.pharmacy,public_transport,leisure.park';
   const apiKey = process.env.GEOAPIFY_API_KEY;
   const geoUrl = 'https://api.geoapify.com/v2/places?categories=' + categories + '&filter=circle:' + lng + ',' + lat + ',800&limit=30&apiKey=' + apiKey;
   try {

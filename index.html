@@ -1158,8 +1158,8 @@ function initMapQuartier() {
           var props = feature.properties || {};
           var cats = props.categories || [];
           if (cats.indexOf('public_transport') !== -1) { cat = 'transport'; }
-          else if (cats.indexOf('leisure.park') !== -1 || cats.indexOf('leisure.park.garden') !== -1) { cat = 'vert'; }
-          else if (cats.indexOf('commercial.supermarket') !== -1 || cats.indexOf('commercial.food_and_drink.bakery') !== -1 || cats.indexOf('commercial.health_and_beauty.pharmacy') !== -1) { cat = 'commerce'; }
+          else if (cats.indexOf('leisure.park') !== -1) { cat = 'vert'; }
+          else if (cats.indexOf('commercial.supermarket') !== -1 || cats.indexOf('commercial.food_and_drink') !== -1 || cats.indexOf('healthcare.pharmacy') !== -1) { cat = 'commerce'; }
           else if (cats.indexOf('education.school') !== -1 || cats.indexOf('childcare.kindergarten') !== -1) { cat = 'ecole'; }
           else return;
           counts[cat]++;
