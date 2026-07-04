@@ -338,6 +338,7 @@ textarea.field{min-height:95px;resize:vertical;}
   </div>
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
+      <div id="welcome-msg" style="display:none;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:var(--gold);margin-bottom:10px;"></div>
       <div class="hbadge">Espace Acheteur Privé · Expertimo · Réf. ex91-lg001</div>
       <h1 class="htitle">5 Rue de l'Arpajonnais<br><span style="color:var(--gold);font-style:italic;">Longjumeau , centre ville</span></h1>
       <p class="hsub">Appartement 3 pièces de 76,87 m² · 2ème et dernier étage · DPE D</p>
@@ -1417,6 +1418,21 @@ document.addEventListener('DOMContentLoaded', function(){
   if(hDpe){ hDpe.style.color = colors[dpe] || 'var(--gold)'; }
 
 })();
+</script>
+
+<script>
+// Personnalisation par lien : ?prenom=Julien&nom=Dupont
+// Prioritaire sur le message injecté à la création de la fiche.
+document.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  var prenom = params.get('prenom');
+  var nom = params.get('nom') || '';
+  var el = document.getElementById('welcome-msg');
+  if (prenom && el) {
+    el.textContent = 'Bonjour ' + prenom + (nom ? ' ' + nom : '') + ', bienvenue dans votre espace privé acquéreur';
+    el.style.display = 'block';
+  }
+});
 </script>
 
 </body>
