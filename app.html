@@ -714,6 +714,16 @@ textarea { resize: vertical; min-height: 60px; }
         <input type="text" id="quartier" placeholder="Centre-ville, Les Ulis…">
       </div>
     </div>
+    <div class="grid-2" style="margin-top:12px;">
+      <div class="form-group">
+        <label>Prénom acheteur <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label>
+        <input type="text" id="acheteur_prenom" placeholder="Julien">
+      </div>
+      <div class="form-group">
+        <label>Nom acheteur <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label>
+        <input type="text" id="acheteur_nom" placeholder="Dupont">
+      </div>
+    </div>
   </div>
 </div>
 
@@ -2091,6 +2101,17 @@ function injectData(html, d) {
   var badge = q('.hbadge');
   if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo · Réf. ' + d.ref;
 
+  // ── Message de bienvenue personnalisé (si prénom acheteur renseigné) ──
+  var welcomeEl = q('#welcome-msg');
+  if (welcomeEl) {
+    if (d.acheteur_prenom) {
+      welcomeEl.textContent = 'Bonjour ' + d.acheteur_prenom + (d.acheteur_nom ? ' ' + d.acheteur_nom : '') + ', bienvenue dans votre espace privé acquéreur';
+      welcomeEl.style.display = 'block';
+    } else {
+      welcomeEl.style.display = 'none';
+    }
+  }
+
   var htitle = q('.htitle');
   if (htitle) htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;">' + esc(d.quartier) + '</span>';
 
@@ -2752,6 +2773,8 @@ function collectBienData() {
     etage:         etage,
     adresse:       getV('adresse'),
     quartier:      getV('quartier'),
+    acheteur_prenom: getV('acheteur_prenom')||'',
+    acheteur_nom:    getV('acheteur_nom')||'',
     annee:         annee,
     description:   desc,
     surface:       surface, surfCarrez:    surfCarrez,
@@ -3498,6 +3521,9 @@ async function modifierFiche(filename, sha, downloadUrl) {
       dbgSet('bien_score_qp',     data.scoreQP     || '');
       dbgSet('bien_score_etat',   data.scoreEtat   || '');
 
+      dbgSet('acheteur_prenom', data.acheteur_prenom || '');
+      dbgSet('acheteur_nom',    data.acheteur_nom    || '');
+
       // Points forts
       dbgSet('bien_fort1', data.fort1 || '');
       dbgSet('bien_fort2', data.fort2 || '');
@@ -3654,6 +3680,8 @@ async function modifierFiche(filename, sha, downloadUrl) {
       dbgSet('prix_vente_t', data.prix       || '');
       dbgSet('charges_copro',   data.chargesCopro  || '');
       dbgSet('taxe_fonciere',   data.taxeFonciere  || '');
+      dbgSet('acheteur_prenom', data.acheteur_prenom || '');
+      dbgSet('acheteur_nom',    data.acheteur_nom    || '');
       dbgSet('bien_fort1', data.fort1 || '');
       dbgSet('bien_fort2', data.fort2 || '');
       dbgSet('bien_fort3', data.fort3 || '');
