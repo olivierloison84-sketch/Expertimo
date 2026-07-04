@@ -2277,11 +2277,17 @@ function injectData(html, d) {
   var timeline = id('historique-timeline');
   if (timeline) {
     var tlHtml = '';
-    if (d.annee || d.histConstrDesc) {
-      tlHtml += tliHtml((d.annee || '?') + ' · CONSTRUCTION', d.histConstrDesc || '');
-    }
-    if (d.histEvt1Date) tlHtml += tliHtml(d.histEvt1Date, d.histEvt1Desc || '');
-    if (d.histEvt2Date) tlHtml += tliHtml(d.histEvt2Date, d.histEvt2Desc || '');
+    var lignes = (d.historiqueLibre || '').split('\n');
+    lignes.forEach(function(ligne) {
+      ligne = ligne.trim();
+      if (!ligne) return;
+      var sepIndex = ligne.indexOf('—');
+      if (sepIndex !== -1) {
+        tlHtml += tliHtml(ligne.substring(0, sepIndex).trim(), ligne.substring(sepIndex + 1).trim());
+      } else {
+        tlHtml += tliHtml('', ligne);
+      }
+    });
     var venteDesc = 'Bien proposé à ' + prixFmt + ' €'
       + (d.dpe ? ' · DPE ' + d.dpe : '')
       + ' · Libre à la vente'
@@ -2802,9 +2808,7 @@ function collectBienData() {
     creditHaut:    parseFloat(getV('bien_credit_taux_haut'))||5,
     creditMoyen:   parseFloat(getV('bien_credit_taux_moyen'))||3.4,
     creditBas:     parseFloat(getV('bien_credit_taux_bas'))||2.5,
-    histConstrDesc:getV('hist_constr_desc'),
-    histEvt1Date:  getV('hist_evt1_date'), histEvt1Desc: getV('hist_evt1_desc'),
-    histEvt2Date:  getV('hist_evt2_date'), histEvt2Desc: getV('hist_evt2_desc'),
+    historiqueLibre: getV('historique_libre'),
     histVenteDate: getV('hist_vente_date')||'2025',
     diags:[
       {icon:'🧱',name:'Amiante',        status:getV('diag_amiante_status'),     result:getV('diag_amiante_result')},
