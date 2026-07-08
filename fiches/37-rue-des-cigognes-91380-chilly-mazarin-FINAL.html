@@ -1295,4 +1295,34 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 
+<script>(function() {
+  var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
+  var params = new URLSearchParams(window.location.search);
+  var client = params.get('client') || 'inconnu';
+  var adresse = document.title || window.location.pathname;
+  function track(evenement) {
+    fetch(SUPABASE_URL + '/rest/v1/fiche_views', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      },
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement })
+    });
+  }
+  track('fiche_ouverte');
+  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
+    });
+  });
+  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
+    el.addEventListener('click', function() { track('credit_simule'); });
+  });
+  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
+    el.addEventListener('click', function() { track('offre_soumise'); });
+  });
+})();</script>
 </body></html>
