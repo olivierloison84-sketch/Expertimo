@@ -2025,6 +2025,31 @@ function getDVFRows() {
   return rows;
 }
 
+function lambert93ToWGS84(X, Y) {
+  var e = 0.0818191910428158;
+  var lonMeridian = 3 * Math.PI / 180;
+  var XS = 700000;
+  var YS = 12655612.0499;
+  var C = 11754255.4261;
+  var N = 0.7256077650532670;
+
+  var A = Math.atan((X - XS) / (YS - Y));
+  var lon = lonMeridian + A / N;
+
+  var R = Math.sqrt(Math.pow(X - XS, 2) + Math.pow(YS - Y, 2));
+  var latIso = Math.log(C / R) / N;
+
+  var phi = 2 * Math.atan(Math.exp(latIso)) - Math.PI / 2;
+  for (var i = 0; i < 8; i++) {
+    phi = 2 * Math.atan(
+      Math.pow((1 + e * Math.sin(phi)) / (1 - e * Math.sin(phi)), e / 2)
+      * Math.exp(latIso)
+    ) - Math.PI / 2;
+  }
+
+  return { lon: lon * 180 / Math.PI, lat: phi * 180 / Math.PI };
+}
+
 function fetchComparablesDVF() {
   var statusEl = document.getElementById('dvf-auto-status');
   if (!statusEl) return;
@@ -2071,22 +2096,42 @@ function fetchComparablesDVF() {
       rows.sort(function(a, b) { return a._dist - b._dist; });
       var top = rows.slice(0, 6);
 
-      top.forEach(function(row, idx) {
-        var n = idx + 1;
-        var d = row.datemut ? new Date(row.datemut) : null;
-        var dateStr = (d && !isNaN(d))
-          ? String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear()
-          : '';
-        var surface = row.sbati || row.sbatapt || row.sbatmai
-          || (currentType === 'terrain' ? row.sterr : '') || '';
-        setV('dvf-date-' + n, dateStr);
-        setV('dvf-adresse-' + n, 'À ~' + Math.round(row._dist) + ' m');
-        setV('dvf-surface-' + n, surface);
-        setV('dvf-prix-' + n, row.valeurfonc || '');
-        calcDVFm2(n);
+      var reverseGeocodePromises = top.map(function(row) {
+        var wgs = lambert93ToWGS84(row.geompar_x, row.geompar_y);
+        var reverseUrl = 'https://data.geopf.fr/geocodage/reverse?lon=' + wgs.lon
+          + '&lat=' + wgs.lat + '&index=address&limit=1';
+        return fetch(reverseUrl)
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var feat = data && data.features && data.features[0];
+            var props = feat && feat.properties;
+            if (props) row._streetLabel = props.street || props.name || null;
+          })
+          .catch(function() {});
       });
 
-      statusEl.textContent = top.length + ' ventes trouvées dans ' + (window._geoCityName || 'la commune');
+      return Promise.all(reverseGeocodePromises).then(function() {
+        top.forEach(function(row, idx) {
+          var n = idx + 1;
+          var d = row.datemut ? new Date(row.datemut) : null;
+          var dateStr = (d && !isNaN(d))
+            ? String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear()
+            : '';
+          var surface = row.sbati || row.sbatapt || row.sbatmai
+            || (currentType === 'terrain' ? row.sterr : '') || '';
+          var distRounded = Math.round(row._dist);
+          var adresseLabel = row._streetLabel
+            ? row._streetLabel + ' (à ~' + distRounded + ' m)'
+            : 'À ~' + distRounded + ' m';
+          setV('dvf-date-' + n, dateStr);
+          setV('dvf-adresse-' + n, adresseLabel);
+          setV('dvf-surface-' + n, surface);
+          setV('dvf-prix-' + n, row.valeurfonc || '');
+          calcDVFm2(n);
+        });
+
+        statusEl.textContent = top.length + ' ventes trouvées dans ' + (window._geoCityName || 'la commune');
+      });
     })
     .catch(function(err) {
       statusEl.textContent = 'Comparables indisponibles, saisie manuelle possible';
