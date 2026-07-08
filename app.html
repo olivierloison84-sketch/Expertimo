@@ -2096,6 +2096,10 @@ function fetchComparablesDVF() {
       rows.sort(function(a, b) { return a._dist - b._dist; });
       var top = rows.slice(0, 6);
 
+      top.sort(function(a, b) {
+        return new Date(b.datemut) - new Date(a.datemut);
+      });
+
       var reverseGeocodePromises = top.map(function(row) {
         var wgs = lambert93ToWGS84(row.geompar_x, row.geompar_y);
         var reverseUrl = 'https://data.geopf.fr/geocodage/reverse?lon=' + wgs.lon
