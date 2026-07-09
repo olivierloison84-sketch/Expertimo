@@ -1,6 +1,34 @@
+const ALLOWED_ORIGIN_PREFIXES = [
+  'https://expertimo-phi.vercel.app',
+  'https://olivierloison84-sketch.github.io',
+  'http://localhost'
+];
+
+function originFromReferer(referer) {
+  try {
+    const u = new URL(referer);
+    return u.protocol + '//' + u.host;
+  } catch (e) {
+    return '';
+  }
+}
+
 module.exports = async function handler(req, res) {
-  // CORS — autorise les appels depuis n'importe quelle origine
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Vérification d'origine — n'accepte que les fiches publiées (ou dev local)
+  const originHeader = req.headers.origin || '';
+  const refererHeader = req.headers.referer || '';
+  const isAllowed = ALLOWED_ORIGIN_PREFIXES.some(function(prefix) {
+    return originHeader.indexOf(prefix) === 0 || refererHeader.indexOf(prefix) === 0;
+  });
+
+  if (!isAllowed) {
+    return res.status(403).json({ error: 'Origin not allowed' });
+  }
+
+  const allowedOrigin = originHeader || originFromReferer(refererHeader);
+
+  // CORS — restreint à l'origine autorisée de la requête
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
@@ -16,6 +44,17 @@ module.exports = async function handler(req, res) {
 
   if (!messages || !Array.isArray(messages)) {
     return res.status(400).json({ error: 'messages array required' });
+  }
+
+  // Plafonds de taille — limite le coût par appel côté API Anthropic
+  if (system && system.length > 3000) {
+    return res.status(400).json({ error: 'system prompt too long' });
+  }
+  if (messages.length > 20) {
+    return res.status(400).json({ error: 'too many messages' });
+  }
+  if (messages.some(function(m) { return m && typeof m.content === 'string' && m.content.length > 2000; })) {
+    return res.status(400).json({ error: 'message too long' });
   }
 
   const apiKey = process.env.ANTHROPIC_API_KEY;

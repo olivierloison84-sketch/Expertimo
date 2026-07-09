@@ -1250,6 +1250,7 @@ document.addEventListener('DOMContentLoaded', function(){
   <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#b8923a;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
   <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;">L'immobilier avec l'expertise d'un professionnel</div>
   <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'DM Sans',sans-serif;">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</div>
+  <div style="margin-top:10px;font-size:10px;font-family:'DM Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;">Mentions légales</a> · <a href="/cgv.html" style="color:#8a7550;text-decoration:none;">CGV</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;">Politique de confidentialité</a></div>
 </footer>
 
 
@@ -1295,4 +1296,34 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 
+<script>(function() {
+  var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
+  var params = new URLSearchParams(window.location.search);
+  var client = params.get('client') || 'inconnu';
+  var adresse = document.title || window.location.pathname;
+  function track(evenement) {
+    fetch(SUPABASE_URL + '/rest/v1/fiche_views', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      },
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement })
+    });
+  }
+  track('fiche_ouverte');
+  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
+    });
+  });
+  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
+    el.addEventListener('click', function() { track('credit_simule'); });
+  });
+  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
+    el.addEventListener('click', function() { track('offre_soumise'); });
+  });
+})();</script>
 </body></html>

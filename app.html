@@ -1203,6 +1203,8 @@ textarea { resize: vertical; min-height: 60px; }
       ou <a href="https://app.dvf.etalab.gouv.fr" target="_blank" style="color:var(--primary)">app.dvf.etalab.gouv.fr</a>
       et saisissez les transactions comparables ci-dessous.
     </p>
+    <button type="button" class="btn" onclick="fetchComparablesDVF()" style="margin-bottom:10px">🔍 Rechercher les comparables automatiquement</button>
+    <div id="dvf-auto-status" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
     <div style="overflow-x:auto">
       <table class="dvf-edit-table">
         <thead>
@@ -2023,6 +2025,124 @@ function getDVFRows() {
   return rows;
 }
 
+function lambert93ToWGS84(X, Y) {
+  var e = 0.0818191910428158;
+  var lonMeridian = 3 * Math.PI / 180;
+  var XS = 700000;
+  var YS = 12655612.0499;
+  var C = 11754255.4261;
+  var N = 0.7256077650532670;
+
+  var A = Math.atan((X - XS) / (YS - Y));
+  var lon = lonMeridian + A / N;
+
+  var R = Math.sqrt(Math.pow(X - XS, 2) + Math.pow(YS - Y, 2));
+  var latIso = Math.log(C / R) / N;
+
+  var phi = 2 * Math.atan(Math.exp(latIso)) - Math.PI / 2;
+  for (var i = 0; i < 8; i++) {
+    phi = 2 * Math.atan(
+      Math.pow((1 + e * Math.sin(phi)) / (1 - e * Math.sin(phi)), e / 2)
+      * Math.exp(latIso)
+    ) - Math.PI / 2;
+  }
+
+  return { lon: lon * 180 / Math.PI, lat: phi * 180 / Math.PI };
+}
+
+function fetchComparablesDVF() {
+  var statusEl = document.getElementById('dvf-auto-status');
+  if (!statusEl) return;
+  if (!window._geoCityCode) {
+    statusEl.textContent = "⚠️ Renseignez d'abord l'adresse du bien";
+    return;
+  }
+
+  var motcle = currentType === 'appart' ? 'APPARTEMENT'
+             : currentType === 'maison' ? 'MAISON'
+             : 'TERRAIN';
+  var anneeMin = new Date().getFullYear() - 5;
+
+  var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
+
+  var url = SUPABASE_URL + '/rest/v1/dvf_ventes'
+    + '?codinsee=eq.' + encodeURIComponent(window._geoCityCode)
+    + '&libtypbien=ilike.*' + motcle + '*'
+    + '&anneemut=gte.' + anneeMin
+    + '&order=anneemut.desc&limit=300';
+
+  statusEl.textContent = '⏳ Recherche des transactions comparables…';
+
+  fetch(url, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY
+    }
+  })
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(rows) {
+      rows = (rows || []).filter(function(row) {
+        return row.geompar_x != null && row.geompar_y != null;
+      });
+      if (rows.length === 0) {
+        statusEl.textContent = 'Aucune vente récente trouvée dans cette commune — saisissez manuellement';
+        return;
+      }
+      rows.forEach(function(row) {
+        var dx = row.geompar_x - window._geoX, dy = row.geompar_y - window._geoY;
+        row._dist = Math.sqrt(dx * dx + dy * dy);
+      });
+      rows.sort(function(a, b) { return a._dist - b._dist; });
+      var top = rows.slice(0, 6);
+
+      top.sort(function(a, b) {
+        return new Date(b.datemut) - new Date(a.datemut);
+      });
+
+      var reverseGeocodePromises = top.map(function(row) {
+        var wgs = lambert93ToWGS84(row.geompar_x, row.geompar_y);
+        var reverseUrl = 'https://data.geopf.fr/geocodage/reverse?lon=' + wgs.lon
+          + '&lat=' + wgs.lat + '&index=address&limit=1';
+        return fetch(reverseUrl)
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            var feat = data && data.features && data.features[0];
+            var props = feat && feat.properties;
+            if (props) row._streetLabel = props.street || props.name || null;
+          })
+          .catch(function() {});
+      });
+
+      return Promise.all(reverseGeocodePromises).then(function() {
+        top.forEach(function(row, idx) {
+          var n = idx + 1;
+          var d = row.datemut ? new Date(row.datemut) : null;
+          var dateStr = (d && !isNaN(d))
+            ? String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear()
+            : '';
+          var surface = row.sbati || row.sbatapt || row.sbatmai
+            || (currentType === 'terrain' ? row.sterr : '') || '';
+          var distRounded = Math.round(row._dist);
+          var adresseLabel = row._streetLabel
+            ? row._streetLabel + ' (à ~' + distRounded + ' m)'
+            : 'À ~' + distRounded + ' m';
+          setV('dvf-date-' + n, dateStr);
+          setV('dvf-adresse-' + n, adresseLabel);
+          setV('dvf-surface-' + n, surface);
+          setV('dvf-prix-' + n, row.valeurfonc || '');
+          calcDVFm2(n);
+        });
+
+        statusEl.textContent = top.length + ' ventes trouvées dans ' + (window._geoCityName || 'la commune');
+      });
+    })
+    .catch(function(err) {
+      statusEl.textContent = 'Comparables indisponibles, saisie manuelle possible';
+      console.error('fetchComparablesDVF:', err);
+    });
+}
+
 // ═══════════════════════════════════════
 // COPIED FROM generateur.html — mot pour mot
 // ═══════════════════════════════════════
@@ -2498,6 +2618,7 @@ function calcCreditStep2() {
 // ═══════════════════════════════════════════════════════
 var _ficheMap=null, _ficheMapMarkers={transport:[],parc:[],commerce:[],ecole:[]};
 var _geoLat=null, _geoLng=null;
+window._geoX=null; window._geoY=null; window._geoCityCode=null; window._geoCityName=null;
 
 function initFicheMap() {
   var adresse=getV('adresse');
@@ -2849,13 +2970,19 @@ function onAdresseChange(val) {
     // 1. Extract code postal and pre-fill DVF field
     var cpMatch = val.match(/\b(\d{5})\b/);
     if (cpMatch) setV('dvf_cp', cpMatch[1]);
-    // 2. Geocode address to set _geoLat/_geoLng (used by injectData for map coordinates)
-    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(val) + '&limit=1')
+    // 2. Geocode address via l'API Adresse (IGN) — sets _geoLat/_geoLng (carte) et
+    //    window._geoX/_geoY/_geoCityCode/_geoCityName (recherche DVF par commune + distance)
+    fetch('https://data.geopf.fr/geocodage/search?q=' + encodeURIComponent(val) + '&limit=1')
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        if (!data || !data[0]) return;
-        var lat = parseFloat(data[0].lat), lng = parseFloat(data[0].lon);
+        var feat = data && data.features && data.features[0];
+        if (!feat) return;
+        var lng = feat.geometry.coordinates[0], lat = feat.geometry.coordinates[1];
         _geoLat = lat; _geoLng = lng;
+        window._geoX = feat.properties.x;
+        window._geoY = feat.properties.y;
+        window._geoCityCode = feat.properties.citycode;
+        window._geoCityName = feat.properties.city;
         if (_ficheMap) _ficheMap.setView([lat, lng], 15);
       })
       .catch(function() {});
@@ -3730,6 +3857,9 @@ function refreshStep4Summary() {
     + '</div>';
 }
 </script>
+<footer style="text-align:center;padding:20px;background:#141414;border-top:1px solid rgba(184,146,58,.15);margin-top:40px;">
+  <div style="font-size:10px;font-family:'DM Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;">Mentions légales</a> · <a href="/cgv.html" style="color:#8a7550;text-decoration:none;">CGV</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;">Politique de confidentialité</a></div>
+</footer>
 </body>
 </html>
 

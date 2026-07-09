@@ -1139,19 +1139,6 @@ function initMapQuartier() {
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#141414;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #b8923a;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
     L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>5 Rue de l'Arpajonnais").openPopup();
-    var overpassUrl = 'https://overpass-api.de/api/interpreter';
-    var query = '[out:json][timeout:10];('
-      + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
-      + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="bus_station"](around:800,' + lat + ',' + lng + ');'
-      + 'node["leisure"="park"](around:800,' + lat + ',' + lng + ');'
-      + 'node["leisure"="garden"](around:800,' + lat + ',' + lng + ');'
-      + 'node["shop"="supermarket"](around:800,' + lat + ',' + lng + ');'
-      + 'node["shop"="bakery"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="pharmacy"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="school"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="kindergarten"](around:800,' + lat + ',' + lng + ');'
-      + ');out body;';
     var catMeta = {
       transport: {color:'#1565c0', emoji:'🚇', label:'Transport'},
       vert:      {color:'#2e7d32', emoji:'🌳', label:'Espace vert'},
@@ -1163,32 +1150,35 @@ function initMapQuartier() {
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
-    setTimeout(function() { fetch(overpassUrl, {method:'POST', body:'data=' + encodeURIComponent(query)})
+    setTimeout(function() { fetch('https://expertimo-phi.vercel.app/api/geoapify?lat=' + lat + '&lng=' + lng)
       .then(function(r){return r.json();})
       .then(function(data){
-        (data.elements||[]).forEach(function(el) {
+        (data.features||[]).forEach(function(feature) {
           var cat;
-          var tags = el.tags || {};
-          if (tags.public_transport || tags.railway === 'station' || tags.amenity === 'bus_station') { cat = 'transport'; }
-          else if (tags.leisure === 'park' || tags.leisure === 'garden') { cat = 'vert'; }
-          else if (tags.shop === 'supermarket' || tags.shop === 'bakery' || tags.amenity === 'pharmacy') { cat = 'commerce'; }
-          else if (tags.amenity === 'school' || tags.amenity === 'kindergarten') { cat = 'ecole'; }
+          var props = feature.properties || {};
+          var cats = props.categories || [];
+          if (cats.indexOf('public_transport') !== -1) { cat = 'transport'; }
+          else if (cats.indexOf('leisure.park') !== -1) { cat = 'vert'; }
+          else if (cats.indexOf('commercial.supermarket') !== -1 || cats.indexOf('commercial.food_and_drink') !== -1 || cats.indexOf('healthcare.pharmacy') !== -1) { cat = 'commerce'; }
+          else if (cats.indexOf('education.school') !== -1 || cats.indexOf('childcare.kindergarten') !== -1) { cat = 'ecole'; }
           else return;
           counts[cat]++;
           var meta = catMeta[cat];
+          var poiLat = props.lat != null ? props.lat : feature.geometry.coordinates[1];
+          var poiLon = props.lon != null ? props.lon : feature.geometry.coordinates[0];
           var icon = L.divIcon({className:'', html:'<div style="background:'+meta.color+';border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid white;">'+meta.emoji+'</div>', iconSize:[28,28], iconAnchor:[14,14]});
-          var dist = Math.round(map.distance([lat,lng],[el.lat,el.lon]));
+          var dist = Math.round(map.distance([lat,lng],[poiLat,poiLon]));
           var mins = Math.ceil(dist / 80);
-          var name = tags.name || tags['name:fr'] || meta.label;
+          var name = props.name || meta.label;
           var popup = '<strong>'+name+'</strong><br>'+meta.emoji+' '+meta.label+'<br>'+dist+' m · ~'+mins+' min à pied';
-          var marker = L.marker([el.lat,el.lon],{icon:icon}).addTo(map).bindPopup(popup);
+          var marker = L.marker([poiLat,poiLon],{icon:icon}).addTo(map).bindPopup(popup);
           window._mapMarkers[cat].push(marker);
         });
         document.getElementById('cnt-transport').textContent = counts.transport;
         document.getElementById('cnt-vert').textContent = counts.vert;
         document.getElementById('cnt-commerce').textContent = counts.commerce;
         document.getElementById('cnt-ecole').textContent = counts.ecole;
-      }).catch(function(err){ console.log('[Overpass] Erreur requête POI :', err); }); }, 1000);
+      }).catch(function(err){ console.log('[Geoapify] Erreur requête POI :', err); }); }, 1000);
   }
 
   if (latFallback && lngFallback) {
@@ -1377,6 +1367,7 @@ document.addEventListener('DOMContentLoaded', function(){
   <div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:#b8923a;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
   <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;">L'immobilier avec l'expertise d'un professionnel</div>
   <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'DM Sans',sans-serif;">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</div>
+  <div style="margin-top:10px;font-size:10px;font-family:'DM Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;">Mentions légales</a> · <a href="/cgv.html" style="color:#8a7550;text-decoration:none;">CGV</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;">Politique de confidentialité</a></div>
 </footer>
 
 
@@ -1436,5 +1427,35 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>setTimeout(function(){var b=document.getElementById('ai-proactive-bubble');if(b){b.style.display='block';setTimeout(function(){b.style.display='none';},6000);}},3000);</script>
+<script>(function() {
+  var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
+  var params = new URLSearchParams(window.location.search);
+  var client = params.get('client') || 'inconnu';
+  var adresse = document.title || window.location.pathname;
+  function track(evenement) {
+    fetch(SUPABASE_URL + '/rest/v1/fiche_views', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': 'Bearer ' + SUPABASE_KEY
+      },
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement })
+    });
+  }
+  track('fiche_ouverte');
+  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
+    });
+  });
+  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
+    el.addEventListener('click', function() { track('credit_simule'); });
+  });
+  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
+    el.addEventListener('click', function() { track('offre_soumise'); });
+  });
+})();</script>
 </body>
 </html>
