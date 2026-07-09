@@ -159,6 +159,39 @@
   .register-link a:hover {
     text-decoration: underline;
   }
+
+  .forgot-link {
+    text-align: right;
+    margin-top: -12px;
+    margin-bottom: 20px;
+  }
+
+  .forgot-link a {
+    font-size: 13px;
+    color: #8a857c;
+    text-decoration: none;
+  }
+
+  .forgot-link a:hover {
+    color: #b8923a;
+    text-decoration: underline;
+  }
+
+  .success-message {
+    display: none;
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: rgba(184, 146, 58, 0.12);
+    border: 1px solid rgba(184, 146, 58, 0.4);
+    border-radius: 8px;
+    color: #d4a956;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .success-message.visible {
+    display: block;
+  }
 </style>
 </head>
 <body>
@@ -180,8 +213,10 @@
         <label for="password">Mot de passe</label>
         <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
       </div>
+      <p class="forgot-link"><a href="#" id="forgot-password-link">Mot de passe oublié ?</a></p>
       <button type="submit" class="btn-submit" id="submit-btn">Se connecter</button>
       <div class="error-message" id="error-message"></div>
+      <div class="success-message" id="success-message"></div>
     </form>
     <p class="register-link">Pas encore de compte ? <a href="/register.html">S'inscrire</a></p>
   </div>
@@ -197,6 +232,34 @@
   const form = document.getElementById('login-form');
   const submitBtn = document.getElementById('submit-btn');
   const errorMessage = document.getElementById('error-message');
+  const successMessage = document.getElementById('success-message');
+  const forgotLink = document.getElementById('forgot-password-link');
+
+  forgotLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('email').value.trim();
+
+    errorMessage.classList.remove('visible');
+    successMessage.classList.remove('visible');
+
+    if (!email) {
+      errorMessage.textContent = "Renseignez d'abord votre email ci-dessus, puis cliquez sur « Mot de passe oublié ? ».";
+      errorMessage.classList.add('visible');
+      return;
+    }
+
+    forgotLink.textContent = 'Envoi en cours…';
+
+    await client.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/reset-password.html'
+    });
+
+    // Message volontairement identique que le compte existe ou non (bonne pratique de sécurité).
+    successMessage.textContent = 'Si un compte existe avec cet email, un lien de réinitialisation vient de vous être envoyé.';
+    successMessage.classList.add('visible');
+    forgotLink.textContent = 'Mot de passe oublié ?';
+  });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -205,7 +268,7 @@
     const password = document.getElementById('password').value;
 
     errorMessage.classList.remove('visible');
-    errorMessage.textContent = '';
+    successMessage.classList.remove('visible');
 
     if (!email || !password) {
       errorMessage.textContent = 'Veuillez renseigner votre email et votre mot de passe.';
