@@ -44,7 +44,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);over
 .hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(184,146,58,.35);border-radius:99px;background:rgba(184,146,58,.08);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
 .hbadge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-.htitle{font-family:'Cormorant Garamond',serif;font-size:clamp(24px,3.5vw,42px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
+.htitle{font-family:'Cormorant Garamond',serif;font-size:clamp(18px,2.6vw,30px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
 .hsub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.8;max-width:540px;font-weight:300;margin-top:8px;}
 .price-card{background:rgba(255,255,255,.06);border:1px solid rgba(184,146,58,.25);border-radius:20px;padding:32px 36px;min-width:320px;max-width:380px;flex-shrink:0;}
 .plabel{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
@@ -271,7 +271,7 @@ textarea.field{min-height:95px;resize:vertical;}
   .header-inner{flex-direction:column;gap:24px;padding:0 20px;}
   .price-card{min-width:100%;max-width:100%;}
   .pamount{font-size:48px;}
-  .htitle{font-size:24px;}
+  .htitle{font-size:18px;}
 }
 @media(max-width:560px){
   .header{padding:26px 0;}
@@ -435,36 +435,6 @@ textarea.field{min-height:95px;resize:vertical;}
       <div class="lbl">Historique patrimonial</div>
       <h2 class="stitle">Chronologie du bien</h2>
       <div class="tl" style="margin-top:13px;" id="historique-timeline"><div class="tli"><div class="tly">1970 · CONSTRUCTION</div><div class="tlt"></div></div><div class="tli"><div class="tly">2026 · MISE EN VENTE</div><div class="tlt">Bien proposé à 295 000 € · DPE D · Libre à la vente · Charges 533 €/mois.</div></div></div>
-    </div>
-    <div class="card">
-      <div class="lbl">Projection patrimoniale — scénarios</div>
-      <!-- CSS PROJECTION CHART -->
-      <div style="display:flex;align-items:flex-end;gap:8px;height:150px;margin:14px 0;padding-bottom:4px;border-bottom:1px solid var(--border);">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-          <div id="proj-bar-lbl-1" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);">—</div>
-          <div id="proj-bar-1" style="width:100%;background:rgba(184,146,58,.3);border-radius:3px 3px 0 0;height:46%;"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);">Basse</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-          <div id="proj-bar-lbl-2" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);">—</div>
-          <div id="proj-bar-2" style="width:100%;background:var(--gold);border-radius:3px 3px 0 0;height:97%;"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);font-weight:600;">Médiane</div>
-        </div>
-        <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-          <div id="proj-bar-lbl-3" style="font-family:'DM Mono',monospace;font-size:8px;color:var(--vert);">—</div>
-          <div id="proj-bar-3" style="width:100%;background:var(--vert);border-radius:3px 3px 0 0;height:100%;"></div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--vert);">Haute</div>
-        </div>
-        <div style="writing-mode:vertical-rl;font-family:'DM Mono',monospace;font-size:8px;color:var(--muted);text-orientation:mixed;transform:rotate(180deg);padding-bottom:10px;">Plus-value sur 10 ans</div>
-      </div>
-      <table class="pt">
-        <thead><tr><th>Horizon</th><th>Hyp. basse (+1%/an)</th><th>Hyp. médiane (+2%/an)</th><th>Hyp. haute (+3%/an)</th></tr></thead>
-        <tbody>
-          <tr><td><strong>3 ans</strong></td><td class="mono"><span id="proj-1-3">—</span></td><td class="mono"><span id="proj-2-3">—</span></td><td class="mono"><span id="proj-3-3">—</span></td></tr>
-          <tr><td><strong>5 ans</strong></td><td class="mono"><span id="proj-1-5">—</span></td><td class="mono txt-vert"><span id="proj-2-5">—</span></td><td class="mono"><span id="proj-3-5">—</span></td></tr>
-          <tr><td><strong>10 ans</strong></td><td class="mono"><span id="proj-1-10">—</span></td><td class="mono txt-vert"><span id="proj-2-10">—</span></td><td class="mono"><span id="proj-3-10">—</span></td></tr>
-        </tbody>
-      </table>
     </div>
   </div>
 
