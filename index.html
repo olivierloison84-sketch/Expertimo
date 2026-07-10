@@ -116,12 +116,12 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .container{max-width:none;margin:0;flex:1;min-width:0;}
 
 @media(max-width:768px){
-  .layout-shell{gap:10px;}
-  .rail{position:sticky;top:12px;width:52px;flex-shrink:0;padding:12px 0;flex-direction:column;gap:10px;align-items:center;}
+  .layout-shell{gap:8px;}
+  .rail{position:sticky;top:12px;width:74px;flex-shrink:0;padding:12px 0;flex-direction:column;gap:8px;align-items:center;}
   .rail-progress{display:none;}
-  .rail button{flex-direction:column;padding:8px 4px;border-radius:10px;justify-content:center;width:44px;}
-  .rail-label{display:none;}
-  .rail-dot{font-size:16px;}
+  .rail button{flex-direction:column;gap:3px;padding:6px 2px;border-radius:10px;justify-content:center;width:68px;}
+  .rail-label{display:block;font-size:8.5px;text-align:center;line-height:1.15;white-space:normal;}
+  .rail-dot{font-size:14px;width:28px;height:28px;}
 }
 .tab{display:none;}
 .tab.active{display:block;animation:fadeIn .3s ease;}
@@ -348,6 +348,9 @@ textarea.field{min-height:95px;resize:vertical;}
 }
 @media(max-width:960px){ .diag-grid{grid-template-columns:repeat(2,1fr);} }
 @media(max-width:480px){ .diag-grid{grid-template-columns:1fr;} }
+html,body{overflow-x:hidden;}
+.pg,.card{min-width:0;}
+.ptrack{min-width:0;}
 </style>
 </head>
 <body>
@@ -454,6 +457,7 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="card">
       <div class="lbl">Transactions DVF officielles</div>
       <h2 class="stitle">Comparables réels</h2>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
       <table class="dvft">
         <thead><tr><th>Date</th><th>Adresse</th><th>Surface</th><th>Prix vendu</th><th>€/m²</th></tr></thead>
         <tbody>
@@ -462,6 +466,7 @@ textarea.field{min-height:95px;resize:vertical;}
           <tr class="dvf-row ref" data-date="Octobre 2024"><td>Octobre 2024</td><td><strong>2 B Avenue de la Gare ★</strong></td><td class="mono">76 m²</td><td class="mono">285 000 €</td><td class="mono" style="color:var(--muted);">3 750 €</td></tr>
         </tbody>
       </table>
+      </div>
       <div class="alert amber" id="comparables-lecture"><h4>📊 Positionnement prix</h4><p id="comparables-justification">Le prix de présentation a été établi sur la base des transactions récentes du secteur et des caractéristiques propres au bien.</p></div>
     </div>
     <div class="card">
@@ -867,6 +872,24 @@ function showTabAssistant(btn) {
   toggleAI();
 }
 
+function renderAISuggestions() {
+  var wrap = document.getElementById('ai-suggestions');
+  if (!wrap) return;
+  var qs = ['Quel est le montant des charges ?', 'Puis-je négocier le prix ?', 'Comment prendre rendez-vous ?'];
+  wrap.innerHTML = '';
+  qs.forEach(function(q) {
+    var b = document.createElement('button');
+    b.textContent = q;
+    b.style.cssText = 'background:var(--cream);color:var(--gold2, var(--gold));border:none;font-size:11px;font-weight:500;padding:7px 12px;border-radius:100px;cursor:pointer;font-family:\'Work Sans\',sans-serif;';
+    b.onclick = function() {
+      document.getElementById('ai-input').value = q;
+      sendAI();
+      wrap.style.display = 'none';
+    };
+    wrap.appendChild(b);
+  });
+}
+
 function dockAI() {
   var modal = document.getElementById('ai-modal');
   var dock = document.getElementById('assistant-dock');
@@ -893,6 +916,7 @@ function dockAI() {
     addAIMsg(welcome, 'assistant');
     _aiMessages.push({role:'user',content:'(début de session)'});
     _aiMessages.push({role:'assistant',content:welcome});
+    renderAISuggestions();
   }
 }
 function undockAI() {
@@ -1453,6 +1477,7 @@ document.addEventListener('DOMContentLoaded', function(){
     <button onclick="toggleAI()" style="background:none;border:none;color:var(--gold);font-size:20px;cursor:pointer;line-height:1;">×</button>
   </div>
   <div id="ai-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:380px;"></div>
+  <div id="ai-suggestions" style="display:flex;gap:8px;padding:0 16px 12px;flex-wrap:wrap;"></div>
   <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">
     <input id="ai-input" type="text" placeholder="Votre question..." style="flex:1;border:1px solid var(--border);border-radius:99px;padding:8px 14px;font-size:13px;font-family:'Work Sans',sans-serif;outline:none;" onkeydown="if(event.key==='Enter')sendAI()">
     <button onclick="sendAI()" style="background:var(--agent-primary);color:var(--gold);border:none;border-radius:99px;padding:8px 14px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;">→</button>
