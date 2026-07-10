@@ -773,7 +773,7 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
     </div>
     <div class="form-group" id="loyer_group" style="display:none">
-      <label>Loyer mensuel (€)</label><input type="number" id="loyer" placeholder="850">
+      <label>Loyer mensuel (€)</label><input type="number" id="loyer_actuel_location" placeholder="850">
     </div>
     <div class="scenario-box mt-8">
       <label>Scénario "Dans 3 mois j'ai une offre à ___ € — on fait quoi ?"</label>
@@ -2219,7 +2219,7 @@ function injectData(html, d) {
 
   // ── Header ──
   var badge = q('.hbadge');
-  if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo · Réf. ' + d.ref;
+  if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo';
 
   // ── Message de bienvenue personnalisé (si prénom acheteur renseigné) ──
   var welcomeEl = q('#welcome-msg');
@@ -2910,7 +2910,7 @@ function collectBienData() {
     mediane:       parseFloat(getV('bien_mediane'))||0,
     tension:       getV('bien_tension')||'Très forte',
     delai:         getV('bien_delai')||'21 jours',
-    loyer:         parseFloat(getV('bien_loyer_estime')||getV('loyer'))||0,
+    loyer:         parseFloat(getV('loyer')||getV('bien_loyer_estime'))||0,
     chargesCopro:  chargesCopro,
     chargesDetail: getV('charges_detail'),
     taxeFonciere:  taxeFonciere,
@@ -3665,7 +3665,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
       dbgSet('bien_vig2', data.vig2 || '');
       dbgSet('bien_vig3', data.vig3 || '');
 
-      // Loyer & marché (deux inputs partagent id="loyer" — injecter tous)
+      // Loyer & marché (id="loyer" = loyer potentiel estimé, alimente la fiche)
       document.querySelectorAll('[id="loyer"]').forEach(function(el){ el.value = data.loyer || ''; });
       dbgSet('bien_loyer_estime', data.loyer    || '');
       dbgSet('bien_mediane',      data.mediane  || '');
