@@ -102,7 +102,7 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .nav button.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500;}
 /* CONTAINER */
 .container{max-width:1300px;margin:auto;padding:32px 28px 70px;}
-.layout-shell{display:flex;gap:28px;max-width:1300px;margin:auto;align-items:flex-start;}
+.layout-shell{display:flex;gap:28px;max-width:1518px;margin:auto;align-items:flex-start;}
 .rail{position:sticky;top:24px;width:190px;flex-shrink:0;padding:24px 0;display:flex;flex-direction:column;gap:2px;}
 .rail-progress{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold2);letter-spacing:.04em;margin-bottom:14px;padding:0 4px;}
 .rail button{display:flex;align-items:center;gap:10px;border:none;background:none;padding:10px 8px;font-family:'Work Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:10px;text-align:left;transition:all .2s;position:relative;}
@@ -384,7 +384,7 @@ textarea.field{min-height:95px;resize:vertical;}
   <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label">Mon Budget</span></button>
   <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Quartier</span></button>
   <button data-tab="documents" onclick="showTab('documents',this)"><span class="rail-dot">📁</span><span class="rail-label">Documents</span></button>
-  <button data-tab="assistant" onclick="showTabAssistant(this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
+  <button data-tab="assistant" onclick="showTab('assistant',this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
   <button data-tab="offre" onclick="showTab('offre',this)"><span class="rail-dot">✍️</span><span class="rail-label">Faire une offre</span></button>
 </nav>
 
@@ -731,6 +731,16 @@ textarea.field{min-height:95px;resize:vertical;}
 
 
 
+<section id="assistant" class="tab">
+<div class="pg">
+<div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div id="assistant-dock" style="min-height:560px;display:flex;flex-direction:column;"></div>
+  </div>
+</div>
+</div>
+</section>
+
 <!-- ═══════════ ONGLET 5 : FAIRE UNE OFFRE ═══════════ -->
 <section id="offre" class="tab">
 <div class="pg">
@@ -850,8 +860,51 @@ function showTabAssistant(btn) {
   toggleAI();
 }
 
+function dockAI() {
+  var modal = document.getElementById('ai-modal');
+  var dock = document.getElementById('assistant-dock');
+  if (!modal || !dock) return;
+  if (modal.parentNode !== dock) dock.appendChild(modal);
+  modal.style.position = 'static';
+  modal.style.width = '100%';
+  modal.style.maxHeight = 'none';
+  modal.style.height = '560px';
+  modal.style.boxShadow = 'none';
+  modal.style.border = 'none';
+  modal.style.display = 'flex';
+  modal.style.flexDirection = 'column';
+  var btn = document.getElementById('ai-btn');
+  if (btn) btn.style.display = 'none';
+  _aiOpen = true;
+  if (!_aiInit) {
+    _aiInit = true;
+    var welcome = "Bonjour ! Je suis l'assistant de " + _sp_adresse + ". Je connais tout de ce bien : prix, diagnostics, charges, DPE, points forts et plus encore. Que souhaitez-vous savoir ?";
+    addAIMsg(welcome, 'assistant');
+    _aiMessages.push({role:'user',content:'(début de session)'});
+    _aiMessages.push({role:'assistant',content:welcome});
+  }
+}
+function undockAI() {
+  var modal = document.getElementById('ai-modal');
+  if (!modal || !modal.parentNode || modal.parentNode.id !== 'assistant-dock') return;
+  document.body.appendChild(modal);
+  modal.style.position = 'fixed';
+  modal.style.bottom = '80px';
+  modal.style.right = '24px';
+  modal.style.width = '360px';
+  modal.style.maxHeight = '560px';
+  modal.style.height = '';
+  modal.style.boxShadow = '0 8px 40px rgba(0,0,0,.25)';
+  modal.style.border = '1px solid var(--border)';
+  modal.style.display = 'none';
+  _aiOpen = false;
+  var btn = document.getElementById('ai-btn');
+  if (btn) btn.style.display = 'flex';
+}
+
 function showTab(id, btn) {
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
+  if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('#main-nav button').forEach(function(b) { b.classList.remove('active'); });
