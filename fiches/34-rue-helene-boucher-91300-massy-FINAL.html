@@ -50,7 +50,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);over
 .plabel{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
 .pamount{font-family:'Cormorant Garamond',serif;font-size:64px;color:var(--gold);font-weight:300;line-height:1;margin-bottom:4px;}
 .pmeta{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08);}
-.hkpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:0;}
+.hkpis{display:grid;grid-template-columns:1fr;gap:12px;margin-top:0;}
 .hkpi{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;}
 .hkpi .hl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
 .hkpi .hv{font-family:'Cormorant Garamond',serif;font-size:22px;color:var(--gold);font-weight:300;line-height:1;}
@@ -175,8 +175,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .tl::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:1px;background:var(--border);}
 .tli{position:relative;margin-bottom:14px;}
 .tli::before{content:'';position:absolute;left:-16px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 0 1px var(--gold);}
-.tly{font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);letter-spacing:.09em;margin-bottom:2px;}
-.tlt{font-size:12px;line-height:1.6;font-weight:300;}
+.tly{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;margin-bottom:2px;}
+.tlt{font-family:'DM Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;line-height:1.6;}
 /* BANK */
 .bi{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:10px;margin-top:11px;}
 .bi.green{background:#f0f7f3;border:1px solid #c3dece;}
@@ -299,8 +299,8 @@ textarea.field{min-height:95px;resize:vertical;}
   </div>
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
-      <div id="welcome-msg" style="display: block; font-family: &quot;Cormorant Garamond&quot;, serif; font-style: italic; font-size: 18px; color: var(--gold); margin-bottom: 10px;">Bonjour Laura DAVID, bienvenue dans votre espace privé acquéreur</div>
-      <div class="hbadge">Espace Acheteur Privé · Expertimo · Réf. ref-mandat</div>
+      <div id="welcome-msg" style="display: block; font-family: &quot;Cormorant Garamond&quot;, serif; font-style: italic; font-size: 24px; color: var(--gold); margin-bottom: 10px;">Bonjour Laura DAVID, bienvenue dans votre espace privé acquéreur</div>
+      <div class="hbadge">Espace Acheteur Privé · Expertimo</div>
       <h1 class="htitle">34 Rue Hélène Boucher 91300 Massy<br><span style="color:var(--gold);font-style:italic;"></span></h1>
       <p class="hsub">Maison 5 pièces de 80 m² · DPE F</p>
     </div>
@@ -309,7 +309,6 @@ textarea.field{min-height:95px;resize:vertical;}
       <div class="pamount">325 000 €</div>
       <div class="pmeta">Frais d'agence inclus · Données temps réel</div>
       <div class="hkpis">
-        <div class="hkpi"><div class="hl">Renta. nette</div><div class="hv" id="h-rnet">3,9%</div></div>
         <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe">F</div></div>
       </div>
     </div>
@@ -1029,10 +1028,11 @@ function calcBudget() {
   var infoLigne = '<div class="rc"><div class="rcl">Mensualité estimée</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
     + '<div class="rc"><div class="rcl">Taux d\'endettement</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
     + '<div class="rc"><div class="rcl">Budget max accessible</div><div class="rcv mono">' + fmt(Math.max(0, budgetMax)) + '</div></div>'
-    + '<div class="rc"><div class="rcl">Effort total <small style="font-size:9px;color:var(--muted);">(crédit + charges)</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">À titre informatif</div></div>';
+    + '<div class="rc"><div class="rcl">Effort total <small style="font-size:9px;color:var(--muted);">(crédit + charges)</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">À titre informatif</div></div>'
+    + '<p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5;">Simulation basée sur un apport minimum de 10% du coût total (frais de notaire compris), règle appliquée par la majorité des banques. Certaines banques financent jusqu\'à 110% du prix (sans apport), mais cette pratique reste de plus en plus rare.</p>';
   if (revenu === 0) {
     html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;">Veuillez renseigner votre revenu mensuel.</div>';
-  } else if (tauxEndettement <= 33 && apport >= apportMinimum) {
+  } else if (tauxEndettement <= 33) {
     html = '<div class="alert" style="background:#f0faf0;border-left:3px solid #4caf50;padding:16px;border-radius:11px;"><h4 style="color:#2e7d32;font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">✅ Ce bien est accessible pour vous</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div></div>';
   } else if (tauxEndettement <= 38 || budgetMax >= prixBien) {
     html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;padding:16px;border-radius:11px;"><h4 style="color:#e65100;font-family:\'DM Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">⚠️ Accessible sous conditions</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
@@ -1066,6 +1066,7 @@ function initMapQuartier() {
       + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
       + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
       + 'node["amenity"="bus_station"](around:800,' + lat + ',' + lng + ');'
+      + 'node["highway"="bus_stop"](around:800,' + lat + ',' + lng + ');'
       + 'node["leisure"="park"](around:800,' + lat + ',' + lng + ');'
       + 'node["leisure"="garden"](around:800,' + lat + ',' + lng + ');'
       + 'node["shop"="supermarket"](around:800,' + lat + ',' + lng + ');'
@@ -1091,7 +1092,7 @@ function initMapQuartier() {
         (data.elements||[]).forEach(function(el) {
           var cat;
           var tags = el.tags || {};
-          if (tags.public_transport || tags.railway === 'station' || tags.amenity === 'bus_station') { cat = 'transport'; }
+          if (tags.public_transport || tags.railway === 'station' || tags.amenity === 'bus_station' || tags.highway === 'bus_stop') { cat = 'transport'; }
           else if (tags.leisure === 'park' || tags.leisure === 'garden') { cat = 'vert'; }
           else if (tags.shop === 'supermarket' || tags.shop === 'bakery' || tags.amenity === 'pharmacy') { cat = 'commerce'; }
           else if (tags.amenity === 'school' || tags.amenity === 'kindergarten') { cat = 'ecole'; }
