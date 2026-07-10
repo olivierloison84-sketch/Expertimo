@@ -108,8 +108,10 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .rail button{display:flex;align-items:center;gap:10px;border:none;background:none;padding:10px 8px;font-family:'Work Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:10px;text-align:left;transition:all .2s;position:relative;}
 .rail button:hover{background:var(--cream);}
 .rail button.active{color:var(--ink);background:var(--cream);}
-.rail button.visited:not(.active) .rail-dot::after{content:'✓';position:absolute;top:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:var(--vert);color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center;}
-.rail-dot{position:relative;font-size:15px;flex-shrink:0;}
+.rail button.visited:not(.active) .rail-dot::after{content:'✓';position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:var(--vert);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
+.rail-dot{position:relative;width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;background:var(--card);border:2px solid var(--border);transition:all .2s;}
+.rail button.active .rail-dot{background:var(--gold);border-color:var(--gold);}
+.rail button.visited:not(.active) .rail-dot{background:rgba(47,122,79,.12);border-color:var(--vert);}
 .rail-label{white-space:nowrap;}
 .container{max-width:none;margin:0;flex:1;min-width:0;}
 
@@ -296,6 +298,7 @@ textarea.field{min-height:95px;resize:vertical;}
 /* DIAGNOSTICS */
 .diag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
 .diag-card{border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);}
+.diag-card{min-width:0;}
 .diag-icon{font-size:24px;margin-bottom:8px;}
 .diag-name{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
 .diag-result{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4;}
@@ -315,8 +318,10 @@ textarea.field{min-height:95px;resize:vertical;}
 .pfooter h2{font-family:'Playfair Display',serif;font-size:30px;font-weight:300;margin-bottom:9px;}
 .pfooter p{max-width:540px;margin:auto;color:#7a7264;line-height:1.9;font-weight:300;font-size:13px;}
 /* RESPONSIVE */
-@media(max-width:960px){
+@media(max-width:1200px){
   .pg{grid-template-columns:1fr;}
+}
+@media(max-width:960px){
   .cons-card{position:static;margin-bottom:18px;}
   .gallery{grid-template-columns:1fr;grid-template-rows:auto;}
   .gallery .gm{grid-row:auto;}
@@ -341,6 +346,8 @@ textarea.field{min-height:95px;resize:vertical;}
   .sval{text-align:left;}
   .ptrack{gap:0;}
 }
+@media(max-width:960px){ .diag-grid{grid-template-columns:repeat(2,1fr);} }
+@media(max-width:480px){ .diag-grid{grid-template-columns:1fr;} }
 </style>
 </head>
 <body>
@@ -875,8 +882,12 @@ function dockAI() {
   modal.style.flexDirection = 'column';
   var btn = document.getElementById('ai-btn');
   if (btn) btn.style.display = 'none';
+  var closeBtn = modal.querySelector('button[onclick="toggleAI()"]');
+  if (closeBtn) closeBtn.style.display = 'none';
+  var msgsEl = document.getElementById('ai-messages');
+  if (msgsEl) msgsEl.style.maxHeight = 'none';
   _aiOpen = true;
-  if (!_aiInit) {
+  if (msgsEl && msgsEl.children.length === 0) {
     _aiInit = true;
     var welcome = "Bonjour ! Je suis l'assistant de " + _sp_adresse + ". Je connais tout de ce bien : prix, diagnostics, charges, DPE, points forts et plus encore. Que souhaitez-vous savoir ?";
     addAIMsg(welcome, 'assistant');
@@ -897,9 +908,13 @@ function undockAI() {
   modal.style.boxShadow = '0 8px 40px rgba(0,0,0,.25)';
   modal.style.border = '1px solid var(--border)';
   modal.style.display = 'none';
-  _aiOpen = false;
   var btn = document.getElementById('ai-btn');
   if (btn) btn.style.display = 'flex';
+  var closeBtn = modal.querySelector('button[onclick="toggleAI()"]');
+  if (closeBtn) closeBtn.style.display = '';
+  var msgsEl = document.getElementById('ai-messages');
+  if (msgsEl) msgsEl.style.maxHeight = '380px';
+  _aiOpen = false;
 }
 
 function showTab(id, btn) {
@@ -1429,10 +1444,11 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 
 <div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;z-index:1001;width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
-  <div style="background:var(--agent-primary);color:var(--gold);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
-    <div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;">Assistant</div>
-      <div style="font-size:13px;font-weight:500;margin-top:2px;">5 Rue de l'Arpajonnais</div>
+  <div style="background:var(--agent-primary);color:var(--gold);padding:18px 22px;display:flex;align-items:center;gap:12px;">
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(201,162,39,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+    <div style="flex:1;">
+      <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:600;">Assistant Privency</div>
+      <div style="font-family:'Work Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:5px;margin-top:2px;"><span style="width:6px;height:6px;border-radius:50%;background:#2F7A4F;display:inline-block;"></span> Disponible 24h/24</div>
     </div>
     <button onclick="toggleAI()" style="background:none;border:none;color:var(--gold);font-size:20px;cursor:pointer;line-height:1;">×</button>
   </div>
