@@ -102,6 +102,25 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .nav button.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500;}
 /* CONTAINER */
 .container{max-width:1300px;margin:auto;padding:32px 28px 70px;}
+.layout-shell{display:flex;gap:28px;max-width:1300px;margin:auto;align-items:flex-start;}
+.rail{position:sticky;top:24px;width:190px;flex-shrink:0;padding:24px 0;display:flex;flex-direction:column;gap:2px;}
+.rail-progress{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold2);letter-spacing:.04em;margin-bottom:14px;padding:0 4px;}
+.rail button{display:flex;align-items:center;gap:10px;border:none;background:none;padding:10px 8px;font-family:'Work Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:10px;text-align:left;transition:all .2s;position:relative;}
+.rail button:hover{background:var(--cream);}
+.rail button.active{color:var(--ink);background:var(--cream);}
+.rail button.visited:not(.active) .rail-dot::after{content:'✓';position:absolute;top:-2px;right:-2px;width:12px;height:12px;border-radius:50%;background:var(--vert);color:#fff;font-size:8px;display:flex;align-items:center;justify-content:center;}
+.rail-dot{position:relative;font-size:15px;flex-shrink:0;}
+.rail-label{white-space:nowrap;}
+.container{max-width:none;margin:0;flex:1;min-width:0;}
+
+@media(max-width:768px){
+  .layout-shell{gap:10px;}
+  .rail{position:sticky;top:12px;width:52px;flex-shrink:0;padding:12px 0;flex-direction:column;gap:10px;align-items:center;}
+  .rail-progress{display:none;}
+  .rail button{flex-direction:column;padding:8px 4px;border-radius:10px;justify-content:center;width:44px;}
+  .rail-label{display:none;}
+  .rail-dot{font-size:16px;}
+}
 .tab{display:none;}
 .tab.active{display:block;animation:fadeIn .3s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -354,16 +373,19 @@ textarea.field{min-height:95px;resize:vertical;}
   </div>
 </header>
 
-<nav class="nav" id="main-nav">
-  <button class="active" onclick="showTab('bien',this)">🏠 Le Bien</button>
-  <button onclick="showTab('marche',this)">📊 Marché</button>
-  <button onclick="showTab('rentabilite',this)">💰 Rentabilité</button>
-  <button onclick="showTab('historique',this)">🏛️ Historique</button>
-  <button onclick="showTab('diagnostics',this)">📋 Diagnostics</button>
-  <button onclick="showTab('budget',this)">💰 Mon Budget</button>
-  <button onclick="showTab('quartier',this);initMapQuartier()">🗺️ Quartier</button>
-  <button onclick="showTab('documents',this)">📁 Documents</button>
-  <button onclick="showTab('offre',this)">✍️ Faire une offre</button>
+<div class="layout-shell">
+<nav class="rail" id="main-nav">
+  <div class="rail-progress"><span id="rail-progress-count">1</span> / 10 sections explorées</div>
+  <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label">Le Bien</span></button>
+  <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label">Marché</span></button>
+  <button data-tab="rentabilite" onclick="showTab('rentabilite',this)"><span class="rail-dot">💰</span><span class="rail-label">Rentabilité</span></button>
+  <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label">Historique</span></button>
+  <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
+  <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label">Mon Budget</span></button>
+  <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Quartier</span></button>
+  <button data-tab="documents" onclick="showTab('documents',this)"><span class="rail-dot">📁</span><span class="rail-label">Documents</span></button>
+  <button data-tab="assistant" onclick="showTabAssistant(this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
+  <button data-tab="offre" onclick="showTab('offre',this)"><span class="rail-dot">✍️</span><span class="rail-label">Faire une offre</span></button>
 </nav>
 
 <div class="container">
@@ -713,6 +735,10 @@ textarea.field{min-height:95px;resize:vertical;}
 <section id="offre" class="tab">
 <div class="pg">
 <div>
+  <div class="card" style="background:var(--cream);border:1px solid var(--gold);margin-bottom:16px;">
+    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;">Vous avez exploré <span id="offre-progress-count">1</span> / 10 sections</div>
+    <div style="font-size:12.5px;color:var(--muted);">Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.</div>
+  </div>
   <div class="card">
     <div class="lbl">Processus d'acquisition</div>
     <div class="ptrack">
@@ -790,9 +816,40 @@ textarea.field{min-height:95px;resize:vertical;}
 </div>
 
 </div>
+</div>
 
 <script>
 // ═══ NAV ═══
+var RAIL_KEY = 'privency_progress_' + location.pathname;
+function getVisited() {
+  try { return JSON.parse(localStorage.getItem(RAIL_KEY)) || []; } catch(e) { return []; }
+}
+function markVisited(tabId) {
+  var visited = getVisited();
+  if (visited.indexOf(tabId) === -1) {
+    visited.push(tabId);
+    localStorage.setItem(RAIL_KEY, JSON.stringify(visited));
+  }
+  updateRailUI();
+}
+function updateRailUI() {
+  var visited = getVisited();
+  document.querySelectorAll('.rail button').forEach(function(b) {
+    var t = b.getAttribute('data-tab');
+    b.classList.toggle('visited', visited.indexOf(t) !== -1);
+  });
+  var countEl = document.getElementById('rail-progress-count');
+  if (countEl) countEl.textContent = visited.length;
+  var offreBanner = document.getElementById('offre-progress-count');
+  if (offreBanner) offreBanner.textContent = visited.length;
+}
+function showTabAssistant(btn) {
+  document.querySelectorAll('.rail button').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  markVisited('assistant');
+  toggleAI();
+}
+
 function showTab(id, btn) {
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -800,10 +857,11 @@ function showTab(id, btn) {
   document.querySelectorAll('#main-nav button').forEach(function(b) { b.classList.remove('active'); });
   if (btn) btn.classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
+  markVisited(id);
 }
 
 function showTabById(id) {
-  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, offre: 8};
+  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, offre: 9};
   var navBtns = document.querySelectorAll('#main-nav button');
   showTab(id, navBtns[navMap[id]]);
 }
@@ -1213,6 +1271,7 @@ var _sp_agent     = "Olivier LOISON";
 var _sp_tel       = "06 85 68 46 13";
 
 function toggleAI() {
+  markVisited('assistant');
   _aiOpen = !_aiOpen;
   var modal = document.getElementById('ai-modal');
   modal.style.display = _aiOpen ? 'flex' : 'none';
@@ -1427,5 +1486,6 @@ document.addEventListener('DOMContentLoaded', function() {
     el.addEventListener('click', function() { track('offre_soumise'); });
   });
 })();</script>
+<script>markVisited('bien'); updateRailUI();</script>
 </body>
 </html>
