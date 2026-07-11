@@ -62,6 +62,26 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .nav button.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500;}
 /* CONTAINER */
 .container{max-width:1300px;margin:auto;padding:32px 28px 70px;}
+.layout-shell{display:flex;gap:28px;max-width:1518px;margin:auto;align-items:flex-start;}
+.rail{position:sticky;top:24px;width:190px;flex-shrink:0;padding:24px 0;display:flex;flex-direction:column;gap:2px;}
+.rail-progress{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--gold2);letter-spacing:.04em;margin-bottom:14px;padding:0 4px;}
+.rail button{display:flex;align-items:center;gap:10px;border:none;background:none;padding:10px 8px;font-family:'Work Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:10px;text-align:left;transition:all .2s;position:relative;}
+.rail button:hover{background:var(--cream);}
+.rail button.active{color:var(--ink);background:var(--cream);}
+.rail-dot{display:none;}
+.rail button.visited:not(.active)::before{content:'✓';display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--vert);color:#fff;font-size:9px;font-weight:700;margin-right:6px;flex-shrink:0;}
+.rail button.active::before{content:'';display:inline-flex;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:9px;flex-shrink:0;}
+.rail-label{white-space:nowrap;}
+.container{max-width:none;margin:0;flex:1;min-width:0;}
+
+@media(max-width:768px){
+  .layout-shell{gap:8px;}
+  .rail{position:sticky;top:12px;width:74px;flex-shrink:0;padding:12px 0;flex-direction:column;gap:8px;align-items:center;}
+  .rail-progress{display:none;}
+  .rail button{flex-direction:column;gap:3px;padding:6px 2px;border-radius:10px;justify-content:center;width:68px;}
+  .rail-label{display:block;font-size:8.5px;text-align:center;line-height:1.15;white-space:normal;}
+  .rail-dot{font-size:14px;width:28px;height:28px;}
+}
 .tab{display:none;}
 .tab.active{display:block;animation:fadeIn .3s ease;}
 @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -161,7 +181,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .alert.rouge h4{color:var(--rouge);}.alert.amber h4{color:#8a6820;}.alert.vert h4{color:var(--vert);}.alert.blue h4{color:#4a5fa8;}
 .alert p{font-size:12px;line-height:1.7;font-weight:300;}
 /* DVF TABLE */
-.dvft{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.dvft{width:100%;min-width:480px;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.dvft td,.dvft th{white-space:nowrap;}
+.dvft-wrap::-webkit-scrollbar{height:5px;}
+.dvft-wrap::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
 .dvft th{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 8px;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);}
 .dvft td{padding:7px 8px;border-bottom:1px solid var(--border);font-weight:300;}
 .dvft tr.ref td{background:#fdf8f0;}
@@ -208,8 +231,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .cc-proj-group{display:flex;gap:2px;align-items:flex-end;flex:1;}
 .cc-proj-bar{width:10px;border-radius:2px 2px 0 0;transition:height .5s;}
 /* PROCESS */
-.ptrack{display:flex;gap:0;overflow-x:auto;padding-bottom:4px;margin-bottom:20px;}
-.ptrack::-webkit-scrollbar{height:0;}
+.ptrack{display:flex;gap:0;overflow-x:auto;padding-bottom:10px;margin-bottom:20px;position:relative;}
+.ptrack::-webkit-scrollbar{height:5px;}
+.ptrack::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+.ptrack::-webkit-scrollbar-track{background:var(--border);border-radius:3px;}
 .pstep{display:flex;flex-direction:column;align-items:center;flex:1;min-width:65px;}
 .picon{width:38px;height:38px;border-radius:50%;background:var(--cream);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:5px;}
 .pstep.done .picon{background:var(--gold);border-color:var(--gold);}
@@ -237,6 +262,7 @@ textarea.field{min-height:95px;resize:vertical;}
 /* DIAGNOSTICS */
 .diag-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
 .diag-card{border-radius:12px;padding:16px;text-align:center;border:1px solid var(--border);}
+.diag-card{min-width:0;}
 .diag-icon{font-size:24px;margin-bottom:8px;}
 .diag-name{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
 .diag-result{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4;}
@@ -256,8 +282,10 @@ textarea.field{min-height:95px;resize:vertical;}
 .pfooter h2{font-family:'Playfair Display',serif;font-size:30px;font-weight:300;margin-bottom:9px;}
 .pfooter p{max-width:540px;margin:auto;color:#7a7264;line-height:1.9;font-weight:300;font-size:13px;}
 /* RESPONSIVE */
-@media(max-width:960px){
+@media(max-width:1200px){
   .pg{grid-template-columns:1fr;}
+}
+@media(max-width:960px){
   .cons-card{position:static;margin-bottom:18px;}
   .gallery{grid-template-columns:1fr;grid-template-rows:auto;}
   .gallery .gm{grid-row:auto;}
@@ -282,6 +310,12 @@ textarea.field{min-height:95px;resize:vertical;}
   .sval{text-align:left;}
   .ptrack{gap:0;}
 }
+@media(max-width:960px){ .diag-grid{grid-template-columns:repeat(2,1fr);} }
+@media(max-width:480px){ .diag-grid{grid-template-columns:1fr;} }
+html,body{overflow-x:hidden;}
+.pg,.card{min-width:0;}
+.ptrack{min-width:0;}
+.pg > div{min-width:0;}
 </style>
 <style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2F7A4F;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"ref":"ref-mandat","type":"appart","etage":"4","adresse":"11, Square Jean Baptiste Clément 91390 MORSANG SUR ORGE","quartier":"","acheteur_prenom":"Mélissa ","acheteur_nom":"MARTI","annee":"1965","description":"Appartement 3 pièces de 66 m² · 4 · DPE D","surface":66,"surfCarrez":0,"pieces":"3","dpe":"D","prix":155000,"prixm2":2348,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":0,"chargesCopro":236,"chargesDetail":"Eau froide, chaude, chauffage, espaces verts, gardien","taxeFonciere":0,"score":"8.25","scorePrest":"7","scoreSecteur":"8","scoreQP":"9","scoreEtat":"9","fort1":"Appartement lumineux, calme avec vue dégagée. Parking + Cave.","fort2":"Bon état général. Beaux volumes et rangements (cellier + dressing)","fort3":"Résidence sécurisée, proche transports, commerces et écoles","vig1":"Etage élevé sans ascenseur","vig2":"Pas de balcon","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/tisjmysrsxmsnpxqvvbn.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/hbbhhphtnpqohcjitg0s.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/zlqaezybdvfwhnj7iwar.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/bfrqkg7vix4k9rlkiex9.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/uk8qtt76cugyqxobm1ij.jpg","dvf":[{"date":"09/2024","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"65","prix":140000,"prixm2":2154},{"date":"08/2025","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"66","prix":153000,"prixm2":2318},{"date":"03/2023","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"66","prix":149000,"prixm2":2258},{"date":"04/2025","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"76","prix":177500,"prixm2":2336},{"date":"06/2024","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"64","prix":153540,"prixm2":2399},{"date":"08/2024","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"75","prix":149000,"prixm2":1987}],"fourchetBasse":139500,"fourchetHaute":170500,"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"2019 : Pose de treillis anti-pigeons sur façades (5 309 €)\n2019-2022 : Travaux séparatif eaux usées/eaux pluviales votés (55 000 €) — non encore réalisés\n2022 : Diagnostic assainissement en cours (7 155 €)\n2023/2024 : DPE collectif prévu (obligation légale avant 2025)\n2024-2025 : Remise en état complète du logement de gardien (électricité, menuiserie, peinture ~13 000 €)\n2025 : Remplacement des équipements électriques vétustes en parties communes, entretien espaces verts\n2026 : Lancement PPPT/DPE collectif (10 000 €, fonds ALUR) — nouveau gardien en poste depuis mars 2026","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"non-soumis","result":"Non soumis — bâtiment après 1997"},{"icon":"🔬","name":"Plomb (CREP)","status":"favorable","result":"Absence de plomb détectée"},{"icon":"🪲","name":"Termites","status":"favorable","result":"Absence de termites constatée"},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie"},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Installation sans anomalie"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme"}],"agentNom":"Olivier LOISON","agentTel":"06 85 68 46 13","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"https://calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#14171F","agentAccent":"#C9A227","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"type":"appart","photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/bfrqkg7vix4k9rlkiex9.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/zlqaezybdvfwhnj7iwar.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/hbbhhphtnpqohcjitg0s.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/uk8qtt76cugyqxobm1ij.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/tisjmysrsxmsnpxqvvbn.jpg","caption":"","uploading":false}],"adresse":"11, Square Jean Baptiste Clément 91390 MORSANG SUR ORGE","quartier":"","acheteur_prenom":"Mélissa ","acheteur_nom":"MARTI","proprio_prenom":"Isabelle","proprio_nom":"PINTO","date_r1":"2026-06-27","tel_fixe":"","tel_mobile":"","email_proprio":"","ref_mandat":"","raison_vente":"","vente_depuis":"","delai_vente":"","cles_chez":"","agences":"","annee_achat":"","prix_achat":"","nb_visites":"","nb_offres":"","prix_offres":"","loyer":"1200","scenario_montant":"","scenario_reponse":"","historique_libre":"2019 : Pose de treillis anti-pigeons sur façades (5 309 €)\n2019-2022 : Travaux séparatif eaux usées/eaux pluviales votés (55 000 €) — non encore réalisés\n2022 : Diagnostic assainissement en cours (7 155 €)\n2023/2024 : DPE collectif prévu (obligation légale avant 2025)\n2024-2025 : Remise en état complète du logement de gardien (électricité, menuiserie, peinture ~13 000 €)\n2025 : Remplacement des équipements électriques vétustes en parties communes, entretien espaces verts\n2026 : Lancement PPPT/DPE collectif (10 000 €, fonds ALUR) — nouveau gardien en poste depuis mars 2026","renov_annee_1":"","renov_montant_1":"","renov_desc_1":"","renov_annee_2":"","renov_montant_2":"","renov_desc_2":"","renov_annee_3":"","renov_montant_3":"","renov_desc_3":"","renov_annee_4":"","renov_montant_4":"","renov_desc_4":"","renov_annee_5":"","renov_montant_5":"","renov_desc_5":"","surface_hab":"66","surface_carrez":"","surface_terrain":"","surface_terrain_m":"","nb_pieces":"3","nb_chambres":"2","nb_sdb":"1","nb_wc":"","nb_sde":"","nb_wc_sep":"1","etage":"4","nb_etages":"4","annee_construction":"1965","syndic_nom":"Siloge","travaux_ag_detail":"","travaux_recents_immeuble":"","annee_construction_m":"","nb_etages_m":"","standard_general":"","prix_vente":"155000","taxe_fonciere":"","taxe_hab":"","charges_copro":"236","charges_mensuelles":"","charges_detail":"Eau froide, chaude, chauffage, espaces verts, gardien","plus_appartement":"","prix_vente_t":"","taxe_fonciere_t":"","parking_int":"","parking_ext":"1","parking_box":"","toit_type_autre_txt":"","facade_type_autre_txt":"","sols_type_autre_txt":"","chauf_diffusion_autre_txt":"","chauf_annee":"","ecs_autre_txt":"","travaux_recents":"","equip_autre":"","ext_Jardin_m2":"","ext_V_randa_m2":"","ext_Terrasse_m2":"","ext_Balcon_s__m2":"","ext_Piscine_m2":"","ext_Pelouse_m2":"","vigilances_texte":"","exposition_autre_txt":"","transport_autre_txt":"","services_prox":"Ecoles, commerces, transports","voisinage":"famille","zone_plu":"","superficie_totale":"","superficie_constructible":"","forme_terrain":"","acces_terrain":"","cos_ces":"","hauteur_max":"","projet_terrain":"","bien_photo1_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/tisjmysrsxmsnpxqvvbn.jpg","bien_photo2_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/hbbhhphtnpqohcjitg0s.jpg","bien_photo3_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/zlqaezybdvfwhnj7iwar.jpg","bien_photo4_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/bfrqkg7vix4k9rlkiex9.jpg","bien_photo5_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/uk8qtt76cugyqxobm1ij.jpg","dpe_valeur":"","ges_valeur":"","syndic_copro":"","diag_amiante_status":"non-soumis","diag_amiante_result":"Non soumis — bâtiment après 1997","diag_plomb_status":"favorable","diag_plomb_result":"Absence de plomb détectée","diag_termites_status":"favorable","diag_termites_result":"Absence de termites constatée","diag_electricite_status":"favorable","diag_electricite_result":"Installation intérieure sans anomalie","diag_gaz_status":"favorable","diag_gaz_result":"Installation sans anomalie","diag_assain_status":"favorable","diag_assain_result":"Raccordement au réseau collectif conforme","dvf-date-1":"09/2024","dvf-adresse-1":"Square Jean Baptiste Clement (à ~54 m)","dvf-surface-1":"65","dvf-prix-1":"140000","dvf-prixm2-1":"2154","dvf-date-2":"08/2025","dvf-adresse-2":"Square Jean Baptiste Clement (à ~54 m)","dvf-surface-2":"66","dvf-prix-2":"153000","dvf-prixm2-2":"2318","dvf-date-3":"03/2023","dvf-adresse-3":"Square Jean Baptiste Clement (à ~54 m)","dvf-surface-3":"66","dvf-prix-3":"149000","dvf-prixm2-3":"2258","dvf-date-4":"04/2025","dvf-adresse-4":"Square Jean Baptiste Clement (à ~54 m)","dvf-surface-4":"76","dvf-prix-4":"177500","dvf-prixm2-4":"2336","dvf-date-5":"06/2024","dvf-adresse-5":"Square Jean Baptiste Clement (à ~54 m)","dvf-surface-5":"64","dvf-prix-5":"153540","dvf-prixm2-5":"2399","dvf-date-6":"08/2024","dvf-adresse-6":"Square Jean Baptiste Clement (à ~54 m)","dvf-surface-6":"75","dvf-prix-6":"149000","dvf-prixm2-6":"1987","bien_score":"8.25","bien_score_prest":"7","bien_score_secteur":"8","bien_score_qp":"9","bien_score_etat":"9","bien_fort1":"Appartement lumineux, calme avec vue dégagée. Parking + Cave.","bien_fort2":"Bon état général. Beaux volumes et rangements (cellier + dressing)","bien_fort3":"Résidence sécurisée, proche transports, commerces et écoles","bien_vig1":"Etage élevé sans ascenseur","bien_vig2":"Pas de balcon","bien_vig3":"","bien_mediane":"","bien_tension":"Très forte","bien_delai":"21 jours","bien_loyer_estime":"","bien_fourchette_basse":"","bien_fourchette_milieu":"","bien_fourchette_haute":"","bien_credit_duree":"20","bien_credit_apport":"10","bien_credit_taux_haut":"5.00","bien_credit_taux_moyen":"3.40","bien_credit_taux_bas":"2.50","q1":"","q2":"","q3":"","q4":"","q5":"","notes_libres":"","prochaines_etapes":"","date_r2":"","capital_restant":"","dette_montant":"","dette_echeance":"","banque":"","taux_pret":"","reloge_budget":"","reloge_type":"","reloge_delai":"","reloge_zone":"","reloge_pieces":"","radio_utilisation":"rs","radio_ascenseur":"non","radio_travaux_ag":"non","radio_pu_Sous_sol":"non","radio_pu_Cave":"oui","radio_pu_Grenier":"non","radio_pu_Cave___vin":"non","radio_pu_Local_de_rangement":"non","radio_pu_Salle_de_loisirs":"non","radio_pu_Combles":"non","radio_pu_D_pendances":"non","radio_vitrage_type":"Double vitrage","radio_volets_elec":"non","radio_chauf_type":"Collectif","radio_ecs":"Gaz","radio_defaut_Moisissures":"non","radio_defaut_Fissures":"non","radio_defaut_Remont_es_capillaires":"non","radio_defaut_Insectes_nuisibles":"non","radio_defaut_D_g_ts_d_eau":"non","radio_defaut_C_bles_haute_tension":"non","radio_defaut_Antenne_t_l_phonie_mobile":"non","radio_defaut_Amiante":"non","radio_eg_Chemin_e":"non","radio_eg_Po_le":"non","radio_eg_Sauna":"non","radio_eg_Photovolta_que":"non","radio_eg_Jacuzzi___Whirlpool":"non","radio_eg_Ascenseur":"non","radio_eg_Piscine_int_rieure":"non","radio_eg_Solaire_thermique":"non","radio_ec_Four":"non","radio_ec_Hotte_aspirante":"non","radio_ec_Cong_lateur":"non","radio_ec_Lave_vaisselle":"non","radio_ec_R_frig_rateur":"non","radio_ec_Cave___vin":"non","radio_ext_Jardin":"non","radio_ext_V_randa":"non","radio_ext_Terrasse":"non","radio_ext_Vue":"non","radio_ext_Balcon_s_":"non","radio_ext_Piscine":"non","radio_ext_Pelouse":"non","radio_ext_Portail":"non","radio_vigi_Nuisances_sonores":"non","radio_vigi_Vis___vis_direct":"non","radio_vigi_Humidit__r_currente":"non","radio_vigi_Travaux_importants___pr_voir":"non","radio_vigi_Isolation_thermique_insuffisante":"non","radio_vigi_Parties_communes_d_grad_es":"non","radio_vigi_Environnement_en_mutation":"non","radio_vigi_Servitude_de_passage":"non","radio_vigi_Litige_de_voisinage":"non","radio_vigi_Toit___toiture___refaire":"non","radio_vigi_Fen_tres___changer":"non","radio_vigi_Chauffage_v_tuste":"non","radio_vigi__lectricit____mettre_aux_normes":"non","radio_expo_sonore":"Normal","radio_viab_Eau":"non","radio_viab_Électricité":"non","radio_viab_Gaz":"non","radio_viab_Assainissement":"non","radio_viab_Fibre optique":"non","radio_risque_Zone_inondable":"non","radio_risque_Sol_argileux":"non","radio_risque_Zone_sismique":"non","radio_risque_Ligne_haute_tension":"non","radio_risque_Servitude":"non","radio_relogement_trouve":"non","rating_sols_etat":"Soigné","rating_etat_general":"Soigné","dpe_dpe":"D","dpe_ges":"D","_pieces_table":[["Entrée","","",""],["Séjour","","",""],["Salle à manger","","",""],["Chambre 1","","",""],["Chambre 2","","",""],["Chambre 3","","",""],["Chambre 4","","",""],["Chambre 5","","",""],["Cuisine","","",""],["WC","","",""],["Salle de bains","","",""],["Salle d'eau","","",""],["","","",""],["","","",""]]},"renovations":[]}</script>
 </head>
@@ -315,16 +349,19 @@ textarea.field{min-height:95px;resize:vertical;}
   </div>
 </header>
 
-<nav class="nav" id="main-nav">
-  <button class="active" onclick="showTab('bien',this)">🏠 Le Bien</button>
-  <button onclick="showTab('marche',this)">📊 Marché</button>
-  <button onclick="showTab('rentabilite',this)">💰 Rentabilité</button>
-  <button onclick="showTab('historique',this)">🏛️ Historique</button>
-  <button onclick="showTab('diagnostics',this)">📋 Diagnostics</button>
-  <button onclick="showTab('budget',this)">💰 Mon Budget</button>
-  <button onclick="showTab('quartier',this);initMapQuartier()">🗺️ Quartier</button>
-  <button onclick="showTab('documents',this)">📁 Documents</button>
-  <button onclick="showTab('offre',this)">✍️ Faire une offre</button>
+<div class="layout-shell">
+<nav class="rail" id="main-nav">
+  <div class="rail-progress"><span id="rail-progress-count">1</span> / 10 sections explorées</div>
+  <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label">Le Bien</span></button>
+  <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label">Marché</span></button>
+  <button data-tab="rentabilite" onclick="showTab('rentabilite',this)"><span class="rail-dot">💰</span><span class="rail-label">Rentabilité</span></button>
+  <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label">Historique</span></button>
+  <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
+  <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label">Mon Budget</span></button>
+  <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Quartier</span></button>
+  <button data-tab="documents" onclick="showTab('documents',this)"><span class="rail-dot">📁</span><span class="rail-label">Documents</span></button>
+  <button data-tab="assistant" onclick="showTab('assistant',this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
+  <button data-tab="offre" onclick="showTab('offre',this)"><span class="rail-dot">✍️</span><span class="rail-label">Faire une offre</span></button>
 </nav>
 
 <div class="container">
@@ -386,10 +423,12 @@ textarea.field{min-height:95px;resize:vertical;}
     <div class="card">
       <div class="lbl">Transactions DVF officielles</div>
       <h2 class="stitle">Comparables réels</h2>
+      <div class="dvft-wrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
       <table class="dvft">
         <thead><tr><th>Date</th><th>Adresse</th><th>Surface</th><th>Prix vendu</th><th>€/m²</th></tr></thead>
         <tbody><tr class="dvf-row" data-date="09/2024"><td>09/2024</td><td>Square Jean Baptiste Clement (à ~54 m)</td><td class="mono">65 m²</td><td class="mono">140 000 €</td><td class="mono">2 154 €</td></tr><tr class="dvf-row" data-date="08/2025"><td>08/2025</td><td>Square Jean Baptiste Clement (à ~54 m)</td><td class="mono">66 m²</td><td class="mono">153 000 €</td><td class="mono">2 318 €</td></tr><tr class="dvf-row" data-date="03/2023"><td>03/2023</td><td>Square Jean Baptiste Clement (à ~54 m)</td><td class="mono">66 m²</td><td class="mono">149 000 €</td><td class="mono">2 258 €</td></tr><tr class="dvf-row" data-date="04/2025"><td>04/2025</td><td>Square Jean Baptiste Clement (à ~54 m)</td><td class="mono">76 m²</td><td class="mono">177 500 €</td><td class="mono">2 336 €</td></tr><tr class="dvf-row" data-date="06/2024"><td>06/2024</td><td>Square Jean Baptiste Clement (à ~54 m)</td><td class="mono">64 m²</td><td class="mono">153 540 €</td><td class="mono">2 399 €</td></tr><tr class="dvf-row" data-date="08/2024"><td>08/2024</td><td>Square Jean Baptiste Clement (à ~54 m)</td><td class="mono">75 m²</td><td class="mono">149 000 €</td><td class="mono">1 987 €</td></tr></tbody>
       </table>
+      </div>
       <div class="alert amber" id="comparables-lecture"><h4>📊 Positionnement prix</h4><p id="comparables-justification">Le prix de présentation a été établi sur la base des transactions récentes du secteur et des caractéristiques propres au bien.</p></div>
     </div>
     <div class="card">
@@ -631,12 +670,27 @@ textarea.field{min-height:95px;resize:vertical;}
 
 
 
+<section id="assistant" class="tab">
+<div class="pg">
+<div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div id="assistant-dock" style="min-height:560px;display:flex;flex-direction:column;"></div>
+  </div>
+</div>
+</div>
+</section>
+
 <!-- ═══════════ ONGLET 5 : FAIRE UNE OFFRE ═══════════ -->
 <section id="offre" class="tab">
 <div class="pg">
 <div>
+  <div class="card" style="background:var(--cream);border:1px solid var(--gold);margin-bottom:16px;">
+    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;">Vous avez exploré <span id="offre-progress-count">1</span> / 10 sections</div>
+    <div style="font-size:12.5px;color:var(--muted);">Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.</div>
+  </div>
   <div class="card">
     <div class="lbl">Processus d'acquisition</div>
+    <div style="position:relative;">
     <div class="ptrack">
       <div class="pstep done"><div class="picon">👀</div><div class="plbl">Visite</div></div>
       <div class="pline done"></div>
@@ -651,6 +705,8 @@ textarea.field{min-height:95px;resize:vertical;}
       <div class="pstep"><div class="picon">🏦</div><div class="plbl">Financement</div></div>
       <div class="pline"></div>
       <div class="pstep"><div class="picon">🔑</div><div class="plbl">Signature</div></div>
+    </div>
+    <div style="position:absolute;top:0;right:0;bottom:10px;width:32px;background:linear-gradient(to right, transparent, var(--card));pointer-events:none;"></div>
     </div>
   </div>
   <div class="card">
@@ -712,20 +768,116 @@ textarea.field{min-height:95px;resize:vertical;}
 </div>
 
 </div>
+</div>
 
 <script>
 // ═══ NAV ═══
+var RAIL_KEY = 'privency_progress_' + location.pathname;
+function getVisited() {
+  try { return JSON.parse(localStorage.getItem(RAIL_KEY)) || []; } catch(e) { return []; }
+}
+function markVisited(tabId) {
+  var visited = getVisited();
+  if (visited.indexOf(tabId) === -1) {
+    visited.push(tabId);
+    localStorage.setItem(RAIL_KEY, JSON.stringify(visited));
+  }
+  updateRailUI();
+}
+function updateRailUI() {
+  var visited = getVisited();
+  document.querySelectorAll('.rail button').forEach(function(b) {
+    var t = b.getAttribute('data-tab');
+    b.classList.toggle('visited', visited.indexOf(t) !== -1);
+  });
+  var countEl = document.getElementById('rail-progress-count');
+  if (countEl) countEl.textContent = visited.length;
+  var offreBanner = document.getElementById('offre-progress-count');
+  if (offreBanner) offreBanner.textContent = visited.length;
+}
+
+function dockAI() {
+  var modal = document.getElementById('ai-modal');
+  var dock = document.getElementById('assistant-dock');
+  if (!modal || !dock) return;
+  if (modal.parentNode !== dock) dock.appendChild(modal);
+  modal.style.position = 'static';
+  modal.style.width = '100%';
+  modal.style.maxHeight = 'none';
+  modal.style.height = '560px';
+  modal.style.boxShadow = 'none';
+  modal.style.border = 'none';
+  modal.style.display = 'flex';
+  modal.style.flexDirection = 'column';
+  var btn = document.getElementById('ai-btn');
+  if (btn) btn.style.display = 'none';
+  var closeBtn = modal.querySelector('button[onclick="toggleAI()"]');
+  if (closeBtn) closeBtn.style.display = 'none';
+  var msgsEl = document.getElementById('ai-messages');
+  if (msgsEl) msgsEl.style.maxHeight = 'none';
+  _aiOpen = true;
+  if (msgsEl && msgsEl.children.length === 0) {
+    _aiInit = true;
+    var welcome = "Bonjour ! Je suis l'assistant de " + _sp_adresse + ". Je connais tout de ce bien : prix, diagnostics, charges, DPE, points forts et plus encore. Que souhaitez-vous savoir ?";
+    addAIMsg(welcome, 'assistant');
+    _aiMessages.push({role:'user',content:'(début de session)'});
+    _aiMessages.push({role:'assistant',content:welcome});
+    renderAISuggestions();
+  }
+}
+function undockAI() {
+  var modal = document.getElementById('ai-modal');
+  if (!modal || !modal.parentNode || modal.parentNode.id !== 'assistant-dock') return;
+  document.body.appendChild(modal);
+  modal.style.position = 'fixed';
+  modal.style.bottom = '80px';
+  modal.style.right = '24px';
+  modal.style.width = '360px';
+  modal.style.maxHeight = '560px';
+  modal.style.height = '';
+  modal.style.boxShadow = '0 8px 40px rgba(0,0,0,.25)';
+  modal.style.border = '1px solid var(--border)';
+  modal.style.display = 'none';
+  var btn = document.getElementById('ai-btn');
+  if (btn) btn.style.display = 'flex';
+  var closeBtn = modal.querySelector('button[onclick="toggleAI()"]');
+  if (closeBtn) closeBtn.style.display = '';
+  var msgsEl = document.getElementById('ai-messages');
+  if (msgsEl) msgsEl.style.maxHeight = '380px';
+  _aiOpen = false;
+}
+
+function renderAISuggestions() {
+  var wrap = document.getElementById('ai-suggestions');
+  if (!wrap) return;
+  var qs = ['Quel est le montant des charges ?', 'Puis-je négocier le prix ?', 'Comment prendre rendez-vous ?'];
+  wrap.innerHTML = '';
+  qs.forEach(function(q) {
+    var b = document.createElement('button');
+    b.textContent = q;
+    b.style.cssText = 'background:var(--cream);color:var(--gold2, var(--gold));border:none;font-size:11px;font-weight:500;padding:7px 12px;border-radius:100px;cursor:pointer;font-family:\'Work Sans\',sans-serif;';
+    b.onclick = function() {
+      document.getElementById('ai-input').value = q;
+      sendAI();
+      wrap.style.display = 'none';
+    };
+    wrap.appendChild(b);
+  });
+}
+
 function showTab(id, btn) {
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
+  if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
   document.querySelectorAll('#main-nav button').forEach(function(b) { b.classList.remove('active'); });
   if (btn) btn.classList.add('active');
   window.scrollTo({top: 0, behavior: 'smooth'});
+  markVisited(id);
 }
 
 function showTabById(id) {
-  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, offre: 8};
+  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, assistant: 8, offre: 9};
   var navBtns = document.querySelectorAll('#main-nav button');
   showTab(id, navBtns[navMap[id]]);
 }
@@ -1135,6 +1287,7 @@ var _sp_agent     = "Olivier LOISON";
 var _sp_tel       = "06 85 68 46 13";
 
 function toggleAI() {
+  markVisited('assistant');
   _aiOpen = !_aiOpen;
   var modal = document.getElementById('ai-modal');
   modal.style.display = _aiOpen ? 'flex' : 'none';
@@ -1145,6 +1298,7 @@ function toggleAI() {
     addAIMsg(welcome, 'assistant');
     _aiMessages.push({role:'user',content:'(début de session)'});
     _aiMessages.push({role:'assistant',content:welcome});
+    renderAISuggestions();
   }
 }
 
@@ -1239,14 +1393,16 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 
 <div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;z-index:1001;width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
-  <div style="background:var(--agent-primary);color:var(--gold);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
-    <div>
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;opacity:.7;">Assistant</div>
-      <div style="font-size:13px;font-weight:500;margin-top:2px;">11, Square Jean Baptiste Clément 91390 MORSANG SUR ORGE</div>
+  <div style="background:var(--agent-primary);color:var(--gold);padding:18px 22px;display:flex;align-items:center;gap:12px;">
+    <div style="width:36px;height:36px;border-radius:50%;background:rgba(201,162,39,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+    <div style="flex:1;">
+      <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:600;">Assistant Privency</div>
+      <div style="font-family:'Work Sans',sans-serif;font-size:11px;color:rgba(255,255,255,.55);display:flex;align-items:center;gap:5px;margin-top:2px;"><span style="width:6px;height:6px;border-radius:50%;background:#2F7A4F;display:inline-block;"></span> Disponible 24h/24</div>
     </div>
     <button onclick="toggleAI()" style="background:none;border:none;color:var(--gold);font-size:20px;cursor:pointer;line-height:1;">×</button>
   </div>
   <div id="ai-messages" style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:380px;"></div>
+  <div id="ai-suggestions" style="display:flex;gap:8px;padding:0 16px 12px;flex-wrap:wrap;"></div>
   <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">
     <input id="ai-input" type="text" placeholder="Votre question..." style="flex:1;border:1px solid var(--border);border-radius:99px;padding:8px 14px;font-size:13px;font-family:'Work Sans',sans-serif;outline:none;" onkeydown="if(event.key==='Enter')sendAI()">
     <button onclick="sendAI()" style="background:var(--agent-primary);color:var(--gold);border:none;border-radius:99px;padding:8px 14px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;">→</button>
@@ -1349,6 +1505,6 @@ document.addEventListener('DOMContentLoaded', function() {
     el.addEventListener('click', function() { track('offre_soumise'); });
   });
 })();</script>
-
+<script>markVisited('bien'); updateRailUI();</script>
 
 </body></html>
