@@ -109,7 +109,9 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .rail button:hover{background:var(--cream);}
 .rail button.active{color:var(--ink);background:var(--cream);}
 .rail button.visited:not(.active) .rail-dot::after{content:'✓';position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:var(--vert);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
-.rail-dot{position:relative;width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;background:var(--card);border:2px solid var(--border);transition:all .2s;}
+.rail-dot{display:none;}
+.rail button.visited:not(.active)::before{content:'✓';display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--vert);color:#fff;font-size:9px;font-weight:700;margin-right:6px;flex-shrink:0;}
+.rail button.active::before{content:'';display:inline-flex;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:9px;flex-shrink:0;}
 .rail button.active .rail-dot{background:var(--gold);border-color:var(--gold);}
 .rail button.visited:not(.active) .rail-dot{background:rgba(47,122,79,.12);border-color:var(--vert);}
 .rail-label{white-space:nowrap;}
@@ -222,7 +224,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .alert.rouge h4{color:var(--rouge);}.alert.amber h4{color:#8a6820;}.alert.vert h4{color:var(--vert);}.alert.blue h4{color:#4a5fa8;}
 .alert p{font-size:12px;line-height:1.7;font-weight:300;}
 /* DVF TABLE */
-.dvft{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.dvft{width:100%;min-width:480px;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
+.dvft td,.dvft th{white-space:nowrap;}
 .dvft th{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 8px;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);}
 .dvft td{padding:7px 8px;border-bottom:1px solid var(--border);font-weight:300;}
 .dvft tr.ref td{background:#fdf8f0;}
@@ -351,6 +354,7 @@ textarea.field{min-height:95px;resize:vertical;}
 html,body{overflow-x:hidden;}
 .pg,.card{min-width:0;}
 .ptrack{min-width:0;}
+.pg > div{min-width:0;}
 </style>
 </head>
 <body>
