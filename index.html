@@ -226,6 +226,8 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 /* DVF TABLE */
 .dvft{width:100%;min-width:480px;border-collapse:collapse;font-size:12px;margin-bottom:14px;}
 .dvft td,.dvft th{white-space:nowrap;}
+.dvft-wrap::-webkit-scrollbar{height:5px;}
+.dvft-wrap::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
 .dvft th{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:6px 8px;text-align:left;background:var(--cream);border-bottom:1px solid var(--border);}
 .dvft td{padding:7px 8px;border-bottom:1px solid var(--border);font-weight:300;}
 .dvft tr.ref td{background:#fdf8f0;}
@@ -272,8 +274,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .cc-proj-group{display:flex;gap:2px;align-items:flex-end;flex:1;}
 .cc-proj-bar{width:10px;border-radius:2px 2px 0 0;transition:height .5s;}
 /* PROCESS */
-.ptrack{display:flex;gap:0;overflow-x:auto;padding-bottom:4px;margin-bottom:20px;}
-.ptrack::-webkit-scrollbar{height:0;}
+.ptrack{display:flex;gap:0;overflow-x:auto;padding-bottom:10px;margin-bottom:20px;position:relative;}
+.ptrack::-webkit-scrollbar{height:5px;}
+.ptrack::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+.ptrack::-webkit-scrollbar-track{background:var(--border);border-radius:3px;}
 .pstep{display:flex;flex-direction:column;align-items:center;flex:1;min-width:65px;}
 .picon{width:38px;height:38px;border-radius:50%;background:var(--cream);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:5px;}
 .pstep.done .picon{background:var(--gold);border-color:var(--gold);}
@@ -461,7 +465,7 @@ html,body{overflow-x:hidden;}
     <div class="card">
       <div class="lbl">Transactions DVF officielles</div>
       <h2 class="stitle">Comparables réels</h2>
-      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
+      <div class="dvft-wrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
       <table class="dvft">
         <thead><tr><th>Date</th><th>Adresse</th><th>Surface</th><th>Prix vendu</th><th>€/m²</th></tr></thead>
         <tbody>
@@ -767,6 +771,7 @@ html,body{overflow-x:hidden;}
   </div>
   <div class="card">
     <div class="lbl">Processus d'acquisition</div>
+    <div style="position:relative;">
     <div class="ptrack">
       <div class="pstep done"><div class="picon">👀</div><div class="plbl">Visite</div></div>
       <div class="pline done"></div>
@@ -781,6 +786,8 @@ html,body{overflow-x:hidden;}
       <div class="pstep"><div class="picon">🏦</div><div class="plbl">Financement</div></div>
       <div class="pline"></div>
       <div class="pstep"><div class="picon">🔑</div><div class="plbl">Signature</div></div>
+    </div>
+    <div style="position:absolute;top:0;right:0;bottom:10px;width:32px;background:linear-gradient(to right, transparent, var(--card));pointer-events:none;"></div>
     </div>
   </div>
   <div class="card">
