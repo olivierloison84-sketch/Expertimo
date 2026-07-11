@@ -1374,6 +1374,7 @@ function toggleAI() {
     addAIMsg(welcome, 'assistant');
     _aiMessages.push({role:'user',content:'(début de session)'});
     _aiMessages.push({role:'assistant',content:welcome});
+    renderAISuggestions();
   }
 }
 
