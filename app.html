@@ -128,6 +128,7 @@ header {
   padding-bottom: 5px; margin: 20px 0 14px;
   text-transform: uppercase; letter-spacing: .5px;
 }
+#internal-notes-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:16px;background:#f8f9fb;border-radius:8px;border:1px solid #e4e7ec;}
 
 /* ═══════════════════════════════════════
    FORM ELEMENTS
@@ -743,13 +744,13 @@ textarea { resize: vertical; min-height: 60px; }
     <div class="grid-3">
       <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" data-internal="1" placeholder="Prénom"></div>
       <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" data-internal="1" placeholder="Nom"></div>
-      <div class="form-group"><label>Date R1</label><input type="date" id="date_r1"></div>
+      <div class="form-group"><label>Date R1</label><input type="date" id="date_r1" data-internal="1"></div>
       <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" data-internal="1" placeholder="01 XX XX XX XX"></div>
       <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" data-internal="1" placeholder="06 XX XX XX XX"></div>
       <div class="form-group"><label>Email</label><input type="email" id="email_proprio" data-internal="1" placeholder="email@exemple.fr"></div>
     </div>
     <div class="grid-3 mt-8">
-      <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" placeholder="ex91-lg001"></div>
+      <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" data-internal="1" placeholder="ex91-lg001"></div>
       <div class="form-group"><label>Raison de la vente</label><input type="text" id="raison_vente" data-internal="1" placeholder="Mutation, divorce, succession…"></div>
       <div class="form-group"><label>Bien en vente depuis</label><input type="text" id="vente_depuis" data-internal="1" placeholder="Date ou durée"></div>
       <div class="form-group"><label>Délai maxi pour vendre</label><input type="text" id="delai_vente" data-internal="1" placeholder="3 mois, 6 mois…"></div>
@@ -763,7 +764,7 @@ textarea { resize: vertical; min-height: 60px; }
       <div class="form-group"><label>Nb d'offres reçues</label><input type="number" id="nb_offres" data-internal="1" placeholder="0"></div>
       <div class="form-group"><label>Prix des offres (€)</label><input type="text" id="prix_offres" data-internal="1" placeholder="195 000 €"></div>
     </div>
-    <div class="form-group mt-8">
+    <div class="form-group mt-8" data-internal="1">
       <label>Utilisation actuelle</label>
       <div class="radio-group">
         <label class="radio-item"><input type="radio" name="utilisation" value="rp"> Résidence primaire</label>
@@ -3920,18 +3921,70 @@ function toggleInternalNotes() {
   var c = document.getElementById('internal-notes-container');
   var icon = document.getElementById('internal-toggle-icon');
   var open = c.style.display !== 'none';
-  c.style.display = open ? 'none' : 'block';
+  c.style.display = open ? 'none' : '';
   icon.textContent = open ? '▸' : '▾';
+}
+
+// Déplace le .section-title correspondant à titleText, avec ses siblingCount
+// éléments suivants, vers #internal-notes-container.
+function moveSectionSiblings(titleText, siblingCount) {
+  var container = document.getElementById('internal-notes-container');
+  if (!container) return;
+  var titles = document.querySelectorAll('#page-2 .section-title');
+  for (var i = 0; i < titles.length; i++) {
+    if (titles[i].textContent.indexOf(titleText) === -1) continue;
+    var title = titles[i];
+    var toMove = [title];
+    var el = title;
+    for (var n = 0; n < siblingCount; n++) {
+      el = el.nextElementSibling;
+      if (!el) break;
+      toMove.push(el);
+    }
+    toMove.forEach(function(node) { container.appendChild(node); });
+    return;
+  }
+}
+
+// Déplace le bloc parent entier qui enveloppe le .section-title correspondant
+// à titleText (title + check-groups dynamiques + tout leur contenu, intact).
+function moveSectionWrapper(titleText) {
+  var container = document.getElementById('internal-notes-container');
+  if (!container) return;
+  var titles = document.querySelectorAll('#page-2 .section-title');
+  for (var i = 0; i < titles.length; i++) {
+    if (titles[i].textContent.indexOf(titleText) === -1) continue;
+    var wrapper = titles[i].parentElement;
+    if (wrapper) container.appendChild(wrapper);
+    return;
+  }
 }
 
 function initInternalNotesSection() {
   var container = document.getElementById('internal-notes-container');
   if (!container) return;
+
+  // Blocs entiers avec check-groups dynamiques (peuplés en JS après coup) :
+  // on déplace le wrapper complet, pas champ par champ.
+  moveSectionWrapper('Sols');
+  moveSectionWrapper('Vitrage');
+  moveSectionWrapper('Chauffage');
+
+  // Sous-sections "titre + N éléments suivants"
+  moveSectionSiblings('Cuisine', 3);
+  moveSectionSiblings('Points de vigilance / Points faibles', 2);
+  moveSectionSiblings('Marché & Fourchette de prix', 2);
+  moveSectionSiblings('Simulation crédit', 2);
+
+  // Champs individuels marqués data-internal="1" — on ignore ceux déjà
+  // déplacés ci-dessus (nichés dans un bloc/sous-section déjà déménagé).
   var fields = document.querySelectorAll('#page-2 [data-internal="1"]');
   fields.forEach(function(field) {
+    if (container.contains(field)) return;
     var wrapper = field.closest('.form-group') || field.parentElement;
     if (wrapper) container.appendChild(wrapper);
   });
+
   // Masquer explicitement le sous-titre "Prêt en cours" et son bloc de champs
   // (100% notes internes, déjà déplacés ci-dessus) — pas de masquage de card
   // entière : la card "Financement & Relogement" qui l'englobe contient aussi
