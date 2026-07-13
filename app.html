@@ -3928,11 +3928,16 @@ function initInternalNotesSection() {
     var wrapper = field.closest('.form-group') || field.parentElement;
     if (wrapper) container.appendChild(wrapper);
   });
-  // Masquer les cards de la page 2 devenues vides après le déplacement
-  document.querySelectorAll('#page-2 .card').forEach(function(card) {
-    if (card.contains(container)) return; // ne pas masquer le conteneur lui-même
-    var hasVisibleField = card.querySelector('input, select, textarea');
-    if (!hasVisibleField) card.style.display = 'none';
+  // Masquer explicitement le sous-titre "Prêt en cours" et son bloc de champs
+  // (100% notes internes, déjà déplacés ci-dessus) — pas de masquage de card
+  // entière : la card "Financement & Relogement" qui l'englobe contient aussi
+  // le champ loyer et le radio "Relogement trouvé", non internes, qui doivent
+  // rester visibles.
+  document.querySelectorAll('#page-2 .section-title').forEach(function(title) {
+    if (title.textContent.indexOf('Prêt en cours') === -1) return;
+    var next = title.nextElementSibling;
+    title.style.display = 'none';
+    if (next) next.style.display = 'none';
   });
 }
 document.addEventListener('DOMContentLoaded', initInternalNotesSection);
