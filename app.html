@@ -1168,22 +1168,22 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
       <div style="padding:0 6px;">
         <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
-          <select id="diag_amiante_status"><option value="non-soumis" selected>Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
+          <select id="diag_amiante_status" onchange="applyDiagDefault('amiante','diag_amiante_status','diag_amiante_result')"><option value="non-soumis" selected>Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
           <input type="text" id="diag_amiante_result" value="Non soumis — bâtiment après 1997"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🔬 Plomb (CREP)</div>
-          <select id="diag_plomb_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <select id="diag_plomb_status" onchange="applyDiagDefault('plomb','diag_plomb_status','diag_plomb_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
           <input type="text" id="diag_plomb_result" value="Absence de plomb détectée"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🪲 Termites</div>
-          <select id="diag_termites_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <select id="diag_termites_status" onchange="applyDiagDefault('termites','diag_termites_status','diag_termites_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
           <input type="text" id="diag_termites_result" value="Absence de termites constatée"></div>
         <div class="diag-form-grid"><div class="diag-form-label">⚡ Électricité</div>
-          <select id="diag_electricite_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <select id="diag_electricite_status" onchange="applyDiagDefault('electricite','diag_electricite_status','diag_electricite_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
           <input type="text" id="diag_electricite_result" value="Installation intérieure sans anomalie"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🔥 Gaz</div>
-          <select id="diag_gaz_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <select id="diag_gaz_status" onchange="applyDiagDefault('gaz','diag_gaz_status','diag_gaz_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
           <input type="text" id="diag_gaz_result" value="Installation sans anomalie"></div>
         <div class="diag-form-grid"><div class="diag-form-label">💧 Assainissement</div>
-          <select id="diag_assain_status"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <select id="diag_assain_status" onchange="applyDiagDefault('assain','diag_assain_status','diag_assain_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
           <input type="text" id="diag_assain_result" value="Raccordement au réseau collectif conforme"></div>
       </div>
     </div>
@@ -2869,6 +2869,53 @@ function fmtNum(n) {
 }
 function slugify(str) {
   return (str||'adresse').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,60);
+}
+
+var DIAG_RESULT_TEXTS = {
+  amiante: {
+    'favorable': "Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.",
+    'attention': "Dans le cadre de la mission, il a été repéré des matériaux contenant de l'amiante.",
+    'defavorable': "Dans le cadre de la mission, il a été repéré des matériaux contenant de l'amiante.",
+    'non-soumis': "Non soumis — bâtiment après 1997."
+  },
+  electricite: {
+    'favorable': "Installation intérieure sans anomalie.",
+    'attention': "L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt).",
+    'defavorable': "L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt).",
+    'non-soumis': "Non soumis - Installation de moins de 15 ans."
+  },
+  gaz: {
+    'favorable': "Installation sans anomalie.",
+    'attention': "Anomalie type A1 ou A2.",
+    'defavorable': "Anomalie type A1 ou A2.",
+    'non-soumis': "Non soumis - Installation de moins de 15 ans."
+  },
+  plomb: {
+    'favorable': "Absence de plomb détectée.",
+    'attention': "Présence de revêtements contenant du plomb à des concentrations supérieures aux seuils réglementaires.",
+    'defavorable': "Présence de revêtements contenant du plomb à des concentrations supérieures aux seuils réglementaires.",
+    'non-soumis': "Non soumis - bâtiment construit après le 1er janvier 1949."
+  },
+  termites: {
+    'favorable': "Absence de termites constatée.",
+    'attention': "Présence d'indices d'infestation de termites détectée.",
+    'defavorable': "Présence d'indices d'infestation de termites détectée.",
+    'non-soumis': "Non soumis à un arrêté préfectoral."
+  },
+  assain: {
+    'favorable': "Raccordement au réseau collectif conforme.",
+    'attention': "Non-conformité constatée sur le raccordement/l'installation d'assainissement — mise en conformité à prévoir.",
+    'defavorable': "Non-conformité constatée sur le raccordement/l'installation d'assainissement — mise en conformité à prévoir.",
+    'non-soumis': "Non soumis — bien non concerné par le contrôle d'assainissement."
+  }
+};
+
+function applyDiagDefault(diagKey, statusId, resultId) {
+  var statusEl = document.getElementById(statusId);
+  var resultEl = document.getElementById(resultId);
+  if (!statusEl || !resultEl) return;
+  var text = DIAG_RESULT_TEXTS[diagKey] && DIAG_RESULT_TEXTS[diagKey][statusEl.value];
+  if (text) resultEl.value = text;
 }
 
 // ═══════════════════════════════════════════════════════
