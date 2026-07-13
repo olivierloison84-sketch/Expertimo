@@ -741,27 +741,27 @@ textarea { resize: vertical; min-height: 60px; }
   <div class="card-header">👤 Propriétaire &amp; Rendez-vous</div>
   <div class="card-body">
     <div class="grid-3">
-      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" placeholder="Prénom"></div>
-      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" placeholder="Nom"></div>
+      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" data-internal="1" placeholder="Prénom"></div>
+      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" data-internal="1" placeholder="Nom"></div>
       <div class="form-group"><label>Date R1</label><input type="date" id="date_r1"></div>
-      <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" placeholder="01 XX XX XX XX"></div>
-      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" placeholder="06 XX XX XX XX"></div>
-      <div class="form-group"><label>Email</label><input type="email" id="email_proprio" placeholder="email@exemple.fr"></div>
+      <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" data-internal="1" placeholder="01 XX XX XX XX"></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" data-internal="1" placeholder="06 XX XX XX XX"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="email_proprio" data-internal="1" placeholder="email@exemple.fr"></div>
     </div>
     <div class="grid-3 mt-8">
       <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" placeholder="ex91-lg001"></div>
-      <div class="form-group"><label>Raison de la vente</label><input type="text" id="raison_vente" placeholder="Mutation, divorce, succession…"></div>
-      <div class="form-group"><label>Bien en vente depuis</label><input type="text" id="vente_depuis" placeholder="Date ou durée"></div>
-      <div class="form-group"><label>Délai maxi pour vendre</label><input type="text" id="delai_vente" placeholder="3 mois, 6 mois…"></div>
-      <div class="form-group"><label>Clés chez ?</label><input type="text" id="cles_chez" placeholder="Propriétaire, gardien…"></div>
-      <div class="form-group"><label>Déjà des agences ?</label><input type="text" id="agences" placeholder="Noms des agences"></div>
-      <div class="form-group"><label>Année d'achat</label><input type="number" id="annee_achat" placeholder="2010"></div>
-      <div class="form-group"><label>Prix d'achat (€)</label><input type="number" id="prix_achat" placeholder="180000"></div>
+      <div class="form-group"><label>Raison de la vente</label><input type="text" id="raison_vente" data-internal="1" placeholder="Mutation, divorce, succession…"></div>
+      <div class="form-group"><label>Bien en vente depuis</label><input type="text" id="vente_depuis" data-internal="1" placeholder="Date ou durée"></div>
+      <div class="form-group"><label>Délai maxi pour vendre</label><input type="text" id="delai_vente" data-internal="1" placeholder="3 mois, 6 mois…"></div>
+      <div class="form-group"><label>Clés chez ?</label><input type="text" id="cles_chez" data-internal="1" placeholder="Propriétaire, gardien…"></div>
+      <div class="form-group"><label>Déjà des agences ?</label><input type="text" id="agences" data-internal="1" placeholder="Noms des agences"></div>
+      <div class="form-group"><label>Année d'achat</label><input type="number" id="annee_achat" data-internal="1" placeholder="2010"></div>
+      <div class="form-group"><label>Prix d'achat (€)</label><input type="number" id="prix_achat" data-internal="1" placeholder="180000"></div>
     </div>
     <div class="grid-3 mt-8">
-      <div class="form-group"><label>Nb de visites</label><input type="number" id="nb_visites" placeholder="0"></div>
-      <div class="form-group"><label>Nb d'offres reçues</label><input type="number" id="nb_offres" placeholder="0"></div>
-      <div class="form-group"><label>Prix des offres (€)</label><input type="text" id="prix_offres" placeholder="195 000 €"></div>
+      <div class="form-group"><label>Nb de visites</label><input type="number" id="nb_visites" data-internal="1" placeholder="0"></div>
+      <div class="form-group"><label>Nb d'offres reçues</label><input type="number" id="nb_offres" data-internal="1" placeholder="0"></div>
+      <div class="form-group"><label>Prix des offres (€)</label><input type="text" id="prix_offres" data-internal="1" placeholder="195 000 €"></div>
     </div>
     <div class="form-group mt-8">
       <label>Utilisation actuelle</label>
@@ -773,13 +773,13 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
     </div>
     <div class="form-group" id="loyer_group" style="display:none">
-      <label>Loyer mensuel (€)</label><input type="number" id="loyer_actuel_location" placeholder="850">
+      <label>Loyer mensuel (€)</label><input type="number" id="loyer_actuel_location" data-internal="1" placeholder="850">
     </div>
     <div class="scenario-box mt-8">
       <label>Scénario "Dans 3 mois j'ai une offre à ___ € — on fait quoi ?"</label>
       <div class="grid-2 mt-8">
-        <input type="number" id="scenario_montant" placeholder="Montant de l'offre (€)">
-        <textarea id="scenario_reponse" placeholder="Réponse / stratégie…" style="min-height:50px"></textarea>
+        <input type="number" id="scenario_montant" data-internal="1" placeholder="Montant de l'offre (€)">
+        <textarea id="scenario_reponse" data-internal="1" placeholder="Réponse / stratégie…" style="min-height:50px"></textarea>
       </div>
     </div>
   </div>
@@ -804,29 +804,29 @@ textarea { resize: vertical; min-height: 60px; }
       </tr></thead>
       <tbody id="renov_tbody">
         <tr>
-          <td><input type="number" id="renov_annee_1" placeholder="2022"></td>
-          <td><input type="number" id="renov_montant_1" placeholder="15000"></td>
-          <td><input type="text" id="renov_desc_1" placeholder="Réfection toiture"></td>
+          <td><input type="number" id="renov_annee_1" data-internal="1" placeholder="2022"></td>
+          <td><input type="number" id="renov_montant_1" data-internal="1" placeholder="15000"></td>
+          <td><input type="text" id="renov_desc_1" data-internal="1" placeholder="Réfection toiture"></td>
         </tr>
         <tr>
-          <td><input type="number" id="renov_annee_2" placeholder="2021"></td>
-          <td><input type="number" id="renov_montant_2"></td>
-          <td><input type="text" id="renov_desc_2"></td>
+          <td><input type="number" id="renov_annee_2" data-internal="1" placeholder="2021"></td>
+          <td><input type="number" id="renov_montant_2" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_2" data-internal="1"></td>
         </tr>
         <tr>
-          <td><input type="number" id="renov_annee_3"></td>
-          <td><input type="number" id="renov_montant_3"></td>
-          <td><input type="text" id="renov_desc_3"></td>
+          <td><input type="number" id="renov_annee_3" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_3" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_3" data-internal="1"></td>
         </tr>
         <tr>
-          <td><input type="number" id="renov_annee_4"></td>
-          <td><input type="number" id="renov_montant_4"></td>
-          <td><input type="text" id="renov_desc_4"></td>
+          <td><input type="number" id="renov_annee_4" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_4" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_4" data-internal="1"></td>
         </tr>
         <tr>
-          <td><input type="number" id="renov_annee_5"></td>
-          <td><input type="number" id="renov_montant_5"></td>
-          <td><input type="text" id="renov_desc_5"></td>
+          <td><input type="number" id="renov_annee_5" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_5" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_5" data-internal="1"></td>
         </tr>
       </tbody>
     </table>
@@ -841,21 +841,21 @@ textarea { resize: vertical; min-height: 60px; }
     <div class="grid-4">
       <div class="form-group"><label>Surface habitable (m²)</label><input type="number" id="surface_hab" placeholder="75" step="0.01"></div>
       <div class="form-group"><label>Surface Carrez (m²)</label><input type="number" id="surface_carrez" placeholder="72" step="0.01"></div>
-      <div class="form-group terrain-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain" placeholder="500"></div>
-      <div class="form-group maison-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain_m" placeholder="300"></div>
+      <div class="form-group terrain-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain" data-internal="1" placeholder="500"></div>
+      <div class="form-group maison-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain_m" data-internal="1" placeholder="300"></div>
     </div>
     <div class="grid-4 appart-maison-only">
       <div class="form-group"><label>Nb total de pièces</label><input type="number" id="nb_pieces" placeholder="4"></div>
-      <div class="form-group"><label>Chambres</label><input type="number" id="nb_chambres" placeholder="2"></div>
-      <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" placeholder="0" min="0"></div>
-      <div class="form-group"><label>WC</label><input type="number" id="nb_wc" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" placeholder="0" min="0"></div>
-      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Chambres</label><input type="number" id="nb_chambres" data-internal="1" placeholder="2"></div>
+      <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" data-internal="1" placeholder="0" min="0"></div>
+      <div class="form-group"><label>WC</label><input type="number" id="nb_wc" data-internal="1" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" data-internal="1" placeholder="0" min="0"></div>
+      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" data-internal="1" placeholder="0" min="0"></div>
     </div>
     <div class="section-title appart-only">Immeuble</div>
     <div class="grid-3 appart-only">
       <div class="form-group"><label>Étage du bien</label><input type="text" id="etage" placeholder="3e sur 8"></div>
-      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages" placeholder="8"></div>
+      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages" data-internal="1" placeholder="8"></div>
       <div class="form-group"><label>Ascenseur</label>
         <div class="radio-group">
           <label class="radio-item"><input type="radio" name="ascenseur" value="non"> Non</label>
@@ -863,22 +863,22 @@ textarea { resize: vertical; min-height: 60px; }
         </div>
       </div>
       <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction" placeholder="1985"></div>
-      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom" placeholder="Nom du syndic"></div>
+      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom" data-internal="1" placeholder="Nom du syndic"></div>
       <div class="form-group"><label>Travaux votés en AG</label>
         <div class="radio-group">
           <label class="radio-item"><input type="radio" name="travaux_ag" value="non"> Non</label>
           <label class="radio-item"><input type="radio" name="travaux_ag" value="oui"> Oui</label>
         </div>
       </div>
-      <div class="form-group col-span-3"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail" placeholder="Ravalement + toiture : 8 500 €"></div>
-      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble" placeholder="Ravalement 2022, toiture 2019…"></div>
+      <div class="form-group col-span-3"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail" data-internal="1" placeholder="Ravalement + toiture : 8 500 €"></div>
+      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble" data-internal="1" placeholder="Ravalement 2022, toiture 2019…"></div>
     </div>
     <div class="section-title maison-only hidden">Construction</div>
     <div class="grid-3 maison-only hidden">
       <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction_m" placeholder="1995"></div>
-      <div class="form-group"><label>Nb d'étages</label><input type="number" id="nb_etages_m" placeholder="1"></div>
+      <div class="form-group"><label>Nb d'étages</label><input type="number" id="nb_etages_m" data-internal="1" placeholder="1"></div>
       <div class="form-group"><label>Standard général</label>
-        <select id="standard_general">
+        <select id="standard_general" data-internal="1">
           <option value="">— Choisir —</option>
           <option>Luxe</option><option>Haut de gamme</option><option>Très bon</option><option>Standard</option><option>Entrée de gamme</option>
         </select>
@@ -888,9 +888,9 @@ textarea { resize: vertical; min-height: 60px; }
     <div class="grid-4 appart-maison-only">
       <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente" placeholder="220000"></div>
       <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere" placeholder="900"></div>
-      <div class="form-group"><label>Taxe d'habitation (€/an)</label><input type="number" id="taxe_hab" placeholder="600"></div>
+      <div class="form-group"><label>Taxe d'habitation (€/an)</label><input type="number" id="taxe_hab" data-internal="1" placeholder="600"></div>
       <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro" placeholder="200"></div>
-      <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" placeholder="150"></div>
+      <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" data-internal="1" placeholder="150"></div>
     </div>
     <div class="form-group appart-maison-only mt-8">
       <label>Détail des charges (contexte chatbot)</label>
@@ -898,7 +898,7 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <div class="section-title appart-maison-only">Les + du bien</div>
     <div class="form-group appart-maison-only">
-      <textarea id="plus_appartement" placeholder="Points forts, luminosité, vue, calme, terrasse, prestations…" style="min-height:70px"></textarea>
+      <textarea id="plus_appartement" data-internal="1" placeholder="Points forts, luminosité, vue, calme, terrasse, prestations…" style="min-height:70px"></textarea>
     </div>
     <div class="section-title terrain-only hidden">Prix &amp; Fiscalité Terrain</div>
     <div class="grid-2 terrain-only hidden">
@@ -915,9 +915,9 @@ textarea { resize: vertical; min-height: 60px; }
     <div class="defaut-grid" id="pieces_utiles_grid"></div>
     <div class="section-title mt-16">Parking</div>
     <div class="grid-3">
-      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" data-internal="1" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" data-internal="1" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" data-internal="1" placeholder="0" min="0"></div>
     </div>
   </div>
 </div>
@@ -976,7 +976,7 @@ textarea { resize: vertical; min-height: 60px; }
         <div class="check-group" id="chauf_type_group"></div>
         <div class="check-group mt-8" id="chauf_energie_group"></div>
         <div class="check-group mt-8" id="chauf_diffusion_group"></div>
-        <div class="form-group mt-8"><label>Année installation</label><input type="number" id="chauf_annee" placeholder="2015" style="max-width:120px"></div>
+        <div class="form-group mt-8"><label>Année installation</label><input type="number" id="chauf_annee" data-internal="1" placeholder="2015" style="max-width:120px"></div>
       </div>
       <div>
         <div class="section-title">Eau chaude sanitaire</div>
@@ -987,7 +987,7 @@ textarea { resize: vertical; min-height: 60px; }
         <label style="margin-bottom:6px">Appréciation globale</label>
         <div class="rating-row" id="etat_general_group"></div>
         <div class="form-group mt-8"><label>Travaux récents</label>
-          <textarea id="travaux_recents" placeholder="Cuisine rénovée 2021, salle de bains 2019…" style="min-height:60px"></textarea>
+          <textarea id="travaux_recents" data-internal="1" placeholder="Cuisine rénovée 2021, salle de bains 2019…" style="min-height:60px"></textarea>
         </div>
       </div>
     </div>
@@ -1020,14 +1020,14 @@ textarea { resize: vertical; min-height: 60px; }
       </div>
     </div>
     <div class="defaut-grid" id="equip_cuisine_grid"></div>
-    <div class="form-group mt-8"><label>Autres équipements cuisine</label><input type="text" id="equip_autre" placeholder="Hotte aspirante, crédence, plan de travail marbre…"></div>
+    <div class="form-group mt-8"><label>Autres équipements cuisine</label><input type="text" id="equip_autre" data-internal="1" placeholder="Hotte aspirante, crédence, plan de travail marbre…"></div>
     <div class="section-title mt-16">Extérieur</div>
     <div id="exterieur_grid" class="defaut-grid"></div>
     <div class="section-title mt-16">Points de vigilance / Points faibles</div>
     <div class="defaut-grid" id="vigilances_grid"></div>
     <div class="form-group mt-8">
       <label>Vigilances complémentaires (texte libre)</label>
-      <textarea id="vigilances_texte" placeholder="Nuisances sonores, vis-à-vis direct, humidité récurrente…" style="min-height:70px;border-color:var(--danger);"></textarea>
+      <textarea id="vigilances_texte" data-internal="1" placeholder="Nuisances sonores, vis-à-vis direct, humidité récurrente…" style="min-height:70px;border-color:var(--danger);"></textarea>
     </div>
   </div>
 </div>
@@ -1047,10 +1047,10 @@ textarea { resize: vertical; min-height: 60px; }
         <div class="section-title">Transports à proximité</div>
         <div class="check-group" id="transport_group"></div>
         <div class="form-group mt-16"><label>Services de proximité</label>
-          <textarea id="services_prox" placeholder="Écoles, commerces, médecins, parcs…" style="min-height:60px"></textarea>
+          <textarea id="services_prox" data-internal="1" placeholder="Écoles, commerces, médecins, parcs…" style="min-height:60px"></textarea>
         </div>
         <div class="form-group"><label>Voisinage</label>
-          <textarea id="voisinage" placeholder="Calme, famille, commerçants…" style="min-height:50px"></textarea>
+          <textarea id="voisinage" data-internal="1" placeholder="Calme, famille, commerçants…" style="min-height:50px"></textarea>
         </div>
       </div>
     </div>
@@ -1081,14 +1081,14 @@ textarea { resize: vertical; min-height: 60px; }
   <div class="card-header">🌿 Informations Terrain</div>
   <div class="card-body">
     <div class="grid-3">
-      <div class="form-group"><label>Zone PLU</label><input type="text" id="zone_plu" placeholder="UA, UB, AU…"></div>
-      <div class="form-group"><label>Superficie totale (m²)</label><input type="number" id="superficie_totale" placeholder="1000"></div>
-      <div class="form-group"><label>Superficie constructible (m²)</label><input type="number" id="superficie_constructible" placeholder="800"></div>
-      <div class="form-group"><label>Forme</label><input type="text" id="forme_terrain" placeholder="Rectangulaire, irrégulier…"></div>
-      <div class="form-group"><label>Accès / Voirie</label><input type="text" id="acces_terrain" placeholder="Chemin privé, route communale…"></div>
-      <div class="form-group"><label>COS / CES</label><input type="text" id="cos_ces" placeholder="0.4 / 0.6"></div>
-      <div class="form-group"><label>Hauteur max autorisée (m)</label><input type="number" id="hauteur_max" placeholder="9"></div>
-      <div class="form-group"><label>Projet envisagé</label><input type="text" id="projet_terrain" placeholder="Maison individuelle…"></div>
+      <div class="form-group"><label>Zone PLU</label><input type="text" id="zone_plu" data-internal="1" placeholder="UA, UB, AU…"></div>
+      <div class="form-group"><label>Superficie totale (m²)</label><input type="number" id="superficie_totale" data-internal="1" placeholder="1000"></div>
+      <div class="form-group"><label>Superficie constructible (m²)</label><input type="number" id="superficie_constructible" data-internal="1" placeholder="800"></div>
+      <div class="form-group"><label>Forme</label><input type="text" id="forme_terrain" data-internal="1" placeholder="Rectangulaire, irrégulier…"></div>
+      <div class="form-group"><label>Accès / Voirie</label><input type="text" id="acces_terrain" data-internal="1" placeholder="Chemin privé, route communale…"></div>
+      <div class="form-group"><label>COS / CES</label><input type="text" id="cos_ces" data-internal="1" placeholder="0.4 / 0.6"></div>
+      <div class="form-group"><label>Hauteur max autorisée (m)</label><input type="number" id="hauteur_max" data-internal="1" placeholder="9"></div>
+      <div class="form-group"><label>Projet envisagé</label><input type="text" id="projet_terrain" data-internal="1" placeholder="Maison individuelle…"></div>
     </div>
     <div class="section-title">Viabilisation</div>
     <div class="viab-grid" id="viab_grid"></div>
@@ -1140,12 +1140,12 @@ textarea { resize: vertical; min-height: 60px; }
       <div>
         <div class="section-title">Consommation d'énergie (DPE)</div>
         <div class="dpe-grid" id="dpe_grid"></div>
-        <div class="form-group mt-8"><label>Valeur numérique (kWh/m²/an)</label><input type="number" id="dpe_valeur" placeholder="180" style="max-width:150px"></div>
+        <div class="form-group mt-8"><label>Valeur numérique (kWh/m²/an)</label><input type="number" id="dpe_valeur" data-internal="1" placeholder="180" style="max-width:150px"></div>
       </div>
       <div>
         <div class="section-title">Émissions GES</div>
         <div class="dpe-grid" id="ges_grid"></div>
-        <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" placeholder="32" style="max-width:150px"></div>
+        <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" data-internal="1" placeholder="32" style="max-width:150px"></div>
       </div>
     </div>
     <div class="grid-3 mt-16">
@@ -1157,7 +1157,7 @@ textarea { resize: vertical; min-height: 60px; }
         <label class="radio-item"><input type="radio" name="droits_superf" value="non"> Non</label>
         <label class="radio-item"><input type="radio" name="droits_superf" value="oui"> Oui</label>
       </div></div>
-      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" placeholder="Nom du syndic"></div>
+      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" data-internal="1" placeholder="Nom du syndic"></div>
     </div>
     <div class="section-title mt-16">Diagnostics réglementaires</div>
     <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
@@ -1258,7 +1258,7 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <div class="grid-3">
       <div class="form-group"><label>Fourchette basse (€)</label><input type="number" id="bien_fourchette_basse" placeholder="156000"></div>
-      <div class="form-group"><label>Fourchette milieu (€)</label><input type="number" id="bien_fourchette_milieu" placeholder="221000"></div>
+      <div class="form-group"><label>Fourchette milieu (€)</label><input type="number" id="bien_fourchette_milieu" data-internal="1" placeholder="221000"></div>
       <div class="form-group"><label>Fourchette haute (€)</label><input type="number" id="bien_fourchette_haute" placeholder="286000"></div>
     </div>
     <div class="section-title">Simulation crédit</div>
@@ -1278,17 +1278,17 @@ textarea { resize: vertical; min-height: 60px; }
   <div class="card-header">💬 Questions de découverte &amp; Notes</div>
   <div class="card-body">
     <div class="grid-2">
-      <div class="form-group"><label>Pourquoi ce bien vous avait-il plu ?</label><textarea id="q1" placeholder="Réponse du propriétaire…"></textarea></div>
-      <div class="form-group"><label>Quel est le plus grand atout de votre bien ?</label><textarea id="q2" placeholder="Réponse du propriétaire…"></textarea></div>
-      <div class="form-group"><label>Pourquoi déménager ?</label><textarea id="q3" placeholder="Réponse du propriétaire…"></textarea></div>
-      <div class="form-group"><label>Quel est votre projet après la vente ?</label><textarea id="q4" placeholder="Réponse du propriétaire…"></textarea></div>
-      <div class="form-group col-span-2"><label>Avez-vous déjà fait estimer le bien ? À combien ?</label><textarea id="q5" placeholder="Réponse du propriétaire…" style="min-height:50px"></textarea></div>
+      <div class="form-group"><label>Pourquoi ce bien vous avait-il plu ?</label><textarea id="q1" data-internal="1" placeholder="Réponse du propriétaire…"></textarea></div>
+      <div class="form-group"><label>Quel est le plus grand atout de votre bien ?</label><textarea id="q2" data-internal="1" placeholder="Réponse du propriétaire…"></textarea></div>
+      <div class="form-group"><label>Pourquoi déménager ?</label><textarea id="q3" data-internal="1" placeholder="Réponse du propriétaire…"></textarea></div>
+      <div class="form-group"><label>Quel est votre projet après la vente ?</label><textarea id="q4" data-internal="1" placeholder="Réponse du propriétaire…"></textarea></div>
+      <div class="form-group col-span-2"><label>Avez-vous déjà fait estimer le bien ? À combien ?</label><textarea id="q5" data-internal="1" placeholder="Réponse du propriétaire…" style="min-height:50px"></textarea></div>
     </div>
-    <div class="form-group mt-8"><label>Notes libres (observations terrain, points à vérifier…)</label><textarea id="notes_libres" style="min-height:120px" placeholder="Toutes vos observations…"></textarea></div>
+    <div class="form-group mt-8"><label>Notes libres (observations terrain, points à vérifier…)</label><textarea id="notes_libres" data-internal="1" style="min-height:120px" placeholder="Toutes vos observations…"></textarea></div>
     <div class="section-title">Prochaines étapes</div>
     <div class="grid-2">
-      <div class="form-group"><label>À faire</label><textarea id="prochaines_etapes" placeholder="Envoyer le mandat, relancer pour les diagnostics…" style="min-height:70px"></textarea></div>
-      <div class="form-group"><label>Date R2</label><input type="date" id="date_r2"></div>
+      <div class="form-group"><label>À faire</label><textarea id="prochaines_etapes" data-internal="1" placeholder="Envoyer le mandat, relancer pour les diagnostics…" style="min-height:70px"></textarea></div>
+      <div class="form-group"><label>Date R2</label><input type="date" id="date_r2" data-internal="1"></div>
     </div>
   </div>
 </div>
@@ -1303,14 +1303,14 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <div class="form-group">
       <label>Capital restant à rembourser (€)</label>
-      <input type="number" id="capital_restant" placeholder="0">
+      <input type="number" id="capital_restant" data-internal="1" placeholder="0">
     </div>
     <div class="section-title">Prêt en cours</div>
     <div class="grid-4">
-      <div class="form-group"><label>Montant de la dette (€)</label><input type="number" id="dette_montant" placeholder="80000"></div>
-      <div class="form-group"><label>Échéance</label><input type="date" id="dette_echeance"></div>
-      <div class="form-group"><label>Banque</label><input type="text" id="banque" placeholder="Nom de la banque"></div>
-      <div class="form-group"><label>Taux (%)</label><input type="number" id="taux_pret" placeholder="1.45" step="0.01"></div>
+      <div class="form-group"><label>Montant de la dette (€)</label><input type="number" id="dette_montant" data-internal="1" placeholder="80000"></div>
+      <div class="form-group"><label>Échéance</label><input type="date" id="dette_echeance" data-internal="1"></div>
+      <div class="form-group"><label>Banque</label><input type="text" id="banque" data-internal="1" placeholder="Nom de la banque"></div>
+      <div class="form-group"><label>Taux (%)</label><input type="number" id="taux_pret" data-internal="1" placeholder="1.45" step="0.01"></div>
     </div>
     <div class="section-title mt-16">Relogement</div>
     <div class="grid-3">
@@ -1318,11 +1318,11 @@ textarea { resize: vertical; min-height: 60px; }
         <label class="radio-item"><input type="radio" name="relogement_trouve" value="non"> Non</label>
         <label class="radio-item"><input type="radio" name="relogement_trouve" value="oui"> Oui</label>
       </div></div>
-      <div class="form-group"><label>Budget maximum (€)</label><input type="number" id="reloge_budget" placeholder="250000"></div>
-      <div class="form-group"><label>Type de bien recherché</label><input type="text" id="reloge_type" placeholder="Maison 4 pièces…"></div>
-      <div class="form-group"><label>Délai d'acquisition</label><input type="text" id="reloge_delai" placeholder="3 mois, avant la rentrée…"></div>
-      <div class="form-group"><label>Zone de recherche</label><input type="text" id="reloge_zone" placeholder="Évry, Corbeil, Massy…"></div>
-      <div class="form-group"><label>Nb de pièces souhaité</label><input type="number" id="reloge_pieces" placeholder="4"></div>
+      <div class="form-group"><label>Budget maximum (€)</label><input type="number" id="reloge_budget" data-internal="1" placeholder="250000"></div>
+      <div class="form-group"><label>Type de bien recherché</label><input type="text" id="reloge_type" data-internal="1" placeholder="Maison 4 pièces…"></div>
+      <div class="form-group"><label>Délai d'acquisition</label><input type="text" id="reloge_delai" data-internal="1" placeholder="3 mois, avant la rentrée…"></div>
+      <div class="form-group"><label>Zone de recherche</label><input type="text" id="reloge_zone" data-internal="1" placeholder="Évry, Corbeil, Massy…"></div>
+      <div class="form-group"><label>Nb de pièces souhaité</label><input type="number" id="reloge_pieces" data-internal="1" placeholder="4"></div>
     </div>
   </div>
 </div>
@@ -1333,6 +1333,14 @@ textarea { resize: vertical; min-height: 60px; }
   <span id="draft-saved-badge" style="font-size:11px;color:var(--success);display:none;">✅ Brouillon sauvegardé</span>
   <div class="spacer"></div>
   <button class="btn btn-success btn-lg" onclick="continuerVersGeneration()">Continuer → Générer la fiche</button>
+</div>
+
+<div class="card">
+  <div class="section-title" onclick="toggleInternalNotes()" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+    <span>📋 Notes internes / dossier mandat <span style="font-weight:400;font-size:12px;color:#888;">(optionnel — jamais affiché dans la fiche acheteur)</span></span>
+    <span id="internal-toggle-icon">▸</span>
+  </div>
+  <div id="internal-notes-container" style="display:none;margin-top:12px;"></div>
 </div>
 
 </div><!-- /container -->
@@ -3903,6 +3911,31 @@ function refreshStep4Summary() {
     + '<code>fiches</code> (Supabase Storage)</div>'
     + '</div>';
 }
+
+function toggleInternalNotes() {
+  var c = document.getElementById('internal-notes-container');
+  var icon = document.getElementById('internal-toggle-icon');
+  var open = c.style.display !== 'none';
+  c.style.display = open ? 'none' : 'block';
+  icon.textContent = open ? '▸' : '▾';
+}
+
+function initInternalNotesSection() {
+  var container = document.getElementById('internal-notes-container');
+  if (!container) return;
+  var fields = document.querySelectorAll('#page-2 [data-internal="1"]');
+  fields.forEach(function(field) {
+    var wrapper = field.closest('.form-group') || field.parentElement;
+    if (wrapper) container.appendChild(wrapper);
+  });
+  // Masquer les cards de la page 2 devenues vides après le déplacement
+  document.querySelectorAll('#page-2 .card').forEach(function(card) {
+    if (card.contains(container)) return; // ne pas masquer le conteneur lui-même
+    var hasVisibleField = card.querySelector('input, select, textarea');
+    if (!hasVisibleField) card.style.display = 'none';
+  });
+}
+document.addEventListener('DOMContentLoaded', initInternalNotesSection);
 </script>
 <footer style="text-align:center;padding:20px;background:#141414;border-top:1px solid rgba(184,146,58,.15);margin-top:40px;">
   <div style="font-size:10px;font-family:'DM Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;">Mentions légales</a> · <a href="/cgv.html" style="color:#8a7550;text-decoration:none;">CGV</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;">Politique de confidentialité</a></div>
