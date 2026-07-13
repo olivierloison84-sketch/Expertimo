@@ -1120,14 +1120,18 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
     <div class="photo-grid" id="photo_grid"></div>
-    <div class="section-title mt-16">URLs photos pour la fiche acheteur (5 photos)</div>
-    <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
-    <div class="grid-3">
-      <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
-      <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
-      <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
-      <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url" placeholder="https://…"></div>
-      <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url" placeholder="https://…"></div>
+    <div class="mt-16">
+      <a href="#" onclick="event.preventDefault();var b=document.getElementById('photo-urls-block');var open=b.style.display!=='none';b.style.display=open?'none':'block';this.textContent=open?'+ Ajouter des URLs photos manuellement (optionnel)':'− Masquer les URLs manuelles';" style="font-size:13px;color:#888;text-decoration:underline;cursor:pointer;">+ Ajouter des URLs photos manuellement (optionnel)</a>
+      <div id="photo-urls-block" style="display:none;margin-top:10px;">
+        <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
+        <div class="grid-3">
+          <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url" placeholder="https://…"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
