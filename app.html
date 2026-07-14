@@ -744,12 +744,12 @@ textarea { resize: vertical; min-height: 60px; }
   <div class="card-header">👤 Propriétaire &amp; Rendez-vous</div>
   <div class="card-body">
     <div class="grid-3">
-      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" data-internal="1" placeholder="Prénom"></div>
-      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" data-internal="1" placeholder="Nom"></div>
-      <div class="form-group"><label>Date R1</label><input type="date" id="date_r1" data-internal="1"></div>
+      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" placeholder="Prénom"></div>
+      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" placeholder="Nom"></div>
+      <div class="form-group"><label>Date R1</label><input type="date" id="date_r1"></div>
       <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" data-internal="1" placeholder="01 XX XX XX XX"></div>
-      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" data-internal="1" placeholder="06 XX XX XX XX"></div>
-      <div class="form-group"><label>Email</label><input type="email" id="email_proprio" data-internal="1" placeholder="email@exemple.fr"></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" placeholder="06 XX XX XX XX"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="email_proprio" placeholder="email@exemple.fr"></div>
     </div>
     <div class="grid-3 mt-8">
       <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" data-internal="1" placeholder="ex91-lg001"></div>
@@ -4059,7 +4059,7 @@ function initInternalNotesSection() {
       }
     });
   });
-  var cardsACacherEntierement = ['Questions de découverte', 'Propriétaire & Rendez-vous'];
+  var cardsACacherEntierement = ['Questions de découverte'];
   document.querySelectorAll('#page-2 .card').forEach(function(card) {
     var header = card.querySelector('.card-header');
     if (!header) return;
