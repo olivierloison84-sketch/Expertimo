@@ -128,7 +128,9 @@ header {
   padding-bottom: 5px; margin: 20px 0 14px;
   text-transform: uppercase; letter-spacing: .5px;
 }
-#internal-notes-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;padding:16px;background:#f8f9fb;border-radius:8px;border:1px solid #e4e7ec;}
+#internal-notes-container{display:flex;flex-direction:column;gap:22px;padding:16px;background:#f8f9fb;border-radius:8px;border:1px solid #e4e7ec;}
+.internal-group-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#888;border-bottom:1px solid #e4e7ec;padding-bottom:6px;margin-bottom:10px;}
+.internal-group-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;}
 
 /* ═══════════════════════════════════════
    FORM ELEMENTS
@@ -3925,76 +3927,130 @@ function toggleInternalNotes() {
   icon.textContent = open ? '▸' : '▾';
 }
 
-// Déplace le .section-title correspondant à titleText, avec ses siblingCount
-// éléments suivants, vers #internal-notes-container.
-function moveSectionSiblings(titleText, siblingCount) {
-  var container = document.getElementById('internal-notes-container');
-  if (!container) return;
-  var titles = document.querySelectorAll('#page-2 .section-title');
-  for (var i = 0; i < titles.length; i++) {
-    if (titles[i].textContent.indexOf(titleText) === -1) continue;
-    var title = titles[i];
-    var toMove = [title];
-    var el = title;
-    for (var n = 0; n < siblingCount; n++) {
-      el = el.nextElementSibling;
-      if (!el) break;
-      toMove.push(el);
-    }
-    toMove.forEach(function(node) { container.appendChild(node); });
-    return;
+function findCardByHeader(headerText) {
+  var headers = document.querySelectorAll('#page-2 .card-header');
+  for (var i = 0; i < headers.length; i++) {
+    if (headers[i].textContent.indexOf(headerText) !== -1) return headers[i].closest('.card');
   }
+  return null;
 }
 
-// Déplace le bloc parent entier qui enveloppe le .section-title correspondant
-// à titleText (title + check-groups dynamiques + tout leur contenu, intact).
-function moveSectionWrapper(titleText) {
-  var container = document.getElementById('internal-notes-container');
-  if (!container) return;
+function originLabel(el) {
+  var card = el.closest('.card');
+  if (!card) return 'Divers';
+  var header = card.querySelector('.card-header');
+  if (!header) return 'Divers';
+  return header.textContent.replace(/[^\wÀ-ÿ\s&()–\-]/g, '').trim();
+}
+
+function captureSectionWrapper(titleText) {
   var titles = document.querySelectorAll('#page-2 .section-title');
   for (var i = 0; i < titles.length; i++) {
-    if (titles[i].textContent.indexOf(titleText) === -1) continue;
-    var wrapper = titles[i].parentElement;
-    if (wrapper) container.appendChild(wrapper);
-    return;
+    if (titles[i].textContent.trim() === titleText) {
+      return titles[i].parentElement;
+    }
   }
+  return null;
+}
+
+function captureSectionSiblings(titleText, siblingCount) {
+  var titles = document.querySelectorAll('#page-2 .section-title');
+  for (var i = 0; i < titles.length; i++) {
+    if (titles[i].textContent.trim() === titleText) {
+      var els = [titles[i]];
+      var next = titles[i].nextElementSibling;
+      for (var n = 0; n < siblingCount && next; n++) {
+        els.push(next);
+        next = next.nextElementSibling;
+      }
+      return els;
+    }
+  }
+  return [];
 }
 
 function initInternalNotesSection() {
   var container = document.getElementById('internal-notes-container');
   if (!container) return;
 
-  // Blocs entiers avec check-groups dynamiques (peuplés en JS après coup) :
-  // on déplace le wrapper complet, pas champ par champ.
-  moveSectionWrapper('Sols');
-  moveSectionWrapper('Vitrage');
-  moveSectionWrapper('Chauffage');
+  var groups = {};
+  var groupOrder = [];
+  var captured = [];
+  function addToGroup(label, el) {
+    if (!el) return;
+    if (!groups[label]) { groups[label] = []; groupOrder.push(label); }
+    groups[label].push(el);
+    captured.push(el);
+  }
+  function isAlreadyCaptured(el) {
+    for (var i = 0; i < captured.length; i++) {
+      if (captured[i] === el || captured[i].contains(el)) return true;
+    }
+    return false;
+  }
 
-  // Sous-sections "titre + N éléments suivants"
-  moveSectionSiblings('Cuisine', 3);
-  moveSectionSiblings('Points de vigilance / Points faibles', 2);
-  moveSectionSiblings('Marché & Fourchette de prix', 2);
-  moveSectionSiblings('Simulation crédit', 2);
-
-  // Champs individuels marqués data-internal="1" — on ignore ceux déjà
-  // déplacés ci-dessus (nichés dans un bloc/sous-section déjà déménagé).
-  var fields = document.querySelectorAll('#page-2 [data-internal="1"]');
-  fields.forEach(function(field) {
-    if (container.contains(field)) return;
-    var wrapper = field.closest('.form-group') || field.parentElement;
-    if (wrapper) container.appendChild(wrapper);
+  // 1. Blocs entiers (cases à cocher dynamiques) — capturés en premier pour
+  // qu'aucun de leurs champs marqués data-internal="1" ne soit extrait à part.
+  ['Sols', 'Vitrage', 'Chauffage'].forEach(function(t) {
+    var w = captureSectionWrapper(t);
+    if (w) addToGroup('Construction & Matériaux', w);
   });
 
-  // Masquer explicitement le sous-titre "Prêt en cours" et son bloc de champs
-  // (100% notes internes, déjà déplacés ci-dessus) — pas de masquage de card
-  // entière : la card "Financement & Relogement" qui l'englobe contient aussi
-  // le champ loyer et le radio "Relogement trouvé", non internes, qui doivent
-  // rester visibles.
+  // 2. Sous-sections "titre + N frères suivants" — captées avant les champs
+  // individuels pour la même raison (ex: bien_fourchette_milieu dans le grid-3
+  // de "Marché & Fourchette de prix"). Libellés alignés sur le nom réel de la
+  // carte d'origine ("Analyse & Scores (fiche acheteur)") pour ne pas scinder
+  // son contenu en deux sous-groupes distincts.
+  [
+    ['Cuisine', 3, 'Équipements'],
+    ['Points de vigilance / Points faibles', 2, 'Équipements'],
+    ['Marché & Fourchette de prix', 2, 'Analyse & Scores (fiche acheteur)'],
+    ['Simulation crédit', 2, 'Analyse & Scores (fiche acheteur)']
+  ].forEach(function(spec) {
+    captureSectionSiblings(spec[0], spec[1]).forEach(function(el) { addToGroup(spec[2], el); });
+  });
+
+  // 3. Carte "Plan des pièces" entière
+  var piecesCard = findCardByHeader('Plan des pièces');
+  if (piecesCard) addToGroup('Plan des pièces', piecesCard);
+
+  // 4. Champs individuels marqués data-internal="1" — on ignore ceux déjà
+  // capturés ci-dessus (nichés dans un bloc/sous-section déjà capturé).
+  document.querySelectorAll('#page-2 [data-internal="1"]').forEach(function(field) {
+    var wrapper = field.closest('.form-group') || field.parentElement;
+    if (!wrapper || isAlreadyCaptured(wrapper)) return;
+    addToGroup(originLabel(wrapper), wrapper);
+  });
+
+  // Rendu : un sous-bloc titré par groupe
+  container.innerHTML = '';
+  groupOrder.forEach(function(label) {
+    var section = document.createElement('div');
+    section.className = 'internal-group';
+    var title = document.createElement('div');
+    title.className = 'internal-group-title';
+    title.textContent = label;
+    section.appendChild(title);
+    var grid = document.createElement('div');
+    grid.className = 'internal-group-grid';
+    groups[label].forEach(function(el) { grid.appendChild(el); });
+    section.appendChild(grid);
+    container.appendChild(section);
+  });
+
+  // Masquer explicitement les cards/sous-titres devenus vides ou 100% internes
+  var titresACacherEntierement = ['Prêt en cours', 'Relogement', 'Commodités dans un rayon de 800m', 'Questions de découverte'];
   document.querySelectorAll('#page-2 .section-title').forEach(function(title) {
-    if (title.textContent.indexOf('Prêt en cours') === -1) return;
+    var t = title.textContent;
+    if (t.indexOf('Prêt en cours') === -1) return;
     var next = title.nextElementSibling;
     title.style.display = 'none';
     if (next) next.style.display = 'none';
+  });
+  document.querySelectorAll('#page-2 .card').forEach(function(card) {
+    var header = card.querySelector('.card-header');
+    if (!header) return;
+    if (header.textContent.indexOf('Questions de découverte') !== -1) card.style.display = 'none';
   });
 }
 document.addEventListener('DOMContentLoaded', initInternalNotesSection);
