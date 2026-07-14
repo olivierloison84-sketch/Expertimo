@@ -849,16 +849,16 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
     <div class="grid-4 appart-maison-only">
       <div class="form-group"><label>Nb total de pièces</label><input type="number" id="nb_pieces" placeholder="4"></div>
-      <div class="form-group"><label>Chambres</label><input type="number" id="nb_chambres" data-internal="1" placeholder="2"></div>
-      <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" data-internal="1" placeholder="0" min="0"></div>
-      <div class="form-group"><label>WC</label><input type="number" id="nb_wc" data-internal="1" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" data-internal="1" placeholder="0" min="0"></div>
-      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" data-internal="1" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Chambres</label><input type="number" id="nb_chambres" placeholder="2"></div>
+      <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" placeholder="0" min="0"></div>
+      <div class="form-group"><label>WC</label><input type="number" id="nb_wc" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" placeholder="0" min="0"></div>
+      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" placeholder="0" min="0"></div>
     </div>
     <div class="section-title appart-only">Immeuble</div>
     <div class="grid-3 appart-only">
       <div class="form-group"><label>Étage du bien</label><input type="text" id="etage" placeholder="3e sur 8"></div>
-      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages" data-internal="1" placeholder="8"></div>
+      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages" placeholder="8"></div>
       <div class="form-group"><label>Ascenseur</label>
         <div class="radio-group">
           <label class="radio-item"><input type="radio" name="ascenseur" value="non"> Non</label>
@@ -866,15 +866,15 @@ textarea { resize: vertical; min-height: 60px; }
         </div>
       </div>
       <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction" placeholder="1985"></div>
-      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom" data-internal="1" placeholder="Nom du syndic"></div>
+      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom" placeholder="Nom du syndic"></div>
       <div class="form-group"><label>Travaux votés en AG</label>
         <div class="radio-group">
-          <label class="radio-item"><input type="radio" name="travaux_ag" value="non"> Non</label>
-          <label class="radio-item"><input type="radio" name="travaux_ag" value="oui"> Oui</label>
+          <label class="radio-item"><input type="radio" name="travaux_ag" value="non" onchange="document.getElementById('travaux_ag_detail_group').style.display='none'"> Non</label>
+          <label class="radio-item"><input type="radio" name="travaux_ag" value="oui" onchange="document.getElementById('travaux_ag_detail_group').style.display='block'"> Oui</label>
         </div>
       </div>
-      <div class="form-group col-span-3"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail" data-internal="1" placeholder="Ravalement + toiture : 8 500 €"></div>
-      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble" data-internal="1" placeholder="Ravalement 2022, toiture 2019…"></div>
+      <div class="form-group col-span-3" id="travaux_ag_detail_group" style="display:none"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail" placeholder="Ravalement + toiture : 8 500 €"></div>
+      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble" placeholder="Ravalement 2022, toiture 2019…"></div>
     </div>
     <div class="section-title maison-only hidden">Construction</div>
     <div class="grid-3 maison-only hidden">
@@ -918,9 +918,9 @@ textarea { resize: vertical; min-height: 60px; }
     <div class="defaut-grid" id="pieces_utiles_grid"></div>
     <div class="section-title mt-16">Parking</div>
     <div class="grid-3">
-      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" data-internal="1" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" data-internal="1" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" data-internal="1" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" placeholder="0" min="0"></div>
     </div>
   </div>
 </div>
@@ -1084,14 +1084,14 @@ textarea { resize: vertical; min-height: 60px; }
   <div class="card-header">🌿 Informations Terrain</div>
   <div class="card-body">
     <div class="grid-3">
-      <div class="form-group"><label>Zone PLU</label><input type="text" id="zone_plu" data-internal="1" placeholder="UA, UB, AU…"></div>
-      <div class="form-group"><label>Superficie totale (m²)</label><input type="number" id="superficie_totale" data-internal="1" placeholder="1000"></div>
-      <div class="form-group"><label>Superficie constructible (m²)</label><input type="number" id="superficie_constructible" data-internal="1" placeholder="800"></div>
-      <div class="form-group"><label>Forme</label><input type="text" id="forme_terrain" data-internal="1" placeholder="Rectangulaire, irrégulier…"></div>
-      <div class="form-group"><label>Accès / Voirie</label><input type="text" id="acces_terrain" data-internal="1" placeholder="Chemin privé, route communale…"></div>
-      <div class="form-group"><label>COS / CES</label><input type="text" id="cos_ces" data-internal="1" placeholder="0.4 / 0.6"></div>
-      <div class="form-group"><label>Hauteur max autorisée (m)</label><input type="number" id="hauteur_max" data-internal="1" placeholder="9"></div>
-      <div class="form-group"><label>Projet envisagé</label><input type="text" id="projet_terrain" data-internal="1" placeholder="Maison individuelle…"></div>
+      <div class="form-group"><label>Zone PLU</label><input type="text" id="zone_plu" placeholder="UA, UB, AU…"></div>
+      <div class="form-group"><label>Superficie totale (m²)</label><input type="number" id="superficie_totale" placeholder="1000"></div>
+      <div class="form-group"><label>Superficie constructible (m²)</label><input type="number" id="superficie_constructible" placeholder="800"></div>
+      <div class="form-group"><label>Forme</label><input type="text" id="forme_terrain" placeholder="Rectangulaire, irrégulier…"></div>
+      <div class="form-group"><label>Accès / Voirie</label><input type="text" id="acces_terrain" placeholder="Chemin privé, route communale…"></div>
+      <div class="form-group"><label>COS / CES</label><input type="text" id="cos_ces" placeholder="0.4 / 0.6"></div>
+      <div class="form-group"><label>Hauteur max autorisée (m)</label><input type="number" id="hauteur_max" placeholder="9"></div>
+      <div class="form-group"><label>Projet envisagé</label><input type="text" id="projet_terrain" placeholder="Maison individuelle…"></div>
     </div>
     <div class="section-title">Viabilisation</div>
     <div class="viab-grid" id="viab_grid"></div>
@@ -2853,7 +2853,10 @@ function restoreRawFormState(d) {
       var r=document.querySelector('#page-2 input[type=radio][name="'+k.replace('radio_','')+'"][value="'+d[k]+'"]');
       if(r){
         r.checked=true;
-
+        if (k === 'radio_travaux_ag') {
+          var travauxAgDetailGroup = document.getElementById('travaux_ag_detail_group');
+          if (travauxAgDetailGroup) travauxAgDetailGroup.style.display = (d[k] === 'oui') ? 'block' : 'none';
+        }
       }
     });
     Object.keys(d).filter(function(k){return k.startsWith('cb_');}).forEach(function(k){var cb=document.getElementById(k.replace('cb_',''));if(cb)cb.checked=d[k];});
@@ -4040,17 +4043,28 @@ function initInternalNotesSection() {
 
   // Masquer explicitement les cards/sous-titres devenus vides ou 100% internes
   var titresACacherEntierement = ['Prêt en cours', 'Relogement', 'Commodités dans un rayon de 800m', 'Questions de découverte'];
+  var sousTitresAMasquer = [
+    ['Prêt en cours', 1],
+    ['Travaux & Rénovations réalisés', 2]
+  ];
   document.querySelectorAll('#page-2 .section-title').forEach(function(title) {
     var t = title.textContent;
-    if (t.indexOf('Prêt en cours') === -1) return;
-    var next = title.nextElementSibling;
-    title.style.display = 'none';
-    if (next) next.style.display = 'none';
+    sousTitresAMasquer.forEach(function(spec) {
+      if (t.indexOf(spec[0]) === -1) return;
+      title.style.display = 'none';
+      var el = title;
+      for (var n = 0; n < spec[1] && el.nextElementSibling; n++) {
+        el = el.nextElementSibling;
+        el.style.display = 'none';
+      }
+    });
   });
+  var cardsACacherEntierement = ['Questions de découverte', 'Propriétaire & Rendez-vous'];
   document.querySelectorAll('#page-2 .card').forEach(function(card) {
     var header = card.querySelector('.card-header');
     if (!header) return;
-    if (header.textContent.indexOf('Questions de découverte') !== -1) card.style.display = 'none';
+    var doitCacher = cardsACacherEntierement.some(function(t) { return header.textContent.indexOf(t) !== -1; });
+    if (doitCacher) card.style.display = 'none';
   });
 }
 document.addEventListener('DOMContentLoaded', initInternalNotesSection);
