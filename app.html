@@ -1412,7 +1412,8 @@ textarea { resize: vertical; min-height: 60px; }
       <div style="margin-bottom:16px;">
         <input type="password" id="gh-token-input" class="form-control"
                placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-               style="max-width:420px;margin-bottom:8px;">
+               style="max-width:420px;margin-bottom:8px;"
+               oninput="var o=document.getElementById('gh-token-input-2'); if(o) o.value=this.value;">
         <button class="btn btn-outline" id="gh-token-save-btn"
                 onclick="saveGhToken()">💾 Sauvegarder</button>
         <div id="gh-token-status" style="margin-top:6px;font-size:13px;"></div>
@@ -1499,11 +1500,11 @@ textarea { resize: vertical; min-height: 60px; }
       <div id="gh-token-bloc" style="margin-bottom:16px;padding:12px 16px;background:#f8fafc;border:1.5px solid var(--border);border-radius:var(--radius);">
         <label style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:6px;">🔑 Token GitHub (stocké localement)</label>
         <div style="display:flex;gap:8px;align-items:center;">
-          <input type="password" id="gh-token-input" placeholder="ghp_…" style="flex:1;font-size:13px;"
-                 oninput="document.getElementById('gh-token-save').disabled=!this.value.trim()">
+          <input type="password" id="gh-token-input-2" placeholder="ghp_…" style="flex:1;font-size:13px;"
+                 oninput="document.getElementById('gh-token-save').disabled=!this.value.trim(); var o=document.getElementById('gh-token-input'); if(o) o.value=this.value;">
           <button id="gh-token-save" class="btn btn-sm btn-primary" onclick="saveGhToken()" disabled>Enregistrer</button>
         </div>
-        <p id="gh-token-status" class="hint" style="margin-top:5px;"></p>
+        <p id="gh-token-status-2" class="hint" style="margin-top:5px;"></p>
       </div>
       <div id="fiches-status" style="font-size:13px;color:var(--muted);margin-bottom:12px;">Chargement…</div>
       <div id="fiches-table-wrap" style="display:none;overflow-x:auto;">
@@ -3246,15 +3247,21 @@ function pushToGitHub() {
 }
 
 function clearGhToken() {
-  localStorage.removeItem('_gh_token');
-  document.getElementById('gh-token-input').value = '';
+  localStorage.removeItem('expertimo_gh_token');
+  _GH_TOKEN = '';
+  var inp = document.getElementById('gh-token-input');
+  var inp2 = document.getElementById('gh-token-input-2');
+  if (inp) inp.value = '';
+  if (inp2) inp2.value = '';
   refreshTokenUI();
 }
 
 function refreshTokenUI() {
-  var token = localStorage.getItem('_gh_token');
+  var token = localStorage.getItem('expertimo_gh_token');
   var inp = document.getElementById('gh-token-input');
+  var inp2 = document.getElementById('gh-token-input-2');
   var lbl = document.getElementById('gh-token-status');
+  var lbl2 = document.getElementById('gh-token-status-2');
   var saveBtn = document.getElementById('gh-token-save-btn');
   if (!inp || !lbl) return;
   if (token) {
@@ -3268,6 +3275,18 @@ function refreshTokenUI() {
     inp.style.display = '';
     if (saveBtn) saveBtn.style.display = '';
     lbl.textContent = '';
+  }
+  if (inp2 && lbl2) {
+    if (token) {
+      inp2.style.display = 'none';
+      lbl2.innerHTML = '✅ Token enregistré &nbsp;'
+        + '<button class="btn btn-outline"'
+        + ' style="font-size:11px;padding:2px 8px;"'
+        + ' onclick="clearGhToken()">Modifier</button>';
+    } else {
+      inp2.style.display = '';
+      lbl2.textContent = '';
+    }
   }
 }
 
@@ -3414,23 +3433,32 @@ async function loadAnalytics() {
 // PAGE 6 — MES FICHES (GitHub)
 // ═══════════════════════════════════════════════════════
 function saveGhToken() {
-  var t = document.getElementById('gh-token-input').value.trim();
+  var inp1 = document.getElementById('gh-token-input');
+  var inp2 = document.getElementById('gh-token-input-2');
+  var t = ((inp1 && inp1.value) || (inp2 && inp2.value) || '').trim();
   if (!t) return;
   localStorage.setItem('expertimo_gh_token', t);
   _GH_TOKEN = t;
-  document.getElementById('gh-token-status').textContent = '✅ Token enregistré.';
-  document.getElementById('gh-token-status').style.color = 'var(--success)';
+  if (inp1) inp1.value = t;
+  if (inp2) inp2.value = t;
+  var status1 = document.getElementById('gh-token-status');
+  var status2 = document.getElementById('gh-token-status-2');
+  if (status1) { status1.textContent = '✅ Token enregistré.'; status1.style.color = 'var(--success)'; }
+  if (status2) { status2.textContent = '✅ Token enregistré.'; status2.style.color = 'var(--success)'; }
   loadFiches();
 }
 
 async function loadFiches() {
   // Init token display
   var inp = document.getElementById('gh-token-input');
+  var inp2 = document.getElementById('gh-token-input-2');
   var tokenStatus = document.getElementById('gh-token-status');
-  if (inp && _GH_TOKEN) {
-    inp.placeholder = '••••••••••••••••••••• (configuré)';
-    tokenStatus.textContent = '✅ Token configuré.';
-    tokenStatus.style.color = 'var(--success)';
+  var tokenStatus2 = document.getElementById('gh-token-status-2');
+  if (_GH_TOKEN) {
+    if (inp) inp.placeholder = '••••••••••••••••••••• (configuré)';
+    if (inp2) inp2.placeholder = '••••••••••••••••••••• (configuré)';
+    if (tokenStatus) { tokenStatus.textContent = '✅ Token configuré.'; tokenStatus.style.color = 'var(--success)'; }
+    if (tokenStatus2) { tokenStatus2.textContent = '✅ Token configuré.'; tokenStatus2.style.color = 'var(--success)'; }
   }
   var status = document.getElementById('fiches-status');
   var wrap   = document.getElementById('fiches-table-wrap');
