@@ -3230,6 +3230,11 @@ function pushToGitHub() {
           + '<button class="btn btn-primary" onclick="copyGhLink()">📋 Copier le lien</button>'
           + '<button class="btn btn-outline" onclick="partagerFiche(\'' + pageUrl.replace(/'/g,"\\'") + '\')">'
           + '📤 Partager</button>'
+          + '</div>'
+          + '<div style="margin-top:10px;font-size:12px;color:var(--muted);">'
+          + '⏳ La fiche est en ligne, mais GitHub Pages peut prendre 1 à 2 minutes pour la rendre '
+          + 'accessible. Si "Ouvrir la fiche" affiche une erreur au premier essai, réessayez dans '
+          + 'un instant.'
           + '</div>';
         _stepsComplete[4] = true;
         updateStepperTabs();
@@ -3310,6 +3315,59 @@ function partagerFiche(url) {
       .then(function() { showToast('📤 Lien copié (Web Share non disponible sur ce navigateur)'); })
       .catch(function() { showToast('📤 URL : ' + url, true); });
   }
+}
+
+function shareFicheWithName(fname) {
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:10000;';
+  overlay.innerHTML =
+    '<div class="card" style="max-width:360px;width:90%;margin:0;">'
+    + '<div class="card-header">📤 Partager la fiche</div>'
+    + '<div class="card-body">'
+    +   '<div class="form-group">'
+    +     '<label>Prénom du client</label>'
+    +     '<input type="text" id="share-fiche-prenom" placeholder="Ex : Marie">'
+    +   '</div>'
+    +   '<div class="form-group">'
+    +     '<label>Nom du client</label>'
+    +     '<input type="text" id="share-fiche-nom" placeholder="Ex : Dupont">'
+    +   '</div>'
+    +   '<div id="share-fiche-error" style="font-size:11px;color:var(--danger);margin-bottom:10px;display:none;">'
+    +     '⚠️ Merci de renseigner le prénom du client.'
+    +   '</div>'
+    +   '<div style="display:flex;gap:10px;justify-content:flex-end;">'
+    +     '<button class="btn btn-outline" id="share-fiche-cancel-btn">Annuler</button>'
+    +     '<button class="btn btn-primary" id="share-fiche-generate-btn">Générer le lien</button>'
+    +   '</div>'
+    + '</div>'
+    + '</div>';
+  document.body.appendChild(overlay);
+
+  var prenomInput = overlay.querySelector('#share-fiche-prenom');
+  var nomInput    = overlay.querySelector('#share-fiche-nom');
+  var errorEl     = overlay.querySelector('#share-fiche-error');
+  var genBtn      = overlay.querySelector('#share-fiche-generate-btn');
+
+  function close() { overlay.remove(); }
+
+  overlay.querySelector('#share-fiche-cancel-btn').onclick = close;
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+
+  genBtn.onclick = function() {
+    var prenom = prenomInput.value.trim();
+    var nom    = nomInput.value.trim();
+    if (!prenom) {
+      errorEl.style.display = 'block';
+      return;
+    }
+    var client = prenom + (nom ? ' ' + nom : '');
+    var url = _GH_PAGES_BASE + encodeURIComponent(fname) + '?prenom=' + encodeURIComponent(prenom)
+      + '&nom=' + encodeURIComponent(nom) + '&client=' + encodeURIComponent(client);
+    close();
+    partagerFiche(url);
+  };
+
+  prenomInput.focus();
 }
 
 function refreshStep4Summary() {
@@ -3501,6 +3559,10 @@ async function loadFiches() {
         + '<td style="padding:10px 14px;text-align:center;white-space:nowrap;">'
         +   '<a href="' + _GH_PAGES_BASE + encodeURIComponent(f.name) + '" target="_blank" rel="noopener" '
         +      'class="btn btn-sm btn-outline" style="margin-right:6px;">👁️ Voir</a>'
+        +   '<button class="btn btn-sm btn-outline" style="margin-right:6px;" '
+        +           'onclick="shareFicheWithName(\'' + safeName + '\')">'
+        +     '📤 Partager'
+        +   '</button>'
         +   '<button class="btn btn-sm" style="background:var(--accent);color:#fff;margin-right:6px;" '
         +           'onclick="modifierFiche(\'' + safeName + '\',\'' + safeSha + '\',\'' + safeDl + '\')">'
         +     '✏️ Modifier'
