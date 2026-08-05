@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style id="auth-guard-hide">body { display: none !important; }</style>
 <title>Expertimo · Générateur Fiche Acheteur</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<meta name="theme-color" content="#14171F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Expertimo">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -4162,6 +4168,15 @@ document.addEventListener('DOMContentLoaded', initInternalNotesSection);
 <footer style="text-align:center;padding:20px;background:#141414;border-top:1px solid rgba(184,146,58,.15);margin-top:40px;">
   <div style="font-size:10px;font-family:'DM Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;">Mentions légales</a> · <a href="/cgv.html" style="color:#8a7550;text-decoration:none;">CGV</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;">Politique de confidentialité</a></div>
 </footer>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js').catch(function(err) {
+      console.log('Service worker non enregistré :', err);
+    });
+  });
+}
+</script>
 </body>
 </html>
 
