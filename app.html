@@ -754,22 +754,22 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <div class="grid-2">
       <div class="form-group">
         <label>Adresse complète</label>
-        <input type="text" id="adresse" placeholder="34 rue Hélène Boucher, 91300 Massy"
+        <input type="text" id="adresse"
           oninput="onAdresseChange(this.value)">
       </div>
       <div class="form-group">
         <label>Quartier / Secteur</label>
-        <input type="text" id="quartier" placeholder="Centre-ville, Les Ulis…">
+        <input type="text" id="quartier">
       </div>
     </div>
     <div class="grid-2" style="margin-top:12px;">
       <div class="form-group">
         <label>Prénom acheteur <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label>
-        <input type="text" id="acheteur_prenom" placeholder="Julien">
+        <input type="text" id="acheteur_prenom">
       </div>
       <div class="form-group">
         <label>Nom acheteur <span style="color:var(--muted);font-weight:400;">(optionnel)</span></label>
-        <input type="text" id="acheteur_nom" placeholder="Dupont">
+        <input type="text" id="acheteur_nom">
       </div>
     </div>
   </div>
@@ -790,20 +790,20 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <div class="section-title">Surfaces &amp; Pièces</div>
     <div class="grid-4">
-      <div class="form-group"><label>Surface habitable (m²)</label><input type="number" id="surface_hab" placeholder="75" step="0.01"></div>
-      <div class="form-group"><label>Surface Carrez (m²)</label><input type="number" id="surface_carrez" placeholder="72" step="0.01"></div>
-      <div class="form-group terrain-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain" data-internal="1" placeholder="500"></div>
-      <div class="form-group maison-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain_m" data-internal="1" placeholder="300"></div>
+      <div class="form-group"><label>Surface habitable (m²)</label><input type="number" id="surface_hab" step="0.01"></div>
+      <div class="form-group"><label>Surface Carrez (m²)</label><input type="number" id="surface_carrez" step="0.01"></div>
+      <div class="form-group terrain-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain" data-internal="1"></div>
+      <div class="form-group maison-only hidden"><label>Surface terrain (m²)</label><input type="number" id="surface_terrain_m" data-internal="1"></div>
     </div>
     <div class="grid-4 appart-maison-only">
-      <div class="form-group"><label>Nb total de pièces</label><input type="number" id="nb_pieces" placeholder="4"></div>
-      <div class="form-group"><label>Chambres</label><input type="number" id="nb_chambres" placeholder="2"></div>
-      <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" placeholder="0" min="0"></div>
-      <div class="form-group"><label>WC</label><input type="number" id="nb_wc" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Nb total de pièces</label><input type="number" id="nb_pieces"></div>
+      <div class="form-group"><label>Chambres</label><input type="number" id="nb_chambres"></div>
+      <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" min="0"></div>
+      <div class="form-group"><label>WC</label><input type="number" id="nb_wc" min="0"></div>
     </div>
     <div class="section-title appart-only">Immeuble</div>
     <div class="grid-2 appart-only">
-      <div class="form-group"><label>Étage du bien</label><input type="text" id="etage" placeholder="3e sur 8"></div>
+      <div class="form-group"><label>Étage du bien</label><input type="text" id="etage"></div>
       <div class="form-group"><label>Ascenseur</label>
         <div class="radio-group">
           <label class="radio-item"><input type="radio" name="ascenseur" value="non"> Non</label>
@@ -813,17 +813,17 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
     <div class="section-title appart-maison-only">Prix &amp; Charges</div>
     <div class="grid-3 appart-maison-only">
-      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente" placeholder="220000"></div>
-      <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro" placeholder="200"></div>
-      <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" data-internal="1" placeholder="150"></div>
+      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente"></div>
+      <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro"></div>
+      <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" data-internal="1"></div>
     </div>
     <div class="grid-2 terrain-only hidden">
-      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente_t" placeholder="120000"></div>
+      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente_t"></div>
     </div>
     <div class="section-title appart-maison-only">Consommation d'énergie (DPE)</div>
     <div class="appart-maison-only">
       <div class="dpe-grid" id="dpe_grid"></div>
-      <div class="form-group mt-8"><label>Valeur numérique (kWh/m²/an)</label><input type="number" id="dpe_valeur" data-internal="1" placeholder="180" style="max-width:150px"></div>
+      <div class="form-group mt-8"><label>Valeur numérique (kWh/m²/an)</label><input type="number" id="dpe_valeur" data-internal="1" style="max-width:150px"></div>
     </div>
   </div>
 </div>
@@ -842,11 +842,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div id="photo-urls-block" style="display:none;margin-top:10px;">
         <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
         <div class="grid-3">
-          <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
-          <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
-          <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
-          <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url" placeholder="https://…"></div>
-          <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url"></div>
+          <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url"></div>
+          <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url"></div>
+          <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url"></div>
+          <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url"></div>
         </div>
       </div>
     </div>
@@ -866,27 +866,27 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <div class="section-title appart-maison-only">Pièces (détail)</div>
     <div class="grid-2 appart-maison-only">
-      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" placeholder="0" min="0"></div>
-      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" min="0"></div>
+      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" min="0"></div>
     </div>
     <div class="section-title appart-only">Immeuble (suite)</div>
     <div class="grid-3 appart-only">
-      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages" placeholder="8"></div>
-      <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction" placeholder="1985"></div>
-      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom" placeholder="Nom du syndic"></div>
+      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages"></div>
+      <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction"></div>
+      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom"></div>
       <div class="form-group"><label>Travaux votés en AG</label>
         <div class="radio-group">
           <label class="radio-item"><input type="radio" name="travaux_ag" value="non" onchange="document.getElementById('travaux_ag_detail_group').style.display='none'"> Non</label>
           <label class="radio-item"><input type="radio" name="travaux_ag" value="oui" onchange="document.getElementById('travaux_ag_detail_group').style.display='block'"> Oui</label>
         </div>
       </div>
-      <div class="form-group col-span-3" id="travaux_ag_detail_group" style="display:none"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail" placeholder="Ravalement + toiture : 8 500 €"></div>
-      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble" placeholder="Ravalement 2022, toiture 2019…"></div>
+      <div class="form-group col-span-3" id="travaux_ag_detail_group" style="display:none"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail"></div>
+      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble"></div>
     </div>
     <div class="section-title maison-only hidden">Construction</div>
     <div class="grid-3 maison-only hidden">
-      <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction_m" placeholder="1995"></div>
-      <div class="form-group"><label>Nb d'étages</label><input type="number" id="nb_etages_m" data-internal="1" placeholder="1"></div>
+      <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction_m"></div>
+      <div class="form-group"><label>Nb d'étages</label><input type="number" id="nb_etages_m" data-internal="1"></div>
       <div class="form-group"><label>Standard général</label>
         <select id="standard_general" data-internal="1">
           <option value="">— Choisir —</option>
@@ -896,20 +896,20 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
     <div class="section-title appart-maison-only">Fiscalité</div>
     <div class="grid-2 appart-maison-only">
-      <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere" placeholder="900"></div>
-      <div class="form-group"><label>Taxe d'habitation (€/an)</label><input type="number" id="taxe_hab" data-internal="1" placeholder="600"></div>
+      <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere"></div>
+      <div class="form-group"><label>Taxe d'habitation (€/an)</label><input type="number" id="taxe_hab" data-internal="1"></div>
     </div>
     <div class="form-group appart-maison-only mt-8">
       <label>Détail des charges (contexte chatbot)</label>
-      <input type="text" id="charges_detail" placeholder="Eau froide, nettoyage parties communes, ascenseur…">
+      <input type="text" id="charges_detail">
     </div>
     <div class="section-title appart-maison-only">Les + du bien</div>
     <div class="form-group appart-maison-only">
-      <textarea id="plus_appartement" data-internal="1" placeholder="Points forts, luminosité, vue, calme, terrasse, prestations…" style="min-height:70px"></textarea>
+      <textarea id="plus_appartement" data-internal="1" style="min-height:70px"></textarea>
     </div>
     <div class="section-title terrain-only hidden">Fiscalité Terrain</div>
     <div class="grid-2 terrain-only hidden">
-      <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere_t" placeholder="450"></div>
+      <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere_t"></div>
     </div>
   </div>
 </div>
@@ -949,7 +949,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <div class="check-group" id="chauf_type_group"></div>
         <div class="check-group mt-8" id="chauf_energie_group"></div>
         <div class="check-group mt-8" id="chauf_diffusion_group"></div>
-        <div class="form-group mt-8"><label>Année installation</label><input type="number" id="chauf_annee" data-internal="1" placeholder="2015" style="max-width:120px"></div>
+        <div class="form-group mt-8"><label>Année installation</label><input type="number" id="chauf_annee" data-internal="1" style="max-width:120px"></div>
       </div>
       <div>
         <div class="section-title">Eau chaude sanitaire</div>
@@ -960,7 +960,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <label style="margin-bottom:6px">Appréciation globale</label>
         <div class="rating-row" id="etat_general_group"></div>
         <div class="form-group mt-8"><label>Travaux récents</label>
-          <textarea id="travaux_recents" data-internal="1" placeholder="Cuisine rénovée 2021, salle de bains 2019…" style="min-height:60px"></textarea>
+          <textarea id="travaux_recents" data-internal="1" style="min-height:60px"></textarea>
         </div>
       </div>
     </div>
@@ -972,7 +972,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <div class="section-title">Émissions GES</div>
     <div class="dpe-grid" id="ges_grid"></div>
-    <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" data-internal="1" placeholder="32" style="max-width:150px"></div>
+    <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" data-internal="1" style="max-width:150px"></div>
     <div class="grid-3 mt-16">
       <div><label>Servitudes</label><div class="radio-group">
         <label class="radio-item"><input type="radio" name="servitudes" value="non"> Non</label>
@@ -982,7 +982,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <label class="radio-item"><input type="radio" name="droits_superf" value="non"> Non</label>
         <label class="radio-item"><input type="radio" name="droits_superf" value="oui"> Oui</label>
       </div></div>
-      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" data-internal="1" placeholder="Nom du syndic"></div>
+      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" data-internal="1"></div>
     </div>
     <div class="section-title mt-16">Diagnostics réglementaires</div>
     <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
@@ -994,22 +994,22 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div style="padding:0 6px;">
         <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
           <select id="diag_amiante_status" onchange="applyDiagDefault('amiante','diag_amiante_status','diag_amiante_result')"><option value="">— À renseigner —</option><option value="non-soumis">Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
-          <input type="text" id="diag_amiante_result" placeholder="Non soumis — bâtiment après 1997"></div>
+          <input type="text" id="diag_amiante_result"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🔬 Plomb (CREP)</div>
           <select id="diag_plomb_status" onchange="applyDiagDefault('plomb','diag_plomb_status','diag_plomb_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_plomb_result" placeholder="Absence de plomb détectée"></div>
+          <input type="text" id="diag_plomb_result"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🪲 Termites</div>
           <select id="diag_termites_status" onchange="applyDiagDefault('termites','diag_termites_status','diag_termites_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_termites_result" placeholder="Absence de termites constatée"></div>
+          <input type="text" id="diag_termites_result"></div>
         <div class="diag-form-grid"><div class="diag-form-label">⚡ Électricité</div>
           <select id="diag_electricite_status" onchange="applyDiagDefault('electricite','diag_electricite_status','diag_electricite_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_electricite_result" placeholder="Installation intérieure sans anomalie"></div>
+          <input type="text" id="diag_electricite_result"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🔥 Gaz</div>
           <select id="diag_gaz_status" onchange="applyDiagDefault('gaz','diag_gaz_status','diag_gaz_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_gaz_result" placeholder="Installation sans anomalie"></div>
+          <input type="text" id="diag_gaz_result"></div>
         <div class="diag-form-grid"><div class="diag-form-label">💧 Assainissement</div>
           <select id="diag_assain_status" onchange="applyDiagDefault('assain','diag_assain_status','diag_assain_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_assain_result" placeholder="Raccordement au réseau collectif conforme"></div>
+          <input type="text" id="diag_assain_result"></div>
       </div>
     </div>
     <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
@@ -1022,15 +1022,15 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <div class="grid-2">
       <div>
         <div style="font-size:11px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">✅ Points forts (3 max — fiche acheteur)</div>
-        <div class="form-group"><input type="text" id="bien_fort1" placeholder="Point fort 1"></div>
-        <div class="form-group"><input type="text" id="bien_fort2" placeholder="Point fort 2"></div>
-        <div class="form-group"><input type="text" id="bien_fort3" placeholder="Point fort 3"></div>
+        <div class="form-group"><input type="text" id="bien_fort1"></div>
+        <div class="form-group"><input type="text" id="bien_fort2"></div>
+        <div class="form-group"><input type="text" id="bien_fort3"></div>
       </div>
       <div>
         <div style="font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">⚠️ Vigilances (3 max — fiche acheteur)</div>
-        <div class="form-group"><input type="text" id="bien_vig1" placeholder="Vigilance 1"></div>
-        <div class="form-group"><input type="text" id="bien_vig2" placeholder="Vigilance 2"></div>
-        <div class="form-group"><input type="text" id="bien_vig3" placeholder="Vigilance 3"></div>
+        <div class="form-group"><input type="text" id="bien_vig1"></div>
+        <div class="form-group"><input type="text" id="bien_vig2"></div>
+        <div class="form-group"><input type="text" id="bien_vig3"></div>
       </div>
     </div>
   </div>
@@ -1042,9 +1042,9 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <div class="defaut-grid" id="pieces_utiles_grid"></div>
     <div class="section-title mt-16">Parking</div>
     <div class="grid-3">
-      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" min="0"></div>
+      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" min="0"></div>
+      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" min="0"></div>
     </div>
   </div>
 </div>
@@ -1063,27 +1063,27 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-header">👤 Propriétaire &amp; Rendez-vous</div>
   <div class="card-body">
     <div class="grid-3">
-      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" placeholder="Prénom"></div>
-      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" placeholder="Nom"></div>
+      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom"></div>
+      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom"></div>
       <div class="form-group"><label>Date R1</label><input type="date" id="date_r1"></div>
-      <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" data-internal="1" placeholder="01 XX XX XX XX"></div>
-      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" placeholder="06 XX XX XX XX"></div>
-      <div class="form-group"><label>Email</label><input type="email" id="email_proprio" placeholder="email@exemple.fr"></div>
+      <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" data-internal="1"></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="email_proprio"></div>
     </div>
     <div class="grid-3 mt-8">
-      <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" data-internal="1" placeholder="ex91-lg001"></div>
-      <div class="form-group"><label>Raison de la vente</label><input type="text" id="raison_vente" data-internal="1" placeholder="Mutation, divorce, succession…"></div>
-      <div class="form-group"><label>Bien en vente depuis</label><input type="text" id="vente_depuis" data-internal="1" placeholder="Date ou durée"></div>
-      <div class="form-group"><label>Délai maxi pour vendre</label><input type="text" id="delai_vente" data-internal="1" placeholder="3 mois, 6 mois…"></div>
-      <div class="form-group"><label>Clés chez ?</label><input type="text" id="cles_chez" data-internal="1" placeholder="Propriétaire, gardien…"></div>
-      <div class="form-group"><label>Déjà des agences ?</label><input type="text" id="agences" data-internal="1" placeholder="Noms des agences"></div>
-      <div class="form-group"><label>Année d'achat</label><input type="number" id="annee_achat" data-internal="1" placeholder="2010"></div>
-      <div class="form-group"><label>Prix d'achat (€)</label><input type="number" id="prix_achat" data-internal="1" placeholder="180000"></div>
+      <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" data-internal="1"></div>
+      <div class="form-group"><label>Raison de la vente</label><input type="text" id="raison_vente" data-internal="1"></div>
+      <div class="form-group"><label>Bien en vente depuis</label><input type="text" id="vente_depuis" data-internal="1"></div>
+      <div class="form-group"><label>Délai maxi pour vendre</label><input type="text" id="delai_vente" data-internal="1"></div>
+      <div class="form-group"><label>Clés chez ?</label><input type="text" id="cles_chez" data-internal="1"></div>
+      <div class="form-group"><label>Déjà des agences ?</label><input type="text" id="agences" data-internal="1"></div>
+      <div class="form-group"><label>Année d'achat</label><input type="number" id="annee_achat" data-internal="1"></div>
+      <div class="form-group"><label>Prix d'achat (€)</label><input type="number" id="prix_achat" data-internal="1"></div>
     </div>
     <div class="grid-3 mt-8">
-      <div class="form-group"><label>Nb de visites</label><input type="number" id="nb_visites" data-internal="1" placeholder="0"></div>
-      <div class="form-group"><label>Nb d'offres reçues</label><input type="number" id="nb_offres" data-internal="1" placeholder="0"></div>
-      <div class="form-group"><label>Prix des offres (€)</label><input type="text" id="prix_offres" data-internal="1" placeholder="195 000 €"></div>
+      <div class="form-group"><label>Nb de visites</label><input type="number" id="nb_visites" data-internal="1"></div>
+      <div class="form-group"><label>Nb d'offres reçues</label><input type="number" id="nb_offres" data-internal="1"></div>
+      <div class="form-group"><label>Prix des offres (€)</label><input type="text" id="prix_offres" data-internal="1"></div>
     </div>
     <div class="form-group mt-8" data-internal="1">
       <label>Utilisation actuelle</label>
@@ -1095,13 +1095,13 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="form-group" id="loyer_group" style="display:none">
-      <label>Loyer mensuel (€)</label><input type="number" id="loyer_actuel_location" data-internal="1" placeholder="850">
+      <label>Loyer mensuel (€)</label><input type="number" id="loyer_actuel_location" data-internal="1">
     </div>
     <div class="scenario-box mt-8">
       <label>Scénario "Dans 3 mois j'ai une offre à ___ € — on fait quoi ?"</label>
       <div class="grid-2 mt-8">
-        <input type="number" id="scenario_montant" data-internal="1" placeholder="Montant de l'offre (€)">
-        <textarea id="scenario_reponse" data-internal="1" placeholder="Réponse / stratégie…" style="min-height:50px"></textarea>
+        <input type="number" id="scenario_montant" data-internal="1">
+        <textarea id="scenario_reponse" data-internal="1" style="min-height:50px"></textarea>
       </div>
     </div>
   </div>
@@ -1112,7 +1112,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <div class="form-group">
       <label>Informations complémentaires (copropriété, exposition, rénovations, équipements…)</label>
-      <textarea id="historique_libre" style="min-height:140px" placeholder="Copropriété — 12 lots, aucune procédure en cours&#10;Exposition — Sud-Ouest, aucun vis-à-vis&#10;Rénovation 2015 — sols, cuisine, salle de bains, électricité refaite à neuf&#10;Chauffage — Individuel gaz, chaudière 2020"></textarea>
+      <textarea id="historique_libre" style="min-height:140px"></textarea>
       <p class="hint">Saisissez chaque information sur une ligne. Ce texte apparaîtra dans la section « Tout savoir sur ce bien » de la fiche acheteur.</p>
     </div>
     <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
@@ -1125,12 +1125,12 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </tr></thead>
       <tbody id="renov_tbody">
         <tr>
-          <td><input type="number" id="renov_annee_1" data-internal="1" placeholder="2022"></td>
-          <td><input type="number" id="renov_montant_1" data-internal="1" placeholder="15000"></td>
-          <td><input type="text" id="renov_desc_1" data-internal="1" placeholder="Réfection toiture"></td>
+          <td><input type="number" id="renov_annee_1" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_1" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_1" data-internal="1"></td>
         </tr>
         <tr>
-          <td><input type="number" id="renov_annee_2" data-internal="1" placeholder="2021"></td>
+          <td><input type="number" id="renov_annee_2" data-internal="1"></td>
           <td><input type="number" id="renov_montant_2" data-internal="1"></td>
           <td><input type="text" id="renov_desc_2" data-internal="1"></td>
         </tr>
@@ -1185,10 +1185,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <div class="section-title">Transports à proximité</div>
         <div class="check-group" id="transport_group"></div>
         <div class="form-group mt-16"><label>Services de proximité</label>
-          <textarea id="services_prox" data-internal="1" placeholder="Écoles, commerces, médecins, parcs…" style="min-height:60px"></textarea>
+          <textarea id="services_prox" data-internal="1" style="min-height:60px"></textarea>
         </div>
         <div class="form-group"><label>Voisinage</label>
-          <textarea id="voisinage" data-internal="1" placeholder="Calme, famille, commerçants…" style="min-height:50px"></textarea>
+          <textarea id="voisinage" data-internal="1" style="min-height:50px"></textarea>
         </div>
       </div>
     </div>
@@ -1218,14 +1218,14 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-header">🌿 Informations Terrain</div>
   <div class="card-body">
     <div class="grid-3">
-      <div class="form-group"><label>Zone PLU</label><input type="text" id="zone_plu" placeholder="UA, UB, AU…"></div>
-      <div class="form-group"><label>Superficie totale (m²)</label><input type="number" id="superficie_totale" placeholder="1000"></div>
-      <div class="form-group"><label>Superficie constructible (m²)</label><input type="number" id="superficie_constructible" placeholder="800"></div>
-      <div class="form-group"><label>Forme</label><input type="text" id="forme_terrain" placeholder="Rectangulaire, irrégulier…"></div>
-      <div class="form-group"><label>Accès / Voirie</label><input type="text" id="acces_terrain" placeholder="Chemin privé, route communale…"></div>
-      <div class="form-group"><label>COS / CES</label><input type="text" id="cos_ces" placeholder="0.4 / 0.6"></div>
-      <div class="form-group"><label>Hauteur max autorisée (m)</label><input type="number" id="hauteur_max" placeholder="9"></div>
-      <div class="form-group"><label>Projet envisagé</label><input type="text" id="projet_terrain" placeholder="Maison individuelle…"></div>
+      <div class="form-group"><label>Zone PLU</label><input type="text" id="zone_plu"></div>
+      <div class="form-group"><label>Superficie totale (m²)</label><input type="number" id="superficie_totale"></div>
+      <div class="form-group"><label>Superficie constructible (m²)</label><input type="number" id="superficie_constructible"></div>
+      <div class="form-group"><label>Forme</label><input type="text" id="forme_terrain"></div>
+      <div class="form-group"><label>Accès / Voirie</label><input type="text" id="acces_terrain"></div>
+      <div class="form-group"><label>COS / CES</label><input type="text" id="cos_ces"></div>
+      <div class="form-group"><label>Hauteur max autorisée (m)</label><input type="number" id="hauteur_max"></div>
+      <div class="form-group"><label>Projet envisagé</label><input type="text" id="projet_terrain"></div>
     </div>
     <div class="section-title">Viabilisation</div>
     <div class="viab-grid" id="viab_grid"></div>
@@ -1283,31 +1283,31 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <div class="section-title">Scores (0 – 10)</div>
     <div class="score-grid">
-      <div class="score-item"><label>Score global</label><input type="number" id="bien_score" min="0" max="10" step="0.1" placeholder="9.3"></div>
-      <div class="score-item"><label>Prestations</label><input type="number" id="bien_score_prest" min="0" max="10" step="1" placeholder="10"></div>
-      <div class="score-item"><label>Secteur</label><input type="number" id="bien_score_secteur" min="0" max="10" step="1" placeholder="9"></div>
-      <div class="score-item"><label>Qualité-prix</label><input type="number" id="bien_score_qp" min="0" max="10" step="1" placeholder="8"></div>
-      <div class="score-item"><label>État général</label><input type="number" id="bien_score_etat" min="0" max="10" step="1" placeholder="10"></div>
+      <div class="score-item"><label>Score global</label><input type="number" id="bien_score" min="0" max="10" step="0.1"></div>
+      <div class="score-item"><label>Prestations</label><input type="number" id="bien_score_prest" min="0" max="10" step="1"></div>
+      <div class="score-item"><label>Secteur</label><input type="number" id="bien_score_secteur" min="0" max="10" step="1"></div>
+      <div class="score-item"><label>Qualité-prix</label><input type="number" id="bien_score_qp" min="0" max="10" step="1"></div>
+      <div class="score-item"><label>État général</label><input type="number" id="bien_score_etat" min="0" max="10" step="1"></div>
     </div>
     <div class="section-title">Marché &amp; Fourchette de prix</div>
     <div class="grid-4">
-      <div class="form-group"><label>Médiane secteur (€/m²)</label><input type="number" id="bien_mediane" placeholder="3020"></div>
-      <div class="form-group"><label>Tension locative</label><input type="text" id="bien_tension" placeholder="Très forte"></div>
-      <div class="form-group"><label>Délai vente moyen</label><input type="text" id="bien_delai" placeholder="21 jours"></div>
-      <div class="form-group"><label>Loyer estimé (€/mois)</label><input type="number" id="bien_loyer_estime" placeholder="1300"></div>
+      <div class="form-group"><label>Médiane secteur (€/m²)</label><input type="number" id="bien_mediane"></div>
+      <div class="form-group"><label>Tension locative</label><input type="text" id="bien_tension"></div>
+      <div class="form-group"><label>Délai vente moyen</label><input type="text" id="bien_delai"></div>
+      <div class="form-group"><label>Loyer estimé (€/mois)</label><input type="number" id="bien_loyer_estime"></div>
     </div>
     <div class="grid-3">
-      <div class="form-group"><label>Fourchette basse (€)</label><input type="number" id="bien_fourchette_basse" placeholder="156000"></div>
-      <div class="form-group"><label>Fourchette milieu (€)</label><input type="number" id="bien_fourchette_milieu" data-internal="1" placeholder="221000"></div>
-      <div class="form-group"><label>Fourchette haute (€)</label><input type="number" id="bien_fourchette_haute" placeholder="286000"></div>
+      <div class="form-group"><label>Fourchette basse (€)</label><input type="number" id="bien_fourchette_basse"></div>
+      <div class="form-group"><label>Fourchette milieu (€)</label><input type="number" id="bien_fourchette_milieu" data-internal="1"></div>
+      <div class="form-group"><label>Fourchette haute (€)</label><input type="number" id="bien_fourchette_haute"></div>
     </div>
     <div class="section-title">Simulation crédit</div>
     <div class="grid-4">
-      <div class="form-group"><label>Durée (ans)</label><input type="number" id="bien_credit_duree" placeholder="20" min="5" max="30" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Apport (%)</label><input type="number" id="bien_credit_apport" placeholder="10" min="0" max="100" step="5" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux haut (%)</label><input type="number" id="bien_credit_taux_haut" placeholder="5.00" step="0.1" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux moyen (%)</label><input type="number" id="bien_credit_taux_moyen" placeholder="3.40" step="0.1" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux bas (%)</label><input type="number" id="bien_credit_taux_bas" placeholder="2.50" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Durée (ans)</label><input type="number" id="bien_credit_duree" min="5" max="30" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Apport (%)</label><input type="number" id="bien_credit_apport" min="0" max="100" step="5" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux haut (%)</label><input type="number" id="bien_credit_taux_haut" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux moyen (%)</label><input type="number" id="bien_credit_taux_moyen" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux bas (%)</label><input type="number" id="bien_credit_taux_bas" step="0.1" oninput="calcCreditStep2()"></div>
     </div>
     <div id="credit-preview-step2"></div>
   </div>
@@ -1317,16 +1317,16 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-header">💬 Questions de découverte &amp; Notes</div>
   <div class="card-body">
     <div class="grid-2">
-      <div class="form-group"><label>Pourquoi ce bien vous avait-il plu ?</label><textarea id="q1" data-internal="1" placeholder="Réponse du propriétaire…"></textarea></div>
-      <div class="form-group"><label>Quel est le plus grand atout de votre bien ?</label><textarea id="q2" data-internal="1" placeholder="Réponse du propriétaire…"></textarea></div>
-      <div class="form-group"><label>Pourquoi déménager ?</label><textarea id="q3" data-internal="1" placeholder="Réponse du propriétaire…"></textarea></div>
-      <div class="form-group"><label>Quel est votre projet après la vente ?</label><textarea id="q4" data-internal="1" placeholder="Réponse du propriétaire…"></textarea></div>
-      <div class="form-group col-span-2"><label>Avez-vous déjà fait estimer le bien ? À combien ?</label><textarea id="q5" data-internal="1" placeholder="Réponse du propriétaire…" style="min-height:50px"></textarea></div>
+      <div class="form-group"><label>Pourquoi ce bien vous avait-il plu ?</label><textarea id="q1" data-internal="1"></textarea></div>
+      <div class="form-group"><label>Quel est le plus grand atout de votre bien ?</label><textarea id="q2" data-internal="1"></textarea></div>
+      <div class="form-group"><label>Pourquoi déménager ?</label><textarea id="q3" data-internal="1"></textarea></div>
+      <div class="form-group"><label>Quel est votre projet après la vente ?</label><textarea id="q4" data-internal="1"></textarea></div>
+      <div class="form-group col-span-2"><label>Avez-vous déjà fait estimer le bien ? À combien ?</label><textarea id="q5" data-internal="1" style="min-height:50px"></textarea></div>
     </div>
-    <div class="form-group mt-8"><label>Notes libres (observations terrain, points à vérifier…)</label><textarea id="notes_libres" data-internal="1" style="min-height:120px" placeholder="Toutes vos observations…"></textarea></div>
+    <div class="form-group mt-8"><label>Notes libres (observations terrain, points à vérifier…)</label><textarea id="notes_libres" data-internal="1" style="min-height:120px"></textarea></div>
     <div class="section-title">Prochaines étapes</div>
     <div class="grid-2">
-      <div class="form-group"><label>À faire</label><textarea id="prochaines_etapes" data-internal="1" placeholder="Envoyer le mandat, relancer pour les diagnostics…" style="min-height:70px"></textarea></div>
+      <div class="form-group"><label>À faire</label><textarea id="prochaines_etapes" data-internal="1" style="min-height:70px"></textarea></div>
       <div class="form-group"><label>Date R2</label><input type="date" id="date_r2" data-internal="1"></div>
     </div>
   </div>
@@ -1337,18 +1337,18 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <div class="form-group">
       <label>Loyer potentiel estimé (€/mois)</label>
-      <input type="number" id="loyer" placeholder="1 300" step="50" min="0">
+      <input type="number" id="loyer" step="50" min="0">
     </div>
     <div class="form-group">
       <label>Capital restant à rembourser (€)</label>
-      <input type="number" id="capital_restant" data-internal="1" placeholder="0">
+      <input type="number" id="capital_restant" data-internal="1">
     </div>
     <div class="section-title">Prêt en cours</div>
     <div class="grid-4">
-      <div class="form-group"><label>Montant de la dette (€)</label><input type="number" id="dette_montant" data-internal="1" placeholder="80000"></div>
+      <div class="form-group"><label>Montant de la dette (€)</label><input type="number" id="dette_montant" data-internal="1"></div>
       <div class="form-group"><label>Échéance</label><input type="date" id="dette_echeance" data-internal="1"></div>
-      <div class="form-group"><label>Banque</label><input type="text" id="banque" data-internal="1" placeholder="Nom de la banque"></div>
-      <div class="form-group"><label>Taux (%)</label><input type="number" id="taux_pret" data-internal="1" placeholder="1.45" step="0.01"></div>
+      <div class="form-group"><label>Banque</label><input type="text" id="banque" data-internal="1"></div>
+      <div class="form-group"><label>Taux (%)</label><input type="number" id="taux_pret" data-internal="1" step="0.01"></div>
     </div>
     <div class="section-title mt-16">Relogement</div>
     <div class="grid-3">
@@ -1356,11 +1356,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <label class="radio-item"><input type="radio" name="relogement_trouve" value="non"> Non</label>
         <label class="radio-item"><input type="radio" name="relogement_trouve" value="oui"> Oui</label>
       </div></div>
-      <div class="form-group"><label>Budget maximum (€)</label><input type="number" id="reloge_budget" data-internal="1" placeholder="250000"></div>
-      <div class="form-group"><label>Type de bien recherché</label><input type="text" id="reloge_type" data-internal="1" placeholder="Maison 4 pièces…"></div>
-      <div class="form-group"><label>Délai d'acquisition</label><input type="text" id="reloge_delai" data-internal="1" placeholder="3 mois, avant la rentrée…"></div>
-      <div class="form-group"><label>Zone de recherche</label><input type="text" id="reloge_zone" data-internal="1" placeholder="Évry, Corbeil, Massy…"></div>
-      <div class="form-group"><label>Nb de pièces souhaité</label><input type="number" id="reloge_pieces" data-internal="1" placeholder="4"></div>
+      <div class="form-group"><label>Budget maximum (€)</label><input type="number" id="reloge_budget" data-internal="1"></div>
+      <div class="form-group"><label>Type de bien recherché</label><input type="text" id="reloge_type" data-internal="1"></div>
+      <div class="form-group"><label>Délai d'acquisition</label><input type="text" id="reloge_delai" data-internal="1"></div>
+      <div class="form-group"><label>Zone de recherche</label><input type="text" id="reloge_zone" data-internal="1"></div>
+      <div class="form-group"><label>Nb de pièces souhaité</label><input type="number" id="reloge_pieces" data-internal="1"></div>
     </div>
   </div>
 </div>
@@ -1389,14 +1389,14 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="defaut-grid" id="equip_cuisine_grid"></div>
-    <div class="form-group mt-8"><label>Autres équipements cuisine</label><input type="text" id="equip_autre" data-internal="1" placeholder="Hotte aspirante, crédence, plan de travail marbre…"></div>
+    <div class="form-group mt-8"><label>Autres équipements cuisine</label><input type="text" id="equip_autre" data-internal="1"></div>
     <div class="section-title mt-16">Extérieur</div>
     <div id="exterieur_grid" class="defaut-grid"></div>
     <div class="section-title mt-16">Points de vigilance / Points faibles</div>
     <div class="defaut-grid" id="vigilances_grid"></div>
     <div class="form-group mt-8">
       <label>Vigilances complémentaires (texte libre)</label>
-      <textarea id="vigilances_texte" data-internal="1" placeholder="Nuisances sonores, vis-à-vis direct, humidité récurrente…" style="min-height:70px;border-color:var(--danger);"></textarea>
+      <textarea id="vigilances_texte" data-internal="1" style="min-height:70px;border-color:var(--danger);"></textarea>
     </div>
   </div>
 </div>
@@ -1974,10 +1974,10 @@ function makePieceRow(name) {
   var tdStyle = 'padding:6px 8px;border-bottom:1px solid var(--border)';
   var inStyle  = 'width:100%;border:1px solid var(--border);padding:5px 7px;border-radius:4px;font-size:12px;';
   tr.innerHTML = '<td style="text-align:center;color:#aaa;font-size:16px;cursor:grab;user-select:none;">⠿</td>'+
-    '<td style="'+tdStyle+'"><input type="text" value="'+name+'" placeholder="Pièce…" style="'+inStyle+'"></td>'+
-    '<td style="'+tdStyle+'"><input type="number" placeholder="m²" style="width:70px;'+inStyle.slice(8)+'"></td>'+
-    '<td style="'+tdStyle+'"><input type="text" placeholder="RDC…" style="width:60px;'+inStyle.slice(8)+'"></td>'+
-    '<td style="'+tdStyle+'"><input type="text" placeholder="Particularités…" style="'+inStyle+'"></td>';
+    '<td style="'+tdStyle+'"><input type="text" value="'+name+'" style="'+inStyle+'"></td>'+
+    '<td style="'+tdStyle+'"><input type="number" style="width:70px;'+inStyle.slice(8)+'"></td>'+
+    '<td style="'+tdStyle+'"><input type="text" style="width:60px;'+inStyle.slice(8)+'"></td>'+
+    '<td style="'+tdStyle+'"><input type="text" style="'+inStyle+'"></td>';
   addDragEvents(tr); return tr;
 }
 
@@ -2082,10 +2082,10 @@ function initDVFTable() {
   tbody.innerHTML = '';
   for (var i = 1; i <= 6; i++) {
     tbody.innerHTML += '<tr>' +
-      '<td data-label="Date"><input type="text" id="dvf-date-'+i+'" placeholder="01/2024"></td>' +
-      '<td data-label="Adresse"><input type="text" id="dvf-adresse-'+i+'" placeholder="Rue du Marché"></td>' +
-      '<td data-label="Surface m²"><input type="number" id="dvf-surface-'+i+'" placeholder="65" oninput="calcDVFm2('+i+')"></td>' +
-      '<td data-label="Prix €"><input type="number" id="dvf-prix-'+i+'" placeholder="180000" oninput="calcDVFm2('+i+')"></td>' +
+      '<td data-label="Date"><input type="text" id="dvf-date-'+i+'"></td>' +
+      '<td data-label="Adresse"><input type="text" id="dvf-adresse-'+i+'"></td>' +
+      '<td data-label="Surface m²"><input type="number" id="dvf-surface-'+i+'" oninput="calcDVFm2('+i+')"></td>' +
+      '<td data-label="Prix €"><input type="number" id="dvf-prix-'+i+'" oninput="calcDVFm2('+i+')"></td>' +
       '<td data-label="€/m²"><input type="number" id="dvf-prixm2-'+i+'" placeholder="auto" style="background:#f0f7ff" readonly></td>' +
     '</tr>';
   }
