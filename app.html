@@ -456,6 +456,45 @@ textarea { resize: vertical; min-height: 60px; }
 /* Credit preview */
 #credit-preview-step2 { margin-top:8px; font-size:12px; color:var(--muted); background:#f8f6f0; padding:10px 12px; border-radius:var(--radius); display:none; line-height:1.8; }
 .leaflet-div-icon-clean { background: none !important; border: none !important; }
+
+/* ═══════════════════════════════════════
+   STEP 2 — Accordéons de niveaux
+   (Essentiel = hors accordéon · Recommandé = ouvert · Optionnel = fermé)
+═══════════════════════════════════════ */
+summary { list-style: none; cursor: pointer; }
+summary::-webkit-details-marker { display: none; }
+.tier-recommande, .tier-optionnel {
+  margin-bottom: 20px;
+}
+.tier-recommande > summary, .tier-optionnel > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--light);
+  border: 1.5px solid var(--primary);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 14px 20px;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .4px;
+  text-transform: uppercase;
+  color: var(--primary);
+  user-select: none;
+  transition: background .15s;
+}
+.tier-recommande > summary:hover, .tier-optionnel > summary:hover {
+  background: #e9edf3;
+}
+summary .chevron {
+  display: inline-block;
+  font-size: 12px;
+  transition: transform .18s;
+}
+details[open] summary .chevron { transform: rotate(90deg); }
+.tier-recommande > .tier-body, .tier-optionnel > .tier-body {
+  padding-top: 16px;
+}
 </style>
 <!-- ══════════ AUTH GUARD (Supabase) ══════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -745,106 +784,9 @@ textarea { resize: vertical; min-height: 60px; }
 
 <div class="container" style="max-width:1100px">
 
-<!-- ── Propriétaire & RDV ── -->
+<!-- ── Informations essentielles (extrait) ── -->
 <div class="card">
-  <div class="card-header">👤 Propriétaire &amp; Rendez-vous</div>
-  <div class="card-body">
-    <div class="grid-3">
-      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" placeholder="Prénom"></div>
-      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" placeholder="Nom"></div>
-      <div class="form-group"><label>Date R1</label><input type="date" id="date_r1"></div>
-      <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" data-internal="1" placeholder="01 XX XX XX XX"></div>
-      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" placeholder="06 XX XX XX XX"></div>
-      <div class="form-group"><label>Email</label><input type="email" id="email_proprio" placeholder="email@exemple.fr"></div>
-    </div>
-    <div class="grid-3 mt-8">
-      <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" data-internal="1" placeholder="ex91-lg001"></div>
-      <div class="form-group"><label>Raison de la vente</label><input type="text" id="raison_vente" data-internal="1" placeholder="Mutation, divorce, succession…"></div>
-      <div class="form-group"><label>Bien en vente depuis</label><input type="text" id="vente_depuis" data-internal="1" placeholder="Date ou durée"></div>
-      <div class="form-group"><label>Délai maxi pour vendre</label><input type="text" id="delai_vente" data-internal="1" placeholder="3 mois, 6 mois…"></div>
-      <div class="form-group"><label>Clés chez ?</label><input type="text" id="cles_chez" data-internal="1" placeholder="Propriétaire, gardien…"></div>
-      <div class="form-group"><label>Déjà des agences ?</label><input type="text" id="agences" data-internal="1" placeholder="Noms des agences"></div>
-      <div class="form-group"><label>Année d'achat</label><input type="number" id="annee_achat" data-internal="1" placeholder="2010"></div>
-      <div class="form-group"><label>Prix d'achat (€)</label><input type="number" id="prix_achat" data-internal="1" placeholder="180000"></div>
-    </div>
-    <div class="grid-3 mt-8">
-      <div class="form-group"><label>Nb de visites</label><input type="number" id="nb_visites" data-internal="1" placeholder="0"></div>
-      <div class="form-group"><label>Nb d'offres reçues</label><input type="number" id="nb_offres" data-internal="1" placeholder="0"></div>
-      <div class="form-group"><label>Prix des offres (€)</label><input type="text" id="prix_offres" data-internal="1" placeholder="195 000 €"></div>
-    </div>
-    <div class="form-group mt-8" data-internal="1">
-      <label>Utilisation actuelle</label>
-      <div class="radio-group">
-        <label class="radio-item"><input type="radio" name="utilisation" value="rp"> Résidence primaire</label>
-        <label class="radio-item"><input type="radio" name="utilisation" value="rs"> Résidence secondaire</label>
-        <label class="radio-item"><input type="radio" name="utilisation" value="vacant"> Vacant</label>
-        <label class="radio-item"><input type="radio" name="utilisation" value="location"> En location</label>
-      </div>
-    </div>
-    <div class="form-group" id="loyer_group" style="display:none">
-      <label>Loyer mensuel (€)</label><input type="number" id="loyer_actuel_location" data-internal="1" placeholder="850">
-    </div>
-    <div class="scenario-box mt-8">
-      <label>Scénario "Dans 3 mois j'ai une offre à ___ € — on fait quoi ?"</label>
-      <div class="grid-2 mt-8">
-        <input type="number" id="scenario_montant" data-internal="1" placeholder="Montant de l'offre (€)">
-        <textarea id="scenario_reponse" data-internal="1" placeholder="Réponse / stratégie…" style="min-height:50px"></textarea>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ── Informations complémentaires sur le bien ── -->
-<div class="card">
-  <div class="card-header">📅 Infos complémentaires sur le bien (texte libre)</div>
-  <div class="card-body">
-    <div class="form-group">
-      <label>Informations complémentaires (copropriété, exposition, rénovations, équipements…)</label>
-      <textarea id="historique_libre" style="min-height:140px" placeholder="Copropriété — 12 lots, aucune procédure en cours&#10;Exposition — Sud-Ouest, aucun vis-à-vis&#10;Rénovation 2015 — sols, cuisine, salle de bains, électricité refaite à neuf&#10;Chauffage — Individuel gaz, chaudière 2020"></textarea>
-      <p class="hint">Saisissez chaque information sur une ligne. Ce texte apparaîtra dans la section « Tout savoir sur ce bien » de la fiche acheteur.</p>
-    </div>
-    <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <thead><tr>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:18%">Année</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Montant (€)</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Nature des travaux</th>
-      </tr></thead>
-      <tbody id="renov_tbody">
-        <tr>
-          <td><input type="number" id="renov_annee_1" data-internal="1" placeholder="2022"></td>
-          <td><input type="number" id="renov_montant_1" data-internal="1" placeholder="15000"></td>
-          <td><input type="text" id="renov_desc_1" data-internal="1" placeholder="Réfection toiture"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_2" data-internal="1" placeholder="2021"></td>
-          <td><input type="number" id="renov_montant_2" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_2" data-internal="1"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_3" data-internal="1"></td>
-          <td><input type="number" id="renov_montant_3" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_3" data-internal="1"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_4" data-internal="1"></td>
-          <td><input type="number" id="renov_montant_4" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_4" data-internal="1"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_5" data-internal="1"></td>
-          <td><input type="number" id="renov_montant_5" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_5" data-internal="1"></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ── Caractéristiques ── -->
-<div class="card">
-  <div class="card-header">📐 Caractéristiques du bien</div>
+  <div class="card-header">📐 Informations essentielles</div>
   <div class="card-body">
     <div class="section-title">Surfaces &amp; Pièces</div>
     <div class="grid-4">
@@ -858,19 +800,78 @@ textarea { resize: vertical; min-height: 60px; }
       <div class="form-group"><label>Chambres</label><input type="number" id="nb_chambres" placeholder="2"></div>
       <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" placeholder="0" min="0"></div>
       <div class="form-group"><label>WC</label><input type="number" id="nb_wc" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" placeholder="0" min="0"></div>
-      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" placeholder="0" min="0"></div>
     </div>
     <div class="section-title appart-only">Immeuble</div>
-    <div class="grid-3 appart-only">
+    <div class="grid-2 appart-only">
       <div class="form-group"><label>Étage du bien</label><input type="text" id="etage" placeholder="3e sur 8"></div>
-      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages" placeholder="8"></div>
       <div class="form-group"><label>Ascenseur</label>
         <div class="radio-group">
           <label class="radio-item"><input type="radio" name="ascenseur" value="non"> Non</label>
           <label class="radio-item"><input type="radio" name="ascenseur" value="oui"> Oui</label>
         </div>
       </div>
+    </div>
+    <div class="section-title appart-maison-only">Prix &amp; Charges</div>
+    <div class="grid-3 appart-maison-only">
+      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente" placeholder="220000"></div>
+      <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro" placeholder="200"></div>
+      <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" data-internal="1" placeholder="150"></div>
+    </div>
+    <div class="grid-2 terrain-only hidden">
+      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente_t" placeholder="120000"></div>
+    </div>
+    <div class="section-title appart-maison-only">Consommation d'énergie (DPE)</div>
+    <div class="appart-maison-only">
+      <div class="dpe-grid" id="dpe_grid"></div>
+      <div class="form-group mt-8"><label>Valeur numérique (kWh/m²/an)</label><input type="number" id="dpe_valeur" data-internal="1" placeholder="180" style="max-width:150px"></div>
+    </div>
+  </div>
+</div>
+<!-- ── Photos ── -->
+<div class="card">
+  <div class="card-header">📸 Photos du bien</div>
+  <div class="card-body">
+    <div class="photo-drop" onclick="document.getElementById('photo_input').click()">
+      📁 Cliquez pour ajouter des photos (JPEG, PNG, HEIC…)
+      <br><span class="text-sm mt-8" style="display:block">Vous pouvez sélectionner plusieurs fichiers à la fois</span>
+    </div>
+    <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
+    <div class="photo-grid" id="photo_grid"></div>
+    <div class="mt-16">
+      <a href="#" onclick="event.preventDefault();var b=document.getElementById('photo-urls-block');var open=b.style.display!=='none';b.style.display=open?'none':'block';this.textContent=open?'+ Ajouter des URLs photos manuellement (optionnel)':'− Masquer les URLs manuelles';" style="font-size:13px;color:#888;text-decoration:underline;cursor:pointer;">+ Ajouter des URLs photos manuellement (optionnel)</a>
+      <div id="photo-urls-block" style="display:none;margin-top:10px;">
+        <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
+        <div class="grid-3">
+          <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url" placeholder="https://…"></div>
+          <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url" placeholder="https://…"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     NIVEAU RECOMMANDÉ — accordéon ouvert par défaut
+════════════════════════════════════════════════════════════ -->
+<details open class="tier-recommande">
+<summary><span class="chevron">▸</span> 🟡 Informations recommandées</summary>
+<div class="tier-body">
+
+<!-- ── Caractéristiques (suite) ── -->
+<div class="card">
+  <div class="card-header">📐 Caractéristiques du bien</div>
+  <div class="card-body">
+    <div class="section-title appart-maison-only">Pièces (détail)</div>
+    <div class="grid-2 appart-maison-only">
+      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" placeholder="0" min="0"></div>
+      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" placeholder="0" min="0"></div>
+    </div>
+    <div class="section-title appart-only">Immeuble (suite)</div>
+    <div class="grid-3 appart-only">
+      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages" placeholder="8"></div>
       <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction" placeholder="1985"></div>
       <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom" placeholder="Nom du syndic"></div>
       <div class="form-group"><label>Travaux votés en AG</label>
@@ -893,13 +894,10 @@ textarea { resize: vertical; min-height: 60px; }
         </select>
       </div>
     </div>
-    <div class="section-title appart-maison-only">Prix &amp; Fiscalité</div>
-    <div class="grid-4 appart-maison-only">
-      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente" placeholder="220000"></div>
+    <div class="section-title appart-maison-only">Fiscalité</div>
+    <div class="grid-2 appart-maison-only">
       <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere" placeholder="900"></div>
       <div class="form-group"><label>Taxe d'habitation (€/an)</label><input type="number" id="taxe_hab" data-internal="1" placeholder="600"></div>
-      <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro" placeholder="200"></div>
-      <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" data-internal="1" placeholder="150"></div>
     </div>
     <div class="form-group appart-maison-only mt-8">
       <label>Détail des charges (contexte chatbot)</label>
@@ -909,46 +907,12 @@ textarea { resize: vertical; min-height: 60px; }
     <div class="form-group appart-maison-only">
       <textarea id="plus_appartement" data-internal="1" placeholder="Points forts, luminosité, vue, calme, terrasse, prestations…" style="min-height:70px"></textarea>
     </div>
-    <div class="section-title terrain-only hidden">Prix &amp; Fiscalité Terrain</div>
+    <div class="section-title terrain-only hidden">Fiscalité Terrain</div>
     <div class="grid-2 terrain-only hidden">
-      <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente_t" placeholder="120000"></div>
       <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere_t" placeholder="450"></div>
     </div>
   </div>
 </div>
-
-<!-- ── Pièces utiles & Parking ── -->
-<div class="card appart-maison-only">
-  <div class="card-header">🔑 Pièces utiles &amp; Parking</div>
-  <div class="card-body">
-    <div class="defaut-grid" id="pieces_utiles_grid"></div>
-    <div class="section-title mt-16">Parking</div>
-    <div class="grid-3">
-      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" placeholder="0" min="0"></div>
-      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" placeholder="0" min="0"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ── Plan des pièces ── -->
-<div class="card appart-maison-only">
-  <div class="card-header">📏 Plan des pièces <span style="background:var(--accent);border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px;">Détail m²</span></div>
-  <div class="card-body">
-    <table style="width:100%;border-collapse:collapse;font-size:13px;" id="pieces_table">
-      <thead><tr>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:28px;"></th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Pièce</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:12%">Surface m²</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:12%">Étage</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Particularités / Équipements</th>
-      </tr></thead>
-      <tbody id="pieces_tbody"></tbody>
-    </table>
-    <button class="btn btn-sm mt-8" style="background:var(--primary);color:#fff" onclick="addPieceRow()">+ Ajouter une ligne</button>
-  </div>
-</div>
-
 <!-- ── Construction & Matériaux ── -->
 <div class="card appart-maison-only">
   <div class="card-header">🏗 Construction &amp; Matériaux</div>
@@ -1002,7 +966,88 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
   </div>
 </div>
-
+<!-- ── DPE & Diagnostics (suite) ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">⚡ DPE &amp; Diagnostics</div>
+  <div class="card-body">
+    <div class="section-title">Émissions GES</div>
+    <div class="dpe-grid" id="ges_grid"></div>
+    <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" data-internal="1" placeholder="32" style="max-width:150px"></div>
+    <div class="grid-3 mt-16">
+      <div><label>Servitudes</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="servitudes" value="non"> Non</label>
+        <label class="radio-item"><input type="radio" name="servitudes" value="oui"> Oui</label>
+      </div></div>
+      <div><label>Droits de superficie</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="droits_superf" value="non"> Non</label>
+        <label class="radio-item"><input type="radio" name="droits_superf" value="oui"> Oui</label>
+      </div></div>
+      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" data-internal="1" placeholder="Nom du syndic"></div>
+    </div>
+    <div class="section-title mt-16">Diagnostics réglementaires</div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
+      <div class="diag-form-grid" style="background:var(--primary);padding:8px 6px;border-top:none;">
+        <div class="diag-form-head" style="color:#fff;">Diagnostic</div>
+        <div class="diag-form-head" style="color:#fff;">Statut</div>
+        <div class="diag-form-head" style="color:#fff;">Résultat affiché</div>
+      </div>
+      <div style="padding:0 6px;">
+        <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
+          <select id="diag_amiante_status" onchange="applyDiagDefault('amiante','diag_amiante_status','diag_amiante_result')"><option value="non-soumis" selected>Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
+          <input type="text" id="diag_amiante_result" value="Non soumis — bâtiment après 1997"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🔬 Plomb (CREP)</div>
+          <select id="diag_plomb_status" onchange="applyDiagDefault('plomb','diag_plomb_status','diag_plomb_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_plomb_result" value="Absence de plomb détectée"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🪲 Termites</div>
+          <select id="diag_termites_status" onchange="applyDiagDefault('termites','diag_termites_status','diag_termites_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_termites_result" value="Absence de termites constatée"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">⚡ Électricité</div>
+          <select id="diag_electricite_status" onchange="applyDiagDefault('electricite','diag_electricite_status','diag_electricite_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_electricite_result" value="Installation intérieure sans anomalie"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🔥 Gaz</div>
+          <select id="diag_gaz_status" onchange="applyDiagDefault('gaz','diag_gaz_status','diag_gaz_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_gaz_result" value="Installation sans anomalie"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">💧 Assainissement</div>
+          <select id="diag_assain_status" onchange="applyDiagDefault('assain','diag_assain_status','diag_assain_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_assain_result" value="Raccordement au réseau collectif conforme"></div>
+      </div>
+    </div>
+    <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
+  </div>
+</div>
+<!-- ── Points forts & Vigilances (extrait de Analyse & Scores) ── -->
+<div class="card">
+  <div class="card-header">✅ Points forts &amp; Vigilances</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">✅ Points forts (3 max — fiche acheteur)</div>
+        <div class="form-group"><input type="text" id="bien_fort1" placeholder="Point fort 1"></div>
+        <div class="form-group"><input type="text" id="bien_fort2" placeholder="Point fort 2"></div>
+        <div class="form-group"><input type="text" id="bien_fort3" placeholder="Point fort 3"></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">⚠️ Vigilances (3 max — fiche acheteur)</div>
+        <div class="form-group"><input type="text" id="bien_vig1" placeholder="Vigilance 1"></div>
+        <div class="form-group"><input type="text" id="bien_vig2" placeholder="Vigilance 2"></div>
+        <div class="form-group"><input type="text" id="bien_vig3" placeholder="Vigilance 3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ── Pièces utiles & Parking ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">🔑 Pièces utiles &amp; Parking</div>
+  <div class="card-body">
+    <div class="defaut-grid" id="pieces_utiles_grid"></div>
+    <div class="section-title mt-16">Parking</div>
+    <div class="grid-3">
+      <div class="form-group"><label>Places intérieures</label><input type="number" id="parking_int" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Places extérieures</label><input type="number" id="parking_ext" placeholder="0" min="0"></div>
+      <div class="form-group"><label>Box fermés</label><input type="number" id="parking_box" placeholder="0" min="0"></div>
+    </div>
+  </div>
+</div>
 <!-- ── Défauts & Risques ── -->
 <div class="card appart-maison-only">
   <div class="card-header">⚠️ Défauts &amp; Risques constatés</div>
@@ -1010,7 +1055,6 @@ textarea { resize: vertical; min-height: 60px; }
     <div class="defaut-grid" id="defauts_grid"></div>
   </div>
 </div>
-
 <!-- ── Équipements ── -->
 <div class="card appart-maison-only">
   <div class="card-header">🔧 Équipements</div>
@@ -1041,6 +1085,128 @@ textarea { resize: vertical; min-height: 60px; }
   </div>
 </div>
 
+</div>
+</details>
+
+<!-- ══════════════════════════════════════════════════════════
+     NIVEAU OPTIONNEL — accordéon fermé par défaut
+════════════════════════════════════════════════════════════ -->
+<details class="tier-optionnel">
+<summary><span class="chevron">▸</span> ⚪ Informations complémentaires (optionnel)</summary>
+<div class="tier-body">
+
+<!-- ── Propriétaire & RDV ── -->
+<div class="card">
+  <div class="card-header">👤 Propriétaire &amp; Rendez-vous</div>
+  <div class="card-body">
+    <div class="grid-3">
+      <div class="form-group"><label>Prénom</label><input type="text" id="proprio_prenom" placeholder="Prénom"></div>
+      <div class="form-group"><label>Nom</label><input type="text" id="proprio_nom" placeholder="Nom"></div>
+      <div class="form-group"><label>Date R1</label><input type="date" id="date_r1"></div>
+      <div class="form-group"><label>Téléphone fixe</label><input type="tel" id="tel_fixe" data-internal="1" placeholder="01 XX XX XX XX"></div>
+      <div class="form-group"><label>Mobile</label><input type="tel" id="tel_mobile" placeholder="06 XX XX XX XX"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="email_proprio" placeholder="email@exemple.fr"></div>
+    </div>
+    <div class="grid-3 mt-8">
+      <div class="form-group"><label>Référence mandat</label><input type="text" id="ref_mandat" data-internal="1" placeholder="ex91-lg001"></div>
+      <div class="form-group"><label>Raison de la vente</label><input type="text" id="raison_vente" data-internal="1" placeholder="Mutation, divorce, succession…"></div>
+      <div class="form-group"><label>Bien en vente depuis</label><input type="text" id="vente_depuis" data-internal="1" placeholder="Date ou durée"></div>
+      <div class="form-group"><label>Délai maxi pour vendre</label><input type="text" id="delai_vente" data-internal="1" placeholder="3 mois, 6 mois…"></div>
+      <div class="form-group"><label>Clés chez ?</label><input type="text" id="cles_chez" data-internal="1" placeholder="Propriétaire, gardien…"></div>
+      <div class="form-group"><label>Déjà des agences ?</label><input type="text" id="agences" data-internal="1" placeholder="Noms des agences"></div>
+      <div class="form-group"><label>Année d'achat</label><input type="number" id="annee_achat" data-internal="1" placeholder="2010"></div>
+      <div class="form-group"><label>Prix d'achat (€)</label><input type="number" id="prix_achat" data-internal="1" placeholder="180000"></div>
+    </div>
+    <div class="grid-3 mt-8">
+      <div class="form-group"><label>Nb de visites</label><input type="number" id="nb_visites" data-internal="1" placeholder="0"></div>
+      <div class="form-group"><label>Nb d'offres reçues</label><input type="number" id="nb_offres" data-internal="1" placeholder="0"></div>
+      <div class="form-group"><label>Prix des offres (€)</label><input type="text" id="prix_offres" data-internal="1" placeholder="195 000 €"></div>
+    </div>
+    <div class="form-group mt-8" data-internal="1">
+      <label>Utilisation actuelle</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="utilisation" value="rp"> Résidence primaire</label>
+        <label class="radio-item"><input type="radio" name="utilisation" value="rs"> Résidence secondaire</label>
+        <label class="radio-item"><input type="radio" name="utilisation" value="vacant"> Vacant</label>
+        <label class="radio-item"><input type="radio" name="utilisation" value="location"> En location</label>
+      </div>
+    </div>
+    <div class="form-group" id="loyer_group" style="display:none">
+      <label>Loyer mensuel (€)</label><input type="number" id="loyer_actuel_location" data-internal="1" placeholder="850">
+    </div>
+    <div class="scenario-box mt-8">
+      <label>Scénario "Dans 3 mois j'ai une offre à ___ € — on fait quoi ?"</label>
+      <div class="grid-2 mt-8">
+        <input type="number" id="scenario_montant" data-internal="1" placeholder="Montant de l'offre (€)">
+        <textarea id="scenario_reponse" data-internal="1" placeholder="Réponse / stratégie…" style="min-height:50px"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ── Informations complémentaires sur le bien ── -->
+<div class="card">
+  <div class="card-header">📅 Infos complémentaires sur le bien (texte libre)</div>
+  <div class="card-body">
+    <div class="form-group">
+      <label>Informations complémentaires (copropriété, exposition, rénovations, équipements…)</label>
+      <textarea id="historique_libre" style="min-height:140px" placeholder="Copropriété — 12 lots, aucune procédure en cours&#10;Exposition — Sud-Ouest, aucun vis-à-vis&#10;Rénovation 2015 — sols, cuisine, salle de bains, électricité refaite à neuf&#10;Chauffage — Individuel gaz, chaudière 2020"></textarea>
+      <p class="hint">Saisissez chaque information sur une ligne. Ce texte apparaîtra dans la section « Tout savoir sur ce bien » de la fiche acheteur.</p>
+    </div>
+    <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:18%">Année</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Montant (€)</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Nature des travaux</th>
+      </tr></thead>
+      <tbody id="renov_tbody">
+        <tr>
+          <td><input type="number" id="renov_annee_1" data-internal="1" placeholder="2022"></td>
+          <td><input type="number" id="renov_montant_1" data-internal="1" placeholder="15000"></td>
+          <td><input type="text" id="renov_desc_1" data-internal="1" placeholder="Réfection toiture"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_2" data-internal="1" placeholder="2021"></td>
+          <td><input type="number" id="renov_montant_2" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_2" data-internal="1"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_3" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_3" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_3" data-internal="1"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_4" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_4" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_4" data-internal="1"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_5" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_5" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_5" data-internal="1"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- ── Plan des pièces ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">📏 Plan des pièces <span style="background:var(--accent);border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px;">Détail m²</span></div>
+  <div class="card-body">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;" id="pieces_table">
+      <thead><tr>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:28px;"></th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Pièce</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:12%">Surface m²</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:12%">Étage</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Particularités / Équipements</th>
+      </tr></thead>
+      <tbody id="pieces_tbody"></tbody>
+    </table>
+    <button class="btn btn-sm mt-8" style="background:var(--primary);color:#fff" onclick="addPieceRow()">+ Ajouter une ligne</button>
+  </div>
+</div>
 <!-- ── Localisation & Environnement ── -->
 <div class="card appart-maison-only">
   <div class="card-header">📍 Localisation &amp; Environnement</div>
@@ -1084,7 +1250,6 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
   </div>
 </div>
-
 <!-- ── Terrain spécifique ── -->
 <div class="card terrain-only hidden">
   <div class="card-header">🌿 Informations Terrain</div>
@@ -1118,92 +1283,6 @@ textarea { resize: vertical; min-height: 60px; }
     <div class="defaut-grid" id="risques_terrain_grid"></div>
   </div>
 </div>
-
-<!-- ── Photos ── -->
-<div class="card">
-  <div class="card-header">📸 Photos du bien</div>
-  <div class="card-body">
-    <div class="photo-drop" onclick="document.getElementById('photo_input').click()">
-      📁 Cliquez pour ajouter des photos (JPEG, PNG, HEIC…)
-      <br><span class="text-sm mt-8" style="display:block">Vous pouvez sélectionner plusieurs fichiers à la fois</span>
-    </div>
-    <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
-    <div class="photo-grid" id="photo_grid"></div>
-    <div class="mt-16">
-      <a href="#" onclick="event.preventDefault();var b=document.getElementById('photo-urls-block');var open=b.style.display!=='none';b.style.display=open?'none':'block';this.textContent=open?'+ Ajouter des URLs photos manuellement (optionnel)':'− Masquer les URLs manuelles';" style="font-size:13px;color:#888;text-decoration:underline;cursor:pointer;">+ Ajouter des URLs photos manuellement (optionnel)</a>
-      <div id="photo-urls-block" style="display:none;margin-top:10px;">
-        <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
-        <div class="grid-3">
-          <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" placeholder="https://…"></div>
-          <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" placeholder="https://…"></div>
-          <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" placeholder="https://…"></div>
-          <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url" placeholder="https://…"></div>
-          <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url" placeholder="https://…"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ── DPE & Diagnostics ── -->
-<div class="card appart-maison-only">
-  <div class="card-header">⚡ DPE &amp; Diagnostics</div>
-  <div class="card-body">
-    <div class="grid-2">
-      <div>
-        <div class="section-title">Consommation d'énergie (DPE)</div>
-        <div class="dpe-grid" id="dpe_grid"></div>
-        <div class="form-group mt-8"><label>Valeur numérique (kWh/m²/an)</label><input type="number" id="dpe_valeur" data-internal="1" placeholder="180" style="max-width:150px"></div>
-      </div>
-      <div>
-        <div class="section-title">Émissions GES</div>
-        <div class="dpe-grid" id="ges_grid"></div>
-        <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" data-internal="1" placeholder="32" style="max-width:150px"></div>
-      </div>
-    </div>
-    <div class="grid-3 mt-16">
-      <div><label>Servitudes</label><div class="radio-group">
-        <label class="radio-item"><input type="radio" name="servitudes" value="non"> Non</label>
-        <label class="radio-item"><input type="radio" name="servitudes" value="oui"> Oui</label>
-      </div></div>
-      <div><label>Droits de superficie</label><div class="radio-group">
-        <label class="radio-item"><input type="radio" name="droits_superf" value="non"> Non</label>
-        <label class="radio-item"><input type="radio" name="droits_superf" value="oui"> Oui</label>
-      </div></div>
-      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" data-internal="1" placeholder="Nom du syndic"></div>
-    </div>
-    <div class="section-title mt-16">Diagnostics réglementaires</div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
-      <div class="diag-form-grid" style="background:var(--primary);padding:8px 6px;border-top:none;">
-        <div class="diag-form-head" style="color:#fff;">Diagnostic</div>
-        <div class="diag-form-head" style="color:#fff;">Statut</div>
-        <div class="diag-form-head" style="color:#fff;">Résultat affiché</div>
-      </div>
-      <div style="padding:0 6px;">
-        <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
-          <select id="diag_amiante_status" onchange="applyDiagDefault('amiante','diag_amiante_status','diag_amiante_result')"><option value="non-soumis" selected>Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
-          <input type="text" id="diag_amiante_result" value="Non soumis — bâtiment après 1997"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">🔬 Plomb (CREP)</div>
-          <select id="diag_plomb_status" onchange="applyDiagDefault('plomb','diag_plomb_status','diag_plomb_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_plomb_result" value="Absence de plomb détectée"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">🪲 Termites</div>
-          <select id="diag_termites_status" onchange="applyDiagDefault('termites','diag_termites_status','diag_termites_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_termites_result" value="Absence de termites constatée"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">⚡ Électricité</div>
-          <select id="diag_electricite_status" onchange="applyDiagDefault('electricite','diag_electricite_status','diag_electricite_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_electricite_result" value="Installation intérieure sans anomalie"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">🔥 Gaz</div>
-          <select id="diag_gaz_status" onchange="applyDiagDefault('gaz','diag_gaz_status','diag_gaz_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_gaz_result" value="Installation sans anomalie"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">💧 Assainissement</div>
-          <select id="diag_assain_status" onchange="applyDiagDefault('assain','diag_assain_status','diag_assain_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_assain_result" value="Raccordement au réseau collectif conforme"></div>
-      </div>
-    </div>
-    <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
-  </div>
-</div>
-
 <!-- ── Transactions DVF — saisie manuelle ── -->
 <div class="card">
   <div class="card-header">
@@ -1235,8 +1314,7 @@ textarea { resize: vertical; min-height: 60px; }
     <p class="hint" style="margin-top:8px">Laisser vide pour ne pas inclure la ligne · €/m² calculé automatiquement</p>
   </div>
 </div>
-
-<!-- ── Analyse & Scores ── -->
+<!-- ── Analyse & Scores (suite) ── -->
 <div class="card">
   <div class="card-header">🎯 Analyse &amp; Scores (fiche acheteur)</div>
   <div class="card-body">
@@ -1247,20 +1325,6 @@ textarea { resize: vertical; min-height: 60px; }
       <div class="score-item"><label>Secteur</label><input type="number" id="bien_score_secteur" min="0" max="10" step="1" value="9"></div>
       <div class="score-item"><label>Qualité-prix</label><input type="number" id="bien_score_qp" min="0" max="10" step="1" value="8"></div>
       <div class="score-item"><label>État général</label><input type="number" id="bien_score_etat" min="0" max="10" step="1" value="10"></div>
-    </div>
-    <div class="grid-2 mt-16">
-      <div>
-        <div style="font-size:11px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">✅ Points forts (3 max — fiche acheteur)</div>
-        <div class="form-group"><input type="text" id="bien_fort1" placeholder="Point fort 1"></div>
-        <div class="form-group"><input type="text" id="bien_fort2" placeholder="Point fort 2"></div>
-        <div class="form-group"><input type="text" id="bien_fort3" placeholder="Point fort 3"></div>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">⚠️ Vigilances (3 max — fiche acheteur)</div>
-        <div class="form-group"><input type="text" id="bien_vig1" placeholder="Vigilance 1"></div>
-        <div class="form-group"><input type="text" id="bien_vig2" placeholder="Vigilance 2"></div>
-        <div class="form-group"><input type="text" id="bien_vig3" placeholder="Vigilance 3"></div>
-      </div>
     </div>
     <div class="section-title">Marché &amp; Fourchette de prix</div>
     <div class="grid-4">
@@ -1285,7 +1349,6 @@ textarea { resize: vertical; min-height: 60px; }
     <div id="credit-preview-step2"></div>
   </div>
 </div>
-
 <!-- ── Questions de découverte & Notes ── -->
 <div class="card">
   <div class="card-header">💬 Questions de découverte &amp; Notes</div>
@@ -1305,7 +1368,6 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
   </div>
 </div>
-
 <!-- ── Financement & Relogement ── -->
 <div class="card appart-maison-only">
   <div class="card-header">🏦 Financement &amp; Relogement</div>
@@ -1339,6 +1401,9 @@ textarea { resize: vertical; min-height: 60px; }
     </div>
   </div>
 </div>
+
+</div>
+</details>
 
 <!-- ── Action row ── -->
 <div class="action-row">
@@ -3821,8 +3886,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
       dbgSet('bien_vig2', data.vig2 || '');
       dbgSet('bien_vig3', data.vig3 || '');
 
-      // Loyer & marché (id="loyer" = loyer potentiel estimé, alimente la fiche)
-      document.querySelectorAll('[id="loyer"]').forEach(function(el){ el.value = data.loyer || ''; });
+      document.getElementById('loyer').value = data.loyer || '';
       dbgSet('bien_loyer_estime', data.loyer    || '');
       dbgSet('bien_mediane',      data.mediane  || '');
       dbgSet('bien_tension',      data.tension  || '');
