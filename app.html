@@ -993,23 +993,23 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
       <div style="padding:0 6px;">
         <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
-          <select id="diag_amiante_status" onchange="applyDiagDefault('amiante','diag_amiante_status','diag_amiante_result')"><option value="non-soumis" selected>Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
-          <input type="text" id="diag_amiante_result" value="Non soumis — bâtiment après 1997"></div>
+          <select id="diag_amiante_status" onchange="applyDiagDefault('amiante','diag_amiante_status','diag_amiante_result')"><option value="">— À renseigner —</option><option value="non-soumis">Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
+          <input type="text" id="diag_amiante_result" placeholder="Non soumis — bâtiment après 1997"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🔬 Plomb (CREP)</div>
-          <select id="diag_plomb_status" onchange="applyDiagDefault('plomb','diag_plomb_status','diag_plomb_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_plomb_result" value="Absence de plomb détectée"></div>
+          <select id="diag_plomb_status" onchange="applyDiagDefault('plomb','diag_plomb_status','diag_plomb_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_plomb_result" placeholder="Absence de plomb détectée"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🪲 Termites</div>
-          <select id="diag_termites_status" onchange="applyDiagDefault('termites','diag_termites_status','diag_termites_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_termites_result" value="Absence de termites constatée"></div>
+          <select id="diag_termites_status" onchange="applyDiagDefault('termites','diag_termites_status','diag_termites_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_termites_result" placeholder="Absence de termites constatée"></div>
         <div class="diag-form-grid"><div class="diag-form-label">⚡ Électricité</div>
-          <select id="diag_electricite_status" onchange="applyDiagDefault('electricite','diag_electricite_status','diag_electricite_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_electricite_result" value="Installation intérieure sans anomalie"></div>
+          <select id="diag_electricite_status" onchange="applyDiagDefault('electricite','diag_electricite_status','diag_electricite_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_electricite_result" placeholder="Installation intérieure sans anomalie"></div>
         <div class="diag-form-grid"><div class="diag-form-label">🔥 Gaz</div>
-          <select id="diag_gaz_status" onchange="applyDiagDefault('gaz','diag_gaz_status','diag_gaz_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_gaz_result" value="Installation sans anomalie"></div>
+          <select id="diag_gaz_status" onchange="applyDiagDefault('gaz','diag_gaz_status','diag_gaz_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_gaz_result" placeholder="Installation sans anomalie"></div>
         <div class="diag-form-grid"><div class="diag-form-label">💧 Assainissement</div>
-          <select id="diag_assain_status" onchange="applyDiagDefault('assain','diag_assain_status','diag_assain_result')"><option value="favorable" selected>Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_assain_result" value="Raccordement au réseau collectif conforme"></div>
+          <select id="diag_assain_status" onchange="applyDiagDefault('assain','diag_assain_status','diag_assain_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_assain_result" placeholder="Raccordement au réseau collectif conforme"></div>
       </div>
     </div>
     <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
@@ -1048,43 +1048,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
   </div>
 </div>
-<!-- ── Défauts & Risques ── -->
-<div class="card appart-maison-only">
-  <div class="card-header">⚠️ Défauts &amp; Risques constatés</div>
-  <div class="card-body">
-    <div class="defaut-grid" id="defauts_grid"></div>
-  </div>
-</div>
-<!-- ── Équipements ── -->
-<div class="card appart-maison-only">
-  <div class="card-header">🔧 Équipements</div>
-  <div class="card-body">
-    <div class="section-title">Équipements généraux</div>
-    <div class="defaut-grid" id="equip_general_grid"></div>
-    <div class="section-title mt-16">Cuisine</div>
-    <div class="form-group">
-      <label>Plaque de cuisson</label>
-      <div class="radio-group">
-        <label class="radio-item"><input type="radio" name="plaque_cuisson" value=""> —</label>
-        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Induction"> 🔵 Induction</label>
-        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Électrique"> ⚡ Électrique</label>
-        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Gaz"> 🔥 Gaz</label>
-        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Mixte"> Mixte</label>
-      </div>
-    </div>
-    <div class="defaut-grid" id="equip_cuisine_grid"></div>
-    <div class="form-group mt-8"><label>Autres équipements cuisine</label><input type="text" id="equip_autre" data-internal="1" placeholder="Hotte aspirante, crédence, plan de travail marbre…"></div>
-    <div class="section-title mt-16">Extérieur</div>
-    <div id="exterieur_grid" class="defaut-grid"></div>
-    <div class="section-title mt-16">Points de vigilance / Points faibles</div>
-    <div class="defaut-grid" id="vigilances_grid"></div>
-    <div class="form-group mt-8">
-      <label>Vigilances complémentaires (texte libre)</label>
-      <textarea id="vigilances_texte" data-internal="1" placeholder="Nuisances sonores, vis-à-vis direct, humidité récurrente…" style="min-height:70px;border-color:var(--danger);"></textarea>
-    </div>
-  </div>
-</div>
-
 </div>
 </details>
 
@@ -1320,17 +1283,17 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <div class="section-title">Scores (0 – 10)</div>
     <div class="score-grid">
-      <div class="score-item"><label>Score global</label><input type="number" id="bien_score" min="0" max="10" step="0.1" value="9.3"></div>
-      <div class="score-item"><label>Prestations</label><input type="number" id="bien_score_prest" min="0" max="10" step="1" value="10"></div>
-      <div class="score-item"><label>Secteur</label><input type="number" id="bien_score_secteur" min="0" max="10" step="1" value="9"></div>
-      <div class="score-item"><label>Qualité-prix</label><input type="number" id="bien_score_qp" min="0" max="10" step="1" value="8"></div>
-      <div class="score-item"><label>État général</label><input type="number" id="bien_score_etat" min="0" max="10" step="1" value="10"></div>
+      <div class="score-item"><label>Score global</label><input type="number" id="bien_score" min="0" max="10" step="0.1" placeholder="9.3"></div>
+      <div class="score-item"><label>Prestations</label><input type="number" id="bien_score_prest" min="0" max="10" step="1" placeholder="10"></div>
+      <div class="score-item"><label>Secteur</label><input type="number" id="bien_score_secteur" min="0" max="10" step="1" placeholder="9"></div>
+      <div class="score-item"><label>Qualité-prix</label><input type="number" id="bien_score_qp" min="0" max="10" step="1" placeholder="8"></div>
+      <div class="score-item"><label>État général</label><input type="number" id="bien_score_etat" min="0" max="10" step="1" placeholder="10"></div>
     </div>
     <div class="section-title">Marché &amp; Fourchette de prix</div>
     <div class="grid-4">
       <div class="form-group"><label>Médiane secteur (€/m²)</label><input type="number" id="bien_mediane" placeholder="3020"></div>
-      <div class="form-group"><label>Tension locative</label><input type="text" id="bien_tension" value="Très forte" placeholder="Très forte"></div>
-      <div class="form-group"><label>Délai vente moyen</label><input type="text" id="bien_delai" value="21 jours" placeholder="21 jours"></div>
+      <div class="form-group"><label>Tension locative</label><input type="text" id="bien_tension" placeholder="Très forte"></div>
+      <div class="form-group"><label>Délai vente moyen</label><input type="text" id="bien_delai" placeholder="21 jours"></div>
       <div class="form-group"><label>Loyer estimé (€/mois)</label><input type="number" id="bien_loyer_estime" placeholder="1300"></div>
     </div>
     <div class="grid-3">
@@ -1340,11 +1303,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
     <div class="section-title">Simulation crédit</div>
     <div class="grid-4">
-      <div class="form-group"><label>Durée (ans)</label><input type="number" id="bien_credit_duree" value="20" min="5" max="30" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Apport (%)</label><input type="number" id="bien_credit_apport" value="10" min="0" max="100" step="5" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux haut (%)</label><input type="number" id="bien_credit_taux_haut" value="5.00" step="0.1" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux moyen (%)</label><input type="number" id="bien_credit_taux_moyen" value="3.40" step="0.1" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux bas (%)</label><input type="number" id="bien_credit_taux_bas" value="2.50" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Durée (ans)</label><input type="number" id="bien_credit_duree" placeholder="20" min="5" max="30" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Apport (%)</label><input type="number" id="bien_credit_apport" placeholder="10" min="0" max="100" step="5" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux haut (%)</label><input type="number" id="bien_credit_taux_haut" placeholder="5.00" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux moyen (%)</label><input type="number" id="bien_credit_taux_moyen" placeholder="3.40" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux bas (%)</label><input type="number" id="bien_credit_taux_bas" placeholder="2.50" step="0.1" oninput="calcCreditStep2()"></div>
     </div>
     <div id="credit-preview-step2"></div>
   </div>
@@ -1398,6 +1361,42 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div class="form-group"><label>Délai d'acquisition</label><input type="text" id="reloge_delai" data-internal="1" placeholder="3 mois, avant la rentrée…"></div>
       <div class="form-group"><label>Zone de recherche</label><input type="text" id="reloge_zone" data-internal="1" placeholder="Évry, Corbeil, Massy…"></div>
       <div class="form-group"><label>Nb de pièces souhaité</label><input type="number" id="reloge_pieces" data-internal="1" placeholder="4"></div>
+    </div>
+  </div>
+</div>
+<!-- ── Défauts & Risques ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">⚠️ Défauts &amp; Risques constatés</div>
+  <div class="card-body">
+    <div class="defaut-grid" id="defauts_grid"></div>
+  </div>
+</div>
+<!-- ── Équipements ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">🔧 Équipements</div>
+  <div class="card-body">
+    <div class="section-title">Équipements généraux</div>
+    <div class="defaut-grid" id="equip_general_grid"></div>
+    <div class="section-title mt-16">Cuisine</div>
+    <div class="form-group">
+      <label>Plaque de cuisson</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value=""> —</label>
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Induction"> 🔵 Induction</label>
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Électrique"> ⚡ Électrique</label>
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Gaz"> 🔥 Gaz</label>
+        <label class="radio-item"><input type="radio" name="plaque_cuisson" value="Mixte"> Mixte</label>
+      </div>
+    </div>
+    <div class="defaut-grid" id="equip_cuisine_grid"></div>
+    <div class="form-group mt-8"><label>Autres équipements cuisine</label><input type="text" id="equip_autre" data-internal="1" placeholder="Hotte aspirante, crédence, plan de travail marbre…"></div>
+    <div class="section-title mt-16">Extérieur</div>
+    <div id="exterieur_grid" class="defaut-grid"></div>
+    <div class="section-title mt-16">Points de vigilance / Points faibles</div>
+    <div class="defaut-grid" id="vigilances_grid"></div>
+    <div class="form-group mt-8">
+      <label>Vigilances complémentaires (texte libre)</label>
+      <textarea id="vigilances_texte" data-internal="1" placeholder="Nuisances sonores, vis-à-vis direct, humidité récurrente…" style="min-height:70px;border-color:var(--danger);"></textarea>
     </div>
   </div>
 </div>
