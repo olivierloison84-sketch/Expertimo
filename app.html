@@ -794,14 +794,14 @@ textarea { resize: vertical; min-height: 60px; }
   </div>
 </div>
 
-<!-- ── Historique du bien ── -->
+<!-- ── Informations complémentaires sur le bien ── -->
 <div class="card">
-  <div class="card-header">📅 Historique du bien (texte libre)</div>
+  <div class="card-header">📅 Infos complémentaires sur le bien (texte libre)</div>
   <div class="card-body">
     <div class="form-group">
-      <label>Historique libre (chronologie, rénovations, événements marquants…)</label>
-      <textarea id="historique_libre" style="min-height:140px" placeholder="2003 · CONSTRUCTION — Immeuble résidentiel récent.&#10;2015 · RÉNOVATION — Rénovation complète : sols, murs, cuisine, salle de bains, installation électrique.&#10;2025 · MISE EN VENTE — Bien proposé à 260 000 €, DPE D, libre à la vente."></textarea>
-      <p class="hint">Saisissez chaque événement sur une ligne. Ce texte apparaîtra dans la section Historique de la fiche acheteur.</p>
+      <label>Informations complémentaires (copropriété, exposition, rénovations, équipements…)</label>
+      <textarea id="historique_libre" style="min-height:140px" placeholder="Copropriété — 12 lots, aucune procédure en cours&#10;Exposition — Sud-Ouest, aucun vis-à-vis&#10;Rénovation 2015 — sols, cuisine, salle de bains, électricité refaite à neuf&#10;Chauffage — Individuel gaz, chaudière 2020"></textarea>
+      <p class="hint">Saisissez chaque information sur une ligne. Ce texte apparaîtra dans la section « Tout savoir sur ce bien » de la fiche acheteur.</p>
     </div>
     <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
@@ -2412,9 +2412,9 @@ function injectData(html, d) {
     if (vCharges) vCharges.textContent = chargesAnnuelles + ' €';
   }
 
-  // Timeline — full rebuild from form data
-  function tliHtml(label, desc) {
-    return '<div class="tli"><div class="tly">' + esc(label) + '</div><div class="tlt">' + esc(desc) + '</div></div>';
+  // Liste d'infos complémentaires — full rebuild from form data
+  function infoItemHtml(label, desc) {
+    return '<li class="info-item">' + (label ? '<b>' + esc(label) + '</b> — ' : '') + esc(desc) + '</li>';
   }
   var timeline = id('historique-timeline');
   if (timeline) {
@@ -2425,16 +2425,11 @@ function injectData(html, d) {
       if (!ligne) return;
       var sepIndex = ligne.indexOf('—');
       if (sepIndex !== -1) {
-        tlHtml += tliHtml(ligne.substring(0, sepIndex).trim(), ligne.substring(sepIndex + 1).trim());
+        tlHtml += infoItemHtml(ligne.substring(0, sepIndex).trim(), ligne.substring(sepIndex + 1).trim());
       } else {
-        tlHtml += tliHtml('', ligne);
+        tlHtml += infoItemHtml('', ligne);
       }
     });
-    var venteDesc = 'Bien proposé à ' + prixFmt + ' €'
-      + (d.dpe ? ' · DPE ' + d.dpe : '')
-      + ' · Libre à la vente'
-      + (chargesCopro > 0 ? ' · Charges ' + chargesCopro + ' €/mois' : '') + '.';
-    tlHtml += tliHtml((d.histVenteDate || '2025') + ' · MISE EN VENTE', venteDesc);
     timeline.innerHTML = tlHtml;
   }
 

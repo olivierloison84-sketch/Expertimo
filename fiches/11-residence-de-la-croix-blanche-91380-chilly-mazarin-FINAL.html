@@ -351,10 +351,10 @@ html,body{overflow-x:hidden;}
   <div class="rail-progress"><span id="rail-progress-count">1</span> / 9 sections explorées</div>
   <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label">Le Bien</span></button>
   <button data-tab="analyse" onclick="showTab('analyse',this)"><span class="rail-dot">📊</span><span class="rail-label">Analyse &amp; Chiffres</span></button>
-  <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label">Historique</span></button>
+  <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label">Tout savoir sur ce bien</span></button>
   <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
   <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label">Mon Budget</span></button>
-  <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Quartier</span></button>
+  <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Carte interactive</span></button>
   <button data-tab="documents" onclick="showTab('documents',this)"><span class="rail-dot">📁</span><span class="rail-label">Documents</span></button>
   <button data-tab="assistant" onclick="showTab('assistant',this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
   <button data-tab="offre" onclick="showTab('offre',this)"><span class="rail-dot">✍️</span><span class="rail-label">Faire une offre</span></button>
@@ -417,8 +417,8 @@ html,body{overflow-x:hidden;}
 <div class="pg">
 <div>
   <div class="sub-tabs" id="sub-nav">
-    <button class="active" onclick="showSub('marche',this)">📊 Marché</button>
-    <button onclick="showSub('rentabilite',this)">💰 Rentabilité</button>
+    <button class="active" onclick="showSub('marche',this)">📊 Ventes comparables</button>
+    <button onclick="showSub('rentabilite',this)">💰 Simulateur investisseur</button>
   </div>
 
   <div id="sub-marche" class="sub-panel active">
@@ -461,7 +461,7 @@ html,body{overflow-x:hidden;}
   <div id="sub-rentabilite" class="sub-panel">
     <div class="card">
       <div class="lbl">Simulateur investisseur temps réel</div>
-      <h2 class="stitle">Rentabilité interactive</h2>
+      <h2 class="stitle">Simulateur investisseur interactif</h2>
       <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 200 € nu. Simulez votre rentabilité ci-dessous.</div>
       <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="130500" max="159500" value="145000" step="500" oninput="calc()"><div class="sval" id="v-prix">145 000 €</div></div>
       <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="600" max="3000" value="1200" step="10" oninput="calc()"><div class="sval" id="v-loyer">1200 €</div></div>
@@ -502,8 +502,8 @@ html,body{overflow-x:hidden;}
 <section id="historique" class="tab">
 <div class="pg">
   <div class="card">
-    <div class="lbl">Historique du bien</div>
-    <h2 class="stitle">Chronologie &amp; travaux</h2>
+    <div class="lbl">Informations complémentaires</div>
+    <h2 class="stitle">Tout savoir sur ce bien</h2>
     <div id="historique-libre" style="font-size:13px;line-height:1.9;font-weight:300;white-space:pre-line;color:var(--ink);padding:8px 0;">Année de construction de l'immeuble : 1965
 Historique des travaux de la copropriété :
 Fermeture sécurisée de la résidence (portails, portillons, grillages) — 2011/2013

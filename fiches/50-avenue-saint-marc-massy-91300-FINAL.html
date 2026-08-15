@@ -199,6 +199,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .tli::before{content:'';position:absolute;left:-16px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 0 1px var(--gold);}
 .tly{font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;margin-bottom:2px;}
 .tlt{font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;line-height:1.6;}
+.info-list{list-style:none;margin:0;padding:0;}
+.info-item{position:relative;padding-left:18px;margin-bottom:14px;font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;line-height:1.6;}
+.info-item::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+.info-item b{font-weight:600;}
 /* BANK */
 .bi{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:10px;margin-top:11px;}
 .bi.green{background:#f0f7f3;border:1px solid #c3dece;}
@@ -346,7 +350,7 @@ html,body{overflow-x:hidden;}
   <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label">Le Bien</span></button>
   <button data-tab="analyse" onclick="showTab('analyse',this)"><span class="rail-dot">📊</span><span class="rail-label">Analyse &amp; Chiffres</span></button>
   <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label">Mon Budget</span></button>
-  <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Quartier</span></button>
+  <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Carte interactive</span></button>
   <button data-tab="documents" onclick="showTab('documents',this)"><span class="rail-dot">📁</span><span class="rail-label">Documents</span></button>
   <button data-tab="assistant" onclick="showTab('assistant',this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
   <button data-tab="offre" onclick="showTab('offre',this)"><span class="rail-dot">✍️</span><span class="rail-label">Faire une offre</span></button>
@@ -398,8 +402,8 @@ html,body{overflow-x:hidden;}
 <div class="pg">
 <div>
   <div class="sub-tabs" id="sub-nav">
-    <button class="active" onclick="showSub('marche',this)">📊 Marché</button>
-    <button onclick="showSub('rentabilite',this)">💰 Rentabilité</button>
+    <button class="active" onclick="showSub('marche',this)">📊 Ventes comparables</button>
+    <button onclick="showSub('rentabilite',this)">💰 Simulateur investisseur</button>
     <button onclick="showSub('patrimoine',this)">🏛️ Historique du bien</button>
     <button onclick="showSub('diagnostics',this)">📋 Diagnostics</button>
   </div>
@@ -444,7 +448,7 @@ html,body{overflow-x:hidden;}
   <div id="sub-rentabilite" class="sub-panel">
     <div class="card">
       <div class="lbl">Simulateur investisseur temps réel</div>
-      <h2 class="stitle">Rentabilité interactive</h2>
+      <h2 class="stitle">Simulateur investisseur interactif</h2>
       <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 300 € nu / 1 400 € meublé. Simulez votre rentabilité ci-dessous.</div>
       <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="265500" max="324500" value="295000" step="500" oninput="calc()"><div class="sval" id="v-prix">295 000 €</div></div>
       <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="300" max="5000" value="1300" step="10" oninput="calc()"><div class="sval" id="v-loyer">1300 €</div></div>
@@ -467,9 +471,9 @@ html,body{overflow-x:hidden;}
 
   <div id="sub-patrimoine" class="sub-panel">
     <div class="card">
-      <div class="lbl">Historique patrimonial</div>
-      <h2 class="stitle">Chronologie du bien</h2>
-      <div class="tl" style="margin-top:13px;" id="historique-timeline"><div class="tli"><div class="tly">1970 · CONSTRUCTION</div><div class="tlt"></div></div><div class="tli"><div class="tly">2026 · MISE EN VENTE</div><div class="tlt">Bien proposé à 295 000 € · DPE D · Libre à la vente · Charges 533 €/mois.</div></div></div>
+      <div class="lbl">Informations complémentaires</div>
+      <h2 class="stitle">Tout savoir sur ce bien</h2>
+      <ul class="info-list" style="margin-top:13px;" id="historique-timeline"><li class="info-item">1970 · CONSTRUCTION</li></ul>
     </div>
   </div>
 
