@@ -203,6 +203,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .tli::before{content:'';position:absolute;left:-16px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 0 1px var(--gold);}
 .tly{font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;margin-bottom:2px;}
 .tlt{font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;line-height:1.6;}
+.info-list{list-style:none;margin:0;padding:0;}
+.info-item{position:relative;padding-left:18px;margin-bottom:14px;font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;line-height:1.6;}
+.info-item::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+.info-item b{font-weight:600;}
 /* BANK */
 .bi{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:10px;margin-top:11px;}
 .bi.green{background:#f0f7f3;border:1px solid #c3dece;}
@@ -356,12 +360,12 @@ html,body{overflow-x:hidden;}
 <nav class="rail" id="main-nav">
   <div class="rail-progress"><span id="rail-progress-count">1</span> / 10 sections explorées</div>
   <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label">Le Bien</span></button>
-  <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label">Marché</span></button>
-  <button data-tab="rentabilite" onclick="showTab('rentabilite',this)"><span class="rail-dot">💰</span><span class="rail-label">Rentabilité</span></button>
-  <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label">Historique</span></button>
+  <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label">Ventes comparables</span></button>
+  <button data-tab="rentabilite" onclick="showTab('rentabilite',this)"><span class="rail-dot">💰</span><span class="rail-label">Simulateur investisseur</span></button>
+  <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label">Tout savoir sur ce bien</span></button>
   <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
   <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label">Mon Budget</span></button>
-  <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Quartier</span></button>
+  <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label">Carte interactive</span></button>
   <button data-tab="documents" onclick="showTab('documents',this)"><span class="rail-dot">📁</span><span class="rail-label">Documents</span></button>
   <button data-tab="assistant" onclick="showTab('assistant',this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
   <button data-tab="offre" onclick="showTab('offre',this)"><span class="rail-dot">✍️</span><span class="rail-label">Faire une offre</span></button>
@@ -518,9 +522,9 @@ html,body{overflow-x:hidden;}
 <div>
   <div id="sub-patrimoine">
     <div class="card">
-      <div class="lbl">Historique patrimonial</div>
-      <h2 class="stitle">Chronologie du bien</h2>
-      <div class="tl" style="margin-top:13px;" id="historique-timeline"><div class="tli"><div class="tly"></div><div class="tlt">1996 : Construction en brique rouge</div></div><div class="tli"><div class="tly"></div><div class="tlt">2000 : Aménagement des combles en 4 chambres + salle d'eau + WC</div></div><div class="tli"><div class="tly"></div><div class="tlt">2000 : Construction du garage de 45m²</div></div><div class="tli"><div class="tly"></div><div class="tlt">Diverse informations sur le bien :</div></div><div class="tli"><div class="tly"></div><div class="tlt">Cheminée avec récupérateur de chaleur à l'étage</div></div><div class="tli"><div class="tly"></div><div class="tlt">Terrasse de 70m²exposée Sud / Ouest.</div></div><div class="tli"><div class="tly"></div><div class="tlt">Pergola bioclimatique - Piscine hors sol (qui reste).</div></div><div class="tli"><div class="tly"></div><div class="tlt">Volets électriques. Fenêtres en double vitrage avec oscillo-battants 2021.</div></div><div class="tli"><div class="tly"></div><div class="tlt">Ballon d'eau chaude installé en 2011.</div></div><div class="tli"><div class="tly"></div><div class="tlt">Plancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles.</div></div><div class="tli"><div class="tly"></div><div class="tlt">Fibre optique.</div></div><div class="tli"><div class="tly"></div><div class="tlt">Terrain de 1073m².</div></div><div class="tli"><div class="tly">2025 · MISE EN VENTE</div><div class="tlt">Bien proposé à 296 200 € · DPE C · Libre à la vente.</div></div></div>
+      <div class="lbl">Informations complémentaires</div>
+      <h2 class="stitle">Tout savoir sur ce bien</h2>
+      <ul class="info-list" style="margin-top:13px;" id="historique-timeline"><li class="info-item">1996 : Construction en brique rouge</li><li class="info-item">2000 : Aménagement des combles en 4 chambres + salle d'eau + WC</li><li class="info-item">2000 : Construction du garage de 45m²</li><li class="info-item">Diverse informations sur le bien :</li><li class="info-item">Cheminée avec récupérateur de chaleur à l'étage</li><li class="info-item">Terrasse de 70m²exposée Sud / Ouest.</li><li class="info-item">Pergola bioclimatique - Piscine hors sol (qui reste).</li><li class="info-item">Volets électriques. Fenêtres en double vitrage avec oscillo-battants 2021.</li><li class="info-item">Ballon d'eau chaude installé en 2011.</li><li class="info-item">Plancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles.</li><li class="info-item">Fibre optique.</li><li class="info-item">Terrain de 1073m².</li></ul>
     </div>
   </div>
 </div>
