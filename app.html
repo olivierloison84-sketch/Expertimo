@@ -731,6 +731,48 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
   </div>
 
+  <div class="card">
+    <div class="card-header">🧾 Informations de facturation</div>
+    <div class="card-body">
+      <div class="section-title">Recherche automatique via SIRET</div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Numéro SIRET</label>
+          <input type="text" id="agent-siret" placeholder="501 159 404 00059" maxlength="20">
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end;">
+          <button type="button" class="btn btn-primary" style="width:100%;" id="siret-lookup-btn" onclick="lookupSiret()">🔍 Récupérer les infos via SIRET</button>
+        </div>
+      </div>
+      <div id="siret-lookup-status" style="font-size:12px;margin-bottom:10px;display:none;"></div>
+
+      <div class="section-title">Informations légales</div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Dénomination / Raison sociale</label>
+          <input type="text" id="agent-denomination">
+        </div>
+        <div class="form-group">
+          <label>Forme juridique</label>
+          <input type="text" id="agent-forme-juridique">
+        </div>
+        <div class="form-group col-span-2">
+          <label>Adresse du siège social</label>
+          <input type="text" id="agent-adresse-siege">
+        </div>
+        <div class="form-group">
+          <label>N° TVA intracommunautaire</label>
+          <input type="text" id="agent-tva-intra">
+        </div>
+        <div class="form-group">
+          <label>Code NAF / APE</label>
+          <input type="text" id="agent-code-naf">
+        </div>
+      </div>
+      <p class="hint">Pré-remplies automatiquement via la recherche SIRET ci-dessus, ces informations restent modifiables manuellement à tout moment.</p>
+    </div>
+  </div>
+
   <div class="action-row">
     <button class="btn btn-outline" onclick="resetProfile()">🗑 Réinitialiser le profil</button>
     <div class="spacer"></div>
@@ -1782,7 +1824,13 @@ function saveProfile() {
     rdv_url:       getV('agent-rdv-url'),
     photo_url:     getV('agent-photo-url'),
     color_primary: getV('agent-color-primary'),
-    color_accent:  getV('agent-color-accent')
+    color_accent:  getV('agent-color-accent'),
+    siret:          getV('agent-siret'),
+    denomination:   getV('agent-denomination'),
+    formeJuridique: getV('agent-forme-juridique'),
+    adresseSiege:   getV('agent-adresse-siege'),
+    tvaIntra:       getV('agent-tva-intra'),
+    codeNaf:        getV('agent-code-naf')
   };
   localStorage.setItem('_agent_profile', JSON.stringify(profile));
   document.getElementById('profile-saved-badge').style.display = 'inline-flex';
@@ -1806,6 +1854,12 @@ function applyProfile(p) {
   sv('agent-secteur',   p.secteur);
   sv('agent-rdv-url',   p.rdv_url);
   sv('agent-photo-url', p.photo_url);
+  sv('agent-siret',            p.siret);
+  sv('agent-denomination',     p.denomination);
+  sv('agent-forme-juridique',  p.formeJuridique);
+  sv('agent-adresse-siege',    p.adresseSiege);
+  sv('agent-tva-intra',        p.tvaIntra);
+  sv('agent-code-naf',         p.codeNaf);
   if (p.color_primary) {
     sv('agent-color-primary',     p.color_primary);
     sv('agent-color-primary-hex', p.color_primary);
@@ -1819,6 +1873,47 @@ function applyProfile(p) {
   updateAgentPreview();
   if (p.prenom || p.nom) {
     document.getElementById('profile-saved-badge').style.display = 'inline-flex';
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 1 — Recherche SIRET (infos de facturation)
+// ═══════════════════════════════════════════════════════
+async function lookupSiret() {
+  var statusEl = document.getElementById('siret-lookup-status');
+  var btn = document.getElementById('siret-lookup-btn');
+
+  function setStatus(msg, color) {
+    statusEl.style.display = 'block';
+    statusEl.style.color = color;
+    statusEl.textContent = msg;
+  }
+
+  var siret = getV('agent-siret').replace(/\s/g, '');
+  if (!/^\d{14}$/.test(siret)) {
+    setStatus('⚠️ Le SIRET doit contenir exactement 14 chiffres.', 'var(--danger)');
+    return;
+  }
+
+  btn.disabled = true;
+  setStatus('⏳ Recherche en cours…', 'var(--muted)');
+
+  try {
+    var res = await fetch('/api/siret-lookup?siret=' + siret, { signal: AbortSignal.timeout(15000) });
+    var payload = await res.json();
+    if (!res.ok) {
+      throw new Error(payload.error || ('Erreur serveur (' + res.status + ')'));
+    }
+    if (payload.denomination)   setV('agent-denomination',    payload.denomination);
+    if (payload.formeJuridique) setV('agent-forme-juridique', payload.formeJuridique);
+    if (payload.adresse)        setV('agent-adresse-siege',   payload.adresse);
+    if (payload.tvaIntra)       setV('agent-tva-intra',       payload.tvaIntra);
+    if (payload.codeNaf)        setV('agent-code-naf',        payload.codeNaf);
+    setStatus('✅ Informations récupérées — vérifiez et complétez si besoin.', 'var(--success)');
+  } catch (err) {
+    setStatus('❌ ' + (err.message || 'Échec de la recherche SIRET.'), 'var(--danger)');
+  } finally {
+    btn.disabled = false;
   }
 }
 
@@ -1839,7 +1934,9 @@ function resetProfile() {
   if (!confirm('Réinitialiser le profil agent ? Les données seront effacées.')) return;
   localStorage.removeItem('_agent_profile');
   ['agent-prenom','agent-nom','agent-reseau','agent-tel','agent-email',
-   'agent-secteur','agent-rdv-url','agent-photo-url'].forEach(function(id) {
+   'agent-secteur','agent-rdv-url','agent-photo-url',
+   'agent-siret','agent-denomination','agent-forme-juridique',
+   'agent-adresse-siege','agent-tva-intra','agent-code-naf'].forEach(function(id) {
     var e = document.getElementById(id); if (e) e.value = '';
   });
   document.getElementById('agent-color-primary').value     = '#1a3a5c';
