@@ -856,6 +856,196 @@ details[open] summary .chevron { transform: rotate(90deg); }
 <!-- ══════════════════════════════════════════════════════════
      NIVEAU RECOMMANDÉ — accordéon ouvert par défaut
 ════════════════════════════════════════════════════════════ -->
+<!-- ── Informations complémentaires sur le bien ── -->
+<div class="card">
+  <div class="card-header">📅 Infos complémentaires sur le bien (texte libre)</div>
+  <div class="card-body">
+    <div class="form-group">
+      <label>Informations complémentaires (copropriété, exposition, rénovations, équipements…)</label>
+      <textarea id="historique_libre" style="min-height:140px"></textarea>
+      <p class="hint">Saisissez chaque information sur une ligne. Ce texte apparaîtra dans la section « Tout savoir sur ce bien » de la fiche acheteur.</p>
+    </div>
+    <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead><tr>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:18%">Année</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Montant (€)</th>
+        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Nature des travaux</th>
+      </tr></thead>
+      <tbody id="renov_tbody">
+        <tr>
+          <td><input type="number" id="renov_annee_1" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_1" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_1" data-internal="1"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_2" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_2" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_2" data-internal="1"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_3" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_3" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_3" data-internal="1"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_4" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_4" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_4" data-internal="1"></td>
+        </tr>
+        <tr>
+          <td><input type="number" id="renov_annee_5" data-internal="1"></td>
+          <td><input type="number" id="renov_montant_5" data-internal="1"></td>
+          <td><input type="text" id="renov_desc_5" data-internal="1"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- ── Localisation & Environnement ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">📍 Localisation &amp; Environnement</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div>
+        <div class="section-title">Exposition</div>
+        <div class="check-group" id="exposition_group"></div>
+        <div class="section-title mt-16">Exposition sonore</div>
+        <div class="radio-group" id="expo_sonore_group"></div>
+      </div>
+      <div>
+        <div class="section-title">Transports à proximité</div>
+        <div class="check-group" id="transport_group"></div>
+        <div class="form-group mt-16"><label>Services de proximité</label>
+          <textarea id="services_prox" data-internal="1" style="min-height:60px"></textarea>
+        </div>
+        <div class="form-group"><label>Voisinage</label>
+          <textarea id="voisinage" data-internal="1" style="min-height:50px"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="section-title mt-16">📍 Carte — Commodités dans un rayon de 800m</div>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
+      <button type="button" class="btn btn-primary" onclick="initFicheMap()" id="btn-geolocate">🗺️ Centrer sur l'adresse</button>
+      <span style="font-size:12px;color:var(--muted);" id="geo-status">Entrez l'adresse ci-dessus puis cliquez.</span>
+    </div>
+    <div id="fiche-map" style="height:350px;border-radius:6px;border:1.5px solid var(--border);background:#e8ecf1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;">La carte s'affichera ici</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;" id="map-filter-btns" style="display:none;">
+      <button type="button" class="btn btn-sm" style="background:#1565c0;color:#fff" onclick="filterFicheMap('transport')">🚇 Transports</button>
+      <button type="button" class="btn btn-sm" style="background:#2e7d32;color:#fff" onclick="filterFicheMap('parc')">🌳 Parcs</button>
+      <button type="button" class="btn btn-sm" style="background:#c62828;color:#fff" onclick="filterFicheMap('commerce')">🛒 Commerces</button>
+      <button type="button" class="btn btn-sm" style="background:#f57f17;color:#fff" onclick="filterFicheMap('ecole')">🏫 Écoles</button>
+      <button type="button" class="btn btn-sm" style="background:#555;color:#fff" onclick="filterFicheMap('all')">👁 Tout</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;font-size:12px;" id="map-counts" style="display:none;">
+      <div>🚇 <span id="mc-transport">—</span> transports</div>
+      <div>🌳 <span id="mc-parc">—</span> parcs</div>
+      <div>🛒 <span id="mc-commerce">—</span> commerces</div>
+      <div>🏫 <span id="mc-ecole">—</span> écoles</div>
+    </div>
+  </div>
+</div>
+<!-- ── Transactions DVF — saisie manuelle ── -->
+<div class="card">
+  <div class="card-header">
+    📊 Transactions comparables DVF
+    <span style="background:var(--accent);border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px;font-weight:600;">Saisie manuelle — source dvf.etalab.gouv.fr</span>
+  </div>
+  <div class="card-body">
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">
+      Consultez <a href="https://dvf.etalab.gouv.fr" target="_blank" style="color:var(--primary)">dvf.etalab.gouv.fr</a>
+      ou <a href="https://app.dvf.etalab.gouv.fr" target="_blank" style="color:var(--primary)">app.dvf.etalab.gouv.fr</a>
+      et saisissez les transactions comparables ci-dessous.
+    </p>
+    <button type="button" class="btn" onclick="fetchComparablesDVF()" style="margin-bottom:10px">🔍 Rechercher les comparables automatiquement</button>
+    <div id="dvf-auto-status" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
+    <div style="overflow-x:auto">
+      <table class="dvf-edit-table">
+        <thead>
+          <tr>
+            <th style="width:110px">Date</th>
+            <th>Adresse</th>
+            <th style="width:90px">Surface m²</th>
+            <th style="width:110px">Prix €</th>
+            <th style="width:100px">€/m²</th>
+          </tr>
+        </thead>
+        <tbody id="dvf-tbody"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:8px">Laisser vide pour ne pas inclure la ligne · €/m² calculé automatiquement</p>
+  </div>
+</div>
+<!-- ── Analyse & Scores (suite) ── -->
+<div class="card">
+  <div class="card-header">🎯 Analyse &amp; Scores (fiche acheteur)</div>
+  <div class="card-body">
+    <div class="section-title">Scores (0 – 10)</div>
+    <div class="score-grid">
+      <div class="score-item"><label>Score global</label><input type="number" id="bien_score" min="0" max="10" step="0.1"></div>
+      <div class="score-item"><label>Prestations</label><input type="number" id="bien_score_prest" min="0" max="10" step="1"></div>
+      <div class="score-item"><label>Secteur</label><input type="number" id="bien_score_secteur" min="0" max="10" step="1"></div>
+      <div class="score-item"><label>Qualité-prix</label><input type="number" id="bien_score_qp" min="0" max="10" step="1"></div>
+      <div class="score-item"><label>État général</label><input type="number" id="bien_score_etat" min="0" max="10" step="1"></div>
+    </div>
+    <div class="section-title">Marché &amp; Fourchette de prix</div>
+    <div class="grid-4">
+      <div class="form-group"><label>Médiane secteur (€/m²)</label><input type="number" id="bien_mediane"></div>
+      <div class="form-group"><label>Tension locative</label><input type="text" id="bien_tension"></div>
+      <div class="form-group"><label>Délai vente moyen</label><input type="text" id="bien_delai"></div>
+      <div class="form-group"><label>Loyer estimé (€/mois)</label><input type="number" id="bien_loyer_estime"></div>
+    </div>
+    <div class="grid-3">
+      <div class="form-group"><label>Fourchette basse (€)</label><input type="number" id="bien_fourchette_basse"></div>
+      <div class="form-group"><label>Fourchette milieu (€)</label><input type="number" id="bien_fourchette_milieu" data-internal="1"></div>
+      <div class="form-group"><label>Fourchette haute (€)</label><input type="number" id="bien_fourchette_haute"></div>
+    </div>
+    <div class="section-title">Simulation crédit</div>
+    <div class="grid-4">
+      <div class="form-group"><label>Durée (ans)</label><input type="number" id="bien_credit_duree" min="5" max="30" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Apport (%)</label><input type="number" id="bien_credit_apport" min="0" max="100" step="5" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux haut (%)</label><input type="number" id="bien_credit_taux_haut" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux moyen (%)</label><input type="number" id="bien_credit_taux_moyen" step="0.1" oninput="calcCreditStep2()"></div>
+      <div class="form-group"><label>Taux bas (%)</label><input type="number" id="bien_credit_taux_bas" step="0.1" oninput="calcCreditStep2()"></div>
+    </div>
+    <div id="credit-preview-step2"></div>
+  </div>
+</div>
+<!-- ── Financement & Relogement ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">🏦 Financement &amp; Relogement</div>
+  <div class="card-body">
+    <div class="form-group">
+      <label>Loyer potentiel estimé (€/mois)</label>
+      <input type="number" id="loyer" step="50" min="0">
+    </div>
+    <div class="form-group">
+      <label>Capital restant à rembourser (€)</label>
+      <input type="number" id="capital_restant" data-internal="1">
+    </div>
+    <div class="section-title">Prêt en cours</div>
+    <div class="grid-4">
+      <div class="form-group"><label>Montant de la dette (€)</label><input type="number" id="dette_montant" data-internal="1"></div>
+      <div class="form-group"><label>Échéance</label><input type="date" id="dette_echeance" data-internal="1"></div>
+      <div class="form-group"><label>Banque</label><input type="text" id="banque" data-internal="1"></div>
+      <div class="form-group"><label>Taux (%)</label><input type="number" id="taux_pret" data-internal="1" step="0.01"></div>
+    </div>
+    <div class="section-title mt-16">Relogement</div>
+    <div class="grid-3">
+      <div class="form-group"><label>Relogement trouvé</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="relogement_trouve" value="non"> Non</label>
+        <label class="radio-item"><input type="radio" name="relogement_trouve" value="oui"> Oui</label>
+      </div></div>
+      <div class="form-group"><label>Budget maximum (€)</label><input type="number" id="reloge_budget" data-internal="1"></div>
+      <div class="form-group"><label>Type de bien recherché</label><input type="text" id="reloge_type" data-internal="1"></div>
+      <div class="form-group"><label>Délai d'acquisition</label><input type="text" id="reloge_delai" data-internal="1"></div>
+      <div class="form-group"><label>Zone de recherche</label><input type="text" id="reloge_zone" data-internal="1"></div>
+      <div class="form-group"><label>Nb de pièces souhaité</label><input type="number" id="reloge_pieces" data-internal="1"></div>
+    </div>
+  </div>
+</div>
+
 <details open class="tier-recommande">
 <summary><span class="chevron">▸</span> 🟡 Informations recommandées</summary>
 <div class="tier-body">
@@ -1057,7 +1247,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
 <details class="tier-optionnel">
 <summary><span class="chevron">▸</span> ⚪ Informations complémentaires (optionnel)</summary>
 <div class="tier-body">
-
 <!-- ── Propriétaire & RDV ── -->
 <div class="card">
   <div class="card-header">👤 Propriétaire &amp; Rendez-vous</div>
@@ -1106,53 +1295,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
   </div>
 </div>
-<!-- ── Informations complémentaires sur le bien ── -->
-<div class="card">
-  <div class="card-header">📅 Infos complémentaires sur le bien (texte libre)</div>
-  <div class="card-body">
-    <div class="form-group">
-      <label>Informations complémentaires (copropriété, exposition, rénovations, équipements…)</label>
-      <textarea id="historique_libre" style="min-height:140px"></textarea>
-      <p class="hint">Saisissez chaque information sur une ligne. Ce texte apparaîtra dans la section « Tout savoir sur ce bien » de la fiche acheteur.</p>
-    </div>
-    <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
-    <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
-    <table style="width:100%;border-collapse:collapse;font-size:13px;">
-      <thead><tr>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:18%">Année</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Montant (€)</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Nature des travaux</th>
-      </tr></thead>
-      <tbody id="renov_tbody">
-        <tr>
-          <td><input type="number" id="renov_annee_1" data-internal="1"></td>
-          <td><input type="number" id="renov_montant_1" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_1" data-internal="1"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_2" data-internal="1"></td>
-          <td><input type="number" id="renov_montant_2" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_2" data-internal="1"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_3" data-internal="1"></td>
-          <td><input type="number" id="renov_montant_3" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_3" data-internal="1"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_4" data-internal="1"></td>
-          <td><input type="number" id="renov_montant_4" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_4" data-internal="1"></td>
-        </tr>
-        <tr>
-          <td><input type="number" id="renov_annee_5" data-internal="1"></td>
-          <td><input type="number" id="renov_montant_5" data-internal="1"></td>
-          <td><input type="text" id="renov_desc_5" data-internal="1"></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 <!-- ── Plan des pièces ── -->
 <div class="card appart-maison-only">
   <div class="card-header">📏 Plan des pièces <span style="background:var(--accent);border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px;">Détail m²</span></div>
@@ -1168,49 +1310,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <tbody id="pieces_tbody"></tbody>
     </table>
     <button class="btn btn-sm mt-8" style="background:var(--primary);color:#fff" onclick="addPieceRow()">+ Ajouter une ligne</button>
-  </div>
-</div>
-<!-- ── Localisation & Environnement ── -->
-<div class="card appart-maison-only">
-  <div class="card-header">📍 Localisation &amp; Environnement</div>
-  <div class="card-body">
-    <div class="grid-2">
-      <div>
-        <div class="section-title">Exposition</div>
-        <div class="check-group" id="exposition_group"></div>
-        <div class="section-title mt-16">Exposition sonore</div>
-        <div class="radio-group" id="expo_sonore_group"></div>
-      </div>
-      <div>
-        <div class="section-title">Transports à proximité</div>
-        <div class="check-group" id="transport_group"></div>
-        <div class="form-group mt-16"><label>Services de proximité</label>
-          <textarea id="services_prox" data-internal="1" style="min-height:60px"></textarea>
-        </div>
-        <div class="form-group"><label>Voisinage</label>
-          <textarea id="voisinage" data-internal="1" style="min-height:50px"></textarea>
-        </div>
-      </div>
-    </div>
-    <div class="section-title mt-16">📍 Carte — Commodités dans un rayon de 800m</div>
-    <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;">
-      <button type="button" class="btn btn-primary" onclick="initFicheMap()" id="btn-geolocate">🗺️ Centrer sur l'adresse</button>
-      <span style="font-size:12px;color:var(--muted);" id="geo-status">Entrez l'adresse ci-dessus puis cliquez.</span>
-    </div>
-    <div id="fiche-map" style="height:350px;border-radius:6px;border:1.5px solid var(--border);background:#e8ecf1;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;">La carte s'affichera ici</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;" id="map-filter-btns" style="display:none;">
-      <button type="button" class="btn btn-sm" style="background:#1565c0;color:#fff" onclick="filterFicheMap('transport')">🚇 Transports</button>
-      <button type="button" class="btn btn-sm" style="background:#2e7d32;color:#fff" onclick="filterFicheMap('parc')">🌳 Parcs</button>
-      <button type="button" class="btn btn-sm" style="background:#c62828;color:#fff" onclick="filterFicheMap('commerce')">🛒 Commerces</button>
-      <button type="button" class="btn btn-sm" style="background:#f57f17;color:#fff" onclick="filterFicheMap('ecole')">🏫 Écoles</button>
-      <button type="button" class="btn btn-sm" style="background:#555;color:#fff" onclick="filterFicheMap('all')">👁 Tout</button>
-    </div>
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;font-size:12px;" id="map-counts" style="display:none;">
-      <div>🚇 <span id="mc-transport">—</span> transports</div>
-      <div>🌳 <span id="mc-parc">—</span> parcs</div>
-      <div>🛒 <span id="mc-commerce">—</span> commerces</div>
-      <div>🏫 <span id="mc-ecole">—</span> écoles</div>
-    </div>
   </div>
 </div>
 <!-- ── Terrain spécifique ── -->
@@ -1246,72 +1345,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <div class="defaut-grid" id="risques_terrain_grid"></div>
   </div>
 </div>
-<!-- ── Transactions DVF — saisie manuelle ── -->
-<div class="card">
-  <div class="card-header">
-    📊 Transactions comparables DVF
-    <span style="background:var(--accent);border-radius:20px;padding:2px 8px;font-size:11px;margin-left:6px;font-weight:600;">Saisie manuelle — source dvf.etalab.gouv.fr</span>
-  </div>
-  <div class="card-body">
-    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">
-      Consultez <a href="https://dvf.etalab.gouv.fr" target="_blank" style="color:var(--primary)">dvf.etalab.gouv.fr</a>
-      ou <a href="https://app.dvf.etalab.gouv.fr" target="_blank" style="color:var(--primary)">app.dvf.etalab.gouv.fr</a>
-      et saisissez les transactions comparables ci-dessous.
-    </p>
-    <button type="button" class="btn" onclick="fetchComparablesDVF()" style="margin-bottom:10px">🔍 Rechercher les comparables automatiquement</button>
-    <div id="dvf-auto-status" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
-    <div style="overflow-x:auto">
-      <table class="dvf-edit-table">
-        <thead>
-          <tr>
-            <th style="width:110px">Date</th>
-            <th>Adresse</th>
-            <th style="width:90px">Surface m²</th>
-            <th style="width:110px">Prix €</th>
-            <th style="width:100px">€/m²</th>
-          </tr>
-        </thead>
-        <tbody id="dvf-tbody"></tbody>
-      </table>
-    </div>
-    <p class="hint" style="margin-top:8px">Laisser vide pour ne pas inclure la ligne · €/m² calculé automatiquement</p>
-  </div>
-</div>
-<!-- ── Analyse & Scores (suite) ── -->
-<div class="card">
-  <div class="card-header">🎯 Analyse &amp; Scores (fiche acheteur)</div>
-  <div class="card-body">
-    <div class="section-title">Scores (0 – 10)</div>
-    <div class="score-grid">
-      <div class="score-item"><label>Score global</label><input type="number" id="bien_score" min="0" max="10" step="0.1"></div>
-      <div class="score-item"><label>Prestations</label><input type="number" id="bien_score_prest" min="0" max="10" step="1"></div>
-      <div class="score-item"><label>Secteur</label><input type="number" id="bien_score_secteur" min="0" max="10" step="1"></div>
-      <div class="score-item"><label>Qualité-prix</label><input type="number" id="bien_score_qp" min="0" max="10" step="1"></div>
-      <div class="score-item"><label>État général</label><input type="number" id="bien_score_etat" min="0" max="10" step="1"></div>
-    </div>
-    <div class="section-title">Marché &amp; Fourchette de prix</div>
-    <div class="grid-4">
-      <div class="form-group"><label>Médiane secteur (€/m²)</label><input type="number" id="bien_mediane"></div>
-      <div class="form-group"><label>Tension locative</label><input type="text" id="bien_tension"></div>
-      <div class="form-group"><label>Délai vente moyen</label><input type="text" id="bien_delai"></div>
-      <div class="form-group"><label>Loyer estimé (€/mois)</label><input type="number" id="bien_loyer_estime"></div>
-    </div>
-    <div class="grid-3">
-      <div class="form-group"><label>Fourchette basse (€)</label><input type="number" id="bien_fourchette_basse"></div>
-      <div class="form-group"><label>Fourchette milieu (€)</label><input type="number" id="bien_fourchette_milieu" data-internal="1"></div>
-      <div class="form-group"><label>Fourchette haute (€)</label><input type="number" id="bien_fourchette_haute"></div>
-    </div>
-    <div class="section-title">Simulation crédit</div>
-    <div class="grid-4">
-      <div class="form-group"><label>Durée (ans)</label><input type="number" id="bien_credit_duree" min="5" max="30" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Apport (%)</label><input type="number" id="bien_credit_apport" min="0" max="100" step="5" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux haut (%)</label><input type="number" id="bien_credit_taux_haut" step="0.1" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux moyen (%)</label><input type="number" id="bien_credit_taux_moyen" step="0.1" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux bas (%)</label><input type="number" id="bien_credit_taux_bas" step="0.1" oninput="calcCreditStep2()"></div>
-    </div>
-    <div id="credit-preview-step2"></div>
-  </div>
-</div>
 <!-- ── Questions de découverte & Notes ── -->
 <div class="card">
   <div class="card-header">💬 Questions de découverte &amp; Notes</div>
@@ -1328,39 +1361,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <div class="grid-2">
       <div class="form-group"><label>À faire</label><textarea id="prochaines_etapes" data-internal="1" style="min-height:70px"></textarea></div>
       <div class="form-group"><label>Date R2</label><input type="date" id="date_r2" data-internal="1"></div>
-    </div>
-  </div>
-</div>
-<!-- ── Financement & Relogement ── -->
-<div class="card appart-maison-only">
-  <div class="card-header">🏦 Financement &amp; Relogement</div>
-  <div class="card-body">
-    <div class="form-group">
-      <label>Loyer potentiel estimé (€/mois)</label>
-      <input type="number" id="loyer" step="50" min="0">
-    </div>
-    <div class="form-group">
-      <label>Capital restant à rembourser (€)</label>
-      <input type="number" id="capital_restant" data-internal="1">
-    </div>
-    <div class="section-title">Prêt en cours</div>
-    <div class="grid-4">
-      <div class="form-group"><label>Montant de la dette (€)</label><input type="number" id="dette_montant" data-internal="1"></div>
-      <div class="form-group"><label>Échéance</label><input type="date" id="dette_echeance" data-internal="1"></div>
-      <div class="form-group"><label>Banque</label><input type="text" id="banque" data-internal="1"></div>
-      <div class="form-group"><label>Taux (%)</label><input type="number" id="taux_pret" data-internal="1" step="0.01"></div>
-    </div>
-    <div class="section-title mt-16">Relogement</div>
-    <div class="grid-3">
-      <div class="form-group"><label>Relogement trouvé</label><div class="radio-group">
-        <label class="radio-item"><input type="radio" name="relogement_trouve" value="non"> Non</label>
-        <label class="radio-item"><input type="radio" name="relogement_trouve" value="oui"> Oui</label>
-      </div></div>
-      <div class="form-group"><label>Budget maximum (€)</label><input type="number" id="reloge_budget" data-internal="1"></div>
-      <div class="form-group"><label>Type de bien recherché</label><input type="text" id="reloge_type" data-internal="1"></div>
-      <div class="form-group"><label>Délai d'acquisition</label><input type="text" id="reloge_delai" data-internal="1"></div>
-      <div class="form-group"><label>Zone de recherche</label><input type="text" id="reloge_zone" data-internal="1"></div>
-      <div class="form-group"><label>Nb de pièces souhaité</label><input type="number" id="reloge_pieces" data-internal="1"></div>
     </div>
   </div>
 </div>
