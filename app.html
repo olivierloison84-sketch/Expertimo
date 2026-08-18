@@ -1046,10 +1046,79 @@ details[open] summary .chevron { transform: rotate(90deg); }
   </div>
 </div>
 
+<!-- ── DPE & Diagnostics (suite) ── -->
+<div class="card appart-maison-only">
+  <div class="card-header">⚡ DPE &amp; Diagnostics</div>
+  <div class="card-body">
+    <div class="section-title">Émissions GES</div>
+    <div class="dpe-grid" id="ges_grid"></div>
+    <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" data-internal="1" style="max-width:150px"></div>
+    <div class="grid-3 mt-16">
+      <div><label>Servitudes</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="servitudes" value="non"> Non</label>
+        <label class="radio-item"><input type="radio" name="servitudes" value="oui"> Oui</label>
+      </div></div>
+      <div><label>Droits de superficie</label><div class="radio-group">
+        <label class="radio-item"><input type="radio" name="droits_superf" value="non"> Non</label>
+        <label class="radio-item"><input type="radio" name="droits_superf" value="oui"> Oui</label>
+      </div></div>
+      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" data-internal="1"></div>
+    </div>
+    <div class="section-title mt-16">Diagnostics réglementaires</div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
+      <div class="diag-form-grid" style="background:var(--primary);padding:8px 6px;border-top:none;">
+        <div class="diag-form-head" style="color:#fff;">Diagnostic</div>
+        <div class="diag-form-head" style="color:#fff;">Statut</div>
+        <div class="diag-form-head" style="color:#fff;">Résultat affiché</div>
+      </div>
+      <div style="padding:0 6px;">
+        <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
+          <select id="diag_amiante_status" onchange="applyDiagDefault('amiante','diag_amiante_status','diag_amiante_result')"><option value="">— À renseigner —</option><option value="non-soumis">Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
+          <input type="text" id="diag_amiante_result"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🔬 Plomb (CREP)</div>
+          <select id="diag_plomb_status" onchange="applyDiagDefault('plomb','diag_plomb_status','diag_plomb_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_plomb_result"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🪲 Termites</div>
+          <select id="diag_termites_status" onchange="applyDiagDefault('termites','diag_termites_status','diag_termites_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_termites_result"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">⚡ Électricité</div>
+          <select id="diag_electricite_status" onchange="applyDiagDefault('electricite','diag_electricite_status','diag_electricite_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_electricite_result"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">🔥 Gaz</div>
+          <select id="diag_gaz_status" onchange="applyDiagDefault('gaz','diag_gaz_status','diag_gaz_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_gaz_result"></div>
+        <div class="diag-form-grid"><div class="diag-form-label">💧 Assainissement</div>
+          <select id="diag_assain_status" onchange="applyDiagDefault('assain','diag_assain_status','diag_assain_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
+          <input type="text" id="diag_assain_result"></div>
+      </div>
+    </div>
+    <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
+  </div>
+</div>
+<!-- ── Points forts & Vigilances (extrait de Analyse & Scores) ── -->
+<div class="card">
+  <div class="card-header">✅ Points forts &amp; Vigilances</div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">✅ Points forts (3 max — fiche acheteur)</div>
+        <div class="form-group"><input type="text" id="bien_fort1"></div>
+        <div class="form-group"><input type="text" id="bien_fort2"></div>
+        <div class="form-group"><input type="text" id="bien_fort3"></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">⚠️ Vigilances (3 max — fiche acheteur)</div>
+        <div class="form-group"><input type="text" id="bien_vig1"></div>
+        <div class="form-group"><input type="text" id="bien_vig2"></div>
+        <div class="form-group"><input type="text" id="bien_vig3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <details open class="tier-recommande">
 <summary><span class="chevron">▸</span> 🟡 Informations recommandées</summary>
 <div class="tier-body">
-
 <!-- ── Caractéristiques (suite) ── -->
 <div class="card">
   <div class="card-header">📐 Caractéristiques du bien</div>
@@ -1152,75 +1221,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <div class="form-group mt-8"><label>Travaux récents</label>
           <textarea id="travaux_recents" data-internal="1" style="min-height:60px"></textarea>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- ── DPE & Diagnostics (suite) ── -->
-<div class="card appart-maison-only">
-  <div class="card-header">⚡ DPE &amp; Diagnostics</div>
-  <div class="card-body">
-    <div class="section-title">Émissions GES</div>
-    <div class="dpe-grid" id="ges_grid"></div>
-    <div class="form-group mt-8"><label>Valeur numérique (kgCO₂/m²/an)</label><input type="number" id="ges_valeur" data-internal="1" style="max-width:150px"></div>
-    <div class="grid-3 mt-16">
-      <div><label>Servitudes</label><div class="radio-group">
-        <label class="radio-item"><input type="radio" name="servitudes" value="non"> Non</label>
-        <label class="radio-item"><input type="radio" name="servitudes" value="oui"> Oui</label>
-      </div></div>
-      <div><label>Droits de superficie</label><div class="radio-group">
-        <label class="radio-item"><input type="radio" name="droits_superf" value="non"> Non</label>
-        <label class="radio-item"><input type="radio" name="droits_superf" value="oui"> Oui</label>
-      </div></div>
-      <div class="form-group"><label>Syndic copro</label><input type="text" id="syndic_copro" data-internal="1"></div>
-    </div>
-    <div class="section-title mt-16">Diagnostics réglementaires</div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
-      <div class="diag-form-grid" style="background:var(--primary);padding:8px 6px;border-top:none;">
-        <div class="diag-form-head" style="color:#fff;">Diagnostic</div>
-        <div class="diag-form-head" style="color:#fff;">Statut</div>
-        <div class="diag-form-head" style="color:#fff;">Résultat affiché</div>
-      </div>
-      <div style="padding:0 6px;">
-        <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
-          <select id="diag_amiante_status" onchange="applyDiagDefault('amiante','diag_amiante_status','diag_amiante_result')"><option value="">— À renseigner —</option><option value="non-soumis">Non soumis</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option></select>
-          <input type="text" id="diag_amiante_result"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">🔬 Plomb (CREP)</div>
-          <select id="diag_plomb_status" onchange="applyDiagDefault('plomb','diag_plomb_status','diag_plomb_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_plomb_result"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">🪲 Termites</div>
-          <select id="diag_termites_status" onchange="applyDiagDefault('termites','diag_termites_status','diag_termites_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_termites_result"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">⚡ Électricité</div>
-          <select id="diag_electricite_status" onchange="applyDiagDefault('electricite','diag_electricite_status','diag_electricite_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_electricite_result"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">🔥 Gaz</div>
-          <select id="diag_gaz_status" onchange="applyDiagDefault('gaz','diag_gaz_status','diag_gaz_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_gaz_result"></div>
-        <div class="diag-form-grid"><div class="diag-form-label">💧 Assainissement</div>
-          <select id="diag_assain_status" onchange="applyDiagDefault('assain','diag_assain_status','diag_assain_result')"><option value="">— À renseigner —</option><option value="favorable">Favorable</option><option value="attention">Attention</option><option value="defavorable">Défavorable</option><option value="non-soumis">Non soumis</option></select>
-          <input type="text" id="diag_assain_result"></div>
-      </div>
-    </div>
-    <p class="hint">Favorable = vert · Attention = orange · Défavorable = rouge · Non soumis = gris</p>
-  </div>
-</div>
-<!-- ── Points forts & Vigilances (extrait de Analyse & Scores) ── -->
-<div class="card">
-  <div class="card-header">✅ Points forts &amp; Vigilances</div>
-  <div class="card-body">
-    <div class="grid-2">
-      <div>
-        <div style="font-size:11px;font-weight:700;color:var(--success);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">✅ Points forts (3 max — fiche acheteur)</div>
-        <div class="form-group"><input type="text" id="bien_fort1"></div>
-        <div class="form-group"><input type="text" id="bien_fort2"></div>
-        <div class="form-group"><input type="text" id="bien_fort3"></div>
-      </div>
-      <div>
-        <div style="font-size:11px;font-weight:700;color:var(--danger);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;">⚠️ Vigilances (3 max — fiche acheteur)</div>
-        <div class="form-group"><input type="text" id="bien_vig1"></div>
-        <div class="form-group"><input type="text" id="bien_vig2"></div>
-        <div class="form-group"><input type="text" id="bien_vig3"></div>
       </div>
     </div>
   </div>
