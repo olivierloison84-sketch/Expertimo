@@ -2263,13 +2263,17 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_pf3',      d.fort3 || '');
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
-  if (d.loyer > 0) html = replaceSp(html, '_sp_loyer', String(Math.round(d.loyer)));
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
 
-  // Loyer slider — replace hardcoded 1300 in template JS
-  html = srep(html, 'value="1300"', 'value="' + (d.loyer || 1300) + '"');
-  html = srep(html, "value='1300'", "value='" + (d.loyer || 1300) + "'");
-  html = srep(html, "setAttribute('value', 1300)", "setAttribute('value', " + (d.loyer || 1300) + ')');
+  // Loyer slider — replace hardcoded 1300 in template JS. Uniquement si l'agent a
+  // renseigné un loyer : sans valeur fiable, l'onglet Simulateur investisseur est
+  // masqué plus bas (Phase 2), inutile de substituer quoi que ce soit ici.
+  if (d.loyer > 0) {
+    html = replaceSp(html, '_sp_loyer', String(Math.round(d.loyer)));
+    html = srep(html, 'value="1300"', 'value="' + Math.round(d.loyer) + '"');
+    html = srep(html, "value='1300'", "value='" + Math.round(d.loyer) + "'");
+    html = srep(html, "setAttribute('value', 1300)", "setAttribute('value', " + Math.round(d.loyer) + ')');
+  }
 
   // Address (the template may have it as literal string in JS)
   html = srep(html, "5 Rue de l'Arpajonnais", d.adresse);
@@ -2333,7 +2337,11 @@ function injectData(html, d) {
   if (pamount) pamount.textContent = prixFmt + ' €';
 
   if (d.dpe) setText('#h-dpe', d.dpe);
-  setText('#h-score', d.score.toString().replace('.', ',') + '/10');
+  var hScoreEl = q('#h-score');
+  if (hScoreEl) {
+    if (d.score) hScoreEl.textContent = d.score.toString().replace('.', ',') + '/10';
+    else hScoreEl.style.display = 'none';
+  }
 
   // ── Tab : Le Bien ──
   var piecesLabel = d.pieces ? d.pieces + ' pièce' + (parseInt(d.pieces) > 1 ? 's' : '') : '';
@@ -2361,18 +2369,23 @@ function injectData(html, d) {
     galleryEl.nextElementSibling.textContent = "📷 Cliquez sur une photo pour l'agrandir · " + nPh + " photo" + (nPh > 1 ? 's' : '') + " disponible" + (nPh > 1 ? 's' : '');
   }
 
-  // Score box
-  var scoreNum = q('.score-num');
-  if (scoreNum) scoreNum.textContent = d.score.toString().replace('.', ',');
-  var scoreDesc = q('.score-box > p');
-  if (scoreDesc) scoreDesc.textContent = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePos(d.prixm2, d.mediane) + '.';
+  // Score box — masqué entièrement si aucun score saisi par l'agent
+  if (d.score) {
+    var scoreNum = q('.score-num');
+    if (scoreNum) scoreNum.textContent = d.score.toString().replace('.', ',');
+    var scoreDesc = q('.score-box > p');
+    if (scoreDesc) scoreDesc.textContent = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePos(d.prixm2, d.mediane) + '.';
 
-  var slines = qa('.sline');
-  if (slines.length >= 4) {
-    updSline(slines[0], d.scorePrest);
-    updSline(slines[1], d.scoreSecteur);
-    updSline(slines[2], d.scoreQP);
-    updSline(slines[3], d.scoreEtat);
+    var slines = qa('.sline');
+    if (slines.length >= 4) {
+      updSline(slines[0], d.scorePrest);
+      updSline(slines[1], d.scoreSecteur);
+      updSline(slines[2], d.scoreQP);
+      updSline(slines[3], d.scoreEtat);
+    }
+  } else {
+    var scoreBoxEl = q('.score-box');
+    if (scoreBoxEl) scoreBoxEl.style.display = 'none';
   }
 
   // Points forts & vigilances
@@ -2415,22 +2428,28 @@ function injectData(html, d) {
   // ── Tab : Analyse ──
   var kpis = qa('.kpi');
   if (kpis[0] && d.prixm2) kpis[0].querySelector('.kv').textContent = fmtNum(d.prixm2) + ' €';
-  if (kpis[1] && d.mediane) kpis[1].querySelector('.kv').textContent = fmtNum(d.mediane) + ' €';
-  if (kpis[2]) kpis[2].querySelector('.kv').textContent = d.tension;
-  if (kpis[3]) kpis[3].querySelector('.kv').textContent = d.delai;
+  if (kpis[1]) { if (d.mediane) kpis[1].querySelector('.kv').textContent = fmtNum(d.mediane) + ' €'; else kpis[1].style.display = 'none'; }
+  if (kpis[2]) { if (d.tension) kpis[2].querySelector('.kv').textContent = d.tension; else kpis[2].style.display = 'none'; }
+  if (kpis[3]) { if (d.delai) kpis[3].querySelector('.kv').textContent = d.delai; else kpis[3].style.display = 'none'; }
 
-  // DVF table
+  // DVF table — masque toute la carte "Ventes comparables" si aucune transaction saisie
   var dvfTbody = q('.dvft tbody');
-  if (dvfTbody && d.dvf.length) {
-    dvfTbody.innerHTML = d.dvf.map(function(r) {
-      return '<tr class="dvf-row" data-date="' + esc(r.date) + '">'
-        + '<td>' + esc(r.date || '—') + '</td>'
-        + '<td>' + esc(r.adresse || '—') + '</td>'
-        + '<td class="mono">' + (r.surface || '—') + ' m²</td>'
-        + '<td class="mono">' + (r.prix ? fmtNum(r.prix) + ' €' : '—') + '</td>'
-        + '<td class="mono">' + (r.prixm2 ? fmtNum(r.prixm2) + ' €' : '—') + '</td>'
-        + '</tr>';
-    }).join('');
+  if (dvfTbody) {
+    if (d.dvf.length) {
+      dvfTbody.innerHTML = d.dvf.map(function(r) {
+        return '<tr class="dvf-row" data-date="' + esc(r.date) + '">'
+          + '<td>' + esc(r.date || '—') + '</td>'
+          + '<td>' + esc(r.adresse || '—') + '</td>'
+          + '<td class="mono">' + (r.surface || '—') + ' m²</td>'
+          + '<td class="mono">' + (r.prix ? fmtNum(r.prix) + ' €' : '—') + '</td>'
+          + '<td class="mono">' + (r.prixm2 ? fmtNum(r.prixm2) + ' €' : '—') + '</td>'
+          + '</tr>';
+      }).join('');
+    } else {
+      dvfTbody.innerHTML = '';
+      var dvfCard = dvfTbody.closest('.card');
+      if (dvfCard) dvfCard.style.display = 'none';
+    }
   }
 
   // DPE alert
@@ -2465,13 +2484,21 @@ function injectData(html, d) {
     if (vPrix) vPrix.textContent = prixFmt + ' €';
   }
   var lSlider = id('loyer');
-  if (lSlider) {
-    var loyerVal = d.loyer || 1300;
+  if (lSlider && d.loyer > 0) {
+    var loyerVal = Math.round(d.loyer);
     lSlider.setAttribute('value', loyerVal);
     lSlider.setAttribute('min', Math.round(loyerVal * 0.5));
     lSlider.setAttribute('max', Math.round(loyerVal * 2.5));
     var vLoyer = id('v-loyer');
     if (vLoyer) vLoyer.textContent = loyerVal + ' €';
+  }
+  // Sans loyer fiable renseigné par l'agent, le simulateur investisseur n'a aucune
+  // donnée à présenter — masque entièrement l'onglet (bouton de nav + section).
+  if (!(d.loyer > 0)) {
+    var rentaTabBtn = q('[data-tab="rentabilite"]');
+    if (rentaTabBtn) rentaTabBtn.style.display = 'none';
+    var rentaSection = id('rentabilite');
+    if (rentaSection) rentaSection.style.display = 'none';
   }
   var cSlider = id('charges');
   if (cSlider) {
@@ -3044,17 +3071,17 @@ function collectBienData() {
     pieces:        pieces,  dpe:           dpe,
     prix:          prix,    prixm2:        prixm2,
     mediane:       parseFloat(getV('bien_mediane'))||0,
-    tension:       getV('bien_tension')||'Très forte',
-    delai:         getV('bien_delai')||'21 jours',
+    tension:       getV('bien_tension'),
+    delai:         getV('bien_delai'),
     loyer:         parseFloat(getV('loyer')||getV('bien_loyer_estime'))||0,
     chargesCopro:  chargesCopro,
     chargesDetail: getV('charges_detail'),
     taxeFonciere:  taxeFonciere,
-    score:         getV('bien_score')||'9',
-    scorePrest:    getV('bien_score_prest')||'8',
-    scoreSecteur:  getV('bien_score_secteur')||'8',
-    scoreQP:       getV('bien_score_qp')||'8',
-    scoreEtat:     getV('bien_score_etat')||'8',
+    score:         getV('bien_score'),
+    scorePrest:    getV('bien_score_prest'),
+    scoreSecteur:  getV('bien_score_secteur'),
+    scoreQP:       getV('bien_score_qp'),
+    scoreEtat:     getV('bien_score_etat'),
     fort1:getV('bien_fort1'), fort2:getV('bien_fort2'), fort3:getV('bien_fort3'),
     vig1: getV('bien_vig1'),  vig2: getV('bien_vig2'),  vig3: getV('bien_vig3'),
     photo1:photo1, photo2:photo2, photo3:photo3, photo4:photo4, photo5:photo5,
