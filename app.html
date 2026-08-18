@@ -747,6 +747,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
 ══════════════════════════════════════════════════════ -->
 <div class="page" id="page-2">
 
+<!-- ── Import rapide depuis une annonce (démo IA) ── -->
+<div style="margin:16px 16px 0;">
+  <button type="button" class="btn" style="background:var(--accent);color:#141414;font-weight:700;width:100%;justify-content:center;padding:12px 18px;font-size:14px;box-shadow:var(--shadow);" onclick="openImportAnnonceModal()">⚡ Import rapide depuis une annonce (démo)</button>
+</div>
+
 <!-- ── Adresse du bien (doit être en tête — critique pour Leaflet, DVF, slug) ── -->
 <div class="card" style="margin:16px 16px 0;border-radius:var(--radius);">
   <div class="card-header">📍 Adresse du bien</div>
@@ -3694,6 +3699,290 @@ async function supprimerFiche(btn) {
   }
 }
 
+// ═══════════════════════════════════════════════════════
+// STEP 2 — injectBienData(data) : remplit les champs de page-2
+// à partir d'un objet data (mêmes clés que modifierFiche()/
+// import-annonce). Ne touche que les champs pour lesquels data
+// fournit une valeur non-null/undefined — laisse les autres
+// champs tels quels (n'écrase rien).
+// ═══════════════════════════════════════════════════════
+function injectBienData(data) {
+  function dbgSet(id, val) {
+    var el = document.getElementById(id);
+    console.log('[inject]', id, '—', el ? 'FOUND' : 'NOT FOUND', '— value:', JSON.stringify(val == null ? '' : val));
+    if (el) el.value = (val == null ? '' : val);
+  }
+  function setIfPresent(id, val) {
+    if (val === undefined || val === null) return;
+    dbgSet(id, val);
+  }
+
+  // Switch to correct type
+  var type = data.type || 'appart';
+  switchType(type);
+  document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
+  var typeTab = document.getElementById('tab-' + type);
+  if (typeTab) typeTab.classList.add('active');
+
+  // Adresse & localisation
+  setIfPresent('adresse', data.adresse);
+  setIfPresent('quartier', data.quartier);
+
+  // Surfaces
+  setIfPresent('surface_hab', data.surface);
+  setIfPresent('surface_carrez', data.surfCarrez);
+
+  // Prix (appartement/maison + terrain)
+  setIfPresent('prix_vente', data.prix);
+  setIfPresent('prix_vente_t', data.prix);
+
+  // Charges & fiscalité
+  setIfPresent('charges_copro', data.chargesCopro);
+  setIfPresent('taxe_fonciere', data.taxeFonciere);
+  setIfPresent('taxe_fonciere_t', data.taxeFonciere);
+  setIfPresent('charges_detail', data.chargesDetail);
+
+  // Caractéristiques
+  setIfPresent('nb_pieces', data.pieces);
+  setIfPresent('etage', data.etage);
+  setIfPresent('annee_construction', data.annee);
+  setIfPresent('ref_mandat', data.ref);
+
+  // DPE : cliquer le bon bouton via data-letter (créés dynamiquement par initStep2)
+  var dpeBtns = document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]');
+  console.log('[inject] dpe value:', data.dpe, '— buttons found:', dpeBtns.length);
+  if (data.dpe) {
+    var dpeTarget = document.querySelector('#page-2 .dpe-btn[data-group="dpe"][data-letter="' + data.dpe + '"]');
+    console.log('[inject] dpe target button:', dpeTarget);
+    if (dpeTarget) dpeTarget.click();
+  }
+
+  // Scores
+  setIfPresent('bien_score', data.score);
+  setIfPresent('bien_score_prest', data.scorePrest);
+  setIfPresent('bien_score_secteur', data.scoreSecteur);
+  setIfPresent('bien_score_qp', data.scoreQP);
+  setIfPresent('bien_score_etat', data.scoreEtat);
+
+  setIfPresent('acheteur_prenom', data.acheteur_prenom);
+  setIfPresent('acheteur_nom', data.acheteur_nom);
+
+  // Points forts
+  setIfPresent('bien_fort1', data.fort1);
+  setIfPresent('bien_fort2', data.fort2);
+  setIfPresent('bien_fort3', data.fort3);
+
+  // Vigilances (IDs réels : bien_vig1/2/3)
+  setIfPresent('bien_vig1', data.vig1);
+  setIfPresent('bien_vig2', data.vig2);
+  setIfPresent('bien_vig3', data.vig3);
+
+  setIfPresent('loyer', data.loyer);
+  setIfPresent('bien_loyer_estime', data.loyer);
+  setIfPresent('bien_mediane', data.mediane);
+  setIfPresent('bien_tension', data.tension);
+  setIfPresent('bien_delai', data.delai);
+
+  // Fourchette & crédit
+  setIfPresent('bien_fourchette_basse', data.fourchetBasse);
+  setIfPresent('bien_fourchette_haute', data.fourchetHaute);
+  setIfPresent('bien_credit_duree', data.creditDuree);
+  setIfPresent('bien_credit_apport', data.creditApport);
+  setIfPresent('bien_credit_taux_haut', data.creditHaut);
+  setIfPresent('bien_credit_taux_moyen', data.creditMoyen);
+  setIfPresent('bien_credit_taux_bas', data.creditBas);
+
+  // Historique & documents
+  setIfPresent('historique_libre', data.historiqueLibre);
+  setIfPresent('facture1_url', data.facture1Url);
+  setIfPresent('facture2_url', data.facture2Url);
+  setIfPresent('facture3_url', data.facture3Url);
+
+  // Photos & médias
+  setIfPresent('bien_photo1_url', data.photo1);
+  setIfPresent('bien_photo2_url', data.photo2);
+  setIfPresent('bien_photo3_url', data.photo3);
+  setIfPresent('bien_photo4_url', data.photo4);
+  setIfPresent('bien_photo5_url', data.photo5);
+  setIfPresent('video_url', data.videoUrl);
+  setIfPresent('visite_url', data.visiteUrl);
+
+  // Diagnostics
+  if (data.diags && Array.isArray(data.diags)) {
+    var diagKeys = ['amiante','plomb','termites','electricite','gaz','assain'];
+    data.diags.forEach(function(diag, i) {
+      var key = diagKeys[i];
+      if (!key) return;
+      dbgSet('diag_' + key + '_status', diag.status || '');
+      dbgSet('diag_' + key + '_result', diag.result || '');
+    });
+  }
+  setIfPresent('diag_carrez', data.diagCarrez);
+
+  // Renovations
+  if (data.renovations && Array.isArray(data.renovations)) {
+    data.renovations.forEach(function(row, i) {
+      dbgSet('renov_annee_'   + (i+1), row.annee   || '');
+      dbgSet('renov_montant_' + (i+1), row.montant || '');
+      dbgSet('renov_desc_'    + (i+1), row.desc    || '');
+    });
+  }
+
+  // DVF rows (collected but previously never re-injected)
+  if (data.dvf && Array.isArray(data.dvf)) {
+    data.dvf.forEach(function(row, i) {
+      var n = i + 1; if (n > 6) return;
+      dbgSet('dvf-date-'    + n, row.date    || '');
+      dbgSet('dvf-adresse-' + n, row.adresse || '');
+      dbgSet('dvf-surface-' + n, row.surface || '');
+      dbgSet('dvf-prix-'    + n, row.prix    || '');
+      if (row.surface && row.prix) calcDVFm2(n);
+    });
+  }
+
+  // Caractéristiques complémentaires
+  setIfPresent('nb_chambres', data.nb_chambres);
+  setIfPresent('nb_sdb', data.nb_sdb);
+  setIfPresent('nb_sde', data.nb_sde);
+  setIfPresent('nb_wc', data.nb_wc);
+  setIfPresent('nb_wc_sep', data.nb_wc_sep);
+  setIfPresent('nb_etages', data.nb_etages);
+  setIfPresent('nb_etages_m', data.nb_etages);
+  setIfPresent('annee_construction_m', (data.annee_construction_m != null ? data.annee_construction_m : data.annee));
+  setIfPresent('standard_general', data.standard_general);
+  setIfPresent('surface_terrain', data.surface_terrain);
+  setIfPresent('surface_terrain_m', data.surface_terrain);
+  setIfPresent('syndic_nom', data.syndic_nom);
+  setIfPresent('syndic_copro', data.syndic_copro);
+  setIfPresent('travaux_ag_detail', data.travaux_ag_detail);
+  setIfPresent('travaux_recents_immeuble', data.travaux_recents_immeuble);
+  setIfPresent('travaux_recents', data.travaux_recents);
+  setIfPresent('chauf_annee', data.chauf_annee);
+  setIfPresent('taxe_hab', data.taxe_hab);
+  setIfPresent('charges_mensuelles', data.charges_mensuelles);
+  setIfPresent('plus_appartement', data.plus_appartement);
+  setIfPresent('bien_fourchette_milieu', data.fourchetMilieu);
+  setIfPresent('dpe_valeur', data.dpeValeur);
+  setIfPresent('ges_valeur', data.gesValeur);
+  setIfPresent('parking_int', data.parking_int);
+  setIfPresent('parking_ext', data.parking_ext);
+  setIfPresent('parking_box', data.parking_box);
+  setIfPresent('equip_autre', data.equip_autre);
+  setIfPresent('vigilances_texte', data.vigilances_texte);
+  setIfPresent('services_prox', data.services_prox);
+  setIfPresent('voisinage', data.voisinage);
+
+  // Propriétaire (notes internes)
+  setIfPresent('proprio_prenom', data.proprio_prenom);
+  setIfPresent('proprio_nom', data.proprio_nom);
+  setIfPresent('date_r1', data.date_r1);
+  setIfPresent('tel_fixe', data.tel_fixe);
+  setIfPresent('tel_mobile', data.tel_mobile);
+  setIfPresent('email_proprio', data.email_proprio);
+  setIfPresent('raison_vente', data.raison_vente);
+  setIfPresent('vente_depuis', data.vente_depuis);
+  setIfPresent('delai_vente', data.delai_vente_prop);
+  setIfPresent('cles_chez', data.cles_chez);
+  setIfPresent('agences', data.agences);
+  setIfPresent('annee_achat', data.annee_achat);
+  setIfPresent('prix_achat', data.prix_achat);
+  setIfPresent('nb_visites', data.nb_visites);
+  setIfPresent('nb_offres', data.nb_offres);
+  setIfPresent('prix_offres', data.prix_offres);
+  setIfPresent('scenario_montant', data.scenario_montant);
+  setIfPresent('scenario_reponse', data.scenario_reponse);
+
+  // Terrain
+  setIfPresent('zone_plu', data.zone_plu);
+  setIfPresent('superficie_totale', data.superficie_totale);
+  setIfPresent('superficie_constructible', data.superficie_constructible);
+  setIfPresent('forme_terrain', data.forme_terrain);
+  setIfPresent('acces_terrain', data.acces_terrain);
+  setIfPresent('cos_ces', data.cos_ces);
+  setIfPresent('hauteur_max', data.hauteur_max);
+  setIfPresent('projet_terrain', data.projet_terrain);
+
+  // GES button (same mechanism as DPE)
+  if (data.gesLettre) {
+    var gesTarget = document.querySelector('#page-2 .dpe-btn[data-group="ges"][data-letter="' + data.gesLettre + '"]');
+    if (gesTarget) gesTarget.click();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 2 — Import rapide depuis une annonce (démo IA)
+// ═══════════════════════════════════════════════════════
+function openImportAnnonceModal() {
+  var overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
+  overlay.innerHTML =
+    '<div class="card" style="max-width:540px;width:100%;margin:0;">'
+    +   '<div class="card-header">⚡ Coller le texte d\'une annonce immobilière</div>'
+    +   '<div class="card-body">'
+    +     '<div class="form-group">'
+    +       '<label>Texte de l\'annonce</label>'
+    +       '<textarea id="import-annonce-text" placeholder="Collez ici le texte complet de l\'annonce (titre, description, prix, surface, DPE…)" style="min-height:220px;"></textarea>'
+    +     '</div>'
+    +     '<div id="import-annonce-status" style="font-size:12px;margin-bottom:10px;display:none;"></div>'
+    +     '<div style="display:flex;gap:10px;justify-content:flex-end;">'
+    +       '<button type="button" class="btn btn-outline" id="import-annonce-cancel-btn">Fermer</button>'
+    +       '<button type="button" class="btn" style="background:var(--accent);color:#141414;font-weight:700;" id="import-annonce-analyze-btn">✨ Analyser &amp; pré-remplir la fiche</button>'
+    +     '</div>'
+    +   '</div>'
+    + '</div>';
+  document.body.appendChild(overlay);
+
+  var textarea   = overlay.querySelector('#import-annonce-text');
+  var statusEl   = overlay.querySelector('#import-annonce-status');
+  var analyzeBtn = overlay.querySelector('#import-annonce-analyze-btn');
+  var cancelBtn  = overlay.querySelector('#import-annonce-cancel-btn');
+
+  function close() { overlay.remove(); }
+  cancelBtn.onclick = close;
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+
+  function setStatus(msg, isError) {
+    statusEl.style.display = 'block';
+    statusEl.style.color = isError ? 'var(--danger)' : 'var(--muted)';
+    statusEl.textContent = msg;
+  }
+
+  analyzeBtn.onclick = async function() {
+    var text = textarea.value.trim();
+    if (!text) {
+      setStatus('⚠️ Collez d\'abord le texte de l\'annonce.', true);
+      return;
+    }
+    analyzeBtn.disabled = true;
+    cancelBtn.disabled = true;
+    setStatus('⏳ Analyse en cours…', false);
+    try {
+      var res = await fetch('/api/import-annonce', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text }),
+        signal: AbortSignal.timeout(30000)
+      });
+      var payload = await res.json();
+      if (!res.ok) {
+        throw new Error(payload.error || ('Erreur serveur (' + res.status + ')'));
+      }
+      injectBienData(payload);
+      close();
+      showToast('✅ Fiche pré-remplie depuis l\'annonce — vérifiez et complétez.');
+      if (payload.adresse && typeof initFicheMap === 'function') {
+        try { initFicheMap(); } catch(e) {}
+      }
+    } catch (err) {
+      setStatus('❌ ' + (err.message || 'Échec de l\'analyse.'), true);
+      analyzeBtn.disabled = false;
+      cancelBtn.disabled = false;
+    }
+  };
+
+  textarea.focus();
+}
+
 async function modifierFiche(filename, sha, downloadUrl) {
   showToast('⏳ Chargement de la fiche…');
   try {
@@ -3825,196 +4114,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
         el.checked = false;
       });
 
-      // Switch to correct type
-      var type = data.type || 'appart';
-      switchType(type);
-      document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
-      var typeTab = document.getElementById('tab-' + type);
-      if (typeTab) typeTab.classList.add('active');
-
-      // Adresse & localisation
-      dbgSet('adresse',      data.adresse    || '');
-      dbgSet('quartier',     data.quartier   || '');
-
-      // Surfaces
-      dbgSet('surface_hab',  data.surface    || '');
-      dbgSet('surface_carrez', data.surfCarrez || '');
-
-      // Prix (appartement/maison + terrain)
-      dbgSet('prix_vente',   data.prix       || '');
-      dbgSet('prix_vente_t', data.prix       || '');
-
-      // Charges & fiscalité
-      dbgSet('charges_copro',   data.chargesCopro  || '');
-      dbgSet('taxe_fonciere',   data.taxeFonciere  || '');
-      dbgSet('taxe_fonciere_t', data.taxeFonciere  || '');
-      dbgSet('charges_detail',  data.chargesDetail || '');
-
-      // Caractéristiques
-      dbgSet('nb_pieces',          data.pieces || '');
-      dbgSet('etage',              data.etage  || '');
-      dbgSet('annee_construction', data.annee  || '');
-      dbgSet('ref_mandat',         data.ref    || '');
-
-      // DPE : cliquer le bon bouton via data-letter (créés dynamiquement par initStep2)
-      var dpeBtns = document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]');
-      console.log('[inject] dpe value:', data.dpe, '— buttons found:', dpeBtns.length);
-      if (data.dpe) {
-        var dpeTarget = document.querySelector('#page-2 .dpe-btn[data-group="dpe"][data-letter="' + data.dpe + '"]');
-        console.log('[inject] dpe target button:', dpeTarget);
-        if (dpeTarget) dpeTarget.click();
-      }
-
-      // Scores
-      dbgSet('bien_score',        data.score       || '');
-      dbgSet('bien_score_prest',  data.scorePrest  || '');
-      dbgSet('bien_score_secteur',data.scoreSecteur || '');
-      dbgSet('bien_score_qp',     data.scoreQP     || '');
-      dbgSet('bien_score_etat',   data.scoreEtat   || '');
-
-      dbgSet('acheteur_prenom', data.acheteur_prenom || '');
-      dbgSet('acheteur_nom',    data.acheteur_nom    || '');
-
-      // Points forts
-      dbgSet('bien_fort1', data.fort1 || '');
-      dbgSet('bien_fort2', data.fort2 || '');
-      dbgSet('bien_fort3', data.fort3 || '');
-
-      // Vigilances (IDs réels : bien_vig1/2/3)
-      dbgSet('bien_vig1', data.vig1 || '');
-      dbgSet('bien_vig2', data.vig2 || '');
-      dbgSet('bien_vig3', data.vig3 || '');
-
-      document.getElementById('loyer').value = data.loyer || '';
-      dbgSet('bien_loyer_estime', data.loyer    || '');
-      dbgSet('bien_mediane',      data.mediane  || '');
-      dbgSet('bien_tension',      data.tension  || '');
-      dbgSet('bien_delai',        data.delai    || '');
-
-      // Fourchette & crédit
-      dbgSet('bien_fourchette_basse',   data.fourchetBasse  || '');
-      dbgSet('bien_fourchette_haute',   data.fourchetHaute  || '');
-      dbgSet('bien_credit_duree',       data.creditDuree    || '');
-      dbgSet('bien_credit_apport',      data.creditApport   || '');
-      dbgSet('bien_credit_taux_haut',   data.creditHaut     || '');
-      dbgSet('bien_credit_taux_moyen',  data.creditMoyen    || '');
-      dbgSet('bien_credit_taux_bas',    data.creditBas      || '');
-
-      // Historique & documents
-      dbgSet('historique_libre', data.historiqueLibre || '');
-      dbgSet('facture1_url',     data.facture1Url    || '');
-      dbgSet('facture2_url',     data.facture2Url    || '');
-      dbgSet('facture3_url',     data.facture3Url    || '');
-
-      // Photos & médias
-      dbgSet('bien_photo1_url', data.photo1    || '');
-      dbgSet('bien_photo2_url', data.photo2    || '');
-      dbgSet('bien_photo3_url', data.photo3    || '');
-      dbgSet('bien_photo4_url', data.photo4    || '');
-      dbgSet('bien_photo5_url', data.photo5    || '');
-      dbgSet('video_url',       data.videoUrl  || '');
-      dbgSet('visite_url',      data.visiteUrl || '');
-
-      // Diagnostics
-      if (data.diags && Array.isArray(data.diags)) {
-        var diagKeys = ['amiante','plomb','termites','electricite','gaz','assain'];
-        data.diags.forEach(function(diag, i) {
-          var key = diagKeys[i];
-          if (!key) return;
-          dbgSet('diag_' + key + '_status', diag.status || '');
-          dbgSet('diag_' + key + '_result', diag.result || '');
-        });
-      }
-      dbgSet('diag_carrez', data.diagCarrez || '');
-
-      // Renovations
-      if (data.renovations && Array.isArray(data.renovations)) {
-        data.renovations.forEach(function(row, i) {
-          dbgSet('renov_annee_'   + (i+1), row.annee   || '');
-          dbgSet('renov_montant_' + (i+1), row.montant || '');
-          dbgSet('renov_desc_'    + (i+1), row.desc    || '');
-        });
-      }
-
-      // DVF rows (collected but previously never re-injected)
-      if (data.dvf && Array.isArray(data.dvf)) {
-        data.dvf.forEach(function(row, i) {
-          var n = i + 1; if (n > 6) return;
-          dbgSet('dvf-date-'    + n, row.date    || '');
-          dbgSet('dvf-adresse-' + n, row.adresse || '');
-          dbgSet('dvf-surface-' + n, row.surface || '');
-          dbgSet('dvf-prix-'    + n, row.prix    || '');
-          if (row.surface && row.prix) calcDVFm2(n);
-        });
-      }
-
-      // Caractéristiques complémentaires
-      dbgSet('nb_chambres',  data.nb_chambres  || '');
-      dbgSet('nb_sdb',       data.nb_sdb       || '');
-      dbgSet('nb_sde',       data.nb_sde       || '');
-      dbgSet('nb_wc',        data.nb_wc        || '');
-      dbgSet('nb_wc_sep',    data.nb_wc_sep    || '');
-      dbgSet('nb_etages',    data.nb_etages    || '');
-      dbgSet('nb_etages_m',  data.nb_etages    || '');
-      dbgSet('annee_construction_m', data.annee_construction_m || data.annee || '');
-      dbgSet('standard_general',     data.standard_general     || '');
-      dbgSet('surface_terrain',   data.surface_terrain || '');
-      dbgSet('surface_terrain_m', data.surface_terrain || '');
-      dbgSet('syndic_nom',   data.syndic_nom   || '');
-      dbgSet('syndic_copro', data.syndic_copro || '');
-      dbgSet('travaux_ag_detail',        data.travaux_ag_detail        || '');
-      dbgSet('travaux_recents_immeuble', data.travaux_recents_immeuble || '');
-      dbgSet('travaux_recents',          data.travaux_recents          || '');
-      dbgSet('chauf_annee',              data.chauf_annee              || '');
-      dbgSet('taxe_hab',           data.taxe_hab           || '');
-      dbgSet('charges_mensuelles', data.charges_mensuelles || '');
-      dbgSet('plus_appartement',   data.plus_appartement   || '');
-      dbgSet('bien_fourchette_milieu', data.fourchetMilieu  || '');
-      dbgSet('dpe_valeur',  data.dpeValeur  || '');
-      dbgSet('ges_valeur',  data.gesValeur  || '');
-      dbgSet('parking_int', data.parking_int || '');
-      dbgSet('parking_ext', data.parking_ext || '');
-      dbgSet('parking_box', data.parking_box || '');
-      dbgSet('equip_autre',      data.equip_autre      || '');
-      dbgSet('vigilances_texte', data.vigilances_texte || '');
-      dbgSet('services_prox',    data.services_prox    || '');
-      dbgSet('voisinage',        data.voisinage        || '');
-
-      // Propriétaire (notes internes)
-      dbgSet('proprio_prenom',  data.proprio_prenom  || '');
-      dbgSet('proprio_nom',     data.proprio_nom     || '');
-      dbgSet('date_r1',         data.date_r1         || '');
-      dbgSet('tel_fixe',        data.tel_fixe        || '');
-      dbgSet('tel_mobile',      data.tel_mobile      || '');
-      dbgSet('email_proprio',   data.email_proprio   || '');
-      dbgSet('raison_vente',    data.raison_vente    || '');
-      dbgSet('vente_depuis',    data.vente_depuis    || '');
-      dbgSet('delai_vente',     data.delai_vente_prop || '');
-      dbgSet('cles_chez',       data.cles_chez       || '');
-      dbgSet('agences',         data.agences         || '');
-      dbgSet('annee_achat',     data.annee_achat     || '');
-      dbgSet('prix_achat',      data.prix_achat      || '');
-      dbgSet('nb_visites',      data.nb_visites      || '');
-      dbgSet('nb_offres',       data.nb_offres       || '');
-      dbgSet('prix_offres',     data.prix_offres     || '');
-      dbgSet('scenario_montant', data.scenario_montant || '');
-      dbgSet('scenario_reponse', data.scenario_reponse || '');
-
-      // Terrain
-      dbgSet('zone_plu',                data.zone_plu                || '');
-      dbgSet('superficie_totale',       data.superficie_totale       || '');
-      dbgSet('superficie_constructible',data.superficie_constructible|| '');
-      dbgSet('forme_terrain',           data.forme_terrain           || '');
-      dbgSet('acces_terrain',           data.acces_terrain           || '');
-      dbgSet('cos_ces',                 data.cos_ces                 || '');
-      dbgSet('hauteur_max',             data.hauteur_max             || '');
-      dbgSet('projet_terrain',          data.projet_terrain          || '');
-
-      // GES button (same mechanism as DPE)
-      if (data.gesLettre) {
-        var gesTarget = document.querySelector('#page-2 .dpe-btn[data-group="ges"][data-letter="' + data.gesLettre + '"]');
-        if (gesTarget) gesTarget.click();
-      }
+      injectBienData(data);
 
       // 6. Release edit mode AFTER injection is complete
       window._editMode = false;
