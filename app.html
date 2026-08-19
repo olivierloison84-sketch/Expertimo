@@ -1834,13 +1834,101 @@ function saveProfile() {
   };
   localStorage.setItem('_agent_profile', JSON.stringify(profile));
   document.getElementById('profile-saved-badge').style.display = 'inline-flex';
+  syncProfileToSupabase(profile);
   return profile;
 }
 
-function loadProfile() {
+// Upsert best-effort du profil vers Supabase (agent_profiles). N'empêche
+// jamais la sauvegarde locale : toute erreur (table absente, RLS, offline…)
+// est seulement loguée en console.
+async function syncProfileToSupabase(profile) {
+  try {
+    var authClient = window.privencyAuth;
+    if (!authClient) return;
+    var userRes = await authClient.auth.getUser();
+    var user = userRes && userRes.data && userRes.data.user;
+    if (!user) return;
+    var row = {
+      user_id:         user.id,
+      prenom:          profile.prenom,
+      nom:             profile.nom,
+      reseau:          profile.reseau,
+      tel:             profile.tel,
+      email:           profile.email,
+      secteur:         profile.secteur,
+      rdv_url:         profile.rdv_url,
+      photo_url:       profile.photo_url,
+      color_primary:   profile.color_primary,
+      color_accent:    profile.color_accent,
+      siret:           profile.siret,
+      denomination:    profile.denomination,
+      forme_juridique: profile.formeJuridique,
+      adresse_siege:   profile.adresseSiege,
+      tva_intra:       profile.tvaIntra,
+      code_naf:        profile.codeNaf,
+      updated_at:      new Date().toISOString()
+    };
+    var { error } = await authClient.from('agent_profiles').upsert(row);
+    if (error) console.error('syncProfileToSupabase: échec upsert (profil conservé en localStorage uniquement)', error);
+  } catch (e) {
+    console.error('syncProfileToSupabase: échec (profil conservé en localStorage uniquement)', e);
+  }
+}
+
+// Lecture synchrone du cache localStorage — utilisée par les points d'appel
+// qui ne peuvent pas attendre la version asynchrone (ex: collecte de données
+// pendant la génération de fiche, une fois le profil déjà chargé au step 1).
+function loadProfileSync() {
   var raw = localStorage.getItem('_agent_profile');
   if (!raw) return null;
   try { return JSON.parse(raw); } catch(e) { return null; }
+}
+
+// Version asynchrone : si un utilisateur est authentifié, tente d'abord
+// Supabase (agent_profiles) et met à jour le cache localStorage au passage.
+// Retombe sur le localStorage existant si non authentifié, table absente,
+// ou toute autre erreur (comportement identique à l'ancien loadProfile()).
+async function loadProfile() {
+  try {
+    var authClient = window.privencyAuth;
+    if (authClient) {
+      var userRes = await authClient.auth.getUser();
+      var user = userRes && userRes.data && userRes.data.user;
+      if (user) {
+        var { data, error } = await authClient
+          .from('agent_profiles')
+          .select('*')
+          .eq('user_id', user.id)
+          .maybeSingle();
+        if (!error && data) {
+          var profile = {
+            prenom:         data.prenom,
+            nom:            data.nom,
+            reseau:         data.reseau,
+            tel:            data.tel,
+            email:          data.email,
+            secteur:        data.secteur,
+            rdv_url:        data.rdv_url,
+            photo_url:      data.photo_url,
+            color_primary:  data.color_primary,
+            color_accent:   data.color_accent,
+            siret:          data.siret,
+            denomination:   data.denomination,
+            formeJuridique: data.forme_juridique,
+            adresseSiege:   data.adresse_siege,
+            tvaIntra:       data.tva_intra,
+            codeNaf:        data.code_naf
+          };
+          localStorage.setItem('_agent_profile', JSON.stringify(profile));
+          return profile;
+        }
+        if (error) console.error('loadProfile: échec lecture Supabase, repli sur localStorage', error);
+      }
+    }
+  } catch (e) {
+    console.error('loadProfile: échec lecture Supabase, repli sur localStorage', e);
+  }
+  return loadProfileSync();
 }
 
 function applyProfile(p) {
@@ -1948,13 +2036,40 @@ function resetProfile() {
   document.getElementById('profile-saved-badge').style.display = 'none';
   updateAgentPreview();
   showToast('Profil réinitialisé');
+  deleteProfileFromSupabase();
+}
+
+// Best-effort : vide la ligne agent_profiles de l'utilisateur authentifié
+// (upsert de champs vides, cohérent avec les policies insert/update fournies
+// dans supabase-agent-profiles.sql — pas de policy delete). Échec silencieux
+// (table absente, RLS, offline…) — la réinitialisation locale reste
+// effective dans tous les cas.
+async function deleteProfileFromSupabase() {
+  try {
+    var authClient = window.privencyAuth;
+    if (!authClient) return;
+    var userRes = await authClient.auth.getUser();
+    var user = userRes && userRes.data && userRes.data.user;
+    if (!user) return;
+    var emptyRow = {
+      user_id: user.id, prenom: null, nom: null, reseau: null, tel: null,
+      email: null, secteur: null, rdv_url: null, photo_url: null,
+      color_primary: null, color_accent: null, siret: null, denomination: null,
+      forme_juridique: null, adresse_siege: null, tva_intra: null, code_naf: null,
+      updated_at: new Date().toISOString()
+    };
+    var { error } = await authClient.from('agent_profiles').upsert(emptyRow);
+    if (error) console.error('deleteProfileFromSupabase: échec réinitialisation Supabase', error);
+  } catch (e) {
+    console.error('deleteProfileFromSupabase: échec réinitialisation Supabase', e);
+  }
 }
 
 // ═══════════════════════════════════════════════════════
 // STEP 1 — INIT
 // ═══════════════════════════════════════════════════════
-(function initApp() {
-  var saved = loadProfile();
+(async function initApp() {
+  var saved = await loadProfile();
   if (saved) { applyProfile(saved); _stepsComplete[1] = true; }
 })();
 
@@ -3153,7 +3268,7 @@ function collectBienData() {
   var typeLabel=currentType==='appart'?'Appartement':currentType==='maison'?'Maison':'Terrain';
   var pieces=getV('nb_pieces'), etage=getV('etage');
   var desc=[typeLabel,pieces?pieces+' pièce'+(parseInt(pieces)>1?'s':''):'',surface?'de '+surface.toLocaleString('fr-FR')+' m²':'',etage?'· '+etage:'',dpe?'· DPE '+dpe:''].filter(Boolean).join(' ');
-  var agent=loadProfile()||{};
+  var agent=loadProfileSync()||{};
   return {
     ref:           getV('ref_mandat')||'ref-mandat',
     type:          currentType,
@@ -3269,7 +3384,7 @@ function refreshStep3Summary() {
   if (!d) { d = collectBienData(); }
   var el = document.getElementById('step3-summary');
   if (!el) return;
-  var agent = loadProfile() || {};
+  var agent = loadProfileSync() || {};
   el.innerHTML =
     '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;font-size:13px;">'
     + '<div><span style="color:var(--muted)">Adresse</span><br><strong>'
