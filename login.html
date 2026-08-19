@@ -406,6 +406,17 @@
       return;
     }
 
+    // Anti-énumération : Supabase ne renvoie pas d'erreur explicite pour un
+    // email déjà associé à un compte confirmé, mais data.user.identities
+    // est alors un tableau vide (aucun nouvel email de confirmation envoyé).
+    if (data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+      signupErrorMessage.textContent = 'Un compte existe déjà avec cet email. Essayez de vous connecter, ou utilisez « Mot de passe oublié » sur l\'écran de connexion si besoin.';
+      signupErrorMessage.classList.add('visible');
+      signupSubmitBtn.disabled = false;
+      signupSubmitBtn.textContent = 'Créer mon compte';
+      return;
+    }
+
     // Si Supabase renvoie une session immédiatement, la confirmation par
     // email n'est pas requise (configuration du projet) : on connecte direct.
     if (data && data.session) {
