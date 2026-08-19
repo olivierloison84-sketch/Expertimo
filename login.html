@@ -202,7 +202,7 @@
     <p>Votre espace immobilier professionnel</p>
   </div>
 
-  <div class="form-box">
+  <div class="form-box" id="login-box">
     <h2>Connexion</h2>
     <form id="login-form" novalidate>
       <div class="field">
@@ -218,7 +218,29 @@
       <div class="error-message" id="error-message"></div>
       <div class="success-message" id="success-message"></div>
     </form>
-    <p class="register-link">Pas encore de compte ? <a href="/register.html">S'inscrire</a></p>
+    <p class="register-link">Pas encore de compte ? <a href="#" id="show-signup-link">Créer un compte</a></p>
+  </div>
+
+  <div class="form-box" id="signup-box" style="display:none;">
+    <h2>Créer un compte</h2>
+    <form id="signup-form" novalidate>
+      <div class="field">
+        <label for="signup-email">Adresse email</label>
+        <input type="email" id="signup-email" name="email" placeholder="vous@exemple.fr" autocomplete="email" required>
+      </div>
+      <div class="field">
+        <label for="signup-password">Mot de passe</label>
+        <input type="password" id="signup-password" name="password" placeholder="••••••••" autocomplete="new-password" required>
+      </div>
+      <div class="field">
+        <label for="signup-password-confirm">Confirmer le mot de passe</label>
+        <input type="password" id="signup-password-confirm" name="password-confirm" placeholder="••••••••" autocomplete="new-password" required>
+      </div>
+      <button type="submit" class="btn-submit" id="signup-submit-btn">Créer mon compte</button>
+      <div class="error-message" id="signup-error-message"></div>
+      <div class="success-message" id="signup-success-message"></div>
+    </form>
+    <p class="register-link">Déjà un compte ? <a href="#" id="show-login-link">Se connecter</a></p>
   </div>
 </div>
 
@@ -292,6 +314,104 @@
     }
 
     window.location.href = '/dashboard.html';
+  });
+
+  // ─── Inscription (signup) ───────────────────────────────
+  const loginBox = document.getElementById('login-box');
+  const signupBox = document.getElementById('signup-box');
+  const showSignupLink = document.getElementById('show-signup-link');
+  const showLoginLink = document.getElementById('show-login-link');
+  const signupForm = document.getElementById('signup-form');
+  const signupSubmitBtn = document.getElementById('signup-submit-btn');
+  const signupErrorMessage = document.getElementById('signup-error-message');
+  const signupSuccessMessage = document.getElementById('signup-success-message');
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function showSignup() {
+    loginBox.style.display = 'none';
+    signupBox.style.display = 'block';
+    signupErrorMessage.classList.remove('visible');
+    signupSuccessMessage.classList.remove('visible');
+  }
+
+  function showLoginBox() {
+    signupBox.style.display = 'none';
+    loginBox.style.display = 'block';
+  }
+
+  showSignupLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showSignup();
+  });
+
+  showLoginLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    showLoginBox();
+  });
+
+  function translateSignupError(message) {
+    const translations = {
+      'User already registered': 'Un compte existe déjà avec cette adresse email.',
+      'Password should be at least 6 characters.': 'Le mot de passe doit contenir au moins 6 caractères.',
+      'Unable to validate email address: invalid format': "L'adresse email est invalide.",
+      'Signup requires a valid password': 'Veuillez saisir un mot de passe valide.'
+    };
+    return translations[message] || message;
+  }
+
+  signupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById('signup-email').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const passwordConfirm = document.getElementById('signup-password-confirm').value;
+
+    signupErrorMessage.classList.remove('visible');
+    signupSuccessMessage.classList.remove('visible');
+
+    if (!email || !password || !passwordConfirm) {
+      signupErrorMessage.textContent = 'Veuillez remplir tous les champs.';
+      signupErrorMessage.classList.add('visible');
+      return;
+    }
+
+    if (!EMAIL_RE.test(email)) {
+      signupErrorMessage.textContent = "L'adresse email est invalide.";
+      signupErrorMessage.classList.add('visible');
+      return;
+    }
+
+    if (password !== passwordConfirm) {
+      signupErrorMessage.textContent = 'Les mots de passe ne correspondent pas.';
+      signupErrorMessage.classList.add('visible');
+      return;
+    }
+
+    signupSubmitBtn.disabled = true;
+    signupSubmitBtn.textContent = 'Création…';
+
+    const { data, error } = await client.auth.signUp({ email, password });
+
+    if (error) {
+      signupErrorMessage.textContent = translateSignupError(error.message);
+      signupErrorMessage.classList.add('visible');
+      signupSubmitBtn.disabled = false;
+      signupSubmitBtn.textContent = 'Créer mon compte';
+      return;
+    }
+
+    // Si Supabase renvoie une session immédiatement, la confirmation par
+    // email n'est pas requise (configuration du projet) : on connecte direct.
+    if (data && data.session) {
+      window.location.href = '/app.html';
+      return;
+    }
+
+    signupForm.reset();
+    signupSuccessMessage.textContent = 'Un email de confirmation vous a été envoyé, cliquez sur le lien pour activer votre compte avant de vous connecter.';
+    signupSuccessMessage.classList.add('visible');
+    signupSubmitBtn.disabled = false;
+    signupSubmitBtn.textContent = 'Créer mon compte';
   });
 </script>
 
