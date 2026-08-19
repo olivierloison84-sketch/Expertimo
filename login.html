@@ -390,7 +390,13 @@
     signupSubmitBtn.disabled = true;
     signupSubmitBtn.textContent = 'Création…';
 
-    const { data, error } = await client.auth.signUp({ email, password });
+    const { data, error } = await client.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: window.location.origin + '/app.html'
+      }
+    });
 
     if (error) {
       signupErrorMessage.textContent = translateSignupError(error.message);
