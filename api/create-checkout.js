@@ -29,10 +29,12 @@ module.exports = async function handler(req, res) {
       mode: 'subscription',
       line_items: [
         {
-          price: 'price_1TgrG0LwU7EqTQT5nH642tHZ',
+          price: 'price_1U6TlILwU7EqTQT57pF77wZB',
           quantity: 1
         }
       ],
+      automatic_tax: { enabled: true },
+      billing_address_collection: 'required',
       success_url: 'https://expertimo-phi.vercel.app/app.html',
       cancel_url: 'https://expertimo-phi.vercel.app/login.html',
       customer_email: email,
