@@ -3473,6 +3473,31 @@ function continuerVersPublication() {
 // ═══════════════════════════════════════════════════════
 // STEP 4 — PUBLICATION GITHUB
 // ═══════════════════════════════════════════════════════
+// Upsert best-effort de l'association fiche <-> agent vers Supabase
+// (agent_fiches). N'empêche jamais l'affichage du succès de publication :
+// la fiche est déjà bien publiée sur GitHub à ce stade, toute erreur ici
+// est seulement loguée en console.
+async function syncFicheToSupabase(slug, pageUrl) {
+  try {
+    var authClient = window.privencyAuth;
+    if (!authClient) return;
+    var userRes = await authClient.auth.getUser();
+    var user = userRes && userRes.data && userRes.data.user;
+    if (!user) return;
+    var row = {
+      agent_user_id: user.id,
+      filename:      slug + '-FINAL.html',
+      label:         slug.replace(/-/g, ' '),
+      published_url: pageUrl,
+      updated_at:    new Date().toISOString()
+    };
+    var { error } = await authClient.from('agent_fiches').upsert(row, { onConflict: 'filename' });
+    if (error) console.error('syncFicheToSupabase: échec upsert', error);
+  } catch (e) {
+    console.error('syncFicheToSupabase: échec', e);
+  }
+}
+
 function pushToGitHub() {
   var token = _GH_TOKEN || localStorage.getItem('expertimo_gh_token');
   if (!token) {
@@ -3531,6 +3556,7 @@ function pushToGitHub() {
       if (res.ok) {
         var pageUrl = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/'
           + _lastGeneratedSlug + '-FINAL.html';
+        syncFicheToSupabase(_lastGeneratedSlug, pageUrl);
         status.innerHTML = '✅ Publié avec succès !';
         var linkArea = document.getElementById('gh-link-area');
         linkArea.style.display = 'block';
@@ -3844,6 +3870,21 @@ async function loadFiches() {
   empty.style.display  = 'none';
 
   try {
+    var ownFilenames = [];
+    var authClient = window.privencyAuth;
+    if (authClient) {
+      var userRes = await authClient.auth.getUser();
+      var user = userRes && userRes.data && userRes.data.user;
+      if (user) {
+        var { data: ownFiches, error: ownFichesErr } = await authClient
+          .from('agent_fiches')
+          .select('filename')
+          .eq('agent_user_id', user.id);
+        if (ownFichesErr) console.error('loadFiches: échec chargement agent_fiches', ownFichesErr);
+        else ownFilenames = (ownFiches || []).map(function(row) { return row.filename; });
+      }
+    }
+
     var r = await fetch('https://api.github.com/repos/' + _GH_REPO + '/contents/fiches', {
       headers: { Authorization: 'token ' + _GH_TOKEN, Accept: 'application/vnd.github.v3+json' }
     });
@@ -3851,7 +3892,9 @@ async function loadFiches() {
     var files = await r.json();
     if (!Array.isArray(files)) throw new Error('Réponse inattendue');
 
-    var htmlFiles = files.filter(function(f) { return f.name.endsWith('.html'); });
+    var htmlFiles = files
+      .filter(function(f) { return f.name.endsWith('.html'); })
+      .filter(function(f) { return ownFilenames.indexOf(f.name) !== -1; });
     if (htmlFiles.length === 0) {
       status.style.display = 'none';
       empty.style.display  = 'block';
