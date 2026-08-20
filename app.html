@@ -539,7 +539,28 @@ details[open] summary .chevron { transform: rotate(90deg); }
         window.location.replace('/dashboard.html');
         return;
       }
+      try {
+        const { data: profile } = await authClient
+          .from('agent_profiles')
+          .select('onboarding_seen')
+          .eq('user_id', session.user.id)
+          .maybeSingle();
+        window._onboardingSeen = profile ? !!profile.onboarding_seen : false;
+      } catch (e) {
+        window._onboardingSeen = false;
+      }
       reveal();
+      if (window._onboardingSeen === false) {
+        // Le script qui définit showOnboardingOverlay() est plus bas dans
+        // le document : s'il n'a pas encore fini de s'exécuter (résolution
+        // Supabase très rapide), on pose un drapeau que ce script consomme
+        // dès qu'il est prêt, plutôt que de perdre silencieusement le trigger.
+        if (typeof window.showOnboardingOverlay === 'function') {
+          window.showOnboardingOverlay();
+        } else {
+          window._onboardingPending = true;
+        }
+      }
     } catch (e) {
       window.location.replace('/dashboard.html');
     }
@@ -1680,6 +1701,146 @@ fetch('./index.html')
   .then(function(r) { return r.text(); })
   .then(function(html) { _templateHTML = html; })
   .catch(function(err) { console.warn('Template non chargé :', err); });
+
+// ═══════════════════════════════════════════════════════
+// ONBOARDING OVERLAY — tutoriel 4 étapes au premier chargement
+// ═══════════════════════════════════════════════════════
+var _ONBOARDING_SLIDES = [
+  { icon: '👤', title: 'Votre profil, une seule fois',
+    text: 'Renseignez vos coordonnées et votre identité visuelle. Elles apparaîtront automatiquement sur chaque fiche que vous publierez, sans avoir à les ressaisir.' },
+  { icon: '🏠', title: 'Saisie du bien',
+    text: 'Importez une annonce existante en collant son texte, ou remplissez les informations du bien vous-même. Seuls les champs essentiels sont nécessaires.' },
+  { icon: '⚡', title: 'Génération automatique',
+    text: 'En un clic, Privency compile les ventes comparables (DVF), le DPE, un simulateur de crédit et une carte interactive dans une fiche prête à partager.' },
+  { icon: '🚀', title: 'Publication en un lien',
+    text: 'Publiez la fiche en ligne et obtenez un lien unique à envoyer directement à votre acheteur. Il pourra la consulter et poser ses questions au chatbot 24h/24.' }
+];
+var _onboardingOverlayEl = null;
+var _onboardingSlideIdx = 0;
+
+// Marque onboarding_seen=true en base (best-effort, jamais bloquant : la
+// fiche/l'app reste utilisable même si cette écriture échoue).
+async function markOnboardingSeen() {
+  try {
+    var authClient = window.privencyAuth;
+    if (!authClient) return;
+    var userRes = await authClient.auth.getUser();
+    var user = userRes && userRes.data && userRes.data.user;
+    if (!user) return;
+    var { error } = await authClient
+      .from('agent_profiles')
+      .update({ onboarding_seen: true })
+      .eq('user_id', user.id);
+    if (error) console.error('markOnboardingSeen: échec update', error);
+  } catch (e) {
+    console.error('markOnboardingSeen: échec', e);
+  }
+}
+
+function renderOnboardingSlide() {
+  if (!_onboardingOverlayEl) return;
+  var slide = _ONBOARDING_SLIDES[_onboardingSlideIdx];
+  var isLast = _onboardingSlideIdx === _ONBOARDING_SLIDES.length - 1;
+
+  var icon = _onboardingOverlayEl.querySelector('#onboarding-icon');
+  var title = _onboardingOverlayEl.querySelector('#onboarding-title');
+  var text = _onboardingOverlayEl.querySelector('#onboarding-text');
+  var prevBtn = _onboardingOverlayEl.querySelector('#onboarding-prev-btn');
+  var nextBtn = _onboardingOverlayEl.querySelector('#onboarding-next-btn');
+  var dotsWrap = _onboardingOverlayEl.querySelector('#onboarding-dots');
+
+  icon.textContent = slide.icon;
+  title.textContent = slide.title;
+  text.textContent = slide.text;
+  prevBtn.style.visibility = _onboardingSlideIdx === 0 ? 'hidden' : 'visible';
+  nextBtn.textContent = isLast ? 'C\'est parti !' : 'Suivant';
+
+  dotsWrap.innerHTML = _ONBOARDING_SLIDES.map(function(s, i) {
+    var active = i === _onboardingSlideIdx;
+    return '<span style="width:8px;height:8px;border-radius:50%;display:inline-block;'
+      + 'background:' + (active ? 'var(--accent)' : 'rgba(184,146,58,.3)') + ';'
+      + 'transform:' + (active ? 'scale(1.2)' : 'scale(1)') + ';transition:.15s;"></span>';
+  }).join('');
+}
+
+function closeOnboardingOverlay(markSeen) {
+  if (markSeen) markOnboardingSeen();
+  if (_onboardingOverlayEl) {
+    _onboardingOverlayEl.remove();
+    _onboardingOverlayEl = null;
+  }
+}
+
+function showOnboardingOverlay() {
+  if (_onboardingOverlayEl) return;
+  _onboardingSlideIdx = 0;
+
+  var overlay = document.createElement('div');
+  overlay.id = 'onboarding-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+    + 'background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;'
+    + 'z-index:10001;padding:20px;';
+  overlay.innerHTML =
+    '<div style="position:relative;max-width:420px;width:100%;background:#141414;'
+    + 'border:1px solid rgba(184,146,58,.35);border-radius:12px;padding:36px 28px 28px;'
+    + 'color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:inherit;">'
+    +   '<button type="button" id="onboarding-skip-btn" style="position:absolute;top:12px;right:14px;'
+    +     'background:none;border:none;color:#8a7550;font-size:12px;cursor:pointer;font-family:inherit;">'
+    +     'Passer</button>'
+    +   '<div id="onboarding-icon" style="font-size:44px;text-align:center;margin-bottom:14px;"></div>'
+    +   '<div id="onboarding-title" style="font-size:18px;font-weight:700;text-align:center;'
+    +     'color:#fff;margin-bottom:10px;"></div>'
+    +   '<div id="onboarding-text" style="font-size:13px;line-height:1.6;text-align:center;'
+    +     'color:#c7ccd3;margin-bottom:22px;"></div>'
+    +   '<div id="onboarding-dots" style="display:flex;justify-content:center;gap:8px;margin-bottom:24px;"></div>'
+    +   '<div style="display:flex;justify-content:space-between;gap:10px;">'
+    +     '<button type="button" id="onboarding-prev-btn" style="background:none;'
+    +       'border:1px solid #8a7550;color:#b8923a;border-radius:6px;padding:8px 16px;'
+    +       'font-size:13px;cursor:pointer;font-family:inherit;">Précédent</button>'
+    +     '<button type="button" id="onboarding-next-btn" style="background:var(--accent);'
+    +       'border:none;color:#141414;font-weight:700;border-radius:6px;padding:8px 16px;'
+    +       'font-size:13px;cursor:pointer;font-family:inherit;margin-left:auto;"></button>'
+    +   '</div>'
+    + '</div>';
+  document.body.appendChild(overlay);
+  _onboardingOverlayEl = overlay;
+
+  overlay.querySelector('#onboarding-skip-btn').onclick = function() { closeOnboardingOverlay(true); };
+  overlay.querySelector('#onboarding-prev-btn').onclick = function() {
+    if (_onboardingSlideIdx > 0) { _onboardingSlideIdx--; renderOnboardingSlide(); }
+  };
+  overlay.querySelector('#onboarding-next-btn').onclick = function() {
+    if (_onboardingSlideIdx === _ONBOARDING_SLIDES.length - 1) {
+      closeOnboardingOverlay(true);
+    } else {
+      _onboardingSlideIdx++;
+      renderOnboardingSlide();
+    }
+  };
+
+  renderOnboardingSlide();
+}
+window.showOnboardingOverlay = showOnboardingOverlay;
+// Consomme un déclenchement posé par checkSubscription() si l'auth s'est
+// résolue avant que ce script n'ait fini de se charger (voir app.html:553).
+if (window._onboardingPending) {
+  window._onboardingPending = false;
+  showOnboardingOverlay();
+}
+
+// Petit bouton discret pour revoir le tutoriel à la demande — n'écrit
+// jamais onboarding_seen (la fermeture le remet à true, ce qui est déjà
+// son état dans ce cas).
+document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.createElement('button');
+  btn.id = 'revoir-tutoriel-btn';
+  btn.textContent = '❓ Revoir le tutoriel';
+  btn.style.cssText = 'position:fixed;top:42px;right:12px;z-index:10000;background:#141414;'
+    + 'color:#b8923a;border:1px solid #b8923a;border-radius:6px;padding:5px 12px;'
+    + 'font-size:12px;font-family:inherit;cursor:pointer;';
+  btn.addEventListener('click', function() { showOnboardingOverlay(); });
+  document.body.appendChild(btn);
+});
 
 // ═══════════════════════════════════════════════════════
 // SHARED HELPERS
