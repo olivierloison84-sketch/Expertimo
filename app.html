@@ -708,8 +708,14 @@ details[open] summary .chevron { transform: rotate(90deg); }
           <input type="url" id="agent-rdv-url" placeholder="https://calendar.app.google/...">
         </div>
         <div class="form-group">
-          <label>Photo de profil (URL)</label>
-          <input type="url" id="agent-photo-url" placeholder="https://… (optionnel)" oninput="updateAgentPreview()">
+          <label>Photo de profil</label>
+          <input type="hidden" id="agent-photo-url" oninput="updateAgentPreview()">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <img id="agent-photo-preview" src="" alt="Photo de profil" style="display:none;width:60px;height:60px;border-radius:50%;object-fit:cover;box-shadow:var(--shadow);">
+            <input type="file" id="agent-photo-file" accept="image/*" onchange="uploadAgentPhoto(this)">
+          </div>
+          <p class="hint" id="agent-photo-uploading" style="display:none;">⏳ Envoi en cours…</p>
+          <p class="hint" id="agent-photo-error" style="display:none;color:var(--danger);"></p>
           <p class="hint">Laissez vide pour utiliser vos initiales</p>
         </div>
       </div>
@@ -1917,18 +1923,21 @@ function updateAgentPreview() {
   document.getElementById('header-initials').textContent = initials;
 
   // Photo
-  var prevImg = document.getElementById('prev-photo');
-  var hdrImg  = document.getElementById('header-photo');
+  var prevImg    = document.getElementById('prev-photo');
+  var hdrImg     = document.getElementById('header-photo');
+  var fieldPhoto = document.getElementById('agent-photo-preview');
   if (photo) {
     prevImg.src = photo; prevImg.style.display = 'block';
     hdrImg.src  = photo; hdrImg.style.display  = 'block';
     document.getElementById('prev-initials').style.display  = 'none';
     document.getElementById('header-initials').style.display = 'none';
+    if (fieldPhoto) { fieldPhoto.src = photo; fieldPhoto.style.display = 'block'; }
   } else {
     prevImg.style.display = 'none';
     hdrImg.style.display  = 'none';
     document.getElementById('prev-initials').style.display  = 'block';
     document.getElementById('header-initials').style.display = 'block';
+    if (fieldPhoto) { fieldPhoto.style.display = 'none'; fieldPhoto.src = ''; }
   }
 
   // Full name in preview + header
@@ -2409,6 +2418,40 @@ function switchType(type) {
   document.querySelectorAll('.appart-maison-only').forEach(function(el) {
     el.classList.toggle('hidden', type === 'terrain');
   });
+}
+
+// ═══════════════════════════════════════════════════════
+// STEP 1 — PHOTO DE PROFIL AGENT
+// ═══════════════════════════════════════════════════════
+function uploadAgentPhoto(input) {
+  var CL_CLOUD  = 'dif0ikaj1';
+  var CL_PRESET = 'privency_upload';
+  var file = input.files[0];
+  if (!file) return;
+
+  var uploadingEl = document.getElementById('agent-photo-uploading');
+  var errorEl     = document.getElementById('agent-photo-error');
+  errorEl.style.display     = 'none';
+  uploadingEl.style.display = 'block';
+
+  var fd = new FormData();
+  fd.append('file', file);
+  fd.append('upload_preset', CL_PRESET);
+  fetch('https://api.cloudinary.com/v1_1/' + CL_CLOUD + '/image/upload', { method: 'POST', body: fd })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      uploadingEl.style.display = 'none';
+      var url = data.secure_url || data.url || '';
+      if (!url) throw new Error('URL manquante');
+      document.getElementById('agent-photo-url').value = url;
+      updateAgentPreview();
+    })
+    .catch(function() {
+      uploadingEl.style.display = 'none';
+      errorEl.textContent   = '❌ Échec de l\'envoi, réessayez';
+      errorEl.style.display = 'block';
+    });
+  input.value = '';
 }
 
 // ═══════════════════════════════════════════════════════
