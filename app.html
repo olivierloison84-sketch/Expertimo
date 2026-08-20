@@ -1900,7 +1900,14 @@ async function loadProfile() {
           .select('*')
           .eq('user_id', user.id)
           .maybeSingle();
-        if (!error && data) {
+        if (!error) {
+          if (!data) {
+            // Requête Supabase réussie mais aucune ligne : nouveau compte
+            // sans profil. Ne PAS retomber sur localStorage, qui n'est pas
+            // lié à un utilisateur précis et pourrait contenir le profil
+            // d'un autre agent ayant utilisé ce même navigateur.
+            return null;
+          }
           var profile = {
             prenom:         data.prenom,
             nom:            data.nom,
@@ -1922,7 +1929,7 @@ async function loadProfile() {
           localStorage.setItem('_agent_profile', JSON.stringify(profile));
           return profile;
         }
-        if (error) console.error('loadProfile: échec lecture Supabase, repli sur localStorage', error);
+        console.error('loadProfile: échec lecture Supabase, repli sur localStorage', error);
       }
     }
   } catch (e) {
