@@ -68,9 +68,12 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .rail button{display:flex;align-items:center;gap:10px;border:none;background:none;padding:10px 8px;font-family:'Work Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:10px;text-align:left;transition:all .2s;position:relative;}
 .rail button:hover{background:var(--cream);}
 .rail button.active{color:var(--ink);background:var(--cream);}
+.rail button.visited:not(.active) .rail-dot::after{content:'✓';position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:var(--vert);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
 .rail-dot{display:none;}
 .rail button.visited:not(.active)::before{content:'✓';display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--vert);color:#fff;font-size:9px;font-weight:700;margin-right:6px;flex-shrink:0;}
 .rail button.active::before{content:'';display:inline-flex;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:9px;flex-shrink:0;}
+.rail button.active .rail-dot{background:var(--gold);border-color:var(--gold);}
+.rail button.visited:not(.active) .rail-dot{background:rgba(47,122,79,.12);border-color:var(--vert);}
 .rail-label{white-space:nowrap;}
 .container{max-width:none;margin:0;flex:1;min-width:0;}
 
@@ -321,7 +324,7 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2F7A4F;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"ref":"ref-mandat","type":"maison","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"Laura","acheteur_nom":"DAVID","annee":"1957","description":"Maison 5 pièces de 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":325000,"prixm2":4063,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Maison familiale avec 4 chambres dont 3 de plain pied","fort2":"Maison familiale avec 4 chambres","fort3":"Proche toutes commodités","vig1":"Travaux à prévoir","vig2":"Petit terrain de 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"fourchetBasse":292500,"fourchetHaute":357500,"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"histConstrDesc":"","histEvt1Date":"","histEvt1Desc":"","histEvt2Date":"","histEvt2Desc":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"L'installation intérieure d'électricité comporte une ou des anomalies"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau conforme"}],"agentNom":"Olivier LOISON","agentTel":"06 85 68 46 13","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"https://calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#14171F","agentAccent":"#C9A227","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"type":"maison","photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","caption":"","uploading":false}],"adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"Laura","acheteur_nom":"DAVID","proprio_prenom":"","proprio_nom":"","date_r1":"2026-07-04","tel_fixe":"","tel_mobile":"","email_proprio":"","ref_mandat":"","raison_vente":"","vente_depuis":"","delai_vente":"","cles_chez":"","agences":"","annee_achat":"","prix_achat":"","nb_visites":"","nb_offres":"","prix_offres":"","loyer":"1800","scenario_montant":"","scenario_reponse":"","historique_libre":"1957 : Construction de la maison. 63m² avec 2 chambres\n1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.\nDébut des années 2000 : remplacement des 2 tableaux électrique\n2010 : Remplacement de toutes le fenêtres en double vitrage PVC\n2012 : Remplacement de la chaudière à gaz (De Dietrich)\n2020 : Travaux de mise en conformité du réseau d'assainissement","renov_annee_1":"","renov_montant_1":"","renov_desc_1":"","renov_annee_2":"","renov_montant_2":"","renov_desc_2":"","renov_annee_3":"","renov_montant_3":"","renov_desc_3":"","renov_annee_4":"","renov_montant_4":"","renov_desc_4":"","renov_annee_5":"","renov_montant_5":"","renov_desc_5":"","surface_hab":"80","surface_carrez":"79.62","surface_terrain":"","surface_terrain_m":"211","nb_pieces":"5","nb_chambres":"4","nb_sdb":"","nb_wc":"","nb_sde":"1","nb_wc_sep":"1","etage":"","nb_etages":"","annee_construction":"","syndic_nom":"","travaux_ag_detail":"","travaux_recents_immeuble":"","annee_construction_m":"1957","nb_etages_m":"","standard_general":"Entrée de gamme","prix_vente":"325000","taxe_fonciere":"1229","taxe_hab":"","charges_copro":"","charges_mensuelles":"","charges_detail":"","plus_appartement":"","prix_vente_t":"","taxe_fonciere_t":"","parking_int":"","parking_ext":"","parking_box":"1","toit_type_autre_txt":"","facade_type_autre_txt":"","sols_type_autre_txt":"Moquette","chauf_diffusion_autre_txt":"","chauf_annee":"2012","ecs_autre_txt":"","travaux_recents":"","equip_autre":"","ext_Jardin_m2":"","ext_V_randa_m2":"","ext_Terrasse_m2":"","ext_Balcon_s__m2":"","ext_Piscine_m2":"","ext_Pelouse_m2":"","vigilances_texte":"","exposition_autre_txt":"","transport_autre_txt":"RER","services_prox":"Ecoles, commerces et transports","voisinage":"","zone_plu":"","superficie_totale":"","superficie_constructible":"","forme_terrain":"","acces_terrain":"","cos_ces":"","hauteur_max":"","projet_terrain":"","bien_photo1_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","bien_photo2_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","bien_photo3_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","bien_photo4_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","bien_photo5_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","dpe_valeur":"","ges_valeur":"","syndic_copro":"","diag_amiante_status":"attention","diag_amiante_result":"Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante.","diag_plomb_status":"non-soumis","diag_plomb_result":"Non soumis","diag_termites_status":"non-soumis","diag_termites_result":"Non soumis","diag_electricite_status":"defavorable","diag_electricite_result":"L'installation intérieure d'électricité comporte une ou des anomalies","diag_gaz_status":"defavorable","diag_gaz_result":"L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais.","diag_assain_status":"favorable","diag_assain_result":"Raccordement au réseau conforme","dvf-date-1":"Oct 2025","dvf-adresse-1":"8 Rue Hèlène Boucher","dvf-surface-1":"125","dvf-prix-1":"412000","dvf-prixm2-1":"3296","dvf-date-2":"Mars 2025","dvf-adresse-2":"39 b Rue Appert","dvf-surface-2":"124","dvf-prix-2":"420000","dvf-prixm2-2":"3387","dvf-date-3":"Mars 2025","dvf-adresse-3":"4 Rue Hèlène Boucher","dvf-surface-3":"63","dvf-prix-3":"373000","dvf-prixm2-3":"5921","dvf-date-4":"Juin 2024","dvf-adresse-4":"19 Rue Hèlène Boucher","dvf-surface-4":"63","dvf-prix-4":"355000","dvf-prixm2-4":"5635","dvf-date-5":"Février 2021","dvf-adresse-5":"11 Rue Hèlène Boucher","dvf-surface-5":"63","dvf-prix-5":"421000","dvf-prixm2-5":"6683","dvf-date-6":"Sept. 2020","dvf-adresse-6":"18 Rue Hèlène Boucher","dvf-surface-6":"90","dvf-prix-6":"458000","dvf-prixm2-6":"5089","bien_score":"7.5","bien_score_prest":"6","bien_score_secteur":"9","bien_score_qp":"9","bien_score_etat":"6","bien_fort1":"Maison familiale avec 4 chambres dont 3 de plain pied","bien_fort2":"Maison familiale avec 4 chambres","bien_fort3":"Proche toutes commodités","bien_vig1":"Travaux à prévoir","bien_vig2":"Petit terrain de 211m²","bien_vig3":"","bien_mediane":"","bien_tension":"Très forte","bien_delai":"21 jours","bien_loyer_estime":"","bien_fourchette_basse":"","bien_fourchette_milieu":"","bien_fourchette_haute":"","bien_credit_duree":"20","bien_credit_apport":"10","bien_credit_taux_haut":"5.00","bien_credit_taux_moyen":"3.40","bien_credit_taux_bas":"2.50","q1":"","q2":"","q3":"","q4":"","q5":"","notes_libres":"","prochaines_etapes":"","date_r2":"","capital_restant":"","dette_montant":"","dette_echeance":"","banque":"","taux_pret":"","reloge_budget":"","reloge_type":"","reloge_delai":"","reloge_zone":"","reloge_pieces":"","radio_utilisation":"rp","radio_pu_Sous_sol":"oui","radio_pu_Cave":"non","radio_pu_Grenier":"non","radio_pu_Cave___vin":"non","radio_pu_Local_de_rangement":"non","radio_pu_Salle_de_loisirs":"non","radio_pu_Combles":"non","radio_pu_D_pendances":"non","radio_vitrage_type":"Double vitrage","radio_volets_elec":"non","radio_chauf_type":"Individuel","radio_ecs":"Gaz","radio_defaut_Moisissures":"non","radio_defaut_Fissures":"non","radio_defaut_Remont_es_capillaires":"non","radio_defaut_Insectes_nuisibles":"non","radio_defaut_D_g_ts_d_eau":"non","radio_defaut_C_bles_haute_tension":"non","radio_defaut_Antenne_t_l_phonie_mobile":"non","radio_defaut_Amiante":"non","radio_eg_Chemin_e":"non","radio_eg_Po_le":"non","radio_eg_Sauna":"non","radio_eg_Photovolta_que":"non","radio_eg_Jacuzzi___Whirlpool":"non","radio_eg_Ascenseur":"non","radio_eg_Piscine_int_rieure":"non","radio_eg_Solaire_thermique":"non","radio_ec_Four":"non","radio_ec_Hotte_aspirante":"non","radio_ec_Cong_lateur":"non","radio_ec_Lave_vaisselle":"non","radio_ec_R_frig_rateur":"non","radio_ec_Cave___vin":"non","radio_ext_Jardin":"non","radio_ext_V_randa":"non","radio_ext_Terrasse":"non","radio_ext_Vue":"non","radio_ext_Balcon_s_":"non","radio_ext_Piscine":"non","radio_ext_Pelouse":"non","radio_ext_Portail":"non","radio_vigi_Nuisances_sonores":"non","radio_vigi_Vis___vis_direct":"non","radio_vigi_Humidit__r_currente":"non","radio_vigi_Travaux_importants___pr_voir":"non","radio_vigi_Isolation_thermique_insuffisante":"non","radio_vigi_Parties_communes_d_grad_es":"non","radio_vigi_Environnement_en_mutation":"non","radio_vigi_Servitude_de_passage":"non","radio_vigi_Litige_de_voisinage":"non","radio_vigi_Toit___toiture___refaire":"non","radio_vigi_Fen_tres___changer":"non","radio_vigi_Chauffage_v_tuste":"non","radio_vigi__lectricit____mettre_aux_normes":"non","radio_expo_sonore":"Calme","radio_viab_Eau":"non","radio_viab_Électricité":"non","radio_viab_Gaz":"non","radio_viab_Assainissement":"non","radio_viab_Fibre optique":"non","radio_risque_Zone_inondable":"non","radio_risque_Sol_argileux":"non","radio_risque_Zone_sismique":"non","radio_risque_Ligne_haute_tension":"non","radio_risque_Servitude":"non","radio_relogement_trouve":"oui","rating_toit_etat":"Moyen","rating_facade_etat":"Moyen","rating_sols_etat":"À rénover","rating_etat_general":"À rénover","dpe_dpe":"F","dpe_ges":"F","_pieces_table":[["Entrée","","",""],["Séjour","","",""],["Salle à manger","","",""],["Chambre 1","","",""],["Chambre 2","","",""],["Chambre 3","","",""],["Chambre 4","","",""],["Chambre 5","","",""],["Cuisine","","",""],["WC","","",""],["Salle de bains","","",""],["Salle d'eau","","",""],["","","",""],["","","",""]]},"renovations":[]}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"ref":"ref-mandat","type":"maison","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1957","description":"Maison 5 pièces de 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":306000,"prixm2":3825,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Maison familiale avec 4 chambres dont 3 de plain pied","fort2":"Maison familiale avec 4 chambres","fort3":"Proche toutes commodités","vig1":"Travaux à prévoir","vig2":"Petit terrain de 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"fourchetBasse":275400,"fourchetHaute":336600,"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1957 : Construction de la maison. 63m² avec 2 chambres\n1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.\nDébut des années 2000 : remplacement des 2 tableaux électrique\n2010 : Remplacement de toutes le fenêtres en double vitrage PVC\n2012 : Remplacement de la chaudière à gaz (De Dietrich)\n2020 : Travaux de mise en conformité du réseau d'assainissement","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"L'installation intérieure d'électricité comporte une ou des anomalies"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau conforme"}],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"type":"maison","photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488154/lityjobsameyjiucvqjz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488174/zt5pllbhgvqybm560rkd.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488208/p99xqq347c4tw5kccaiv.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488212/ztxky50i7g3ik65mg1wa.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488211/bnzjbsctmb20i8rzgdjr.jpg","caption":"","uploading":false}],"adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","surface_hab":"80","surface_carrez":"79.62","nb_pieces":"5","nb_chambres":"4","nb_sdb":"","nb_wc":"","etage":"","prix_vente":"306000","charges_copro":"","prix_vente_t":"","bien_photo1_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","bien_photo2_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","bien_photo3_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","bien_photo4_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","bien_photo5_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","historique_libre":"1957 : Construction de la maison. 63m² avec 2 chambres\n1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.\nDébut des années 2000 : remplacement des 2 tableaux électrique\n2010 : Remplacement de toutes le fenêtres en double vitrage PVC\n2012 : Remplacement de la chaudière à gaz (De Dietrich)\n2020 : Travaux de mise en conformité du réseau d'assainissement","exposition_autre_txt":"","transport_autre_txt":"RER","dvf-date-1":"Oct 2025","dvf-adresse-1":"8 Rue Hèlène Boucher","dvf-surface-1":"125","dvf-prix-1":"412000","dvf-prixm2-1":"3296","dvf-date-2":"Mars 2025","dvf-adresse-2":"39 b Rue Appert","dvf-surface-2":"124","dvf-prix-2":"420000","dvf-prixm2-2":"3387","dvf-date-3":"Mars 2025","dvf-adresse-3":"4 Rue Hèlène Boucher","dvf-surface-3":"63","dvf-prix-3":"373000","dvf-prixm2-3":"5921","dvf-date-4":"Juin 2024","dvf-adresse-4":"19 Rue Hèlène Boucher","dvf-surface-4":"63","dvf-prix-4":"355000","dvf-prixm2-4":"5635","dvf-date-5":"Février 2021","dvf-adresse-5":"11 Rue Hèlène Boucher","dvf-surface-5":"63","dvf-prix-5":"421000","dvf-prixm2-5":"6683","dvf-date-6":"Sept. 2020","dvf-adresse-6":"18 Rue Hèlène Boucher","dvf-surface-6":"90","dvf-prix-6":"458000","dvf-prixm2-6":"5089","bien_score":"7.5","bien_score_prest":"6","bien_score_secteur":"9","bien_score_qp":"9","bien_score_etat":"6","loyer":"1800","diag_amiante_status":"attention","diag_amiante_result":"Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante.","diag_plomb_status":"non-soumis","diag_plomb_result":"Non soumis","diag_termites_status":"non-soumis","diag_termites_result":"Non soumis","diag_electricite_status":"defavorable","diag_electricite_result":"L'installation intérieure d'électricité comporte une ou des anomalies","diag_gaz_status":"defavorable","diag_gaz_result":"L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais.","diag_assain_status":"favorable","diag_assain_result":"Raccordement au réseau conforme","bien_fort1":"Maison familiale avec 4 chambres dont 3 de plain pied","bien_fort2":"Maison familiale avec 4 chambres","bien_fort3":"Proche toutes commodités","bien_vig1":"Travaux à prévoir","bien_vig2":"Petit terrain de 211m²","bien_vig3":"","nb_sde":"1","nb_wc_sep":"1","nb_etages":"","annee_construction":"","syndic_nom":"","travaux_ag_detail":"","travaux_recents_immeuble":"","annee_construction_m":"1957","taxe_fonciere":"1229","charges_detail":"","taxe_fonciere_t":"","toit_type_autre_txt":"","facade_type_autre_txt":"","ecs_autre_txt":"","parking_int":"","parking_ext":"","parking_box":"1","proprio_prenom":"","proprio_nom":"","date_r1":"2026-07-04","tel_mobile":"","email_proprio":"","zone_plu":"","superficie_totale":"","superficie_constructible":"","forme_terrain":"","acces_terrain":"","cos_ces":"","hauteur_max":"","projet_terrain":"","ext_Jardin_m2":"","ext_V_randa_m2":"","ext_Terrasse_m2":"","ext_Balcon_s__m2":"","ext_Piscine_m2":"","ext_Pelouse_m2":"","sols_type_autre_txt":"Moquette","chauf_diffusion_autre_txt":"","chauf_annee":"2012","travaux_recents":"","equip_autre":"","vigilances_texte":"","bien_mediane":"","bien_tension":"Très forte","bien_delai":"21 jours","bien_loyer_estime":"","bien_fourchette_basse":"","bien_fourchette_milieu":"","bien_fourchette_haute":"","bien_credit_duree":"20","bien_credit_apport":"10","bien_credit_taux_haut":"5.00","bien_credit_taux_moyen":"3.40","bien_credit_taux_bas":"2.50","surface_terrain":"","surface_terrain_m":"211","charges_mensuelles":"","dpe_valeur":"","renov_annee_1":"","renov_montant_1":"","renov_desc_1":"","renov_annee_2":"","renov_montant_2":"","renov_desc_2":"","renov_annee_3":"","renov_montant_3":"","renov_desc_3":"","renov_annee_4":"","renov_montant_4":"","renov_desc_4":"","renov_annee_5":"","renov_montant_5":"","renov_desc_5":"","services_prox":"Ecoles, commerces et transports","voisinage":"","capital_restant":"","dette_montant":"","dette_echeance":"","banque":"","taux_pret":"","reloge_budget":"","reloge_type":"","reloge_delai":"","reloge_zone":"","reloge_pieces":"","ges_valeur":"","syndic_copro":"","nb_etages_m":"","standard_general":"Entrée de gamme","taxe_hab":"","plus_appartement":"","tel_fixe":"","ref_mandat":"","raison_vente":"","vente_depuis":"","delai_vente":"","cles_chez":"","agences":"","annee_achat":"","prix_achat":"","nb_visites":"","nb_offres":"","prix_offres":"","loyer_actuel_location":"","scenario_montant":"","scenario_reponse":"","q1":"","q2":"","q3":"","q4":"","q5":"","notes_libres":"","prochaines_etapes":"","date_r2":"","radio_expo_sonore":"","radio_ecs":"","radio_pu_Sous_sol":"","radio_pu_Combles":"","radio_pu_D_pendances":"","rating_toit_etat":"Moyen","rating_facade_etat":"Moyen","rating_etat_general":"À rénover","rating_sols_etat":"À rénover","dpe_dpe":"F","dpe_ges":"F","_pieces_table":[["Entrée","","",""],["Séjour","","",""],["Salle à manger","","",""],["Chambre 1","","",""],["Chambre 2","","",""],["Chambre 3","","",""],["Chambre 4","","",""],["Chambre 5","","",""],["Cuisine","","",""],["WC","","",""],["Salle de bains","","",""],["Salle d'eau","","",""],["","","",""],["","","",""]]},"renovations":[]}</script>
 </head>
 <body>
 
@@ -337,14 +340,14 @@ html,body{overflow-x:hidden;}
   </div>
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
-      <div id="welcome-msg" style="display: block; font-family: &quot;Playfair Display&quot;, serif; font-style: italic; font-size: 32px; color: var(--gold); margin-bottom: 10px;">Bonjour Laura DAVID, bienvenue dans votre espace privé acquéreur</div>
+      <div id="welcome-msg" style="display:none;font-family:'Playfair Display',serif;font-style:italic;font-size:32px;color:var(--gold);margin-bottom:10px;"></div>
       <div class="hbadge">Espace Acheteur Privé · Expertimo</div>
       <h1 class="htitle">34 Rue Hélène Boucher 91300 Massy<br><span style="color:var(--gold);font-style:italic;"></span></h1>
       <p class="hsub">Maison 5 pièces de 80 m² · DPE F</p>
     </div>
     <div class="price-card">
       <div class="plabel">Prix affiché</div>
-      <div class="pamount">325 000 €</div>
+      <div class="pamount">306 000 €</div>
       <div class="pmeta">Frais d'agence inclus · Données temps réel</div>
       <div class="hkpis">
         <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe">F</div></div>
@@ -419,8 +422,8 @@ html,body{overflow-x:hidden;}
 <div>
   <div id="sub-marche">
     <div class="kpi-grid">
-      <div class="kpi"><div class="kl">Prix m² · ce bien</div><div class="kv g">4 063 €</div></div>
-      <div class="kpi"><div class="kl">Médiane Longjumeau / Essonne 91</div><div class="kv">3 020 €</div></div>
+      <div class="kpi"><div class="kl">Prix m² · ce bien</div><div class="kv g">3 825 €</div></div>
+      <div class="kpi" style="display: none;"><div class="kl">Médiane Longjumeau / Essonne 91</div><div class="kv">3 020 €</div></div>
       <div class="kpi"><div class="kl">Tension locative</div><div class="kv v">Très forte</div></div>
       <div class="kpi"><div class="kl">Délai vente moyen</div><div class="kv">21 jours</div></div>
     </div>
@@ -455,7 +458,7 @@ html,body{overflow-x:hidden;}
   </div>
 </div>
 <div><div class="cons-card">
-  <img id="agent-photo" src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:none" alt="">
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
@@ -479,7 +482,7 @@ html,body{overflow-x:hidden;}
       <div class="lbl">Simulateur investisseur temps réel</div>
       <h2 class="stitle">Simulateur investisseur interactif</h2>
       <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info">Bien libre. Loyer estimé : 1 800 € nu. Simulez votre rentabilité ci-dessous.</div>
-      <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="292500" max="357500" value="325000" step="500" oninput="calc()"><div class="sval" id="v-prix">325 000 €</div></div>
+      <div class="srow"><div class="slbl">Prix d'achat<small>Votre offre</small></div><input type="range" id="prix" min="275400" max="336600" value="306000" step="500" oninput="calc()"><div class="sval" id="v-prix">306 000 €</div></div>
       <div class="srow"><div class="slbl">Loyer simulé<small>Post-rénovation</small></div><input type="range" id="loyer" min="900" max="4500" value="1800" step="10" oninput="calc()"><div class="sval" id="v-loyer">1800 €</div></div>
       <div class="srow"><div class="slbl">Apport<small>% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
       <div class="srow"><div class="slbl">Taux crédit<small>Oct. 2025 : 3,22%</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
@@ -498,7 +501,7 @@ html,body{overflow-x:hidden;}
   </div>
 </div>
 <div><div class="cons-card">
-  <img id="agent-photo" src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:none" alt="">
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
@@ -521,12 +524,12 @@ html,body{overflow-x:hidden;}
     <div class="card">
       <div class="lbl">Informations complémentaires</div>
       <h2 class="stitle">Tout savoir sur ce bien</h2>
-      <ul class="info-list" style="margin-top:13px;" id="historique-timeline"><li class="info-item">1957 · CONSTRUCTION</li></ul>
+      <ul class="info-list" style="margin-top:13px;" id="historique-timeline"><li class="info-item">1957 : Construction de la maison. 63m² avec 2 chambres</li><li class="info-item">1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.</li><li class="info-item">Début des années 2000 : remplacement des 2 tableaux électrique</li><li class="info-item">2010 : Remplacement de toutes le fenêtres en double vitrage PVC</li><li class="info-item">2012 : Remplacement de la chaudière à gaz (De Dietrich)</li><li class="info-item">2020 : Travaux de mise en conformité du réseau d'assainissement</li></ul>
     </div>
   </div>
 </div>
 <div><div class="cons-card">
-  <img id="agent-photo" src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:none" alt="">
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
@@ -718,7 +721,7 @@ html,body{overflow-x:hidden;}
     <h2 class="stitle">Votre offre d'achat</h2>
     <p class="ssub">Renseignez votre proposition. Elle sera transmise au conseiller et au vendeur sous 24h.</p>
     <div class="f2">
-      <div><label class="lbl">Montant de votre offre (€)</label><input type="number" class="field" id="offer-amount" value="325000" oninput="updateOffer()"></div>
+      <div><label class="lbl">Montant de votre offre (€)</label><input type="number" class="field" id="offer-amount" value="306000" oninput="updateOffer()"></div>
       <div><label class="lbl">Mode de financement</label><select class="field" id="offer-financement"><option>Financement bancaire</option><option>Comptant</option></select></div>
       <div><label class="lbl">Apport personnel (€)</label><input type="number" class="field" id="offer-apport" value="25000"></div>
       <div><label class="lbl">Délai souhaité</label><select class="field" id="offer-delai"><option>3 mois (standard)</option><option>2 mois (rapide)</option><option>4 mois ou plus</option></select></div>
@@ -743,8 +746,8 @@ html,body{overflow-x:hidden;}
 <div>
   <div class="card-dark" style="margin-bottom:18px;">
     <div class="lbl" style="color:#6a6358;margin-bottom:6px;">Votre offre</div>
-    <div style="font-family:'Playfair Display',serif;font-size:42px;color:var(--gold);line-height:1;" id="offer-display">325 000 €</div>
-    <div style="font-size:11px;color:#7a7264;margin-top:4px;" id="offer-diff">Prix affiché : 325 000 €</div>
+    <div style="font-family:'Playfair Display',serif;font-size:42px;color:var(--gold);line-height:1;" id="offer-display">306 000 €</div>
+    <div style="font-size:11px;color:#7a7264;margin-top:4px;" id="offer-diff">Prix affiché : 306 000 €</div>
     <div style="margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:#7a7264;line-height:1.8;font-weight:300;">
       Marge de négociation estimée : <strong style="color:var(--gold);">3 à 7%</strong> selon le DPE et les DVF du secteur.
     </div>
@@ -799,6 +802,30 @@ function updateRailUI() {
   var offreBanner = document.getElementById('offre-progress-count');
   if (offreBanner) offreBanner.textContent = visited.length;
 }
+function showTabAssistant(btn) {
+  document.querySelectorAll('.rail button').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  markVisited('assistant');
+  toggleAI();
+}
+
+function renderAISuggestions() {
+  var wrap = document.getElementById('ai-suggestions');
+  if (!wrap) return;
+  var qs = ['Quel est le montant des charges ?', 'Puis-je négocier le prix ?', 'Comment prendre rendez-vous ?'];
+  wrap.innerHTML = '';
+  qs.forEach(function(q) {
+    var b = document.createElement('button');
+    b.textContent = q;
+    b.style.cssText = 'background:var(--cream);color:var(--gold2, var(--gold));border:none;font-size:11px;font-weight:500;padding:7px 12px;border-radius:100px;cursor:pointer;font-family:\'Work Sans\',sans-serif;';
+    b.onclick = function() {
+      document.getElementById('ai-input').value = q;
+      sendAI();
+      wrap.style.display = 'none';
+    };
+    wrap.appendChild(b);
+  });
+}
 
 function dockAI() {
   var modal = document.getElementById('ai-modal');
@@ -851,24 +878,6 @@ function undockAI() {
   _aiOpen = false;
 }
 
-function renderAISuggestions() {
-  var wrap = document.getElementById('ai-suggestions');
-  if (!wrap) return;
-  var qs = ['Quel est le montant des charges ?', 'Puis-je négocier le prix ?', 'Comment prendre rendez-vous ?'];
-  wrap.innerHTML = '';
-  qs.forEach(function(q) {
-    var b = document.createElement('button');
-    b.textContent = q;
-    b.style.cssText = 'background:var(--cream);color:var(--gold2, var(--gold));border:none;font-size:11px;font-weight:500;padding:7px 12px;border-radius:100px;cursor:pointer;font-family:\'Work Sans\',sans-serif;';
-    b.onclick = function() {
-      document.getElementById('ai-input').value = q;
-      sendAI();
-      wrap.style.display = 'none';
-    };
-    wrap.appendChild(b);
-  });
-}
-
 function showTab(id, btn) {
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
@@ -881,7 +890,7 @@ function showTab(id, btn) {
 }
 
 function showTabById(id) {
-  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, assistant: 8, offre: 9};
+  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, offre: 9};
   var navBtns = document.querySelectorAll('#main-nav button');
   showTab(id, navBtns[navMap[id]]);
 }
@@ -920,7 +929,7 @@ function mensualite(cap, ta, da) {
 function calcProjection() {
   try {
     var prixEl = document.getElementById('prix');
-    var prixBase = parseFloat("325 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+    var prixBase = parseFloat("306 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
     var prix = prixEl ? parseFloat(prixEl.value) : prixBase;
     if (!prix || isNaN(prix)) return;
     var taux = [0.01, 0.02, 0.03];
@@ -1009,7 +1018,7 @@ function calcBank() { /* éléments de financement remplacés par l'onglet Mon B
 
 // ═══ OFFRE ═══
 function updateOffer() {
-  var prixBase = parseFloat("325 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  var prixBase = parseFloat("306 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
   var v = parseFloat(document.getElementById('offer-amount').value) || prixBase;
   document.getElementById('offer-display').textContent = fmt(v);
   var diff = prixBase - v;
@@ -1132,7 +1141,7 @@ function calcBudget() {
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
-  var prixBien = parseFloat("325 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  var prixBien = parseFloat("306 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
   var fraisNotaire = prixBien * 0.075;
   var coutTotal = prixBien + fraisNotaire;
   var capital = Math.max(0, coutTotal - apport);
@@ -1177,8 +1186,8 @@ function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
   var adresse = "34 Rue Hélène Boucher 91300 Massy";
-  var latFallback = 48.7324826;
-  var lngFallback = 2.2816158;
+  var latFallback = 48.7326437;
+  var lngFallback = 2.2818384;
 
   function buildMap(lat, lng) {
     var map = L.map('map-quartier', {cursor:'default'}).setView([lat, lng], 15);
@@ -1187,20 +1196,6 @@ function initMapQuartier() {
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#14171F;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #C9A227;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
     L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>34 Rue Hélène Boucher 91300 Massy").openPopup();
-    var overpassUrl = 'https://overpass-api.de/api/interpreter';
-    var query = '[out:json][timeout:10];('
-      + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
-      + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="bus_station"](around:800,' + lat + ',' + lng + ');'
-      + 'node["highway"="bus_stop"](around:800,' + lat + ',' + lng + ');'
-      + 'node["leisure"="park"](around:800,' + lat + ',' + lng + ');'
-      + 'node["leisure"="garden"](around:800,' + lat + ',' + lng + ');'
-      + 'node["shop"="supermarket"](around:800,' + lat + ',' + lng + ');'
-      + 'node["shop"="bakery"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="pharmacy"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="school"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="kindergarten"](around:800,' + lat + ',' + lng + ');'
-      + ');out body;';
     var catMeta = {
       transport: {color:'#1565c0', emoji:'🚇', label:'Transport'},
       vert:      {color:'#2e7d32', emoji:'🌳', label:'Espace vert'},
@@ -1212,32 +1207,35 @@ function initMapQuartier() {
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
-    setTimeout(function() { fetch(overpassUrl, {method:'POST', body:'data=' + encodeURIComponent(query)})
+    setTimeout(function() { fetch('https://expertimo-phi.vercel.app/api/geoapify?lat=' + lat + '&lng=' + lng)
       .then(function(r){return r.json();})
       .then(function(data){
-        (data.elements||[]).forEach(function(el) {
+        (data.features||[]).forEach(function(feature) {
           var cat;
-          var tags = el.tags || {};
-          if (tags.public_transport || tags.railway === 'station' || tags.amenity === 'bus_station' || tags.highway === 'bus_stop') { cat = 'transport'; }
-          else if (tags.leisure === 'park' || tags.leisure === 'garden') { cat = 'vert'; }
-          else if (tags.shop === 'supermarket' || tags.shop === 'bakery' || tags.amenity === 'pharmacy') { cat = 'commerce'; }
-          else if (tags.amenity === 'school' || tags.amenity === 'kindergarten') { cat = 'ecole'; }
+          var props = feature.properties || {};
+          var cats = props.categories || [];
+          if (cats.indexOf('public_transport') !== -1 || cats.indexOf('public_transport.bus') !== -1) { cat = 'transport'; }
+          else if (cats.indexOf('leisure.park') !== -1) { cat = 'vert'; }
+          else if (cats.indexOf('commercial.supermarket') !== -1 || cats.indexOf('commercial.food_and_drink') !== -1 || cats.indexOf('healthcare.pharmacy') !== -1) { cat = 'commerce'; }
+          else if (cats.indexOf('education.school') !== -1 || cats.indexOf('childcare.kindergarten') !== -1) { cat = 'ecole'; }
           else return;
           counts[cat]++;
           var meta = catMeta[cat];
+          var poiLat = props.lat != null ? props.lat : feature.geometry.coordinates[1];
+          var poiLon = props.lon != null ? props.lon : feature.geometry.coordinates[0];
           var icon = L.divIcon({className:'', html:'<div style="background:'+meta.color+';border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid white;">'+meta.emoji+'</div>', iconSize:[28,28], iconAnchor:[14,14]});
-          var dist = Math.round(map.distance([lat,lng],[el.lat,el.lon]));
+          var dist = Math.round(map.distance([lat,lng],[poiLat,poiLon]));
           var mins = Math.ceil(dist / 80);
-          var name = tags.name || tags['name:fr'] || meta.label;
+          var name = props.name || meta.label;
           var popup = '<strong>'+name+'</strong><br>'+meta.emoji+' '+meta.label+'<br>'+dist+' m · ~'+mins+' min à pied';
-          var marker = L.marker([el.lat,el.lon],{icon:icon}).addTo(map).bindPopup(popup);
+          var marker = L.marker([poiLat,poiLon],{icon:icon}).addTo(map).bindPopup(popup);
           window._mapMarkers[cat].push(marker);
         });
         document.getElementById('cnt-transport').textContent = counts.transport;
         document.getElementById('cnt-vert').textContent = counts.vert;
         document.getElementById('cnt-commerce').textContent = counts.commerce;
         document.getElementById('cnt-ecole').textContent = counts.ecole;
-      }).catch(function(err){ console.log('[Overpass] Erreur requête POI :', err); }); }, 1000);
+      }).catch(function(err){ console.log('[Geoapify] Erreur requête POI :', err); }); }, 1000);
   }
 
   if (latFallback && lngFallback) {
@@ -1286,7 +1284,7 @@ var _aiOpen = false;
 var _aiMessages = [];
 var _aiInit = false;
 var _sp_adresse   = "34 Rue Hélène Boucher 91300 Massy";
-var _sp_prix      = "325 000";
+var _sp_prix      = "306 000";
 var _sp_surface   = "80";
 var _sp_etage     = "";
 var _sp_dpe       = "F";
@@ -1489,7 +1487,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 </script>
-
 <script>setTimeout(function(){var b=document.getElementById('ai-proactive-bubble');if(b){b.style.display='block';setTimeout(function(){b.style.display='none';},6000);}},3000);</script>
 <script>(function() {
   var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
@@ -1522,4 +1519,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 })();</script>
 <script>markVisited('bien'); updateRailUI();</script>
+
+
 </body></html>
