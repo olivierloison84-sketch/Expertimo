@@ -1691,6 +1691,7 @@ window._bienData   = null;
 var _templateHTML      = null;
 var _lastGeneratedHTML = null;
 var _lastGeneratedSlug = null;
+var _editingFiche = null;
 
 refreshTokenUI();
 
@@ -3624,7 +3625,9 @@ function generatePreview() {
     try {
       var out = injectData(tmpl, d);
       _lastGeneratedHTML = out;
-      _lastGeneratedSlug = slugify(d.adresse);
+      _lastGeneratedSlug = (_editingFiche && _editingFiche.filename)
+        ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
+        : slugify(d.adresse);
       var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
       document.getElementById('preview-iframe').src = URL.createObjectURL(blob);
       document.getElementById('btn-download-fiche').disabled = false;
