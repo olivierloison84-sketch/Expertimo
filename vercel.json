@@ -9,7 +9,8 @@
       "maxDuration": 30
     }
   },
-  "rewrites": [
-    { "source": "/", "destination": "/landing.html" }
+  "routes": [
+    { "src": "/$", "dest": "/landing.html" },
+    { "handle": "filesystem" }
   ]
 }
