@@ -1684,7 +1684,7 @@ var _currentStep   = 1;
 var _stepsComplete = { 1: false, 2: false, 3: false, 4: false };
 var _GH_TOKEN      = localStorage.getItem('expertimo_gh_token') || '';
 var _GH_REPO       = 'olivierloison84-sketch/Expertimo';
-var _GH_PAGES_BASE = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/';
+var _GH_PAGES_BASE = 'https://espace.privency.fr/fiches/';
 var _step2Inited   = false;
 var _draftTimer    = null;
 window._bienData   = null;
@@ -3758,8 +3758,7 @@ function pushToGitHub() {
       clearInterval(_pubMsgTimer);
       btn.disabled = false;
       if (res.ok) {
-        var pageUrl = 'https://olivierloison84-sketch.github.io/Expertimo/fiches/'
-          + _lastGeneratedSlug + '-FINAL.html';
+        var pageUrl = _GH_PAGES_BASE + _lastGeneratedSlug + '-FINAL.html';
         syncFicheToSupabase(_lastGeneratedSlug, pageUrl);
         status.innerHTML = '✅ Publié avec succès !';
         var linkArea = document.getElementById('gh-link-area');
