@@ -33,7 +33,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-:root{--bg:#FAF9F6;--card:#fff;--ink:#14171F;--gold:#C9A227;--gold2:#8F7015;--cream:#F3E9CC;--muted:#6E6A5C;--border:#E7E3D8;--vert:#2F7A4F;--rouge:#B23F3F;--dark:#14171F;}
+:root{--bg:#FAF9F6;--card:#fff;--ink:#14171F;--gold:#C9A227;--gold2:#8F7015;--cream:#F3E9CC;--muted:#6E6A5C;--border:#E7E3D8;--vert:#2F7A4F;--rouge:#B23F3F;--dark:#14171F;--agent-primary:#14171F;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);overflow-x:hidden;}
@@ -44,14 +44,13 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(201,162,39,.35);border-radius:99px;background:rgba(201,162,39,.08);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
 .hbadge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-@keyframes pulseBtn{0%,100%{box-shadow:0 4px 24px rgba(201,162,39,.5)}50%{box-shadow:0 4px 40px rgba(201,162,39,.9)}}
 .htitle{font-family:'Playfair Display',serif;font-size:clamp(18px,2.6vw,30px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
-.hsub{font-size:18px;color:rgba(255,255,255,.5);line-height:1.8;max-width:540px;font-weight:400;margin-top:8px;}
+.hsub{font-size:14px;color:rgba(255,255,255,.5);line-height:1.8;max-width:540px;font-weight:300;margin-top:8px;}
 .price-card{background:rgba(255,255,255,.06);border:1px solid rgba(201,162,39,.25);border-radius:20px;padding:32px 36px;min-width:320px;max-width:380px;flex-shrink:0;}
 .plabel{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:8px;}
 .pamount{font-family:'Playfair Display',serif;font-size:64px;color:var(--gold);font-weight:300;line-height:1;margin-bottom:4px;}
 .pmeta{font-size:10px;color:rgba(255,255,255,.3);margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.08);}
-.hkpis{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:0;padding:4px;}
+.hkpis{display:grid;grid-template-columns:1fr;gap:12px;margin-top:0;}
 .hkpi{background:rgba(255,255,255,.05);border-radius:10px;padding:10px 12px;}
 .hkpi .hl{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
 .hkpi .hv{font-family:'Playfair Display',serif;font-size:22px;color:var(--gold);font-weight:300;line-height:1;}
@@ -69,9 +68,12 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .rail button{display:flex;align-items:center;gap:10px;border:none;background:none;padding:10px 8px;font-family:'Work Sans',sans-serif;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:10px;text-align:left;transition:all .2s;position:relative;}
 .rail button:hover{background:var(--cream);}
 .rail button.active{color:var(--ink);background:var(--cream);}
+.rail button.visited:not(.active) .rail-dot::after{content:'✓';position:absolute;top:-3px;right:-3px;width:14px;height:14px;border-radius:50%;background:var(--vert);color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);}
 .rail-dot{display:none;}
 .rail button.visited:not(.active)::before{content:'✓';display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:var(--vert);color:#fff;font-size:9px;font-weight:700;margin-right:6px;flex-shrink:0;}
 .rail button.active::before{content:'';display:inline-flex;width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:9px;flex-shrink:0;}
+.rail button.active .rail-dot{background:var(--gold);border-color:var(--gold);}
+.rail button.visited:not(.active) .rail-dot{background:rgba(47,122,79,.12);border-color:var(--vert);}
 .rail-label{white-space:nowrap;}
 .container{max-width:none;margin:0;flex:1;min-width:0;}
 
@@ -201,6 +203,10 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
 .tli::before{content:'';position:absolute;left:-16px;top:5px;width:7px;height:7px;border-radius:50%;background:var(--gold);border:2px solid var(--bg);box-shadow:0 0 0 1px var(--gold);}
 .tly{font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;margin-bottom:2px;}
 .tlt{font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;line-height:1.6;}
+.info-list{list-style:none;margin:0;padding:0;}
+.info-item{position:relative;padding-left:18px;margin-bottom:14px;font-family:'Work Sans',sans-serif;font-size:12px;color:var(--ink);font-weight:400;line-height:1.6;}
+.info-item::before{content:'';position:absolute;left:0;top:7px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+.info-item b{font-weight:600;}
 /* BANK */
 .bi{display:flex;align-items:center;gap:9px;padding:11px 14px;border-radius:10px;margin-top:11px;}
 .bi.green{background:#f0f7f3;border:1px solid #c3dece;}
@@ -318,7 +324,8 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2F7A4F;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script>document.addEventListener("DOMContentLoaded",function(){var mapEl=document.getElementById("map")||document.querySelector(".map-wrap")||document.querySelector("[id*='map']");if(mapEl&&!mapEl.querySelector("#map-loading-ov")){mapEl.style.position="relative";var ov=document.createElement("div");ov.id="map-loading-ov";ov.style.cssText="position:absolute;inset:0;background:rgba(244,246,249,.88);display:flex;align-items:center;justify-content:center;z-index:999;font-size:13px;color:#6b7a8d;border-radius:6px;pointer-events:none;";ov.textContent="🗺️ Chargement de la carte…";mapEl.appendChild(ov);}});</script></head>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"ref":"ref-mandat","type":"appart","etage":"3","adresse":"11 Résidence de la Croix Blanche 91380 Chilly Mazarin","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1965","description":"Appartement 3 pièces de 66 m² · 3 · DPE E","surface":66,"surfCarrez":0,"pieces":"3","dpe":"E","prix":145000,"prixm2":2197,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1200,"chargesCopro":345,"chargesDetail":"Chauffage collectif, eau chaude et froide, gardien, entretien des parties communes, terrain de tennis","taxeFonciere":1079,"score":"8.25","scorePrest":"7","scoreSecteur":"9","scoreQP":"10","scoreEtat":"7","fort1":"Dernier étage sans vis-à-vis + balcon Sud-Ouest","fort2":"Résidence avec gardien, tennis, espaces verts","fort3":"Cave et place de parking dans résidence sécurisée et fermée","vig1":"Travaux de rafraîchissement à prévoir","vig2":"Charges de copropriété : 345€ (tout compris)","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854456/TIMERA-ExpertimoOlivierLoison-OlivierReynes-12_lm88dp.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-5_cdjafj.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854454/TIMERA-ExpertimoOlivierLoison-OlivierReynes-9_agno9m.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854452/TIMERA-ExpertimoOlivierLoison-OlivierReynes-2_folxsf.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-8_eidycg.jpg","dvf":[{"date":"Août 2025","adresse":"1 Résidence la Croix Blanche ","surface":"62.31","prix":145000,"prixm2":2327},{"date":"Août 2025","adresse":"Résidence la Croix Blanche ","surface":"67","prix":172000,"prixm2":2567},{"date":"Juillet 2025","adresse":"Résidence la Croix Blanche ","surface":"62","prix":170000,"prixm2":2742},{"date":"Avril 2025","adresse":"Résidence la Croix Blanche ","surface":"62.36","prix":167500,"prixm2":2686},{"date":"Mars 2025","adresse":"Résidence la Croix Blanche ","surface":"61.69","prix":190000,"prixm2":3080},{"date":"Janv. 2025","adresse":"Résidence la Croix Blanche ","surface":"61.52","prix":155000,"prixm2":2520}],"fourchetBasse":130500,"fourchetHaute":159500,"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Année de construction de l'immeuble : 1965\nHistorique des travaux de la copropriété :\nFermeture sécurisée de la résidence (portails, portillons, grillages) — 2011/2013\nRemplacement des fenêtres dans plusieurs cages d'escalier — 2013 à 2016\nInstallation de systèmes VIGIK (contrôle d'accès) — 2016\nAménagement d'aires de stationnement motos — 2011\nRéfection complète des toitures-terrasses — votée en AG le 25/03/2019, confiée à la société ETANCHEPRO pour un montant de 1 088 337,57 € TTC, avec maîtrise d'œuvre assurée par le Cabinet ATTEA. Financement via le fonds travaux et un emprunt collectif DOMOFINANCE, avec démarrage effectif à partir d'avril 2020.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis"},{"icon":"⚡","name":"Électricité","status":"favorable","result":"L'installation intérieure d'électricité ne comporte aucune anomalie"},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conforme"}],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"type":"appart","photos":[],"adresse":"11 Résidence de la Croix Blanche 91380 Chilly Mazarin","quartier":"","acheteur_prenom":"","acheteur_nom":"","surface_hab":"66","surface_carrez":"0","nb_pieces":"3","nb_chambres":"2","nb_sdb":"1","nb_wc":"1","etage":"3","prix_vente":"145000","charges_copro":"345","prix_vente_t":"145000","bien_photo1_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854456/TIMERA-ExpertimoOlivierLoison-OlivierReynes-12_lm88dp.jpg","bien_photo2_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-5_cdjafj.jpg","bien_photo3_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854454/TIMERA-ExpertimoOlivierLoison-OlivierReynes-9_agno9m.jpg","bien_photo4_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854452/TIMERA-ExpertimoOlivierLoison-OlivierReynes-2_folxsf.jpg","bien_photo5_url":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-8_eidycg.jpg","historique_libre":"Année de construction de l'immeuble : 1965\nHistorique des travaux de la copropriété :\nFermeture sécurisée de la résidence (portails, portillons, grillages) — 2011/2013\nRemplacement des fenêtres dans plusieurs cages d'escalier — 2013 à 2016\nInstallation de systèmes VIGIK (contrôle d'accès) — 2016\nAménagement d'aires de stationnement motos — 2011\nRéfection complète des toitures-terrasses — votée en AG le 25/03/2019, confiée à la société ETANCHEPRO pour un montant de 1 088 337,57 € TTC, avec maîtrise d'œuvre assurée par le Cabinet ATTEA. Financement via le fonds travaux et un emprunt collectif DOMOFINANCE, avec démarrage effectif à partir d'avril 2020.","exposition_autre_txt":"","transport_autre_txt":"","dvf-date-1":"Août 2025","dvf-adresse-1":"1 Résidence la Croix Blanche ","dvf-surface-1":"62.31","dvf-prix-1":"145000","dvf-prixm2-1":"2327","dvf-date-2":"Août 2025","dvf-adresse-2":"Résidence la Croix Blanche ","dvf-surface-2":"67","dvf-prix-2":"172000","dvf-prixm2-2":"2567","dvf-date-3":"Juillet 2025","dvf-adresse-3":"Résidence la Croix Blanche ","dvf-surface-3":"62","dvf-prix-3":"170000","dvf-prixm2-3":"2742","dvf-date-4":"Avril 2025","dvf-adresse-4":"Résidence la Croix Blanche ","dvf-surface-4":"62.36","dvf-prix-4":"167500","dvf-prixm2-4":"2686","dvf-date-5":"Mars 2025","dvf-adresse-5":"Résidence la Croix Blanche ","dvf-surface-5":"61.69","dvf-prix-5":"190000","dvf-prixm2-5":"3080","dvf-date-6":"Janv. 2025","dvf-adresse-6":"Résidence la Croix Blanche ","dvf-surface-6":"61.52","dvf-prix-6":"155000","dvf-prixm2-6":"2520","bien_score":"8.25","bien_score_prest":"7","bien_score_secteur":"9","bien_score_qp":"10","bien_score_etat":"7","loyer":"1200","diag_amiante_status":"attention","diag_amiante_result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.","diag_plomb_status":"non-soumis","diag_plomb_result":"Non soumis","diag_termites_status":"non-soumis","diag_termites_result":"Non soumis","diag_electricite_status":"favorable","diag_electricite_result":"L'installation intérieure d'électricité ne comporte aucune anomalie","diag_gaz_status":"non-soumis","diag_gaz_result":"Non soumis","diag_assain_status":"favorable","diag_assain_result":"Conforme","bien_fort1":"Dernier étage sans vis-à-vis + balcon Sud-Ouest","bien_fort2":"Résidence avec gardien, tennis, espaces verts","bien_fort3":"Cave et place de parking dans résidence sécurisée et fermée","bien_vig1":"Travaux de rafraîchissement à prévoir","bien_vig2":"Charges de copropriété : 345€ (tout compris)","bien_vig3":"","nb_sde":"","nb_wc_sep":"","nb_etages":"","annee_construction":"1965","syndic_nom":"","travaux_ag_detail":"","travaux_recents_immeuble":"","annee_construction_m":"1965","taxe_fonciere":"1079","charges_detail":"Chauffage collectif, eau chaude et froide, gardien, entretien des parties communes, terrain de tennis","taxe_fonciere_t":"1079","toit_type_autre_txt":"","facade_type_autre_txt":"","ecs_autre_txt":"","parking_int":"","parking_ext":"","parking_box":"","proprio_prenom":"","proprio_nom":"","date_r1":"","tel_mobile":"","email_proprio":"","zone_plu":"","superficie_totale":"","superficie_constructible":"","forme_terrain":"","acces_terrain":"","cos_ces":"","hauteur_max":"","projet_terrain":"","ext_Jardin_m2":"","ext_V_randa_m2":"","ext_Terrasse_m2":"","ext_Balcon_s__m2":"","ext_Piscine_m2":"","ext_Pelouse_m2":"","sols_type_autre_txt":"","chauf_diffusion_autre_txt":"","chauf_annee":"","travaux_recents":"","equip_autre":"","vigilances_texte":"","bien_mediane":"0","bien_tension":"Très forte","bien_delai":"21 jours","bien_loyer_estime":"1200","bien_fourchette_basse":"130500","bien_fourchette_milieu":"","bien_fourchette_haute":"159500","bien_credit_duree":"20","bien_credit_apport":"10","bien_credit_taux_haut":"5","bien_credit_taux_moyen":"3.4","bien_credit_taux_bas":"2.5","surface_terrain":"","surface_terrain_m":"","charges_mensuelles":"","dpe_valeur":"","renov_annee_1":"","renov_montant_1":"","renov_desc_1":"","renov_annee_2":"","renov_montant_2":"","renov_desc_2":"","renov_annee_3":"","renov_montant_3":"","renov_desc_3":"","renov_annee_4":"","renov_montant_4":"","renov_desc_4":"","renov_annee_5":"","renov_montant_5":"","renov_desc_5":"","services_prox":"","voisinage":"","capital_restant":"","dette_montant":"","dette_echeance":"","banque":"","taux_pret":"","reloge_budget":"","reloge_type":"","reloge_delai":"","reloge_zone":"","reloge_pieces":"","ges_valeur":"","syndic_copro":"","nb_etages_m":"","standard_general":"","taxe_hab":"","plus_appartement":"","tel_fixe":"","ref_mandat":"ref-mandat","raison_vente":"","vente_depuis":"","delai_vente":"","cles_chez":"","agences":"","annee_achat":"","prix_achat":"","nb_visites":"","nb_offres":"","prix_offres":"","loyer_actuel_location":"","scenario_montant":"","scenario_reponse":"","q1":"","q2":"","q3":"","q4":"","q5":"","notes_libres":"","prochaines_etapes":"","date_r2":"","dpe_dpe":"E","_pieces_table":[["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""],["","","",""]]},"renovations":[]}</script>
+</head>
 <body>
 
 
@@ -328,19 +335,22 @@ html,body{overflow-x:hidden;}
 </div>
 
 <header class="header">
+  <div style="position:absolute;top:16px;right:24px;z-index:10;opacity:.7;">
+    <div style="font-family:'Playfair Display',serif;font-size:13px;color:#C9A227;letter-spacing:.12em;text-transform:uppercase;font-weight:300;">Privency</div>
+  </div>
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
-      <div class="hbadge"><svg viewBox="0 0 28 22" width="20" height="16" style="display:inline-block;vertical-align:middle;margin-right:6px;"><polygon points="14,0 28,11 14,22 0,11" fill="none" stroke="#C9A227" stroke-width="1.2"></polygon><polygon points="14,5 23,11 14,17 5,11" fill="#C9A227" opacity="0.15"></polygon><text x="14" y="14" text-anchor="middle" font-family="Georgia,serif" font-size="8" fill="#C9A227" letter-spacing="1">PV</text></svg>PRIVENCY · Votre Espace Acheteur Privé</div>
+      <div id="welcome-msg" style="display:none;font-family:'Playfair Display',serif;font-style:italic;font-size:32px;color:var(--gold);margin-bottom:10px;"></div>
+      <div class="hbadge">Espace Acheteur Privé · Expertimo</div>
       <h1 class="htitle">11 Résidence de la Croix Blanche 91380 Chilly Mazarin<br><span style="color:var(--gold);font-style:italic;"></span></h1>
-      <p class="hsub">Appartement 3 pièces de 65 m² · 3 · DPE E</p>
+      <p class="hsub">Appartement 3 pièces de 66 m² · 3 · DPE E</p>
     </div>
     <div class="price-card">
       <div class="plabel">Prix affiché</div>
       <div class="pamount">145 000 €</div>
       <div class="pmeta">Frais d'agence inclus · Données temps réel</div>
       <div class="hkpis">
-        <div class="hkpi"><div class="hl">Score qualité</div><div class="hv" id="h-score" style="font-size:32px;">8,25/10</div></div>
-        <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe" style="font-size:32px;">E</div></div>
+        <div class="hkpi"><div class="hl">DPE</div><div class="hv" id="h-dpe">E</div></div>
       </div>
     </div>
   </div>
@@ -348,9 +358,10 @@ html,body{overflow-x:hidden;}
 
 <div class="layout-shell">
 <nav class="rail" id="main-nav">
-  <div class="rail-progress"><span id="rail-progress-count">1</span> / 9 sections explorées</div>
+  <div class="rail-progress"><span id="rail-progress-count">1</span> / 10 sections explorées</div>
   <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label">Le Bien</span></button>
-  <button data-tab="analyse" onclick="showTab('analyse',this)"><span class="rail-dot">📊</span><span class="rail-label">Analyse &amp; Chiffres</span></button>
+  <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label">Ventes comparables</span></button>
+  <button data-tab="rentabilite" onclick="showTab('rentabilite',this)"><span class="rail-dot">💰</span><span class="rail-label">Simulateur investisseur</span></button>
   <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label">Tout savoir sur ce bien</span></button>
   <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
   <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label">Mon Budget</span></button>
@@ -369,24 +380,15 @@ html,body{overflow-x:hidden;}
   <div class="card">
     <div class="lbl">Le bien</div>
     <h2 class="stitle">11 Résidence de la Croix Blanche 91380 Chilly Mazarin · 3 pièces · 3</h2>
-    <p class="ssub">Appartement 3 pièces de 65 m² · 3 · DPE E</p>
-    <div class="gallery" id="main-gallery" style="grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 190px 190px;">
-    <img id="gallery-photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854456/TIMERA-ExpertimoOlivierLoison-OlivierReynes-12_lm88dp.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin - Vue principale" class="gm" onclick="openLightbox(this.src)">
-    <img id="gallery-photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-5_cdjafj.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
-    <img id="gallery-photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854454/TIMERA-ExpertimoOlivierLoison-OlivierReynes-9_agno9m.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
-    <img id="gallery-photo4" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854452/TIMERA-ExpertimoOlivierLoison-OlivierReynes-2_folxsf.jpg" alt="Photo 4" onclick="openLightbox(this.src)" style="">
-    <img id="gallery-photo5" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-8_eidycg.jpg" alt="Photo 5" onclick="openLightbox(this.src)" style="">
+    <p class="ssub">Appartement 3 pièces de 66 m² · 3 · DPE E</p>
+    <div class="gallery" id="gallery-grid">
+    <img id="photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854456/TIMERA-ExpertimoOlivierLoison-OlivierReynes-12_lm88dp.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin - Vue principale" class="gm" onclick="openLightbox(this.src)">
+    <img id="photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-5_cdjafj.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
+    <img id="photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854454/TIMERA-ExpertimoOlivierLoison-OlivierReynes-9_agno9m.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
+    <img id="photo4" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854452/TIMERA-ExpertimoOlivierLoison-OlivierReynes-2_folxsf.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
+    <img id="photo5" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-8_eidycg.jpg" alt="11 Résidence de la Croix Blanche 91380 Chilly Mazarin" onclick="openLightbox(this.src)">
   </div>
   <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption">📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles</div>
-  <div id="media-bloc" style="display:none;margin-bottom:18px;">
-    <div id="video-container" style="display:none;margin-bottom:12px;">
-      <div class="lbl">Vidéo du bien</div>
-      <div id="video-embed" style="border-radius:12px;overflow:hidden;"></div>
-    </div>
-    <div id="visite-container" style="display:none;">
-      <a id="visite-btn" href="#" target="_blank" class="btn-rdv" style="display:inline-flex;align-items:center;gap:8px;width:auto;">🔍 Visite virtuelle 360°</a>
-    </div>
-  </div>
   <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>Dernier étage sans vis-à-vis + balcon Sud-Ouest</li><li>Résidence avec gardien, tennis, espaces verts</li><li>Cave et place de parking dans résidence sécurisée et fermée</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>Travaux de rafraîchissement à prévoir</li><li>Charges de copropriété : 345€ (tout compris)</li></ul></div></div><div class="score-box">
   <div class="lbl" style="color:#6a6358;">Score Qualité du Bien</div>
   <div class="score-num">8,25</div>
@@ -398,7 +400,8 @@ html,body{overflow-x:hidden;}
 </div>
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar" style="background-image: url(&quot;https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg&quot;); background-size: cover; background-position: center top;"></div>
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
+  <div class="cons-avatar" style="display: none;">OL</div>
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
@@ -413,18 +416,14 @@ html,body{overflow-x:hidden;}
 </div></section>
 
 <!-- ═══════════ ONGLET 2 : ANALYSE ═══════════ -->
-<section id="analyse" class="tab">
+<!-- ═══════════ ONGLET : MARCHÉ ═══════════ -->
+<section id="marche" class="tab">
 <div class="pg">
 <div>
-  <div class="sub-tabs" id="sub-nav">
-    <button class="active" onclick="showSub('marche',this)">📊 Ventes comparables</button>
-    <button onclick="showSub('rentabilite',this)">💰 Simulateur investisseur</button>
-  </div>
-
-  <div id="sub-marche" class="sub-panel active">
+  <div id="sub-marche">
     <div class="kpi-grid">
-      <div class="kpi"><div class="kl">Prix m² · ce bien</div><div class="kv g">2 231 €</div></div>
-      <div class="kpi"><div class="kl">Médiane Longjumeau / Essonne 91</div><div class="kv">3 020 €</div></div>
+      <div class="kpi"><div class="kl">Prix m² · ce bien</div><div class="kv g">2 197 €</div></div>
+      <div class="kpi" style="display: none;"><div class="kl">Médiane Longjumeau / Essonne 91</div><div class="kv">3 020 €</div></div>
       <div class="kpi"><div class="kl">Tension locative</div><div class="kv v">Très forte</div></div>
       <div class="kpi"><div class="kl">Délai vente moyen</div><div class="kv">21 jours</div></div>
     </div>
@@ -457,8 +456,28 @@ html,body{overflow-x:hidden;}
       </div>
     </div>
   </div>
+</div>
+<div><div class="cons-card">
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
+  <div class="cons-avatar" style="display: none;">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
+</div>
+</section>
 
-  <div id="sub-rentabilite" class="sub-panel">
+<!-- ═══════════ ONGLET : RENTABILITÉ ═══════════ -->
+<section id="rentabilite" class="tab">
+<div class="pg">
+<div>
+  <div id="sub-rentabilite">
     <div class="card">
       <div class="lbl">Simulateur investisseur temps réel</div>
       <h2 class="stitle">Simulateur investisseur interactif</h2>
@@ -478,13 +497,12 @@ html,body{overflow-x:hidden;}
       <div class="rc dk"><div class="rcl">Apport requis</div><div class="rcv mono" style="font-size:22px;" id="r-apport">—</div></div>
       <div class="rc"><div class="rcl">Rendement brut</div><div class="rcv" style="font-size:22px;" id="r-brut">—</div></div>
       <div class="rc"><div class="rcl">Mensualité crédit</div><div class="rcv" style="font-size:22px;" id="r-mens">—</div></div>
-      <div class="rc"><div class="rcl">Cash-flow / mois</div><div class="rcv" style="font-size:22px;" id="r-cf">—</div></div>
     </div>
   </div>
-
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar" style="background-image: url(&quot;https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg&quot;); background-size: cover; background-position: center top;"></div>
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
+  <div class="cons-avatar" style="display: none;">OL</div>
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
@@ -501,21 +519,28 @@ html,body{overflow-x:hidden;}
 <!-- ═══════════ ONGLET : HISTORIQUE ═══════════ -->
 <section id="historique" class="tab">
 <div class="pg">
-  <div class="card">
-    <div class="lbl">Informations complémentaires</div>
-    <h2 class="stitle">Tout savoir sur ce bien</h2>
-    <div id="historique-libre" style="font-size:13px;line-height:1.9;font-weight:300;white-space:pre-line;color:var(--ink);padding:8px 0;">Année de construction de l'immeuble : 1965
-Historique des travaux de la copropriété :
-Fermeture sécurisée de la résidence (portails, portillons, grillages) — 2011/2013
-Remplacement des fenêtres dans plusieurs cages d'escalier — 2013 à 2016
-Installation de systèmes VIGIK (contrôle d'accès) — 2016
-Aménagement d'aires de stationnement motos — 2011
-Réfection complète des toitures-terrasses — votée en AG le 25/03/2019, confiée à la société ETANCHEPRO pour un montant de 1 088 337,57 € TTC, avec maîtrise d'œuvre assurée par le Cabinet ATTEA. Financement via le fonds travaux et un emprunt collectif DOMOFINANCE, avec démarrage effectif à partir d'avril 2020.</div>
-    <div id="factures-bloc" style="margin-top:20px;display:none;">
-      <div class="lbl">Factures &amp; devis travaux</div>
-      <div id="factures-liens" style="display:flex;flex-direction:column;gap:8px;margin-top:8px;"></div>
+<div>
+  <div id="sub-patrimoine">
+    <div class="card">
+      <div class="lbl">Informations complémentaires</div>
+      <h2 class="stitle">Tout savoir sur ce bien</h2>
+      <ul class="info-list" style="margin-top:13px;" id="historique-timeline"><li class="info-item">Année de construction de l'immeuble : 1965</li><li class="info-item">Historique des travaux de la copropriété :</li><li class="info-item"><b>Fermeture sécurisée de la résidence (portails, portillons, grillages)</b> — 2011/2013</li><li class="info-item"><b>Remplacement des fenêtres dans plusieurs cages d'escalier</b> — 2013 à 2016</li><li class="info-item"><b>Installation de systèmes VIGIK (contrôle d'accès)</b> — 2016</li><li class="info-item"><b>Aménagement d'aires de stationnement motos</b> — 2011</li><li class="info-item"><b>Réfection complète des toitures-terrasses</b> — votée en AG le 25/03/2019, confiée à la société ETANCHEPRO pour un montant de 1 088 337,57 € TTC, avec maîtrise d'œuvre assurée par le Cabinet ATTEA. Financement via le fonds travaux et un emprunt collectif DOMOFINANCE, avec démarrage effectif à partir d'avril 2020.</li></ul>
     </div>
   </div>
+</div>
+<div><div class="cons-card">
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
+  <div class="cons-avatar" style="display: none;">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
 </div>
 </section>
 
@@ -523,14 +548,30 @@ Réfection complète des toitures-terrasses — votée en AG le 25/03/2019, conf
 <section id="diagnostics" class="tab">
 <div class="pg">
 <div>
-  <div class="card">
-    <div class="lbl">Diagnostics réglementaires</div>
-    <h2 class="stitle">Diagnostics Techniques</h2>
-    <p class="ssub">Résultats officiels des diagnostics réglementaires</p>
-    <div class="diag-grid" id="diag-grid"><div class="diag-card diag-attention"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-ok"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">L'installation intérieure d'électricité ne comporte aucune anomalie</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Conforme</div></div><div class="diag-card diag-ok" id="diag-carrez"><div class="diag-icon">📐</div><div class="diag-name">Loi Carrez</div><div class="diag-result" id="diag-carrez-result">64,73 m²</div></div></div>
+  <div id="sub-diagnostics">
+    <div class="card">
+      <div class="lbl">Diagnostics réglementaires</div>
+      <h2 class="stitle">Diagnostics Techniques</h2>
+      <p class="ssub">Résultats officiels des diagnostics réglementaires</p>
+      <div class="diag-grid" id="diag-grid"><div class="diag-card diag-attention"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-ok"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">L'installation intérieure d'électricité ne comporte aucune anomalie</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Conforme</div></div></div>
+    </div>
   </div>
 </div>
-</div></section>
+<div><div class="cons-card">
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
+  <div class="cons-avatar" style="display: none;">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
+</div></div>
+</div>
+</section>
 
 <!-- ═══════════ ONGLET : MON BUDGET ═══════════ -->
 <section id="budget" class="tab">
@@ -607,10 +648,6 @@ Réfection complète des toitures-terrasses — votée en AG le 25/03/2019, conf
     </div>
     <div id="doc-content" style="display:none;">
       <div id="doc-success" class="alert vert" style="margin-top:13px;margin-bottom:14px;"><h4>✅ Accès déverrouillé</h4><p>Votre demande a été transmise. Le conseiller vous contactera dans les 24h avec les documents complets.</p></div>
-      <div id="factures-section" style="display:none;margin-bottom:14px;">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;">Factures travaux</div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;" id="factures-buttons"></div>
-      </div>
       <div class="dg">
         <div class="dc"><div class="dci">📄</div><div class="dcn">PV Assemblée Générale</div><div class="dcm">Dernière AG copropriété</div><div class="dlck">🔓 Disponible</div></div>
         <div class="dc"><div class="dci">📊</div><div class="dcn">Appels de charges</div><div class="dcm">Relevé annuel · 345 €/mois</div><div class="dlck">🔓 Disponible</div></div>
@@ -623,7 +660,8 @@ Réfection complète des toitures-terrasses — votée en AG le 25/03/2019, conf
   </div>
 </div>
 <div><div class="cons-card">
-  <div class="cons-avatar" style="background-image: url(&quot;https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg&quot;); background-size: cover; background-position: center top;"></div>
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
+  <div class="cons-avatar" style="display: none;">OL</div>
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
@@ -654,7 +692,7 @@ Réfection complète des toitures-terrasses — votée en AG le 25/03/2019, conf
 <div class="pg">
 <div>
   <div class="card" style="background:var(--cream);border:1px solid var(--gold);margin-bottom:16px;">
-    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;">Vous avez exploré <span id="offre-progress-count">1</span> / 9 sections</div>
+    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;">Vous avez exploré <span id="offre-progress-count">1</span> / 10 sections</div>
     <div style="font-size:12.5px;color:var(--muted);">Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.</div>
   </div>
   <div class="card">
@@ -715,7 +753,8 @@ Réfection complète des toitures-terrasses — votée en AG le 25/03/2019, conf
     </div>
   </div>
   <div class="cons-card">
-  <div class="cons-avatar" style="background-image: url(&quot;https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg&quot;); background-size: cover; background-position: center top;"></div>
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
+  <div class="cons-avatar" style="display: none;">OL</div>
   <div class="cons-name">Olivier Loison</div>
   <div class="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
@@ -731,14 +770,6 @@ Réfection complète des toitures-terrasses — votée en AG le 25/03/2019, conf
 </section>
 
 <div class="pfooter">
-  <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:12px;">
-  <svg viewBox="0 0 60 46" width="40" height="31" style="display:inline-block;">
-    <polygon points="30,0 60,23 30,46 0,23" fill="none" stroke="#C9A227" stroke-width="1.5"></polygon>
-    <polygon points="30,10 48,23 30,36 12,23" fill="#C9A227" opacity="0.12"></polygon>
-    <text x="30" y="27" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="400" fill="#C9A227" letter-spacing="1.5">PV</text>
-  </svg>
-  <span style="font-family:'Playfair Display',serif;font-size:42px;color:#C9A227;font-weight:300;letter-spacing:.06em;">Privency</span>
-</div>
   <h2>Espace Acheteur Privé<br><span style="color:var(--gold);font-style:italic;">une expérience immobilière nouvelle génération</span></h2>
   <p>Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.</p>
 </div>
@@ -770,6 +801,30 @@ function updateRailUI() {
   if (countEl) countEl.textContent = visited.length;
   var offreBanner = document.getElementById('offre-progress-count');
   if (offreBanner) offreBanner.textContent = visited.length;
+}
+function showTabAssistant(btn) {
+  document.querySelectorAll('.rail button').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  markVisited('assistant');
+  toggleAI();
+}
+
+function renderAISuggestions() {
+  var wrap = document.getElementById('ai-suggestions');
+  if (!wrap) return;
+  var qs = ['Quel est le montant des charges ?', 'Puis-je négocier le prix ?', 'Comment prendre rendez-vous ?'];
+  wrap.innerHTML = '';
+  qs.forEach(function(q) {
+    var b = document.createElement('button');
+    b.textContent = q;
+    b.style.cssText = 'background:var(--cream);color:var(--gold2, var(--gold));border:none;font-size:11px;font-weight:500;padding:7px 12px;border-radius:100px;cursor:pointer;font-family:\'Work Sans\',sans-serif;';
+    b.onclick = function() {
+      document.getElementById('ai-input').value = q;
+      sendAI();
+      wrap.style.display = 'none';
+    };
+    wrap.appendChild(b);
+  });
 }
 
 function dockAI() {
@@ -823,24 +878,6 @@ function undockAI() {
   _aiOpen = false;
 }
 
-function renderAISuggestions() {
-  var wrap = document.getElementById('ai-suggestions');
-  if (!wrap) return;
-  var qs = ['Quel est le montant des charges ?', 'Puis-je négocier le prix ?', 'Comment prendre rendez-vous ?'];
-  wrap.innerHTML = '';
-  qs.forEach(function(q) {
-    var b = document.createElement('button');
-    b.textContent = q;
-    b.style.cssText = 'background:var(--cream);color:var(--gold2, var(--gold));border:none;font-size:11px;font-weight:500;padding:7px 12px;border-radius:100px;cursor:pointer;font-family:\'Work Sans\',sans-serif;';
-    b.onclick = function() {
-      document.getElementById('ai-input').value = q;
-      sendAI();
-      wrap.style.display = 'none';
-    };
-    wrap.appendChild(b);
-  });
-}
-
 function showTab(id, btn) {
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
@@ -853,27 +890,16 @@ function showTab(id, btn) {
 }
 
 function showTabById(id) {
-  var navMap = {bien: 0, analyse: 1, historique: 2, diagnostics: 3, budget: 4, quartier: 5, documents: 6, assistant: 7, offre: 8};
+  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, offre: 9};
   var navBtns = document.querySelectorAll('#main-nav button');
   showTab(id, navBtns[navMap[id]]);
 }
 
-// ═══ SUB TABS ═══
-function showSub(id, btn) {
-  document.querySelectorAll('.sub-panel').forEach(function(p) { p.classList.remove('active'); });
-  document.getElementById('sub-' + id).classList.add('active');
-  document.querySelectorAll('#sub-nav button').forEach(function(b) { b.classList.remove('active'); });
-  if (btn) btn.classList.add('active');
-  if (id === 'patrimoine') { /* projection supprimée */ }
-}
-
+// ═══ COMPAT: showSub2 redirects to main tabs ═══
 function showSub2(id) {
-  showTabById('analyse');
-  setTimeout(function() {
-    var subBtns = document.querySelectorAll('#sub-nav button');
-    var subMap = {marche: 0, rentabilite: 1, patrimoine: 2, diagnostics: 3};
-    showSub(id, subBtns[subMap[id]]);
-  }, 100);
+  var tabMap = {marche: 'marche', rentabilite: 'rentabilite', patrimoine: 'historique', diagnostics: 'diagnostics'};
+  showTabById(tabMap[id] || id);
+  if (id === 'patrimoine') { setTimeout(function(){ try{ calcProjection(); }catch(e){} }, 100); }
 }
 
 // ═══ LIGHTBOX ═══
@@ -900,10 +926,51 @@ function mensualite(cap, ta, da) {
 }
 
 // ═══ CALCULATEUR RENTABILITÉ ═══
+function calcProjection() {
+  try {
+    var prixEl = document.getElementById('prix');
+    var prixBase = parseFloat("145 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+    var prix = prixEl ? parseFloat(prixEl.value) : prixBase;
+    if (!prix || isNaN(prix)) return;
+    var taux = [0.01, 0.02, 0.03];
+    var ans  = [3, 5, 10];
+    var pvMax = 0;
+    // Calcul des valeurs et plus-values
+    taux.forEach(function(t, ti) {
+      ans.forEach(function(a) {
+        var valeur = prix * Math.pow(1 + t, a);
+        var pv = valeur - prix;
+        if (pv > pvMax) pvMax = pv;
+        var el = document.getElementById('proj-' + (ti+1) + '-' + a);
+        if (el) el.textContent = Math.round(valeur).toLocaleString('fr-FR') + ' €';
+      });
+    });
+    // Mise à jour des barres du graphique (basée sur plus-value à 10 ans)
+    var pvBarre = [
+      prix * Math.pow(1.01, 10) - prix,
+      prix * Math.pow(1.02, 10) - prix,
+      prix * Math.pow(1.03, 10) - prix
+    ];
+    var pvRef = pvBarre[2] || 1;
+    var lblEl1 = document.getElementById('proj-bar-lbl-1');
+    var lblEl2 = document.getElementById('proj-bar-lbl-2');
+    var lblEl3 = document.getElementById('proj-bar-lbl-3');
+    var barEl1 = document.getElementById('proj-bar-1');
+    var barEl2 = document.getElementById('proj-bar-2');
+    var barEl3 = document.getElementById('proj-bar-3');
+    function fmtK(v) { return '+' + (v >= 1000 ? (Math.round(v/100)/10).toFixed(1) + 'k€' : Math.round(v) + '€'); }
+    if (lblEl1) lblEl1.textContent = fmtK(pvBarre[0]);
+    if (lblEl2) lblEl2.textContent = fmtK(pvBarre[1]);
+    if (lblEl3) lblEl3.textContent = fmtK(pvBarre[2]);
+    if (barEl1) barEl1.style.height = Math.round(pvBarre[0] / pvRef * 100) + '%';
+    if (barEl2) barEl2.style.height = Math.round(pvBarre[1] / pvRef * 100) + '%';
+    if (barEl3) barEl3.style.height = '100%';
+  } catch(e) { console.error('[calcProjection]', e); }
+}
 
 function calc() {
   if(typeof gtag!=='undefined') gtag('event','simulation_credit',{client:clientId});
-  try { _calc(); } catch(e) { console.error('[calc]', e); }
+  try { _calc(); calcProjection(); } catch(e) { console.error('[calc]', e); }
 }
 function _calc() {
   var prix = parseFloat(document.getElementById('prix').value);
@@ -932,12 +999,12 @@ function _calc() {
   var cfAnnuel = cf * 12;
   var rnet = (apE > 0) ? (cfAnnuel / apE * 100) : ((loyer * 12 - ch) / tot * 100);
 
-  document.getElementById('r-brut').textContent = fmtPct(brut);
-  document.getElementById('r-cf').textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + ' €';
-  document.getElementById('r-mens').textContent = Math.round(mens) + ' €';
-  document.getElementById('r-prix').textContent = fmt(prix);
-  document.getElementById('r-notaire').textContent = fmt(not);
-  document.getElementById('r-apport').textContent = fmt(apE);
+  var elBrut = document.getElementById('r-brut'); if (elBrut) elBrut.textContent = fmtPct(brut);
+  var elCf = document.getElementById('r-cf'); if (elCf) elCf.textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + ' €';
+  var elMens = document.getElementById('r-mens'); if (elMens) elMens.textContent = Math.round(mens) + ' €';
+  var elRprix = document.getElementById('r-prix'); if (elRprix) elRprix.textContent = fmt(prix);
+  var elNot = document.getElementById('r-notaire'); if (elNot) elNot.textContent = fmt(not);
+  var elAp = document.getElementById('r-apport'); if (elAp) elAp.textContent = fmt(apE);
 
   var hRnet = document.getElementById('h-rnet');
   var hCf = document.getElementById('h-cf');
@@ -1053,7 +1120,19 @@ function unlockDocs() {
   }
 }
 
-// ═══ INIT ═══
+// ═══ INIT — loyer slider initialisé depuis _sp_loyer ═══
+var _sp_loyer = "1200";
+(function() {
+  var loyerSlider = document.getElementById('loyer');
+  if (loyerSlider && _sp_loyer && parseFloat(_sp_loyer) > 0) {
+    var loyerVal = parseFloat(_sp_loyer);
+    loyerSlider.value = loyerVal;
+    loyerSlider.min   = Math.round(loyerVal * 0.5);
+    loyerSlider.max   = Math.round(loyerVal * 2.5);
+    var vLoyer = document.getElementById('v-loyer');
+    if (vLoyer) vLoyer.textContent = loyerVal + ' €';
+  }
+})();
 calc();
 calcBank();
 
@@ -1107,8 +1186,8 @@ function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
   var adresse = "11 Résidence de la Croix Blanche 91380 Chilly Mazarin";
-  var latFallback = parseFloat("") || 0;
-  var lngFallback = parseFloat("") || 0;
+  var latFallback = 48.7074855;
+  var lngFallback = 2.3142355;
 
   function buildMap(lat, lng) {
     var map = L.map('map-quartier', {cursor:'default'}).setView([lat, lng], 15);
@@ -1117,24 +1196,6 @@ function initMapQuartier() {
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#14171F;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #C9A227;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
     L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>11 Résidence de la Croix Blanche 91380 Chilly Mazarin").openPopup();
-    var overpassProxies = [
-      'https://overpass.kumi.systems/api/interpreter',
-      'https://overpass.private.coffee/api/interpreter',
-      'https://maps.mail.ru/osm/tools/overpass/api/interpreter'
-    ];
-    var query = '[out:json][timeout:10];('
-      + 'node["public_transport"](around:800,' + lat + ',' + lng + ');'
-      + 'node["railway"="station"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="bus_station"](around:800,' + lat + ',' + lng + ');'
-      + 'node["highway"="bus_stop"](around:800,' + lat + ',' + lng + ');'
-      + 'node["leisure"="park"](around:800,' + lat + ',' + lng + ');'
-      + 'node["leisure"="garden"](around:800,' + lat + ',' + lng + ');'
-      + 'node["shop"="supermarket"](around:800,' + lat + ',' + lng + ');'
-      + 'node["shop"="bakery"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="pharmacy"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="school"](around:800,' + lat + ',' + lng + ');'
-      + 'node["amenity"="kindergarten"](around:800,' + lat + ',' + lng + ');'
-      + ');out body;';
     var catMeta = {
       transport: {color:'#1565c0', emoji:'🚇', label:'Transport'},
       vert:      {color:'#2e7d32', emoji:'🌳', label:'Espace vert'},
@@ -1146,52 +1207,35 @@ function initMapQuartier() {
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
-    async function tryOverpass(q, proxies) {
-      for (var i = 0; i < proxies.length; i++) {
-        try {
-          var r = await fetch(proxies[i], {
-            method: 'POST',
-            body: 'data=' + encodeURIComponent(q)
-          });
-          if (r.ok) return await r.json();
-        } catch(e) {}
-      }
-      return null;
-    }
-
-    setTimeout(async function() {
-      var elements = null;
-      if (window._poiData && window._poiData.length) {
-        elements = window._poiData;
-      } else {
-        var data = await tryOverpass(query, overpassProxies);
-        if (data) elements = data.elements || [];
-      }
-      if (elements) {
-        elements.forEach(function(el) {
+    setTimeout(function() { fetch('https://expertimo-phi.vercel.app/api/geoapify?lat=' + lat + '&lng=' + lng)
+      .then(function(r){return r.json();})
+      .then(function(data){
+        (data.features||[]).forEach(function(feature) {
           var cat;
-          var tags = el.tags || {};
-          if (tags.public_transport || tags.railway === 'station' || tags.amenity === 'bus_station' || tags.highway === 'bus_stop') { cat = 'transport'; }
-          else if (tags.leisure === 'park' || tags.leisure === 'garden') { cat = 'vert'; }
-          else if (tags.shop === 'supermarket' || tags.shop === 'bakery' || tags.amenity === 'pharmacy') { cat = 'commerce'; }
-          else if (tags.amenity === 'school' || tags.amenity === 'kindergarten') { cat = 'ecole'; }
+          var props = feature.properties || {};
+          var cats = props.categories || [];
+          if (cats.indexOf('public_transport') !== -1 || cats.indexOf('public_transport.bus') !== -1) { cat = 'transport'; }
+          else if (cats.indexOf('leisure.park') !== -1) { cat = 'vert'; }
+          else if (cats.indexOf('commercial.supermarket') !== -1 || cats.indexOf('commercial.food_and_drink') !== -1 || cats.indexOf('healthcare.pharmacy') !== -1) { cat = 'commerce'; }
+          else if (cats.indexOf('education.school') !== -1 || cats.indexOf('childcare.kindergarten') !== -1) { cat = 'ecole'; }
           else return;
           counts[cat]++;
           var meta = catMeta[cat];
+          var poiLat = props.lat != null ? props.lat : feature.geometry.coordinates[1];
+          var poiLon = props.lon != null ? props.lon : feature.geometry.coordinates[0];
           var icon = L.divIcon({className:'', html:'<div style="background:'+meta.color+';border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid white;">'+meta.emoji+'</div>', iconSize:[28,28], iconAnchor:[14,14]});
-          var dist = Math.round(map.distance([lat,lng],[el.lat,el.lon]));
+          var dist = Math.round(map.distance([lat,lng],[poiLat,poiLon]));
           var mins = Math.ceil(dist / 80);
-          var name = tags.name || tags['name:fr'] || meta.label;
+          var name = props.name || meta.label;
           var popup = '<strong>'+name+'</strong><br>'+meta.emoji+' '+meta.label+'<br>'+dist+' m · ~'+mins+' min à pied';
-          var marker = L.marker([el.lat,el.lon],{icon:icon}).addTo(map).bindPopup(popup);
+          var marker = L.marker([poiLat,poiLon],{icon:icon}).addTo(map).bindPopup(popup);
           window._mapMarkers[cat].push(marker);
         });
         document.getElementById('cnt-transport').textContent = counts.transport;
         document.getElementById('cnt-vert').textContent = counts.vert;
         document.getElementById('cnt-commerce').textContent = counts.commerce;
         document.getElementById('cnt-ecole').textContent = counts.ecole;
-      }
-    }, 1000);
+      }).catch(function(err){ console.log('[Geoapify] Erreur requête POI :', err); }); }, 1000);
   }
 
   if (latFallback && lngFallback) {
@@ -1241,7 +1285,7 @@ var _aiMessages = [];
 var _aiInit = false;
 var _sp_adresse   = "11 Résidence de la Croix Blanche 91380 Chilly Mazarin";
 var _sp_prix      = "145 000";
-var _sp_surface   = "65";
+var _sp_surface   = "66";
 var _sp_etage     = "3";
 var _sp_dpe       = "E";
 var _sp_charges   = "345";
@@ -1252,10 +1296,8 @@ var _sp_pf2       = "Résidence avec gardien, tennis, espaces verts";
 var _sp_pf3       = "Cave et place de parking dans résidence sécurisée et fermée";
 var _sp_vigi1     = "Travaux de rafraîchissement à prévoir";
 var _sp_vigi2     = "Charges de copropriété : 345€ (tout compris)";
-var _sp_loyer     = "1200";
 var _sp_agent     = "Olivier LOISON";
 var _sp_tel       = "06 85 68 46 13";
-var Expertimo    = "Expertimo";
 
 function toggleAI() {
   markVisited('assistant');
@@ -1348,6 +1390,7 @@ document.addEventListener('DOMContentLoaded', function(){
     });
     try{ calc(); }catch(e){ console.error('[init calc]', e); }
     try{ calcBank(); }catch(e){ console.error('[init calcBank]', e); }
+    setTimeout(function(){ try{ calcProjection(); }catch(e){ console.error('[init calcProjection]', e); } }, 500);
     // Masquer lignes DVF vides
     document.querySelectorAll('.dvf-row').forEach(function(row) {
         var d = row.dataset.date || '';
@@ -1357,12 +1400,13 @@ document.addEventListener('DOMContentLoaded', function(){
 </script>
 
 <!-- ═══ ASSISTANT IA ═══ -->
-<div id="ai-btn" onclick="toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--gold);color:var(--dark);border:none;border-radius:99px;padding:14px 22px;font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 24px rgba(201,162,39,.5);display:flex;align-items:center;gap:10px;animation:pulseBtn 2s infinite;">
-  Tout savoir sur ce bien
+<div id="ai-proactive-bubble" onclick="document.getElementById('ai-proactive-bubble').style.display='none';toggleAI();" style="display:none;position:fixed;bottom:76px;right:24px;z-index:1000;background:#fff;color:var(--ink);border:1px solid var(--border);border-radius:14px;padding:10px 16px;font-family:'Work Sans',sans-serif;font-size:13px;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);max-width:220px;">Une question sur ce bien ? Je suis là 👋</div>
+<div id="ai-btn" onclick="document.getElementById('ai-proactive-bubble').style.display='none';toggleAI()" style="position:fixed;bottom:24px;right:24px;z-index:1000;background:var(--agent-primary);color:var(--gold);border:none;border-radius:99px;padding:14px 20px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.3);display:flex;align-items:center;gap:8px;">
+  <span style="font-size:16px;">💬</span> Poser une question
 </div>
 
 <div id="ai-modal" style="display:none;position:fixed;bottom:80px;right:24px;z-index:1001;width:360px;max-height:560px;background:white;border-radius:20px;box-shadow:0 8px 40px rgba(0,0,0,.25);flex-direction:column;overflow:hidden;border:1px solid var(--border);">
-  <div style="background:var(--dark);color:var(--gold);padding:18px 22px;display:flex;align-items:center;gap:12px;">
+  <div style="background:var(--agent-primary);color:var(--gold);padding:18px 22px;display:flex;align-items:center;gap:12px;">
     <div style="width:36px;height:36px;border-radius:50%;background:rgba(201,162,39,.15);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
     <div style="flex:1;">
       <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:600;">Assistant Privency</div>
@@ -1374,7 +1418,7 @@ document.addEventListener('DOMContentLoaded', function(){
   <div id="ai-suggestions" style="display:flex;gap:8px;padding:0 16px 12px;flex-wrap:wrap;"></div>
   <div style="padding:12px 16px;border-top:1px solid var(--border);display:flex;gap:8px;">
     <input id="ai-input" type="text" placeholder="Votre question..." style="flex:1;border:1px solid var(--border);border-radius:99px;padding:8px 14px;font-size:13px;font-family:'Work Sans',sans-serif;outline:none;" onkeydown="if(event.key==='Enter')sendAI()">
-    <button onclick="sendAI()" style="background:var(--dark);color:var(--gold);border:none;border-radius:99px;padding:8px 14px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;">→</button>
+    <button onclick="sendAI()" style="background:var(--agent-primary);color:var(--gold);border:none;border-radius:99px;padding:8px 14px;cursor:pointer;font-family:'IBM Plex Mono',monospace;font-size:10px;">→</button>
   </div>
 </div>
 
@@ -1383,7 +1427,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <footer style="text-align:center;padding:24px 20px;background:#14171F;border-top:1px solid rgba(201,162,39,.15);">
   <div style="font-family:'Playfair Display',serif;font-size:18px;color:#C9A227;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
   <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;">L'immobilier avec l'expertise d'un professionnel</div>
-  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'Work Sans',sans-serif;" id="footer-agent-credit">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</div>
+  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'Work Sans',sans-serif;">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</div>
   <div style="margin-top:10px;font-size:10px;font-family:'Work Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;">Mentions légales</a> · <a href="/cgv.html" style="color:#8a7550;text-decoration:none;">CGV</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;">Politique de confidentialité</a></div>
 </footer>
 
@@ -1429,8 +1473,22 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
-
-<script id="expertimo-data" type="application/json">{"ref":"ref-mandat","type":"appart","etage":"3","adresse":"11 Résidence de la Croix Blanche 91380 Chilly Mazarin","quartier":"","annee":"1965","description":"Appartement 3 pièces de 65 m² · 3 · DPE E","surface":65,"surfCarrez":0,"pieces":"3","dpe":"E","prix":145000,"prixm2":2231,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1200,"chargesCopro":345,"chargesDetail":"Chauffage collectif, eau chaude et froide, gardien, entretien des parties communes, terrain de tennis","taxeFonciere":1079,"score":"8.25","scorePrest":"7","scoreSecteur":"9","scoreQP":"10","scoreEtat":"7","fort1":"Dernier étage sans vis-à-vis + balcon Sud-Ouest","fort2":"Résidence avec gardien, tennis, espaces verts","fort3":"Cave et place de parking dans résidence sécurisée et fermée","vig1":"Travaux de rafraîchissement à prévoir","vig2":"Charges de copropriété : 345€ (tout compris)","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854456/TIMERA-ExpertimoOlivierLoison-OlivierReynes-12_lm88dp.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-5_cdjafj.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854454/TIMERA-ExpertimoOlivierLoison-OlivierReynes-9_agno9m.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854452/TIMERA-ExpertimoOlivierLoison-OlivierReynes-2_folxsf.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1778854453/TIMERA-ExpertimoOlivierLoison-OlivierReynes-8_eidycg.jpg","videoUrl":"","visiteUrl":"","dvf":[{"date":"Août 2025","adresse":"1 Résidence la Croix Blanche ","surface":"62.31","prix":145000,"prixm2":2327},{"date":"Août 2025","adresse":"Résidence la Croix Blanche ","surface":"67","prix":172000,"prixm2":2567},{"date":"Juillet 2025","adresse":"Résidence la Croix Blanche ","surface":"62","prix":170000,"prixm2":2742},{"date":"Avril 2025","adresse":"Résidence la Croix Blanche ","surface":"62.36","prix":167500,"prixm2":2686},{"date":"Mars 2025","adresse":"Résidence la Croix Blanche ","surface":"61.69","prix":190000,"prixm2":3080},{"date":"Janv. 2025","adresse":"Résidence la Croix Blanche ","surface":"61.52","prix":155000,"prixm2":2520}],"fourchetBasse":130500,"fourchetHaute":159500,"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Année de construction de l'immeuble : 1965\nHistorique des travaux de la copropriété :\nFermeture sécurisée de la résidence (portails, portillons, grillages) — 2011/2013\nRemplacement des fenêtres dans plusieurs cages d'escalier — 2013 à 2016\nInstallation de systèmes VIGIK (contrôle d'accès) — 2016\nAménagement d'aires de stationnement motos — 2011\nRéfection complète des toitures-terrasses — votée en AG le 25/03/2019, confiée à la société ETANCHEPRO pour un montant de 1 088 337,57 € TTC, avec maîtrise d'œuvre assurée par le Cabinet ATTEA. Financement via le fonds travaux et un emprunt collectif DOMOFINANCE, avec démarrage effectif à partir d'avril 2020.","facture1Url":"","facture2Url":"","facture3Url":"","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis"},{"icon":"⚡","name":"Électricité","status":"favorable","result":"L'installation intérieure d'électricité ne comporte aucune anomalie"},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conforme"}],"diagCarrez":"64,73 m²","agentNom":"Olivier LOISON","agentReseau":"Expertimo","agentTel":"06 85 68 46 13","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"https://calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#14171F","agentAccent":"#C9A227","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","renovations":[]}</script><script>(function() {
+<script>
+// Personnalisation par lien : ?prenom=Julien&nom=Dupont
+// Prioritaire sur le message injecté à la création de la fiche.
+document.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  var prenom = params.get('prenom');
+  var nom = params.get('nom') || '';
+  var el = document.getElementById('welcome-msg');
+  if (prenom && el) {
+    el.textContent = 'Bonjour ' + prenom + (nom ? ' ' + nom : '') + ', bienvenue dans votre espace privé acquéreur';
+    el.style.display = 'block';
+  }
+});
+</script>
+<script>setTimeout(function(){var b=document.getElementById('ai-proactive-bubble');if(b){b.style.display='block';setTimeout(function(){b.style.display='none';},6000);}},3000);</script>
+<script>(function() {
   var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
   var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
   var params = new URLSearchParams(window.location.search);
@@ -1461,4 +1519,6 @@ document.addEventListener('DOMContentLoaded', function(){
   });
 })();</script>
 <script>markVisited('bien'); updateRailUI();</script>
-</body></html>
+
+
+<script async="" data-explicit-opt-in="true" data-deployment-id="dpl_HJVHfvvrHW4yVC6gtKQWHNDFYk7u" src="https://vercel.live/_next-live/feedback/feedback.js"></script></body></html>
