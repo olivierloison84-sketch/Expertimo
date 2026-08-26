@@ -1,6 +1,7 @@
 const ALLOWED_ORIGIN_PREFIXES = [
   'https://expertimo-phi.vercel.app',
   'https://olivierloison84-sketch.github.io',
+  'https://espace.privency.fr',
   'http://localhost'
 ];
 
