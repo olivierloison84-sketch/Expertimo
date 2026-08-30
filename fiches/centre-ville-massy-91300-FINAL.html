@@ -1192,8 +1192,8 @@ function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
   var adresse = "Centre Ville, Massy (91300)";
-  var latFallback = 48.730022;
-  var lngFallback = 2.276919;
+  var latFallback = parseFloat("") || 0;
+  var lngFallback = parseFloat("") || 0;
 
   function buildMap(lat, lng) {
     var map = L.map('map-quartier', {cursor:'default'}).setView([lat, lng], 15);
