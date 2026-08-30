@@ -158,6 +158,9 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .kpi .kl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
 .kpi .kv{font-family:'Playfair Display',serif;font-size:26px;line-height:1;}
 .kpi .kv.g{color:var(--gold);}.kpi .kv.v{color:var(--vert);}.kpi .kv.r{color:var(--rouge);}
+/* VIDEO LINKS */
+.video-link-btn{display:inline-block;padding:8px 16px;margin:0 8px 8px 0;background:var(--ink);color:#fff;border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-decoration:none;cursor:pointer;transition:.2s;}
+.video-link-btn:hover{background:var(--gold2);}
 /* SCORE BOX */
 .score-box{background:var(--dark);border-radius:14px;padding:20px;color:white;margin-bottom:16px;}
 .score-num{font-family:'Playfair Display',serif;font-size:clamp(32px,6vw,48px);color:var(--gold);line-height:1;font-weight:300;overflow:hidden;}
@@ -428,6 +431,9 @@ html,body{overflow-x:hidden;}
     <img id="photo5" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
   </div>
   <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption">📷 Cliquez sur une photo pour l'agrandir · 3 photos disponibles</div>
+  <div id="video-links-section" style="display:none;margin-bottom:18px;">
+    <div id="video-links-list"></div>
+  </div>
   <div class="score-box">
   <div class="lbl" style="color:#6a6358;">Score Qualité du Bien</div>
   <div class="score-num">9,3</div>
