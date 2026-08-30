@@ -1602,6 +1602,16 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="card-body">
+      <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#fdf6f0;border:1px solid #f0ddc8;border-radius:var(--radius);">
+        <span style="font-size:13px;color:var(--muted);">Purger les statistiques de plus de</span>
+        <select id="analytics-purge-days" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
+          <option value="30">30 jours</option>
+          <option value="90">90 jours</option>
+          <option value="180">6 mois</option>
+          <option value="365">1 an</option>
+        </select>
+        <button id="analytics-purge-btn" class="btn btn-sm btn-danger" onclick="purgerStatsAnciennes()">🧹 Purger les statistiques de plus de...</button>
+      </div>
       <div id="analytics-status" style="font-size:13px;color:var(--muted);margin-bottom:12px;">Chargement…</div>
       <div id="analytics-table-wrap" style="display:none;overflow-x:auto;">
         <table id="analytics-table" style="width:100%;border-collapse:collapse;font-size:13px;">
@@ -1612,6 +1622,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
               <th style="padding:9px 12px;text-align:center;font-weight:600;">Nb vues</th>
               <th style="padding:9px 12px;text-align:left;font-weight:600;">Dernière activité</th>
               <th style="padding:9px 12px;text-align:left;font-weight:600;">Événements</th>
+              <th style="padding:9px 12px;text-align:center;font-weight:600;">Actions</th>
             </tr>
           </thead>
           <tbody id="analytics-tbody"></tbody>
@@ -4000,6 +4011,7 @@ async function loadAnalytics() {
         groups[key] = {
           client:    row.client_nom  || 'inconnu',
           adresse:   row.bien_adresse || '—',
+          fichePath: row.fiche_path  || '',
           count:     0,
           last:      row.created_at  || '',
           events:    {}
@@ -4041,7 +4053,13 @@ async function loadAnalytics() {
         + '<td style="padding:9px 12px;color:var(--muted);font-size:12px;">' + esc(g.adresse) + '</td>'
         + '<td style="padding:9px 12px;text-align:center;"><span style="display:inline-block;background:var(--primary);color:#fff;border-radius:50%;width:28px;height:28px;line-height:28px;font-weight:700;font-size:13px;">' + g.count + '</span></td>'
         + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + esc(dateStr) + '</td>'
-        + '<td style="padding:9px 12px;">' + evHtml + '</td>';
+        + '<td style="padding:9px 12px;">' + evHtml + '</td>'
+        + '<td style="padding:9px 12px;text-align:center;">'
+        +   '<button class="btn btn-sm btn-danger" title="Supprimer ces statistiques" '
+        +           'data-fiche-path="' + esc(g.fichePath) + '" data-client="' + esc(g.client) + '" '
+        +           'data-adresse="' + esc(g.adresse) + '" data-count="' + g.count + '" '
+        +           'onclick="supprimerStatsLigne(this)">🗑️</button>'
+        + '</td>';
       tbody.appendChild(tr);
     });
 
@@ -4049,6 +4067,105 @@ async function loadAnalytics() {
     wrap.style.display   = 'block';
   } catch(err) {
     status.textContent = '❌ Erreur chargement : ' + err.message;
+  }
+}
+
+// Récupère le token de session de l'agent connecté (jamais la clé anonyme)
+// pour que les policies RLS de suppression s'appliquent.
+async function getAnalyticsSessionToken() {
+  var res = await window.privencyAuth.auth.getSession();
+  var session = res.data && res.data.session ? res.data.session : null;
+  if (!session || !session.access_token) throw new Error('Session expirée, reconnectez-vous.');
+  return session.access_token;
+}
+
+async function supprimerStatsLigne(btn) {
+  var fichePath = btn.getAttribute('data-fiche-path');
+  var client    = btn.getAttribute('data-client');
+  var adresse   = btn.getAttribute('data-adresse');
+  var count     = btn.getAttribute('data-count');
+  if (!fichePath) { showToast('❌ fiche_path manquant pour cette ligne.', true); return; }
+  if (!confirm('Supprimer les ' + count + ' vues de ' + client + ' pour ' + adresse + ' ? Cette action est irréversible.')) return;
+
+  var original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳';
+  try {
+    var accessToken = await getAnalyticsSessionToken();
+    var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
+    var url = SUPABASE_URL + '/rest/v1/fiche_views'
+      + '?fiche_path=eq.' + encodeURIComponent(fichePath)
+      + '&client_nom=eq.' + encodeURIComponent(client);
+    var r = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'apikey':        SUPABASE_KEY,
+        'Authorization': 'Bearer ' + accessToken
+      }
+    });
+    if (!r.ok) {
+      var errBody = await r.text();
+      throw new Error('HTTP ' + r.status + (errBody ? ' : ' + errBody : ''));
+    }
+    showToast('✅ Statistiques supprimées.');
+    loadAnalytics();
+  } catch (err) {
+    showToast('❌ ' + (err && err.message ? err.message : String(err)), true);
+    btn.disabled = false;
+    btn.textContent = original;
+  }
+}
+
+var ANALYTICS_PURGE_LABELS = { '30': '30 jours', '90': '90 jours', '180': '6 mois', '365': '1 an' };
+
+async function purgerStatsAnciennes() {
+  var select = document.getElementById('analytics-purge-days');
+  var btn    = document.getElementById('analytics-purge-btn');
+  var days   = select.value;
+  var label  = ANALYTICS_PURGE_LABELS[days] || (days + ' jours');
+  var cutoffIso = new Date(Date.now() - parseInt(days, 10) * 24 * 60 * 60 * 1000).toISOString();
+
+  var original = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = '⏳…';
+  try {
+    var accessToken = await getAnalyticsSessionToken();
+    var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+    var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
+    var filterUrl = SUPABASE_URL + '/rest/v1/fiche_views?created_at=lt.' + encodeURIComponent(cutoffIso);
+    var headers = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + accessToken };
+
+    // Compte les lignes concernées (RLS limite déjà aux fiches de l'agent connecté)
+    var countRes = await fetch(filterUrl, {
+      method: 'HEAD',
+      headers: Object.assign({ 'Prefer': 'count=exact' }, headers)
+    });
+    var total = 0;
+    var range = countRes.headers.get('content-range');
+    if (range) {
+      var m = range.match(/\/(\d+)$/);
+      if (m) total = parseInt(m[1], 10);
+    }
+
+    if (total === 0) {
+      showToast('Aucune statistique de plus de ' + label + ' à purger.');
+      return;
+    }
+    if (!confirm('Supprimer ' + total + ' ligne(s) de statistiques de plus de ' + label + ' ? Cette action est irréversible.')) return;
+
+    var delRes = await fetch(filterUrl, { method: 'DELETE', headers: headers });
+    if (!delRes.ok) {
+      var errBody = await delRes.text();
+      throw new Error('HTTP ' + delRes.status + (errBody ? ' : ' + errBody : ''));
+    }
+    showToast('✅ ' + total + ' ligne(s) de statistiques supprimée(s).');
+    loadAnalytics();
+  } catch (err) {
+    showToast('❌ ' + (err && err.message ? err.message : String(err)), true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = original;
   }
 }
 
