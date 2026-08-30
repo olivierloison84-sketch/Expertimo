@@ -1503,7 +1503,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, agent_id: agentId })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: "/fiches/2-allee-du-vivier-sud-91410-saint-escobille-FINAL.html", agent_id: agentId })
     });
   }
   track('fiche_ouverte');
