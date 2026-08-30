@@ -3705,7 +3705,7 @@ async function syncFicheToSupabase(slug, pageUrl) {
   }
 }
 
-function pushToGitHub() {
+async function pushToGitHub() {
   var token = _GH_TOKEN || localStorage.getItem('expertimo_gh_token');
   if (!token) {
     document.getElementById('gh-push-status').textContent =
@@ -3729,6 +3729,23 @@ function pushToGitHub() {
     status.textContent = _pubMsgs[_pubMsgIdx];
   }, 2000);
 
+  var htmlToPublish = _lastGeneratedHTML;
+  try {
+    var authClient = window.privencyAuth;
+    if (authClient) {
+      var userRes = await authClient.auth.getUser();
+      var user = userRes && userRes.data && userRes.data.user;
+      if (user) {
+        var agentTag = '<script>window.PRIVENCY_AGENT_ID = "' + user.id + '";<' + '/script>\n</body>';
+        htmlToPublish = /<\/body>/i.test(htmlToPublish)
+          ? htmlToPublish.replace(/<\/body>/i, agentTag)
+          : htmlToPublish + agentTag;
+      }
+    }
+  } catch (e) {
+    console.error('pushToGitHub: échec injection agent_id', e);
+  }
+
   var path = 'fiches/' + _lastGeneratedSlug + '-FINAL.html';
   var apiUrl = 'https://api.github.com/repos/olivierloison84-sketch/Expertimo/contents/' + path;
   var headers = {
@@ -3742,7 +3759,7 @@ function pushToGitHub() {
     .then(function(existing) {
       var body = {
         message: 'feat: fiche acquereur ' + _lastGeneratedSlug,
-        content: toBase64UTF8(_lastGeneratedHTML),
+        content: toBase64UTF8(htmlToPublish),
         branch: 'main'
       };
       if (existing && existing.sha) body.sha = existing.sha;
