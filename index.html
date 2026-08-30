@@ -1566,6 +1566,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>(function() {
   var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
   var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
+  var agentId = window.PRIVENCY_AGENT_ID || null;
   var params = new URLSearchParams(window.location.search);
   var client = params.get('client') || 'inconnu';
   var adresse = document.title || window.location.pathname;
@@ -1577,7 +1578,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: agentId })
     });
   }
   track('fiche_ouverte');
