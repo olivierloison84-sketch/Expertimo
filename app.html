@@ -924,6 +924,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
         </div>
       </div>
     </div>
+    <div class="section-title mt-16">🎥 Liens vidéo (optionnel, max 3)</div>
+    <p class="hint" style="margin-bottom:8px">Collez un lien YouTube, Vimeo, ou toute autre vidéo en ligne. Elle apparaîtra sous les photos dans la fiche acheteur, sous forme de bouton cliquable ouvrant la vidéo dans un nouvel onglet.</p>
+    <div class="form-group"><label>Vidéo 1</label><input type="url" id="bien_video1_url" placeholder="https://youtube.com/..."></div>
+    <div class="form-group"><label>Vidéo 2</label><input type="url" id="bien_video2_url" placeholder="https://youtube.com/..."></div>
+    <div class="form-group"><label>Vidéo 3</label><input type="url" id="bien_video3_url" placeholder="https://youtube.com/..."></div>
   </div>
 </div>
 
@@ -2816,6 +2821,21 @@ function injectData(html, d) {
     galleryEl.nextElementSibling.textContent = "📷 Cliquez sur une photo pour l'agrandir · " + nPh + " photo" + (nPh > 1 ? 's' : '') + " disponible" + (nPh > 1 ? 's' : '');
   }
 
+  // Liens vidéo (optionnel, max 3)
+  var videoList = [d.video1, d.video2, d.video3].filter(Boolean);
+  var videoSection = id('video-links-section');
+  var videoListEl  = id('video-links-list');
+  if (videoSection && videoListEl) {
+    if (videoList.length > 0) {
+      videoListEl.innerHTML = videoList.map(function(url, vi) {
+        return '<a href="' + esc(url) + '" target="_blank" rel="noopener" class="video-link-btn">▶️ Vidéo ' + (vi + 1) + '</a>';
+      }).join('');
+      videoSection.style.display = 'block';
+    } else {
+      videoSection.style.display = 'none';
+    }
+  }
+
   // Score box — masqué entièrement si aucun score saisi par l'agent
   if (d.score) {
     var scoreNum = q('.score-num');
@@ -3498,6 +3518,7 @@ function collectBienData() {
   var photo3=getV('bien_photo3_url')||(_photos[2]?_photos[2].dataUrl:'');
   var photo4=getV('bien_photo4_url')||(_photos[3]?_photos[3].dataUrl:'');
   var photo5=getV('bien_photo5_url')||(_photos[4]?_photos[4].dataUrl:'');
+  var video1=getV('bien_video1_url'), video2=getV('bien_video2_url'), video3=getV('bien_video3_url');
   var fb=parseFloat(getV('bien_fourchette_basse'))||(prix?Math.round(prix*.9):0);
   var fh=parseFloat(getV('bien_fourchette_haute'))||(prix?Math.round(prix*1.1):0);
   var typeLabel=currentType==='appart'?'Appartement':currentType==='maison'?'Maison':'Terrain';
@@ -3532,6 +3553,7 @@ function collectBienData() {
     fort1:getV('bien_fort1'), fort2:getV('bien_fort2'), fort3:getV('bien_fort3'),
     vig1: getV('bien_vig1'),  vig2: getV('bien_vig2'),  vig3: getV('bien_vig3'),
     photo1:photo1, photo2:photo2, photo3:photo3, photo4:photo4, photo5:photo5,
+    video1:video1, video2:video2, video3:video3,
     dvf:           getDVFRows(),
     fourchetBasse: fb, fourchetHaute: fh,
     creditDuree:   parseInt(getV('bien_credit_duree'))||20,
