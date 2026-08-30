@@ -1514,6 +1514,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
       <!-- Aperçu iframe -->
       <div class="section-title">Aperçu de la fiche</div>
+      <label style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="chk-bilingue" style="width:16px;height:16px;">
+        🌍 Générer aussi une version anglaise (+ agences de luxe / clients étrangers)
+      </label>
       <div id="step3-status" style="margin-bottom:8px;font-size:13px;"></div>
       <div style="margin-bottom:12px;display:flex;gap:10px;flex-wrap:wrap;">
         <button class="btn btn-primary btn-lg" onclick="generatePreview()">
@@ -1523,6 +1527,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
                 onclick="downloadFiche()" disabled>
           ⬇ Télécharger le HTML
         </button>
+      </div>
+      <div id="preview-lang-tabs" style="display:none;margin-bottom:10px;gap:8px;">
+        <button type="button" class="btn btn-sm" id="preview-tab-fr" onclick="switchPreviewTab('fr')">🇫🇷 Français</button>
+        <button type="button" class="btn btn-sm btn-outline" id="preview-tab-en" onclick="switchPreviewTab('en')">🇬🇧 English</button>
       </div>
       <iframe id="preview-iframe"
         style="width:100%;height:600px;border:1px solid var(--border);
@@ -1700,8 +1708,12 @@ var _step2Inited   = false;
 var _draftTimer    = null;
 window._bienData   = null;
 var _templateHTML      = null;
+var _templateHTML_EN   = null;
 var _lastGeneratedHTML = null;
+var _lastGeneratedHTML_EN = null;
 var _lastGeneratedSlug = null;
+var _previewBlobUrlFR  = null;
+var _previewBlobUrlEN  = null;
 var _editingFiche = null;
 
 refreshTokenUI();
@@ -3625,8 +3637,74 @@ function refreshStep3Summary() {
     + '</div>';
 }
 
+// Traduit les champs texte libre d'une fiche via l'API serveur (mode bilingue).
+async function translateFicheFields(d) {
+  var payload = {
+    quartier:        d.quartier || '',
+    chargesDetail:   d.chargesDetail || '',
+    fort1: d.fort1 || '', fort2: d.fort2 || '', fort3: d.fort3 || '',
+    vig1:  d.vig1  || '', vig2:  d.vig2  || '', vig3:  d.vig3  || '',
+    historiqueLibre: d.historiqueLibre || '',
+    tension:         d.tension || '',
+    delai:           d.delai || '',
+    description:     d.description || '',
+    diags:       (d.diags || []).map(function(diag) { return { result: diag.result || '' }; }),
+    renovations: (d.renovations || []).map(function(r) { return { desc: r.desc || '' }; })
+  };
+  var res = await fetch('/api/translate-fiche', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(45000)
+  });
+  var translated = await res.json();
+  if (!res.ok) throw new Error(translated.error || ('Erreur serveur (' + res.status + ')'));
+  return translated;
+}
+
+// Construit _bienData_en : copie de d avec les champs texte libre remplacés par
+// leur traduction. Les diags/renovations sont ré-associés par index (même ordre,
+// même longueur, garanti par api/translate-fiche.js).
+function buildBienDataEn(d, translated) {
+  var dEn = Object.assign({}, d);
+  ['quartier','chargesDetail','fort1','fort2','fort3','vig1','vig2','vig3',
+   'historiqueLibre','tension','delai','description'].forEach(function(f) {
+    if (typeof translated[f] === 'string') dEn[f] = translated[f];
+  });
+  if (Array.isArray(d.diags) && Array.isArray(translated.diags)) {
+    dEn.diags = d.diags.map(function(diag, i) {
+      var t = translated.diags[i];
+      return Object.assign({}, diag, (t && typeof t.result === 'string') ? { result: t.result } : {});
+    });
+  }
+  if (Array.isArray(d.renovations) && Array.isArray(translated.renovations)) {
+    dEn.renovations = d.renovations.map(function(r, i) {
+      var t = translated.renovations[i];
+      return Object.assign({}, r, (t && typeof t.desc === 'string') ? { desc: t.desc } : {});
+    });
+  }
+  return dEn;
+}
+
+function switchPreviewTab(lang) {
+  var iframe = document.getElementById('preview-iframe');
+  var btnFr  = document.getElementById('preview-tab-fr');
+  var btnEn  = document.getElementById('preview-tab-en');
+  if (lang === 'en' && _previewBlobUrlEN) {
+    iframe.src = _previewBlobUrlEN;
+    if (btnFr) btnFr.className = 'btn btn-sm btn-outline';
+    if (btnEn) btnEn.className = 'btn btn-sm';
+  } else if (_previewBlobUrlFR) {
+    iframe.src = _previewBlobUrlFR;
+    if (btnFr) btnFr.className = 'btn btn-sm';
+    if (btnEn) btnEn.className = 'btn btn-sm btn-outline';
+  }
+}
+
 function generatePreview() {
   window._bienData = collectBienData();
+  var bilingue = !!(document.getElementById('chk-bilingue') && document.getElementById('chk-bilingue').checked);
+
   var doGenerate = function(tmpl) {
     var d = window._bienData;
     if (!d.adresse) {
@@ -3636,19 +3714,52 @@ function generatePreview() {
     try {
       var out = injectData(tmpl, d);
       _lastGeneratedHTML = out;
+      _lastGeneratedHTML_EN = null;
       _lastGeneratedSlug = (_editingFiche && _editingFiche.filename)
         ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
         : slugify(d.adresse);
       var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
-      document.getElementById('preview-iframe').src = URL.createObjectURL(blob);
+      _previewBlobUrlFR = URL.createObjectURL(blob);
+      _previewBlobUrlEN = null;
+      document.getElementById('preview-iframe').src = _previewBlobUrlFR;
       document.getElementById('btn-download-fiche').disabled = false;
       var btnC = document.getElementById('btn-step3-continue');
       if (btnC) btnC.disabled = false;
+      var tabsEl = document.getElementById('preview-lang-tabs');
+      if (tabsEl) tabsEl.style.display = 'none';
       _stepsComplete[3] = true;
       updateStepperTabs();
       document.getElementById('step3-status').innerHTML =
         '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>';
       showToast('✅ Aperçu généré !');
+
+      if (!bilingue) return;
+
+      document.getElementById('step3-status').innerHTML =
+        '⏳ Fiche FR générée — traduction anglaise en cours…';
+      Promise.all([
+        translateFicheFields(d),
+        fetch('./index_en.html?nocache=' + Date.now()).then(function(r) { return r.text(); })
+      ]).then(function(results) {
+        var translated = results[0];
+        var tmplEn = results[1];
+        _templateHTML_EN = tmplEn;
+        var dEn = buildBienDataEn(d, translated);
+        var outEn = injectData(tmplEn, dEn);
+        _lastGeneratedHTML_EN = outEn;
+        var blobEn = new Blob([outEn], { type: 'text/html;charset=utf-8' });
+        _previewBlobUrlEN = URL.createObjectURL(blobEn);
+        if (tabsEl) tabsEl.style.display = 'flex';
+        switchPreviewTab('fr');
+        document.getElementById('step3-status').innerHTML =
+          '✅ Fiche générée (FR + EN) — <strong>' + esc(d.adresse) + '</strong>';
+        showToast('✅ Version anglaise générée !');
+      }).catch(function(err) {
+        console.error('[generatePreview] échec version EN', err);
+        showToast('❌ Traduction EN échouée : ' + err.message, true);
+        document.getElementById('step3-status').innerHTML =
+          '✅ Fiche FR générée — <strong>' + esc(d.adresse) + '</strong> (⚠️ version EN échouée)';
+      });
     } catch(err) {
       document.getElementById('step3-status').textContent = '❌ ' + err.message;
       console.error(err);
@@ -3740,84 +3851,100 @@ async function pushToGitHub() {
     status.textContent = _pubMsgs[_pubMsgIdx];
   }, 2000);
 
+  function injectAgentTag(html, user) {
+    var agentTag = '<script>window.PRIVENCY_AGENT_ID = "' + user.id + '";<' + '/script>\n</body>';
+    return /<\/body>/i.test(html) ? html.replace(/<\/body>/i, agentTag) : html + agentTag;
+  }
+
   var htmlToPublish = _lastGeneratedHTML;
+  var htmlToPublishEn = _lastGeneratedHTML_EN;
   try {
     var authClient = window.privencyAuth;
     if (authClient) {
       var userRes = await authClient.auth.getUser();
       var user = userRes && userRes.data && userRes.data.user;
       if (user) {
-        var agentTag = '<script>window.PRIVENCY_AGENT_ID = "' + user.id + '";<' + '/script>\n</body>';
-        htmlToPublish = /<\/body>/i.test(htmlToPublish)
-          ? htmlToPublish.replace(/<\/body>/i, agentTag)
-          : htmlToPublish + agentTag;
+        htmlToPublish = injectAgentTag(htmlToPublish, user);
+        if (htmlToPublishEn) htmlToPublishEn = injectAgentTag(htmlToPublishEn, user);
       }
     }
   } catch (e) {
     console.error('pushToGitHub: échec injection agent_id', e);
   }
 
-  var path = 'fiches/' + _lastGeneratedSlug + '-FINAL.html';
-  var apiUrl = 'https://api.github.com/repos/olivierloison84-sketch/Expertimo/contents/' + path;
   var headers = {
     'Authorization': 'token ' + token,
     'Accept': 'application/vnd.github+json',
     'Content-Type': 'application/json'
   };
 
-  fetch(apiUrl, { headers: headers })
-    .then(function(r) { return r.ok ? r.json() : null; })
-    .then(function(existing) {
-      var body = {
-        message: 'feat: fiche acquereur ' + _lastGeneratedSlug,
-        content: toBase64UTF8(htmlToPublish),
-        branch: 'main'
-      };
-      if (existing && existing.sha) body.sha = existing.sha;
-      return fetch(apiUrl, {
-        method: 'PUT',
-        headers: headers,
-        body: JSON.stringify(body)
+  // Publie un fichier via l'API GitHub Contents (GET sha existant puis PUT).
+  function publishFile(filename, html, commitMsg) {
+    var apiUrl = 'https://api.github.com/repos/olivierloison84-sketch/Expertimo/contents/fiches/' + filename;
+    return fetch(apiUrl, { headers: headers })
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(existing) {
+        var body = { message: commitMsg, content: toBase64UTF8(html), branch: 'main' };
+        if (existing && existing.sha) body.sha = existing.sha;
+        return fetch(apiUrl, { method: 'PUT', headers: headers, body: JSON.stringify(body) });
+      })
+      .then(function(r) {
+        return r.json().then(function(data) { return { ok: r.ok, status: r.status, data: data }; });
       });
-    })
-    .then(function(r) {
-      return r.json().then(function(data) {
-        return { ok: r.ok, status: r.status, data: data };
-      });
+  }
+
+  var frFilename = _lastGeneratedSlug + '-FINAL.html';
+  var enFilename = _lastGeneratedSlug + '-EN-FINAL.html';
+
+  publishFile(frFilename, htmlToPublish, 'feat: fiche acquereur ' + _lastGeneratedSlug)
+    .then(function(frRes) {
+      if (!frRes.ok) return { fr: frRes, en: null };
+      if (!htmlToPublishEn) return { fr: frRes, en: null };
+      return publishFile(enFilename, htmlToPublishEn, 'feat: fiche acquereur ' + _lastGeneratedSlug + ' (EN)')
+        .then(function(enRes) { return { fr: frRes, en: enRes }; });
     })
     .then(function(res) {
       clearInterval(_pubMsgTimer);
       btn.disabled = false;
-      if (res.ok) {
-        var pageUrl = _GH_PAGES_BASE + _lastGeneratedSlug + '-FINAL.html';
+      if (res.fr.ok) {
+        var pageUrl = _GH_PAGES_BASE + frFilename;
         syncFicheToSupabase(_lastGeneratedSlug, pageUrl);
         status.innerHTML = '✅ Publié avec succès !';
         var linkArea = document.getElementById('gh-link-area');
         linkArea.style.display = 'block';
+
+        var pageUrlEn = (res.en && res.en.ok) ? (_GH_PAGES_BASE + enFilename) : null;
+
+        var block = function(label, url, urlId) {
+          return '<div style="background:#f0f7ff;border:1.5px solid #b8d4f0;border-radius:var(--radius);padding:12px 16px;margin-bottom:12px;">'
+            + '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">🔗 ' + label + '</div>'
+            + '<a id="' + urlId + '" href="' + url + '" target="_blank"'
+            + ' style="color:var(--primary);font-weight:700;word-break:break-all;font-size:13px;">'
+            + url + '</a>'
+            + '</div>'
+            + '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">'
+            + '<a href="' + url + '" target="_blank" rel="noopener" class="btn btn-success">🌐 Ouvrir la fiche' + (pageUrlEn ? (urlId === 'gh-page-url' ? ' FR' : ' EN') : '') + '</a>'
+            + '<button class="btn btn-primary" onclick="copyLinkById(\'' + urlId + '\')">📋 Copier le lien</button>'
+            + '<button class="btn btn-outline" onclick="partagerFiche(\'' + url.replace(/'/g,"\\'") + '\')">'
+            + '📤 Partager</button>'
+            + '</div>';
+        };
+
         linkArea.innerHTML =
-          '<div style="background:#f0f7ff;border:1.5px solid #b8d4f0;border-radius:var(--radius);padding:12px 16px;margin-bottom:12px;">'
-          + '<div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">🔗 URL de la fiche publiée</div>'
-          + '<a id="gh-page-url" href="' + pageUrl + '" target="_blank"'
-          + ' style="color:var(--primary);font-weight:700;word-break:break-all;font-size:13px;">'
-          + pageUrl + '</a>'
-          + '</div>'
-          + '<div style="display:flex;gap:10px;flex-wrap:wrap;">'
-          + '<a href="' + pageUrl + '" target="_blank" rel="noopener" class="btn btn-success">🌐 Ouvrir la fiche</a>'
-          + '<button class="btn btn-primary" onclick="copyGhLink()">📋 Copier le lien</button>'
-          + '<button class="btn btn-outline" onclick="partagerFiche(\'' + pageUrl.replace(/'/g,"\\'") + '\')">'
-          + '📤 Partager</button>'
-          + '</div>'
-          + '<div style="margin-top:10px;font-size:12px;color:var(--muted);">'
+          block(pageUrlEn ? 'URL de la fiche publiée (Français)' : 'URL de la fiche publiée', pageUrl, 'gh-page-url')
+          + (pageUrlEn ? block('URL de la fiche publiée (English)', pageUrlEn, 'gh-page-url-en') : '')
+          + '<div style="font-size:12px;color:var(--muted);">'
           + '⏳ La fiche est en ligne, mais GitHub Pages peut prendre 1 à 2 minutes pour la rendre '
           + 'accessible. Si "Ouvrir la fiche" affiche une erreur au premier essai, réessayez dans '
           + 'un instant.'
+          + (htmlToPublishEn && !pageUrlEn ? '<br>⚠️ La publication de la version anglaise a échoué — réessayez.' : '')
           + '</div>';
         _stepsComplete[4] = true;
         updateStepperTabs();
-        showToast('✅ Fiche publiée !');
+        showToast(pageUrlEn ? '✅ Fiches FR + EN publiées !' : '✅ Fiche publiée !');
       } else {
-        status.textContent = '❌ Erreur ' + res.status + ' : '
-          + (res.data.message || JSON.stringify(res.data));
+        status.textContent = '❌ Erreur ' + res.fr.status + ' : '
+          + (res.fr.data.message || JSON.stringify(res.fr.data));
       }
     })
     .catch(function(err) {
@@ -3871,13 +3998,15 @@ function refreshTokenUI() {
   }
 }
 
-function copyGhLink() {
-  var link = document.getElementById('gh-page-url');
+function copyLinkById(id) {
+  var link = document.getElementById(id);
   if (!link) return;
   navigator.clipboard.writeText(link.href)
     .then(function() { showToast('📋 Lien copié !'); })
     .catch(function() { showToast('⚠️ Copie manuelle : ' + link.href, true); });
 }
+
+function copyGhLink() { copyLinkById('gh-page-url'); }
 
 function partagerFiche(url) {
   if (navigator.share) {
@@ -4715,6 +4844,7 @@ async function modifierFiche(filename, sha, downloadUrl) {
     // Without this, _lastGeneratedHTML from a previous generation would remain valid and
     // the "Continuer →" button would stay enabled, allowing stale HTML to be published.
     _lastGeneratedHTML = null;
+    _lastGeneratedHTML_EN = null;
     _lastGeneratedSlug = null;
     _stepsComplete[3] = false;
 
