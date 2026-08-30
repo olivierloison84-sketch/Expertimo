@@ -1503,7 +1503,7 @@ document.addEventListener('DOMContentLoaded', function() {
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, agent_id: agentId })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: "/fiches/34-rue-helene-boucher-91300-massy-FINAL.html", agent_id: agentId })
     });
   }
   track('fiche_ouverte');
