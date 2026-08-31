@@ -1713,12 +1713,9 @@ var _step2Inited   = false;
 var _draftTimer    = null;
 window._bienData   = null;
 var _templateHTML      = null;
-var _templateHTML_EN   = null;
 var _lastGeneratedHTML = null;
-var _lastGeneratedHTML_EN = null;
 var _lastGeneratedSlug = null;
 var _previewBlobUrlFR  = null;
-var _previewBlobUrlEN  = null;
 var _editingFiche = null;
 
 refreshTokenUI();
@@ -2689,7 +2686,7 @@ function fetchComparablesDVF() {
 // ═══════════════════════════════════════
 // COPIED FROM generateur.html — mot pour mot
 // ═══════════════════════════════════════
-function injectData(html, d) {
+function injectData(html, d, dEn) {
   var prixFmt = fmtNum(d.prix);                         // "260 000" — used for JS string matching
   var chargesCopro = Math.round(d.chargesCopro);
   var chargesAnnuelles = chargesCopro * 12 + Math.round(d.taxeFonciere);
@@ -2716,6 +2713,16 @@ function injectData(html, d) {
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
   // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
+
+  // ── EN variants of chatbot vars (single-file bilingual fiche) ──
+  if (dEn) {
+    html = replaceSp(html, '_sp_pf1_en',    dEn.fort1 || '');
+    html = replaceSp(html, '_sp_pf2_en',    dEn.fort2 || '');
+    html = replaceSp(html, '_sp_pf3_en',    dEn.fort3 || '');
+    html = replaceSp(html, '_sp_vigi1_en',  dEn.vig1 || '');
+    html = replaceSp(html, '_sp_vigi2_en',  dEn.vig2 || '');
+    html = replaceSp(html, '_sp_detail_en', dEn.chargesDetail || '');
+  }
 
   // Loyer slider — replace hardcoded 1300 in template JS. Uniquement si l'agent a
   // renseigné un loyer : sans valeur fiable, l'onglet Simulateur investisseur est
@@ -2772,7 +2779,10 @@ function injectData(html, d) {
   var welcomeEl = q('#welcome-msg');
   if (welcomeEl) {
     if (d.acheteur_prenom) {
-      welcomeEl.textContent = 'Bonjour ' + d.acheteur_prenom + (d.acheteur_nom ? ' ' + d.acheteur_nom : '') + ', bienvenue dans votre espace privé acquéreur';
+      var welcomeFr = 'Bonjour ' + d.acheteur_prenom + (d.acheteur_nom ? ' ' + d.acheteur_nom : '') + ', bienvenue dans votre espace privé acquéreur';
+      welcomeEl.textContent = welcomeFr;
+      welcomeEl.setAttribute('data-fr-val', welcomeFr);
+      if (dEn) welcomeEl.setAttribute('data-en-val', 'Hello ' + d.acheteur_prenom + (d.acheteur_nom ? ' ' + d.acheteur_nom : '') + ', welcome to your private buyer portal');
       welcomeEl.style.display = 'block';
     } else {
       welcomeEl.style.display = 'none';
@@ -2780,10 +2790,16 @@ function injectData(html, d) {
   }
 
   var htitle = q('.htitle');
-  if (htitle) htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;">' + esc(d.quartier) + '</span>';
+  if (htitle) {
+    htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;" data-fr-val="' + esc(d.quartier) + '" data-en-val="' + esc(dEn ? dEn.quartier : d.quartier) + '">' + esc(d.quartier) + '</span>';
+  }
 
   var hsub = q('.hsub');
-  if (hsub) hsub.textContent = d.description;
+  if (hsub) {
+    hsub.textContent = d.description;
+    hsub.setAttribute('data-fr-val', d.description || '');
+    if (dEn) hsub.setAttribute('data-en-val', dEn.description || '');
+  }
 
   var pamount = q('.pamount');
   if (pamount) pamount.textContent = prixFmt + ' €';
@@ -2801,7 +2817,11 @@ function injectData(html, d) {
   if (stitle) stitle.textContent = d.adresse + (piecesLabel ? ' · ' + piecesLabel : '') + (d.etage ? ' · ' + d.etage : '');
 
   var ssub = q('.ssub');
-  if (ssub) ssub.textContent = d.description;
+  if (ssub) {
+    ssub.textContent = d.description;
+    ssub.setAttribute('data-fr-val', d.description || '');
+    if (dEn) ssub.setAttribute('data-en-val', dEn.description || '');
+  }
 
   // Gallery images (5 photos)
   var imgs = qa('.gallery img');
@@ -2818,7 +2838,11 @@ function injectData(html, d) {
   var galleryEl = q('.gallery');
   if (galleryEl && galleryEl.nextElementSibling) {
     var nPh = photoList.filter(Boolean).length;
-    galleryEl.nextElementSibling.textContent = "📷 Cliquez sur une photo pour l'agrandir · " + nPh + " photo" + (nPh > 1 ? 's' : '') + " disponible" + (nPh > 1 ? 's' : '');
+    var captionFr = "📷 Cliquez sur une photo pour l'agrandir · " + nPh + " photo" + (nPh > 1 ? 's' : '') + " disponible" + (nPh > 1 ? 's' : '');
+    var captionEn = "📷 Click on a photo to enlarge it · " + nPh + " photo" + (nPh > 1 ? 's' : '') + " available";
+    galleryEl.nextElementSibling.textContent = captionFr;
+    galleryEl.nextElementSibling.setAttribute('data-fr-val', captionFr);
+    if (dEn) galleryEl.nextElementSibling.setAttribute('data-en-val', captionEn);
   }
 
   // Liens vidéo (optionnel, max 3)
@@ -2841,7 +2865,15 @@ function injectData(html, d) {
     var scoreNum = q('.score-num');
     if (scoreNum) scoreNum.textContent = d.score.toString().replace('.', ',');
     var scoreDesc = q('.score-box > p');
-    if (scoreDesc) scoreDesc.textContent = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePos(d.prixm2, d.mediane) + '.';
+    if (scoreDesc) {
+      var scoreDescFr = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePos(d.prixm2, d.mediane) + '.';
+      scoreDesc.textContent = scoreDescFr;
+      scoreDesc.setAttribute('data-fr-val', scoreDescFr);
+      if (dEn) {
+        var scoreDescEn = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePosEn(d.prixm2, d.mediane) + '.';
+        scoreDesc.setAttribute('data-en-val', scoreDescEn);
+      }
+    }
 
     var slines = qa('.sline');
     if (slines.length >= 4) {
@@ -2876,28 +2908,59 @@ function injectData(html, d) {
       var ptsDiv = doc.createElement('div');
       ptsDiv.className = 'pts-grid';
       ptsDiv.id = 'pts-grid-section';
-      ptsDiv.innerHTML = '<div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>—</li></ul></div>'
-        + '<div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>—</li></ul></div>';
+      if (dEn) {
+        ptsDiv.innerHTML = '<div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>—</li></ul><ul id="pf-list-en" style="display:none;"><li>—</li></ul></div>'
+          + '<div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>—</li></ul><ul id="vg-list-en" style="display:none;"><li>—</li></ul></div>';
+      } else {
+        ptsDiv.innerHTML = '<div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list"><li>—</li></ul></div>'
+          + '<div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list"><li>—</li></ul></div>';
+      }
       scoreBox.parentNode.insertBefore(ptsDiv, scoreBox);
     }
   }
-  var ptsGreen = id('pf-list') || q('.pb.green ul');
+  var ptsGreen = id(dEn ? 'pf-list-fr' : 'pf-list') || q('.pb.green ul');
   if (ptsGreen) {
     var forts = [d.fort1, d.fort2, d.fort3].filter(Boolean);
     if (forts.length) ptsGreen.innerHTML = forts.map(function(f) { return '<li>' + esc(f) + '</li>'; }).join('');
   }
-  var ptsAmber = id('vg-list') || q('.pb.amber ul');
+  var ptsAmber = id(dEn ? 'vg-list-fr' : 'vg-list') || q('.pb.amber ul');
   if (ptsAmber) {
     var vigs = [d.vig1, d.vig2, d.vig3].filter(Boolean);
     if (vigs.length) ptsAmber.innerHTML = vigs.map(function(v) { return '<li>' + esc(v) + '</li>'; }).join('');
+  }
+  if (dEn) {
+    var ptsGreenEn = id('pf-list-en');
+    if (ptsGreenEn) {
+      var fortsEn = [dEn.fort1, dEn.fort2, dEn.fort3].filter(Boolean);
+      if (fortsEn.length) ptsGreenEn.innerHTML = fortsEn.map(function(f) { return '<li>' + esc(f) + '</li>'; }).join('');
+    }
+    var ptsAmberEn = id('vg-list-en');
+    if (ptsAmberEn) {
+      var vigsEn = [dEn.vig1, dEn.vig2, dEn.vig3].filter(Boolean);
+      if (vigsEn.length) ptsAmberEn.innerHTML = vigsEn.map(function(v) { return '<li>' + esc(v) + '</li>'; }).join('');
+    }
   }
 
   // ── Tab : Analyse ──
   var kpis = qa('.kpi');
   if (kpis[0] && d.prixm2) kpis[0].querySelector('.kv').textContent = fmtNum(d.prixm2) + ' €';
   if (kpis[1]) { if (d.mediane) kpis[1].querySelector('.kv').textContent = fmtNum(d.mediane) + ' €'; else kpis[1].style.display = 'none'; }
-  if (kpis[2]) { if (d.tension) kpis[2].querySelector('.kv').textContent = d.tension; else kpis[2].style.display = 'none'; }
-  if (kpis[3]) { if (d.delai) kpis[3].querySelector('.kv').textContent = d.delai; else kpis[3].style.display = 'none'; }
+  if (kpis[2]) {
+    if (d.tension) {
+      var kvTension = kpis[2].querySelector('.kv');
+      kvTension.textContent = d.tension;
+      kvTension.setAttribute('data-fr-val', d.tension);
+      if (dEn) kvTension.setAttribute('data-en-val', dEn.tension || d.tension);
+    } else kpis[2].style.display = 'none';
+  }
+  if (kpis[3]) {
+    if (d.delai) {
+      var kvDelai = kpis[3].querySelector('.kv');
+      kvDelai.textContent = d.delai;
+      kvDelai.setAttribute('data-fr-val', d.delai);
+      if (dEn) kvDelai.setAttribute('data-en-val', dEn.delai || d.delai);
+    } else kpis[3].style.display = 'none';
+  }
 
   // DVF table — masque toute la carte "Ventes comparables" si aucune transaction saisie
   var dvfTbody = q('.dvft tbody');
@@ -2937,7 +3000,12 @@ function injectData(html, d) {
 
   // Loyer info
   var loyerInfo = id('renta-loyer-info');
-  if (loyerInfo && d.loyer) loyerInfo.textContent = 'Bien libre. Loyer estimé : ' + fmtNum(d.loyer) + ' € nu. Simulez votre rentabilité ci-dessous.';
+  if (loyerInfo && d.loyer) {
+    var loyerInfoFr = 'Bien libre. Loyer estimé : ' + fmtNum(d.loyer) + ' € nu. Simulez votre rentabilité ci-dessous.';
+    loyerInfo.textContent = loyerInfoFr;
+    loyerInfo.setAttribute('data-fr-val', loyerInfoFr);
+    if (dEn) loyerInfo.setAttribute('data-en-val', 'Vacant property. Estimated rent: ' + fmtNum(d.loyer) + ' € unfurnished. Simulate your returns below.');
+  }
 
   // Sliders — critical: sets initial values so template's calc() runs correctly on load
   var pSlider = id('prix');
@@ -2979,35 +3047,50 @@ function injectData(html, d) {
   function infoItemHtml(label, desc) {
     return '<li class="info-item">' + (label ? '<b>' + esc(label) + '</b> — ' : '') + esc(desc) + '</li>';
   }
-  var timeline = id('historique-timeline');
-  if (timeline) {
-    var tlHtml = '';
-    var lignes = (d.historiqueLibre || '').split('\n');
-    lignes.forEach(function(ligne) {
+  function timelineHtml(historiqueLibre) {
+    var html = '';
+    (historiqueLibre || '').split('\n').forEach(function(ligne) {
       ligne = ligne.trim();
       if (!ligne) return;
       var sepIndex = ligne.indexOf('—');
       if (sepIndex !== -1) {
-        tlHtml += infoItemHtml(ligne.substring(0, sepIndex).trim(), ligne.substring(sepIndex + 1).trim());
+        html += infoItemHtml(ligne.substring(0, sepIndex).trim(), ligne.substring(sepIndex + 1).trim());
       } else {
-        tlHtml += infoItemHtml('', ligne);
+        html += infoItemHtml('', ligne);
       }
     });
-    timeline.innerHTML = tlHtml;
+    return html;
+  }
+  var timeline = id('historique-timeline-fr');
+  if (timeline) timeline.innerHTML = timelineHtml(d.historiqueLibre);
+  if (dEn) {
+    var timelineEn = id('historique-timeline-en');
+    if (timelineEn) timelineEn.innerHTML = timelineHtml(dEn.historiqueLibre);
   }
 
   // Diagnostics grid — full rebuild
-  var diagGrid = q('.diag-grid');
+  var DIAG_NAME_EN = {
+    'Amiante': 'Asbestos', 'Plomb (CREP)': 'Lead (CREP)', 'Termites': 'Termites',
+    'Électricité': 'Electricity', 'Gaz': 'Gas', 'Assainissement': 'Sanitation'
+  };
+  var statusToClass = { favorable: 'diag-ok', attention: 'diag-attention', defavorable: 'diag-alerte', 'non-soumis': 'diag-' };
+  function diagCardHtml(diag, nameOverride) {
+    var cls = statusToClass[diag.status] || 'diag-ok';
+    return '<div class="diag-card ' + cls + '">'
+      + '<div class="diag-icon">' + diag.icon + '</div>'
+      + '<div class="diag-name">' + esc(nameOverride || diag.name) + '</div>'
+      + '<div class="diag-result">' + esc(diag.result) + '</div>'
+      + '</div>';
+  }
+  var diagGrid = id('diag-grid-fr') || q('.diag-grid');
   if (diagGrid && d.diags && d.diags.length) {
-    var statusToClass = { favorable: 'diag-ok', attention: 'diag-attention', defavorable: 'diag-alerte', 'non-soumis': 'diag-' };
-    diagGrid.innerHTML = d.diags.map(function(diag) {
-      var cls = statusToClass[diag.status] || 'diag-ok';
-      return '<div class="diag-card ' + cls + '">'
-        + '<div class="diag-icon">' + diag.icon + '</div>'
-        + '<div class="diag-name">' + esc(diag.name) + '</div>'
-        + '<div class="diag-result">' + esc(diag.result) + '</div>'
-        + '</div>';
-    }).join('');
+    diagGrid.innerHTML = d.diags.map(function(diag) { return diagCardHtml(diag); }).join('');
+  }
+  if (dEn) {
+    var diagGridEn = id('diag-grid-en');
+    if (diagGridEn && dEn.diags && dEn.diags.length) {
+      diagGridEn.innerHTML = dEn.diags.map(function(diag) { return diagCardHtml(diag, DIAG_NAME_EN[diag.name] || diag.name); }).join('');
+    }
   }
 
   // Documents tab — charges & taxe mentions
@@ -3017,10 +3100,16 @@ function injectData(html, d) {
     if (!dcn || !dcm) return;
     var nm = dcn.textContent || '';
     if (nm.indexOf('Appels de charges') !== -1 && chargesCopro > 0) {
-      dcm.textContent = 'Relevé annuel · ' + chargesCopro + ' €/mois';
+      var chargesTxtFr = 'Relevé annuel · ' + chargesCopro + ' €/mois';
+      dcm.textContent = chargesTxtFr;
+      dcm.setAttribute('data-fr-val', chargesTxtFr);
+      if (dEn) dcm.setAttribute('data-en-val', 'Annual statement · ' + chargesCopro + ' €/month');
     }
     if ((nm.indexOf('taxe foncière') !== -1 || nm.indexOf('Taxe foncière') !== -1) && d.taxeFonciere > 0) {
-      dcm.textContent = Math.round(d.taxeFonciere) + ' € / an';
+      var taxeTxtFr = Math.round(d.taxeFonciere) + ' € / an';
+      dcm.textContent = taxeTxtFr;
+      dcm.setAttribute('data-fr-val', taxeTxtFr);
+      if (dEn) dcm.setAttribute('data-en-val', Math.round(d.taxeFonciere) + ' € / year');
     }
   });
 
@@ -3030,7 +3119,11 @@ function injectData(html, d) {
   var offerDisp = id('offer-display');
   if (offerDisp) offerDisp.textContent = prixFmt + ' €';
   var offerDiff = id('offer-diff');
-  if (offerDiff) offerDiff.textContent = 'Prix affiché : ' + prixFmt + ' €';
+  if (offerDiff) {
+    offerDiff.textContent = 'Prix affiché : ' + prixFmt + ' €';
+    offerDiff.setAttribute('data-fr-val', 'Prix affiché : ' + prixFmt + ' €');
+    if (dEn) offerDiff.setAttribute('data-en-val', 'Listed price: ' + prixFmt + ' €');
+  }
 
   // Agent photo
   if (d.agentPhoto) {
@@ -3055,8 +3148,17 @@ function injectData(html, d) {
   try { embedData = JSON.parse(JSON.stringify(d)); } catch(e) { embedData = {}; }
   var dataTag = '<script id="expertimo-data" type="application/json">' + JSON.stringify(embedData) + '<\/script>';
 
+  // Fiche bilingue à fichier unique : embarque les données EN pour que le bouton
+  // FR|EN du template (applyLang) sache qu'il doit s'afficher.
+  var dataTagEn = '';
+  if (dEn) {
+    var embedDataEn = {};
+    try { embedDataEn = JSON.parse(JSON.stringify(dEn)); } catch(e) { embedDataEn = {}; }
+    dataTagEn = '<script id="expertimo-data-en" type="application/json">' + JSON.stringify(embedDataEn) + '<\/script>';
+  }
+
   var raw = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
-  return raw.replace('</head>', dataTag + '\n</head>');
+  return raw.replace('</head>', dataTag + '\n' + dataTagEn + '\n</head>');
 }
 
 function srep(str, find, rep) { return str.split(find).join(rep); }
@@ -3089,6 +3191,13 @@ function pricePos(pm2, med) {
   if (pm2 > med * 1.1) return 'Prix au-dessus du marché';
   if (pm2 < med * 0.9) return 'Prix sous le marché';
   return 'Prix dans le marché';
+}
+
+function pricePosEn(pm2, med) {
+  if (!med || !pm2) return 'Price to be confirmed';
+  if (pm2 > med * 1.1) return 'Price above market';
+  if (pm2 < med * 0.9) return 'Price below market';
+  return 'Price in line with the market';
 }
 
 function dpeDesc(dpe) {
@@ -3712,12 +3821,15 @@ function switchPreviewTab(lang) {
   var iframe = document.getElementById('preview-iframe');
   var btnFr  = document.getElementById('preview-tab-fr');
   var btnEn  = document.getElementById('preview-tab-en');
-  if (lang === 'en' && _previewBlobUrlEN) {
-    iframe.src = _previewBlobUrlEN;
+  try {
+    if (iframe && iframe.contentWindow && typeof iframe.contentWindow.applyLang === 'function') {
+      iframe.contentWindow.applyLang(lang);
+    }
+  } catch(e) { console.error('[switchPreviewTab]', e); }
+  if (lang === 'en') {
     if (btnFr) btnFr.className = 'btn btn-sm btn-outline';
     if (btnEn) btnEn.className = 'btn btn-sm';
-  } else if (_previewBlobUrlFR) {
-    iframe.src = _previewBlobUrlFR;
+  } else {
     if (btnFr) btnFr.className = 'btn btn-sm';
     if (btnEn) btnEn.className = 'btn btn-sm btn-outline';
   }
@@ -3733,59 +3845,49 @@ function generatePreview() {
       showToast('⚠️ Adresse obligatoire — retournez à l\'étape 2.', true);
       return;
     }
-    try {
-      var out = injectData(tmpl, d);
-      _lastGeneratedHTML = out;
-      _lastGeneratedHTML_EN = null;
-      _lastGeneratedSlug = (_editingFiche && _editingFiche.filename)
-        ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
-        : slugify(d.adresse);
-      var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
-      _previewBlobUrlFR = URL.createObjectURL(blob);
-      _previewBlobUrlEN = null;
-      document.getElementById('preview-iframe').src = _previewBlobUrlFR;
-      document.getElementById('btn-download-fiche').disabled = false;
-      var btnC = document.getElementById('btn-step3-continue');
-      if (btnC) btnC.disabled = false;
-      var tabsEl = document.getElementById('preview-lang-tabs');
-      if (tabsEl) tabsEl.style.display = 'none';
-      _stepsComplete[3] = true;
-      updateStepperTabs();
-      document.getElementById('step3-status').innerHTML =
-        '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>';
-      showToast('✅ Aperçu généré !');
 
-      if (!bilingue) return;
+    _lastGeneratedSlug = (_editingFiche && _editingFiche.filename)
+      ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
+      : slugify(d.adresse);
 
+    var publishSingle = function(dEn) {
+      try {
+        var out = injectData(tmpl, d, dEn || null);
+        _lastGeneratedHTML = out;
+        var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
+        _previewBlobUrlFR = URL.createObjectURL(blob);
+        document.getElementById('preview-iframe').src = _previewBlobUrlFR;
+        document.getElementById('btn-download-fiche').disabled = false;
+        var btnC = document.getElementById('btn-step3-continue');
+        if (btnC) btnC.disabled = false;
+        var tabsEl = document.getElementById('preview-lang-tabs');
+        if (tabsEl) tabsEl.style.display = dEn ? 'flex' : 'none';
+        _stepsComplete[3] = true;
+        updateStepperTabs();
+        document.getElementById('step3-status').innerHTML = dEn
+          ? ('✅ Fiche générée (FR + EN, fichier unique) — <strong>' + esc(d.adresse) + '</strong>')
+          : ('✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>');
+        showToast(dEn ? '✅ Fiche bilingue générée !' : '✅ Aperçu généré !');
+      } catch(err) {
+        document.getElementById('step3-status').textContent = '❌ ' + err.message;
+        console.error(err);
+      }
+    };
+
+    if (!bilingue) { publishSingle(null); return; }
+
+    document.getElementById('step3-status').innerHTML =
+      '⏳ Fiche générée — traduction anglaise en cours…';
+    translateFicheFields(d).then(function(translated) {
+      var dEn = buildBienDataEn(d, translated);
+      publishSingle(dEn);
+    }).catch(function(err) {
+      console.error('[generatePreview] échec traduction EN', err);
+      showToast('❌ Traduction EN échouée : ' + err.message, true);
+      publishSingle(null);
       document.getElementById('step3-status').innerHTML =
-        '⏳ Fiche FR générée — traduction anglaise en cours…';
-      Promise.all([
-        translateFicheFields(d),
-        fetch('./index_en.html?nocache=' + Date.now()).then(function(r) { return r.text(); })
-      ]).then(function(results) {
-        var translated = results[0];
-        var tmplEn = results[1];
-        _templateHTML_EN = tmplEn;
-        var dEn = buildBienDataEn(d, translated);
-        var outEn = injectData(tmplEn, dEn);
-        _lastGeneratedHTML_EN = outEn;
-        var blobEn = new Blob([outEn], { type: 'text/html;charset=utf-8' });
-        _previewBlobUrlEN = URL.createObjectURL(blobEn);
-        if (tabsEl) tabsEl.style.display = 'flex';
-        switchPreviewTab('fr');
-        document.getElementById('step3-status').innerHTML =
-          '✅ Fiche générée (FR + EN) — <strong>' + esc(d.adresse) + '</strong>';
-        showToast('✅ Version anglaise générée !');
-      }).catch(function(err) {
-        console.error('[generatePreview] échec version EN', err);
-        showToast('❌ Traduction EN échouée : ' + err.message, true);
-        document.getElementById('step3-status').innerHTML =
-          '✅ Fiche FR générée — <strong>' + esc(d.adresse) + '</strong> (⚠️ version EN échouée)';
-      });
-    } catch(err) {
-      document.getElementById('step3-status').textContent = '❌ ' + err.message;
-      console.error(err);
-    }
+        '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong> (⚠️ version EN échouée, fiche FR uniquement)';
+    });
   };
 
   // Toujours recharger le template depuis le disque
@@ -3879,7 +3981,6 @@ async function pushToGitHub() {
   }
 
   var htmlToPublish = _lastGeneratedHTML;
-  var htmlToPublishEn = _lastGeneratedHTML_EN;
   try {
     var authClient = window.privencyAuth;
     if (authClient) {
@@ -3887,7 +3988,6 @@ async function pushToGitHub() {
       var user = userRes && userRes.data && userRes.data.user;
       if (user) {
         htmlToPublish = injectAgentTag(htmlToPublish, user);
-        if (htmlToPublishEn) htmlToPublishEn = injectAgentTag(htmlToPublishEn, user);
       }
     }
   } catch (e) {
@@ -3916,30 +4016,17 @@ async function pushToGitHub() {
   }
 
   var frFilename = _lastGeneratedSlug + '-FINAL.html';
-  var enFilename = _lastGeneratedSlug + '-EN-FINAL.html';
 
   publishFile(frFilename, htmlToPublish, 'feat: fiche acquereur ' + _lastGeneratedSlug)
     .then(function(frRes) {
-      if (!frRes.ok) return { fr: frRes, en: null };
-      if (!htmlToPublishEn) return { fr: frRes, en: null };
-      return publishFile(enFilename, htmlToPublishEn, 'feat: fiche acquereur ' + _lastGeneratedSlug + ' (EN)')
-        .then(function(enRes) { return { fr: frRes, en: enRes }; });
-    })
-    .then(function(res) {
       clearInterval(_pubMsgTimer);
       btn.disabled = false;
-      if (res.fr.ok) {
+      if (frRes.ok) {
         var pageUrl = _GH_PAGES_BASE + frFilename;
         syncFicheToSupabase(_lastGeneratedSlug, pageUrl);
         status.innerHTML = '✅ Publié avec succès !';
         var linkArea = document.getElementById('gh-link-area');
         linkArea.style.display = 'block';
-
-        var pageUrlEn = (res.en && res.en.ok) ? (_GH_PAGES_BASE + enFilename) : null;
-
-        if (res.en && res.en.ok) {
-          syncFicheToSupabase(_lastGeneratedSlug, pageUrlEn, enFilename, ' (EN)');
-        }
 
         var block = function(label, url, urlId) {
           return '<div style="background:#f0f7ff;border:1.5px solid #b8d4f0;border-radius:var(--radius);padding:12px 16px;margin-bottom:12px;">'
@@ -3949,7 +4036,7 @@ async function pushToGitHub() {
             + url + '</a>'
             + '</div>'
             + '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px;">'
-            + '<a href="' + url + '" target="_blank" rel="noopener" class="btn btn-success">🌐 Ouvrir la fiche' + (pageUrlEn ? (urlId === 'gh-page-url' ? ' FR' : ' EN') : '') + '</a>'
+            + '<a href="' + url + '" target="_blank" rel="noopener" class="btn btn-success">🌐 Ouvrir la fiche</a>'
             + '<button class="btn btn-primary" onclick="copyLinkById(\'' + urlId + '\')">📋 Copier le lien</button>'
             + '<button class="btn btn-outline" onclick="partagerFiche(\'' + url.replace(/'/g,"\\'") + '\')">'
             + '📤 Partager</button>'
@@ -3957,20 +4044,18 @@ async function pushToGitHub() {
         };
 
         linkArea.innerHTML =
-          block(pageUrlEn ? 'URL de la fiche publiée (Français)' : 'URL de la fiche publiée', pageUrl, 'gh-page-url')
-          + (pageUrlEn ? block('URL de la fiche publiée (English)', pageUrlEn, 'gh-page-url-en') : '')
+          block('URL de la fiche publiée', pageUrl, 'gh-page-url')
           + '<div style="font-size:12px;color:var(--muted);">'
           + '⏳ La fiche est en ligne, mais GitHub Pages peut prendre 1 à 2 minutes pour la rendre '
           + 'accessible. Si "Ouvrir la fiche" affiche une erreur au premier essai, réessayez dans '
           + 'un instant.'
-          + (htmlToPublishEn && !pageUrlEn ? '<br>⚠️ La publication de la version anglaise a échoué — réessayez.' : '')
           + '</div>';
         _stepsComplete[4] = true;
         updateStepperTabs();
-        showToast(pageUrlEn ? '✅ Fiches FR + EN publiées !' : '✅ Fiche publiée !');
+        showToast('✅ Fiche publiée !');
       } else {
-        status.textContent = '❌ Erreur ' + res.fr.status + ' : '
-          + (res.fr.data.message || JSON.stringify(res.fr.data));
+        status.textContent = '❌ Erreur ' + frRes.status + ' : '
+          + (frRes.data.message || JSON.stringify(frRes.data));
       }
     })
     .catch(function(err) {
@@ -4870,7 +4955,6 @@ async function modifierFiche(filename, sha, downloadUrl) {
     // Without this, _lastGeneratedHTML from a previous generation would remain valid and
     // the "Continuer →" button would stay enabled, allowing stale HTML to be published.
     _lastGeneratedHTML = null;
-    _lastGeneratedHTML_EN = null;
     _lastGeneratedSlug = null;
     _stepsComplete[3] = false;
 
