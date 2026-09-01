@@ -2026,6 +2026,7 @@ var I18N_STATIC = {
 
 function applyLang(lang) {
   lang = (lang === 'en') ? 'en' : 'fr';
+  var _prevLang = _currentLang;
   _currentLang = lang;
   document.documentElement.lang = lang;
 
@@ -2070,6 +2071,23 @@ function applyLang(lang) {
     try { calcBudget(); } catch(e) {}
   }
   try { updateOffer(); } catch(e) {}
+
+  // L'assistant IA a déjà démarré une conversation dans l'ancienne langue :
+  // on la relance dans la nouvelle pour ne pas mélanger historique et
+  // systemPrompt (sinon les nouvelles réponses continuaient dans l'ancienne langue).
+  if (_aiInit && _prevLang !== lang) {
+    var aiMsgsEl = document.getElementById('ai-messages');
+    if (aiMsgsEl) aiMsgsEl.innerHTML = '';
+    _aiMessages = [];
+    var aiDictReset = AI_I18N[lang] || AI_I18N.fr;
+    var welcomeReset = aiDictReset.welcome(_sp_adresse);
+    addAIMsg(welcomeReset, 'assistant');
+    _aiMessages.push({role:'user',content:aiDictReset.sessionStart});
+    _aiMessages.push({role:'assistant',content:welcomeReset});
+    var aiSuggestionsEl = document.getElementById('ai-suggestions');
+    if (aiSuggestionsEl) aiSuggestionsEl.style.display = '';
+  }
+
   var aiSuggestions = document.getElementById('ai-suggestions');
   if (aiSuggestions && aiSuggestions.style.display !== 'none' && aiSuggestions.children.length) {
     try { renderAISuggestions(); } catch(e) {}
