@@ -1148,28 +1148,26 @@ function submitOffer() {
     return;
   }
 
-  var formspreeId = "xpqbnkjj";
-  var _ob = '[' + '[';
-  if (!formspreeId || formspreeId.indexOf(_ob) !== -1) {
-    alert(isEn ? 'Form not configured. Please contact Olivier Loison directly at 06 85 68 46 13.' : 'Formulaire non configuré. Contactez directement Olivier Loison au 06 85 68 46 13.');
-    return;
-  }
+  var expData = {};
+  try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
 
-  fetch('https://formspree.io/f/' + formspreeId, {
+  fetch('https://expertimo-phi.vercel.app/api/send-lead', {
     method: 'POST',
-    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
-      _subject: "Offre d'achat — 5 Rue de l'Arpajonnais — " + montant + ' €',
-      montant: montant + ' €',
+      type: 'offre',
+      montant: montant,
       financement: financement,
-      apport: apport + ' €',
+      apport: apport,
       delai: delai,
       nom: nom,
       email: email,
       message: msg,
       bien: "5 Rue de l'Arpajonnais",
       reference: "ex91-lg001",
-      prix_affiche: "260 000 €"
+      prix_affiche: "260 000 €",
+      agentEmail: expData.agentEmail || '',
+      agentNom: expData.agentNom || ''
     })
   }).then(function(r) {
     var el = document.getElementById('offer-success');
@@ -1196,22 +1194,23 @@ function unlockDocs() {
   }
   document.getElementById('doc-gate').style.display = 'none';
   document.getElementById('doc-content').style.display = 'block';
-  var formspreeId = "xpqbnkjj";
-  var _ob = '[' + '[';
-  if (formspreeId && formspreeId.indexOf(_ob) === -1) {
-    fetch('https://formspree.io/f/' + formspreeId, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-      body: JSON.stringify({
-        _subject: "Demande de documents — 5 Rue de l'Arpajonnais",
-        nom: nom,
-        email: email,
-        bien: "5 Rue de l'Arpajonnais",
-        reference: "ex91-lg001",
-        demande: "Acces aux documents du bien"
-      })
-    }).catch(function(){});
-  }
+
+  var expData = {};
+  try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
+
+  fetch('https://expertimo-phi.vercel.app/api/send-lead', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      type: 'documents',
+      nom: nom,
+      email: email,
+      bien: "5 Rue de l'Arpajonnais",
+      reference: "ex91-lg001",
+      agentEmail: expData.agentEmail || '',
+      agentNom: expData.agentNom || ''
+    })
+  }).catch(function(){});
 }
 
 // ═══ INIT — loyer slider initialisé depuis _sp_loyer ═══
