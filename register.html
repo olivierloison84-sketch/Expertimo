@@ -270,7 +270,10 @@
     const { error } = await client.auth.signUp({
       email,
       password,
-      options: { data: { prenom, nom } }
+      options: {
+        data: { prenom, nom },
+        emailRedirectTo: window.location.origin + '/dashboard.html'
+      }
     });
 
     if (error) {
