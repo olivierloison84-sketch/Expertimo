@@ -496,6 +496,13 @@ details[open] summary .chevron { transform: rotate(90deg); }
   padding-top: 16px;
 }
 </style>
+<!-- Domaine fixe de l'espace agent : les appels vers /api/* utilisent toujours
+     cette adresse absolue, pour ne jamais dépendre du domaine depuis lequel
+     cette page a été chargée (ex: si elle est ouverte par erreur depuis
+     espace.privency.fr, réservé aux fiches publiées). -->
+<script>
+  var PRIVENCY_API_BASE = 'https://app.privency.fr';
+</script>
 <!-- ══════════ AUTH GUARD (Supabase) ══════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -2165,7 +2172,7 @@ async function lookupSiret() {
   setStatus('⏳ Recherche en cours…', 'var(--muted)');
 
   try {
-    var res = await fetch('/api/siret-lookup?siret=' + siret, { signal: AbortSignal.timeout(15000) });
+    var res = await fetch(PRIVENCY_API_BASE + '/api/siret-lookup?siret=' + siret, { signal: AbortSignal.timeout(15000) });
     var payload = await res.json();
     if (!res.ok) {
       throw new Error(payload.error || ('Erreur serveur (' + res.status + ')'));
@@ -3344,7 +3351,7 @@ function loadPOI(lat, lng) {
     restaurant:  { emoji: '🍽️', label: 'Restaurant' }
   };
 
-  fetch('/api/overpass', {
+  fetch(PRIVENCY_API_BASE + '/api/overpass', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query: query }),
@@ -3757,7 +3764,7 @@ async function translateFicheFields(d) {
     diags:       (d.diags || []).map(function(diag) { return { result: diag.result || '' }; }),
     renovations: (d.renovations || []).map(function(r) { return { desc: r.desc || '' }; })
   };
-  var res = await fetch('/api/translate-fiche', {
+  var res = await fetch(PRIVENCY_API_BASE + '/api/translate-fiche', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -3945,7 +3952,7 @@ async function pushToGitHub() {
     var session = sessionRes && sessionRes.data && sessionRes.data.session;
     if (!session || !session.access_token) throw new Error('Session expirée, reconnectez-vous.');
 
-    var r = await fetch('/api/fiche-publish', {
+    var r = await fetch(PRIVENCY_API_BASE + '/api/fiche-publish', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -4326,7 +4333,7 @@ async function loadFiches() {
 
   try {
     var accessToken = await getFicheSessionToken();
-    var r = await fetch('/api/fiches-list', {
+    var r = await fetch(PRIVENCY_API_BASE + '/api/fiches-list', {
       headers: { 'Authorization': 'Bearer ' + accessToken }
     });
     var resData = await r.json();
@@ -4393,7 +4400,7 @@ async function supprimerFiche(btn) {
   btn.textContent = '⏳…';
   try {
     var accessToken = await getFicheSessionToken();
-    var r = await fetch('/api/fiche-delete', {
+    var r = await fetch(PRIVENCY_API_BASE + '/api/fiche-delete', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -4673,7 +4680,7 @@ function openImportAnnonceModal() {
     cancelBtn.disabled = true;
     setStatus('⏳ Analyse en cours…', false);
     try {
-      var res = await fetch('/api/import-annonce', {
+      var res = await fetch(PRIVENCY_API_BASE + '/api/import-annonce', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: text }),

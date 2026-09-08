@@ -167,6 +167,13 @@
     display: block;
   }
 </style>
+<!-- Domaine fixe de l'espace agent : les appels vers /api/* utilisent toujours
+     cette adresse absolue, pour ne jamais dépendre du domaine depuis lequel
+     cette page a été chargée (ex: si elle est ouverte par erreur depuis
+     espace.privency.fr, réservé aux fiches publiées). -->
+<script>
+  var PRIVENCY_API_BASE = 'https://app.privency.fr';
+</script>
 <!-- ══════════ AUTH GUARD (Supabase) ══════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -278,7 +285,7 @@
     subscribeBtn.textContent = 'Redirection vers le paiement…';
 
     try {
-      const response = await fetch('/api/create-checkout', {
+      const response = await fetch(PRIVENCY_API_BASE + '/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
