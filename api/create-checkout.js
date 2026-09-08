@@ -35,8 +35,8 @@ module.exports = async function handler(req, res) {
       ],
       automatic_tax: { enabled: true },
       billing_address_collection: 'required',
-      success_url: 'https://expertimo-phi.vercel.app/app.html',
-      cancel_url: 'https://expertimo-phi.vercel.app/login.html',
+      success_url: 'https://app.privency.fr/app.html',
+      cancel_url: 'https://app.privency.fr/login.html',
       customer_email: email,
       client_reference_id: user_id
     });
