@@ -29,7 +29,7 @@ module.exports = async function handler(req, res) {
       mode: 'subscription',
       line_items: [
         {
-          price: 'price_1U6TlILwU7EqTQT57pF77wZB',
+          price: 'price_1UGLoSLkk3vvHRV1Vo5eFzv9',
           quantity: 1
         }
       ],
