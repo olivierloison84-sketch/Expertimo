@@ -569,28 +569,55 @@ details[open] summary .chevron { transform: rotate(90deg); }
       try {
         const { data: profile } = await authClient
           .from('agent_profiles')
-          .select('onboarding_seen')
+          .select('onboarding_seen, a_vu_ecran_accueil, prenom')
           .eq('user_id', session.user.id)
           .maybeSingle();
         window._onboardingSeen = profile ? !!profile.onboarding_seen : false;
+        window._welcomeScreenSeen = profile ? !!profile.a_vu_ecran_accueil : false;
+        window._welcomePrenom = (profile && profile.prenom) || session.user.user_metadata.prenom || '';
       } catch (e) {
         window._onboardingSeen = false;
+        window._welcomeScreenSeen = false;
+        window._welcomePrenom = session.user.user_metadata.prenom || '';
       }
       reveal();
-      if (window._onboardingSeen === false) {
-        // Le script qui définit showOnboardingOverlay() est plus bas dans
-        // le document : s'il n'a pas encore fini de s'exécuter (résolution
-        // Supabase très rapide), on pose un drapeau que ce script consomme
-        // dès qu'il est prêt, plutôt que de perdre silencieusement le trigger.
+      // Écran de révélation en premier (à la toute première connexion), puis
+      // seulement le tutoriel s'il n'a pas non plus déjà été vu — les deux
+      // fonctions sont définies plus bas dans le document : s'il n'a pas
+      // encore fini de se charger (résolution Supabase très rapide), on pose
+      // un drapeau que ce script consomme dès qu'il est prêt, plutôt que de
+      // perdre silencieusement le trigger.
+      if (window._welcomeScreenSeen === false) {
+        if (typeof window.showWelcomeScreen === 'function') {
+          window.showWelcomeScreen();
+        } else {
+          window._welcomeScreenPending = true;
+        }
+      } else if (window._onboardingSeen === false) {
         if (typeof window.showOnboardingOverlay === 'function') {
           window.showOnboardingOverlay();
         } else {
           window._onboardingPending = true;
         }
       }
+      markConnexion(authClient, session.user.id);
     } catch (e) {
       window.location.replace('/dashboard.html');
     }
+  }
+
+  // Best-effort : met à jour la date de dernière connexion et réinitialise
+  // le drapeau de relance d'inactivité (pour permettre une future relance si
+  // l'agent redevient inactif). N'empêche jamais l'accès à l'app en cas
+  // d'échec (table absente, RLS, offline…).
+  function markConnexion(authClient, userId) {
+    authClient
+      .from('agent_profiles')
+      .update({ date_derniere_connexion: new Date().toISOString(), relance_inactivite_envoyee_at: null })
+      .eq('user_id', userId)
+      .then(function (res) {
+        if (res && res.error) console.error('markConnexion: échec update', res.error);
+      });
   }
 
   // Signal principal : onAuthStateChange émet INITIAL_SESSION au chargement
@@ -1705,6 +1732,85 @@ fetch('./index.html')
   .catch(function(err) { console.warn('Template non chargé :', err); });
 
 // ═══════════════════════════════════════════════════════
+// ÉCRAN DE RÉVÉLATION — bienvenue à la toute première connexion
+// ═══════════════════════════════════════════════════════
+var _welcomeScreenEl = null;
+
+// Marque a_vu_ecran_accueil=true en base (best-effort, jamais bloquant).
+async function markWelcomeScreenSeen() {
+  try {
+    var authClient = window.privencyAuth;
+    if (!authClient) return;
+    var userRes = await authClient.auth.getUser();
+    var user = userRes && userRes.data && userRes.data.user;
+    if (!user) return;
+    var { error } = await authClient
+      .from('agent_profiles')
+      .update({ a_vu_ecran_accueil: true })
+      .eq('user_id', user.id);
+    if (error) console.error('markWelcomeScreenSeen: échec update', error);
+  } catch (e) {
+    console.error('markWelcomeScreenSeen: échec', e);
+  }
+}
+
+function closeWelcomeScreen() {
+  markWelcomeScreenSeen();
+  if (_welcomeScreenEl) {
+    _welcomeScreenEl.remove();
+    _welcomeScreenEl = null;
+  }
+  // Enchaîne sur le tutoriel s'il n'a pas non plus déjà été vu.
+  if (window._onboardingSeen === false && typeof window.showOnboardingOverlay === 'function') {
+    window.showOnboardingOverlay();
+  }
+}
+
+function showWelcomeScreen() {
+  if (_welcomeScreenEl) return;
+  var prenom = window._welcomePrenom || '';
+
+  var overlay = document.createElement('div');
+  overlay.id = 'welcome-screen-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;'
+    + 'background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;'
+    + 'z-index:10002;padding:20px;';
+  var checklistItem = function(label) {
+    return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;">'
+      + '<span style="color:#4caf50;font-size:15px;">✓</span>'
+      + '<span style="font-size:13px;color:#e6e2d8;">' + label + '</span>'
+      + '</div>';
+  };
+  overlay.innerHTML =
+    '<div style="max-width:440px;width:100%;background:#141414;'
+    + 'border:1px solid rgba(184,146,58,.35);border-radius:12px;padding:40px 32px 28px;'
+    + 'color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:inherit;text-align:center;">'
+    +   '<div style="font-size:20px;font-weight:700;margin-bottom:6px;">'
+    +     'Bienvenue' + (prenom ? ' ' + esc(prenom) : '') + '</div>'
+    +   '<div style="font-size:14px;color:#c7ccd3;margin-bottom:22px;">'
+    +     'Votre espace personnalisé est prêt</div>'
+    +   '<div style="text-align:left;background:rgba(184,146,58,.08);border-radius:8px;padding:12px 16px;margin-bottom:26px;">'
+    +     checklistItem('Profil agence configuré')
+    +     checklistItem('Facture réglée')
+    +     checklistItem('Prête à créer sa première fiche')
+    +   '</div>'
+    +   '<button type="button" id="welcome-cta-btn" style="width:100%;background:var(--accent);'
+    +     'border:none;color:#141414;font-weight:700;border-radius:6px;padding:12px 16px;'
+    +     'font-size:14px;cursor:pointer;font-family:inherit;">Découvrir mon espace</button>'
+    + '</div>';
+  document.body.appendChild(overlay);
+  _welcomeScreenEl = overlay;
+  overlay.querySelector('#welcome-cta-btn').onclick = function() { closeWelcomeScreen(); };
+}
+window.showWelcomeScreen = showWelcomeScreen;
+// Consomme un déclenchement posé par checkSubscription() si l'auth s'est
+// résolue avant que ce script n'ait fini de se charger (voir app.html:553).
+if (window._welcomeScreenPending) {
+  window._welcomeScreenPending = false;
+  showWelcomeScreen();
+}
+
+// ═══════════════════════════════════════════════════════
 // ONBOARDING OVERLAY — tutoriel 4 étapes au premier chargement
 // ═══════════════════════════════════════════════════════
 var _ONBOARDING_SLIDES = [
@@ -1843,6 +1949,69 @@ document.addEventListener('DOMContentLoaded', function() {
   btn.addEventListener('click', function() { showOnboardingOverlay(); });
   document.body.appendChild(btn);
 });
+
+// ═══════════════════════════════════════════════════════
+// CONSEILS CONTEXTUELS — micro-conseils déclenchés au bon moment
+// ═══════════════════════════════════════════════════════
+var _CONTEXT_TIPS = {
+  premiere_fiche:
+    'Ajoutez une photo de qualité en premier : c\'est ce que les acheteurs regardent en premier.',
+  fiche_sans_photo:
+    'Cette fiche n\'a pas encore de photo — les fiches avec photo génèrent bien plus de visites.',
+  premiere_fiche_publiee:
+    'Bravo, votre première fiche est en ligne ! Testez le simulateur de financement dessus.',
+  profil_incomplet_24h:
+    'Complétez votre profil : c\'est ce qui rassure les acheteurs sur votre identité.',
+  lien_expertimo_manquant:
+    'Ajoutez le lien de votre site Expertimo pour que les acheteurs découvrent vos autres biens.',
+  scoring_premiere_consultation:
+    'Ce score résume l\'intérêt de l\'acheteur pour le bien — plus il est élevé, plus le contact est chaud.'
+};
+
+function contextTipSeen(key) {
+  try { return localStorage.getItem('privency_tip_' + key) === '1'; } catch (e) { return false; }
+}
+function markContextTipSeen(key) {
+  try { localStorage.setItem('privency_tip_' + key, '1'); } catch (e) {}
+}
+
+function showContextTip(key) {
+  if (contextTipSeen(key)) return;
+  markContextTipSeen(key);
+  var msg = _CONTEXT_TIPS[key];
+  if (!msg) return;
+
+  var el = document.createElement('div');
+  el.style.cssText = 'position:fixed;bottom:24px;right:24px;max-width:320px;background:#141414;'
+    + 'color:#f0ede6;border:1px solid rgba(184,146,58,.45);border-radius:10px;padding:14px 16px;'
+    + 'font-size:13px;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:9999;'
+    + 'display:flex;gap:10px;align-items:flex-start;font-family:inherit;';
+  el.innerHTML = '<span style="font-size:16px;">💡</span>'
+    + '<span style="flex:1;">' + msg + '</span>'
+    + '<button type="button" aria-label="Fermer" style="background:none;border:none;color:#8a7550;'
+    + 'font-size:14px;cursor:pointer;line-height:1;padding:0;">✕</button>';
+  el.querySelector('button').onclick = function() { el.remove(); };
+  document.body.appendChild(el);
+  setTimeout(function() { if (el.parentNode) el.remove(); }, 12000);
+}
+
+// Déclencheur : profil incomplet après 24h depuis l'abonnement — appelé
+// depuis initApp() une fois le profil chargé (le flag localStorage empêche
+// toute répétition au-delà du premier affichage).
+async function checkProfilIncomplet24h(profile) {
+  try {
+    var authClient = window.privencyAuth;
+    if (!authClient) return;
+    var sessionRes = await authClient.auth.getSession();
+    var session = sessionRes && sessionRes.data && sessionRes.data.session;
+    if (!session || !session.user || !session.user.created_at) return;
+    var ageMs = Date.now() - new Date(session.user.created_at).getTime();
+    if (ageMs < 24 * 60 * 60 * 1000) return;
+    var p = profile || {};
+    var incomplete = !p.tel || !p.photo_url || !p.rdv_url;
+    if (incomplete) showContextTip('profil_incomplet_24h');
+  } catch (e) {}
+}
 
 // ═══════════════════════════════════════════════════════
 // SHARED HELPERS
@@ -2214,6 +2383,7 @@ async function deleteProfileFromSupabase() {
 (async function initApp() {
   var saved = await loadProfile();
   if (saved) { applyProfile(saved); _stepsComplete[1] = true; }
+  checkProfilIncomplet24h(saved);
 })();
 
 // ═══════════════════════════════════════════════════════
@@ -2222,9 +2392,10 @@ async function deleteProfileFromSupabase() {
 var _origGoToStep = goToStep;
 goToStep = function(n) {
   _origGoToStep(n);
-  if (n === 2 && !_step2Inited) { initStep2(); _step2Inited = true; }
+  if (n === 2 && !_step2Inited) { initStep2(); _step2Inited = true; showContextTip('premiere_fiche'); }
   if (n === 2) loadDraftBien();
   if (n === 2 && !_ficheMap) { if (getV('adresse')) initFicheMap(); }
+  if (n === 5) showContextTip('scoring_premiere_consultation');
 };
 
 // ═══════════════════════════════════════════════════════
@@ -3695,6 +3866,9 @@ function continuerVersGeneration() {
     window._bienData=collectBienData();
     saveDraftBien();
     _stepsComplete[2]=true;
+    var aucunePhoto = !getV('bien_photo1_url') && !getV('bien_photo2_url') && !getV('bien_photo3_url')
+      && !getV('bien_photo4_url') && !getV('bien_photo5_url') && !(_photos && _photos.length);
+    if (aucunePhoto) showContextTip('fiche_sans_photo');
     showToast('✅ Données collectées !');
     setTimeout(function(){goToStep(3);},600);
   } catch(e) { showToast('❌ Erreur : '+e.message, true); console.error(e); }
@@ -3977,6 +4151,11 @@ async function pushToGitHub() {
       _stepsComplete[4] = true;
       updateStepperTabs();
       showToast('✅ Fiche publiée !');
+      try {
+        var nbPublications = parseInt(localStorage.getItem('privency_nb_fiches_publiees') || '0', 10) + 1;
+        localStorage.setItem('privency_nb_fiches_publiees', String(nbPublications));
+        if (nbPublications === 1) showContextTip('premiere_fiche_publiee');
+      } catch (e) {}
     } else {
       status.textContent = '❌ Erreur ' + r.status + ' : ' + (resData.error || JSON.stringify(resData));
     }
@@ -4873,6 +5052,8 @@ function refreshStep4Summary() {
     + '<div><span style="color:var(--muted)">Bucket</span> : '
     + '<code>fiches</code> (Supabase Storage)</div>'
     + '</div>';
+  var agentPourLien = loadProfileSync() || {};
+  if (!agentPourLien.site_url) showContextTip('lien_expertimo_manquant');
 }
 
 function toggleInternalNotes() {

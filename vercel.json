@@ -7,8 +7,14 @@
     "api/import-annonce.js": {
       "memory": 512,
       "maxDuration": 30
+    },
+    "api/cron/relances-comportementales.js": {
+      "maxDuration": 60
     }
   },
+  "crons": [
+    { "path": "/api/cron/relances-comportementales", "schedule": "0 7 * * *" }
+  ],
   "routes": [
     { "src": "/$", "dest": "/landing.html" },
     { "handle": "filesystem" }
