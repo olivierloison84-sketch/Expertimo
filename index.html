@@ -689,6 +689,10 @@ html,body{overflow-x:hidden;}
           <option value="25" data-i18n="opt-25ans">25 ans</option>
         </select>
       </div>
+      <div>
+        <label class="lbl" data-i18n="lbl-taux-budget">Taux du crédit (%)</label>
+        <input type="number" class="field" id="bgt-taux" min="0.5" max="8" step="0.05" value="3.4">
+      </div>
     </div>
     <button onclick="calcBudget()" style="margin-top:20px;padding:12px 28px;background:var(--dark);color:var(--gold);border:none;border-radius:99px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;" data-i18n="btn-calc-budget">Calculer mon accessibilité</button>
     <div id="bgt-result" style="margin-top:24px;display:none;"></div>
@@ -1248,7 +1252,9 @@ function calcBudget() {
   var fraisNotaire = prixBien * 0.075;
   var coutTotal = prixBien + fraisNotaire;
   var capital = Math.max(0, coutTotal - apport);
-  var tauxAnnuel = 3.4;
+  var bgtTauxEl = document.getElementById('bgt-taux');
+  var bgtTauxVal = bgtTauxEl ? parseFloat(bgtTauxEl.value) : NaN;
+  var tauxAnnuel = (bgtTauxVal >= 0.5 && bgtTauxVal <= 8) ? bgtTauxVal : 3.4;
   var tauxMensuel = tauxAnnuel / 100 / 12;
   var n = duree * 12;
   var mens = capital > 0 ? capital * tauxMensuel / (1 - Math.pow(1 + tauxMensuel, -n)) : 0;
@@ -1263,9 +1269,10 @@ function calcBudget() {
   var res = document.getElementById('bgt-result');
   res.style.display = 'block';
   var isEn = _currentLang === 'en';
+  var tauxLigneTxt = isEn ? tauxAnnuel.toFixed(2) : tauxAnnuel.toFixed(2).replace('.', ',');
   var prixLigne = isEn
-    ? ('<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Simulation based on a price of ' + fmt(prixBien) + '</p>')
-    : ('<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Simulation basée sur un prix de ' + fmt(prixBien) + '</p>');
+    ? ('<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Simulation based on a price of ' + fmt(prixBien) + ' and a rate of ' + tauxLigneTxt + '%.</p>')
+    : ('<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Simulation basée sur un prix de ' + fmt(prixBien) + ' et un taux de ' + tauxLigneTxt + '%.</p>');
   var html = '';
   var infoLigne = isEn
     ? ('<div class="rc"><div class="rcl">Estimated monthly payment</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
@@ -1793,6 +1800,7 @@ var I18N_STATIC = {
     'lbl-revenu': 'Revenu net mensuel du foyer (€)',
     'lbl-apport-dispo': 'Apport disponible (€)',
     'lbl-duree-credit': 'Durée du crédit souhaitée',
+    'lbl-taux-budget': 'Taux du crédit (%)',
     'opt-15ans': '15 ans',
     'opt-20ans': '20 ans',
     'opt-25ans': '25 ans',
@@ -1948,6 +1956,7 @@ var I18N_STATIC = {
     'lbl-revenu': 'Net monthly household income (€)',
     'lbl-apport-dispo': 'Available down payment (€)',
     'lbl-duree-credit': 'Desired loan term',
+    'lbl-taux-budget': 'Loan interest rate (%)',
     'opt-15ans': '15 years',
     'opt-20ans': '20 years',
     'opt-25ans': '25 years',
