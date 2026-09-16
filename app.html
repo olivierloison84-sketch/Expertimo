@@ -811,10 +811,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
      PAGE 2 — SAISIE DU BIEN
 ══════════════════════════════════════════════════════ -->
 <div class="page" id="page-2">
+<div class="container" style="max-width:1100px">
 
 <!-- ── Import rapide depuis une annonce (démo IA) ── -->
 <div style="margin:16px 16px 0;">
-  <button type="button" class="btn" style="background:var(--accent);color:#141414;font-weight:700;width:100%;justify-content:center;padding:12px 18px;font-size:14px;box-shadow:var(--shadow);" onclick="openImportAnnonceModal()">⚡ Import rapide depuis une annonce (démo)</button>
+  <button type="button" class="btn" style="background:var(--accent);color:#141414;font-weight:700;width:100%;justify-content:center;padding:12px 18px;font-size:14px;box-shadow:var(--shadow);" onclick="openImportAnnonceModal()">⚡ Import rapide depuis une annonce</button>
 </div>
 
 <!-- ── Adresse du bien (doit être en tête — critique pour Leaflet, DVF, slug) ── -->
@@ -851,8 +852,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="type-tab" data-type="maison"  onclick="switchType('maison')"  id="tab-maison">🏠 Maison</div>
   <div class="type-tab" data-type="terrain" onclick="switchType('terrain')" id="tab-terrain">🌿 Terrain</div>
 </div>
-
-<div class="container" style="max-width:1100px">
 
 <!-- ── Informations essentielles (extrait) ── -->
 <div class="card">
