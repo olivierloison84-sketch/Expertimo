@@ -671,6 +671,8 @@ html,body{overflow-x:hidden;}
     <h2 class="stitle" data-i18n="stitle-budget">Ce bien est-il fait pour vous ?</h2>
     <p class="ssub" data-i18n="ssub-budget">Entrez votre situation pour le savoir en 30 secondes</p>
     <div class="f2" style="margin-top:20px;">
+      <div><label class="lbl" data-i18n="lbl-prix-vente">Prix de vente (€)</label>
+      <input type="number" class="field" id="bgt-prix" min="0" step="1000"></div>
       <div>
         <label class="lbl" data-i18n="lbl-revenu">Revenu net mensuel du foyer (€)</label>
         <input type="number" class="field" id="bgt-revenu" placeholder="3500" min="0">
@@ -1230,11 +1232,19 @@ calc();
 calcBank();
 
 // ═══ MON BUDGET ═══
+document.addEventListener('DOMContentLoaded', function() {
+  var bgtPrix = document.getElementById('bgt-prix');
+  if (bgtPrix && !bgtPrix.value) {
+    bgtPrix.value = parseFloat("260 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  }
+});
 function calcBudget() {
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
-  var prixBien = parseFloat("260 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  var bgtPrixEl = document.getElementById('bgt-prix');
+  var bgtPrixVal = bgtPrixEl ? parseFloat(bgtPrixEl.value) || 0 : 0;
+  var prixBien = bgtPrixVal > 0 ? bgtPrixVal : (parseFloat("260 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0);
   var fraisNotaire = prixBien * 0.075;
   var coutTotal = prixBien + fraisNotaire;
   var capital = Math.max(0, coutTotal - apport);
@@ -1252,8 +1262,11 @@ function calcBudget() {
   var budgetMax = capitalMax + apport - fraisNotaire;
   var res = document.getElementById('bgt-result');
   res.style.display = 'block';
-  var html = '';
   var isEn = _currentLang === 'en';
+  var prixLigne = isEn
+    ? ('<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Simulation based on a price of ' + fmt(prixBien) + '</p>')
+    : ('<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">Simulation basée sur un prix de ' + fmt(prixBien) + '</p>');
+  var html = '';
   var infoLigne = isEn
     ? ('<div class="rc"><div class="rcl">Estimated monthly payment</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
       + '<div class="rc"><div class="rcl">Debt ratio</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
@@ -1288,7 +1301,7 @@ function calcBudget() {
         + '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
         + '<p style="font-size:12px;color:#c62828;margin-top:10px;">Avec un revenu de ' + fmt(revenu) + ' €/mois et un apport de ' + fmt(apport) + ' €, votre budget max est estimé à <strong>' + fmt(Math.max(0, budgetMax)) + ' €</strong> vs ' + fmt(prixBien) + ' € pour ce bien.</p></div>');
   }
-  res.innerHTML = html;
+  res.innerHTML = (revenu === 0 ? '' : prixLigne) + html;
 }
 
 // ═══ CARTE QUARTIER ═══
@@ -1776,6 +1789,7 @@ var I18N_STATIC = {
     'lbl-simulateur-perso': 'Simulateur personnel',
     'stitle-budget': 'Ce bien est-il fait pour vous ?',
     'ssub-budget': 'Entrez votre situation pour le savoir en 30 secondes',
+    'lbl-prix-vente': 'Prix de vente (€)',
     'lbl-revenu': 'Revenu net mensuel du foyer (€)',
     'lbl-apport-dispo': 'Apport disponible (€)',
     'lbl-duree-credit': 'Durée du crédit souhaitée',
@@ -1930,6 +1944,7 @@ var I18N_STATIC = {
     'lbl-simulateur-perso': 'Personal simulator',
     'stitle-budget': 'Is this property right for you?',
     'ssub-budget': 'Enter your situation to find out in 30 seconds',
+    'lbl-prix-vente': 'Sale price (€)',
     'lbl-revenu': 'Net monthly household income (€)',
     'lbl-apport-dispo': 'Available down payment (€)',
     'lbl-duree-credit': 'Desired loan term',
