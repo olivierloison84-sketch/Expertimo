@@ -619,7 +619,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
     const btn = document.createElement('button');
     btn.id = 'logout-btn';
     btn.textContent = 'Déconnexion';
-    btn.style.cssText = 'position:fixed;top:80px;right:12px;z-index:10000;background:#141414;color:#b8923a;border:1px solid #b8923a;border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
+    btn.style.cssText = 'position:fixed;top:80px;right:12px;z-index:10000;background:var(--primary);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
     btn.addEventListener('click', async () => {
       await authClient.auth.signOut();
       window.location.replace('/login.html');
@@ -1837,8 +1837,8 @@ document.addEventListener('DOMContentLoaded', function() {
   var btn = document.createElement('button');
   btn.id = 'revoir-tutoriel-btn';
   btn.textContent = '❓ Revoir le tutoriel';
-  btn.style.cssText = 'position:fixed;top:116px;right:12px;z-index:10000;background:#141414;'
-    + 'color:#b8923a;border:1px solid #b8923a;border-radius:6px;padding:5px 12px;'
+  btn.style.cssText = 'position:fixed;top:116px;right:12px;z-index:10000;background:var(--primary);'
+    + 'color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;'
     + 'font-size:12px;font-family:inherit;cursor:pointer;';
   btn.addEventListener('click', function() { showOnboardingOverlay(); });
   document.body.appendChild(btn);
