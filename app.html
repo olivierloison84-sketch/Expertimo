@@ -11,6 +11,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Expertimo">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -18,23 +19,25 @@
    VARIABLES — overridable per agent
 ═══════════════════════════════════════ */
 :root {
-  --primary: #1a3a5c;
-  --accent:  #c9a84c;
-  --light:   #f4f6f9;
-  --border:  #cdd5e0;
-  --text:    #1e2a38;
-  --muted:   #6b7a8d;
+  --primary: #14171F;
+  --accent:  #C9A227;
+  --light:   #FAF9F6;
+  --border:  #E7E3D8;
+  --text:    #14171F;
+  --muted:   #6E6A5C;
   --danger:  #c0392b;
   --success: #27ae60;
-  --radius:  6px;
+  --radius:  14px;
   --shadow:  0 2px 8px rgba(0,0,0,.12);
+  --gold2:   #8F7015;
+  --vert:    #2F7A4F;
 }
 
 /* ═══════════════════════════════════════
    RESET & BASE
 ═══════════════════════════════════════ */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Segoe UI', Arial, sans-serif; font-size: 14px; background: #e8ecf1; color: var(--text); }
+body { font-family: 'Work Sans', sans-serif; font-size: 14px; background: var(--light); color: var(--text); }
 
 /* ═══════════════════════════════════════
    HEADER
@@ -60,7 +63,7 @@ header {
   flex-shrink: 0; overflow: hidden;
 }
 .logo-circle img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 50%; }
-.header-brand h1 { font-size: 17px; font-weight: 700; }
+.header-brand h1 { font-family: 'Playfair Display', serif; font-weight: 500; font-size: 17px; }
 .header-brand p  { font-size: 11px; opacity: .75; margin-top: 1px; }
 .header-right { font-size: 11px; opacity: .7; text-align: right; }
 
@@ -123,7 +126,7 @@ header {
 .card-header {
   background: var(--primary); color: #fff;
   padding: 11px 18px;
-  font-weight: 700; font-size: 13px;
+  font-family: 'Playfair Display', serif; font-weight: 500; font-size: 13px;
   letter-spacing: .4px; text-transform: uppercase;
   display: flex; align-items: center; gap: 8px;
 }
@@ -217,25 +220,6 @@ textarea { resize: vertical; min-height: 60px; }
 .agent-preview-logo img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 50%; }
 .agent-preview-info h3 { font-size: 16px; font-weight: 700; color: var(--primary); }
 .agent-preview-info p  { font-size: 12px; color: var(--muted); margin-top: 2px; }
-
-/* ═══════════════════════════════════════
-   COLOR PREVIEW
-═══════════════════════════════════════ */
-.color-row { display: flex; align-items: center; gap: 10px; }
-.color-row input[type=color] {
-  width: 48px; height: 36px; padding: 2px 4px;
-  border-radius: var(--radius); cursor: pointer;
-}
-.color-swatch {
-  display: flex; gap: 8px; flex-wrap: wrap; align-items: center;
-  margin-top: 8px;
-}
-.color-swatch span {
-  display: inline-block; width: 28px; height: 28px;
-  border-radius: 50%; border: 2px solid rgba(0,0,0,.1);
-  cursor: pointer; transition: transform .15s;
-}
-.color-swatch span:hover { transform: scale(1.2); }
 
 /* ═══════════════════════════════════════
    SAVED BADGE
@@ -731,41 +715,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
         </div>
       </div>
 
-      <div class="section-title">Couleurs de marque</div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label>Couleur principale (--primary)</label>
-          <div class="color-row">
-            <input type="color" id="agent-color-primary" value="#1a3a5c" oninput="applyAgentColors()">
-            <input type="text" id="agent-color-primary-hex" value="#1a3a5c" placeholder="#1a3a5c"
-              oninput="syncColorHex('primary')" style="width:110px">
-          </div>
-          <div class="color-swatch" id="swatch-primary">
-            <span title="#1a3a5c" style="background:#1a3a5c" onclick="setColor('primary','#1a3a5c')"></span>
-            <span title="#2c3e50" style="background:#2c3e50" onclick="setColor('primary','#2c3e50')"></span>
-            <span title="#1e3a5f" style="background:#1e3a5f" onclick="setColor('primary','#1e3a5f')"></span>
-            <span title="#2d4a22" style="background:#2d4a22" onclick="setColor('primary','#2d4a22')"></span>
-            <span title="#4a1942" style="background:#4a1942" onclick="setColor('primary','#4a1942')"></span>
-            <span title="#7b3f00" style="background:#7b3f00" onclick="setColor('primary','#7b3f00')"></span>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Couleur accent (--accent)</label>
-          <div class="color-row">
-            <input type="color" id="agent-color-accent" value="#c9a84c" oninput="applyAgentColors()">
-            <input type="text" id="agent-color-accent-hex" value="#c9a84c" placeholder="#c9a84c"
-              oninput="syncColorHex('accent')" style="width:110px">
-          </div>
-          <div class="color-swatch" id="swatch-accent">
-            <span title="#c9a84c" style="background:#c9a84c" onclick="setColor('accent','#c9a84c')"></span>
-            <span title="#e67e22" style="background:#e67e22" onclick="setColor('accent','#e67e22')"></span>
-            <span title="#27ae60" style="background:#27ae60" onclick="setColor('accent','#27ae60')"></span>
-            <span title="#2980b9" style="background:#2980b9" onclick="setColor('accent','#2980b9')"></span>
-            <span title="#8e44ad" style="background:#8e44ad" onclick="setColor('accent','#8e44ad')"></span>
-            <span title="#c0392b" style="background:#c0392b" onclick="setColor('accent','#c0392b')"></span>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -1963,36 +1912,6 @@ function updateAgentPreview() {
 }
 
 // ═══════════════════════════════════════════════════════
-// AGENT PROFILE — colors
-// ═══════════════════════════════════════════════════════
-function applyAgentColors() {
-  var cp = getV('agent-color-primary');
-  var ca = getV('agent-color-accent');
-  if (cp) {
-    document.documentElement.style.setProperty('--primary', cp);
-    document.getElementById('agent-color-primary-hex').value = cp;
-  }
-  if (ca) {
-    document.documentElement.style.setProperty('--accent', ca);
-    document.getElementById('agent-color-accent-hex').value = ca;
-  }
-}
-
-function syncColorHex(which) {
-  var hex = getV('agent-color-' + which + '-hex').trim();
-  if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
-    document.getElementById('agent-color-' + which).value = hex;
-    document.documentElement.style.setProperty('--' + which, hex);
-  }
-}
-
-function setColor(which, hex) {
-  document.getElementById('agent-color-' + which).value     = hex;
-  document.getElementById('agent-color-' + which + '-hex').value = hex;
-  document.documentElement.style.setProperty('--' + which, hex);
-}
-
-// ═══════════════════════════════════════════════════════
 // AGENT PROFILE — save / load / reset
 // ═══════════════════════════════════════════════════════
 function saveProfile() {
@@ -2220,12 +2139,8 @@ function resetProfile() {
    'agent-adresse-siege','agent-tva-intra','agent-code-naf'].forEach(function(id) {
     var e = document.getElementById(id); if (e) e.value = '';
   });
-  document.getElementById('agent-color-primary').value     = '#1a3a5c';
-  document.getElementById('agent-color-primary-hex').value = '#1a3a5c';
-  document.getElementById('agent-color-accent').value      = '#c9a84c';
-  document.getElementById('agent-color-accent-hex').value  = '#c9a84c';
-  document.documentElement.style.setProperty('--primary', '#1a3a5c');
-  document.documentElement.style.setProperty('--accent',  '#c9a84c');
+  document.documentElement.style.setProperty('--primary', '#14171F');
+  document.documentElement.style.setProperty('--accent',  '#C9A227');
   document.getElementById('profile-saved-badge').style.display = 'none';
   updateAgentPreview();
   showToast('Profil réinitialisé');
