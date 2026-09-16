@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style id="auth-guard-hide">body { display: none !important; }</style>
+<title>Expertimo · Dashboard Activité</title>
+<meta name="theme-color" content="#14171F">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   VARIABLES — identiques à la refonte app.html
+═══════════════════════════════════════ */
+:root {
+  --primary: #14171F;
+  --accent:  #C9A227;
+  --light:   #FAF9F6;
+  --border:  #E7E3D8;
+  --text:    #14171F;
+  --muted:   #6E6A5C;
+  --danger:  #c0392b;
+  --success: #27ae60;
+  --radius:  14px;
+  --shadow:  0 2px 8px rgba(0,0,0,.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Work Sans', sans-serif; font-size: 14px; background: var(--light); color: var(--text); }
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+header {
+  background: var(--primary);
+  color: #fff;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0,0,0,.2);
+}
+.header-brand { display: flex; align-items: center; gap: 14px; }
+.logo-circle {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 16px; color: #fff;
+  flex-shrink: 0;
+}
+.header-brand h1 { font-family: 'Playfair Display', serif; font-weight: 500; font-size: 17px; }
+.header-brand p  { font-size: 11px; opacity: .75; margin-top: 1px; }
+#logout-btn {
+  background: transparent; border: 1.5px solid rgba(255,255,255,.35); color: #fff;
+  border-radius: var(--radius); padding: 7px 14px; font-size: 12px; font-family: inherit;
+  cursor: pointer; transition: opacity .2s;
+}
+#logout-btn:hover { opacity: .8; }
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+.container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+
+#dash-status {
+  text-align: center; color: var(--muted); font-size: 13px;
+  padding: 60px 20px;
+}
+.forbidden-msg {
+  max-width: 480px; margin: 80px auto; text-align: center;
+  background: #fff; border: 1.5px solid var(--danger); border-radius: var(--radius);
+  padding: 32px 24px; color: var(--danger); font-weight: 600; box-shadow: var(--shadow);
+}
+
+/* ═══════════════════════════════════════
+   KPI TILES
+═══════════════════════════════════════ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.kpi-tile {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 18px;
+}
+.kpi-label {
+  font-size: 10px; font-weight: 700; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
+}
+.kpi-value {
+  font-family: 'Playfair Display', serif; font-weight: 500;
+  font-size: 26px; color: var(--primary); line-height: 1;
+}
+
+/* ═══════════════════════════════════════
+   CARDS / SECTIONS
+═══════════════════════════════════════ */
+.card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.card-header {
+  background: var(--primary); color: #fff;
+  padding: 11px 18px;
+  font-family: 'Playfair Display', serif; font-weight: 500; font-size: 13px;
+  letter-spacing: .4px; text-transform: uppercase;
+  display: flex; align-items: center; gap: 8px;
+}
+.card-body { padding: 0; }
+.empty-msg { padding: 32px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+
+/* ═══════════════════════════════════════
+   TABLE
+═══════════════════════════════════════ */
+.table-wrap { overflow-x: auto; }
+table.data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; white-space: nowrap; }
+table.data-table th {
+  background: var(--light); color: var(--muted);
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
+  text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--border);
+}
+table.data-table td {
+  padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text);
+}
+table.data-table tr:last-child td { border-bottom: none; }
+table.data-table tr:hover td { background: var(--light); }
+.cell-sub { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600;
+}
+.badge-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.badge-dot.is-active   { background: var(--success); }
+.badge-dot.is-canceled { background: var(--danger); }
+.badge-dot.is-other    { background: var(--muted); }
+
+/* ═══════════════════════════════════════
+   COMPTES INTERNES (repliable)
+═══════════════════════════════════════ */
+details.card summary {
+  cursor: pointer; list-style: none;
+}
+details.card summary::-webkit-details-marker { display: none; }
+details.card summary .chevron {
+  display: inline-block; margin-left: auto; transition: transform .18s; font-size: 11px;
+}
+details.card[open] summary .chevron { transform: rotate(90deg); }
+details.card summary.card-header { justify-content: flex-start; }
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width: 700px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <div class="header-brand">
+    <div class="logo-circle">EX</div>
+    <div>
+      <h1>Dashboard Activité</h1>
+      <p>Vue d'ensemble des comptes agents Privency</p>
+    </div>
+  </div>
+  <button id="logout-btn" onclick="window.privencyAuth.auth.signOut().then(function(){ window.location.replace('/login.html'); });">Déconnexion</button>
+</header>
+
+<div class="container" id="dash-root">
+  <div id="dash-status">⏳ Chargement des statistiques…</div>
+
+  <div id="dash-content" style="display:none;">
+
+    <div class="kpi-grid" id="kpi-grid"></div>
+
+    <div class="card">
+      <div class="card-header">👥 Clients</div>
+      <div class="card-body">
+        <div class="table-wrap" id="clients-table-wrap"></div>
+      </div>
+    </div>
+
+    <details class="card" id="internal-section">
+      <summary class="card-header">
+        🔒 Comptes internes / test
+        <span class="chevron">▶</span>
+      </summary>
+      <div class="card-body">
+        <div class="table-wrap" id="internal-table-wrap"></div>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<!-- Domaine fixe de l'espace agent : les appels vers /api/* utilisent toujours
+     cette adresse absolue, pour ne jamais dépendre du domaine depuis lequel
+     cette page a été chargée. -->
+<script>
+  var PRIVENCY_API_BASE = 'https://app.privency.fr';
+</script>
+<!-- ══════════ AUTH GUARD (Supabase) + garde-fou admin ══════════ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+  const AUTH_SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
+  const AUTH_SUPABASE_KEY = 'sb_publishable_Asv3-Q2Q9XSA_gvV1nB74Q_0N6prN2E';
+  const ADMIN_USER_ID = '79e4e432-2232-4d2c-b41d-8c7c907c4dec';
+
+  const authClient = supabase.createClient(AUTH_SUPABASE_URL, AUTH_SUPABASE_KEY);
+  window.privencyAuth = authClient;
+
+  // resolved : une seule décision (révéler, refuser ou rediriger), quel que
+  // soit le premier signal arrivé (onAuthStateChange, getSession ou timeout).
+  let resolved = false;
+
+  function reveal() {
+    const hide = document.getElementById('auth-guard-hide');
+    if (hide) hide.remove();
+    if (document.body) document.body.style.display = 'block';
+  }
+
+  function onDomReady(fn) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', fn);
+    } else {
+      fn();
+    }
+  }
+
+  // Pas de session Supabase du tout : même garde de base que app.html.
+  function denied() {
+    if (resolved) return;
+    resolved = true;
+    window.location.replace('/login.html');
+  }
+
+  // Session valide mais utilisateur différent d'Olivier : garde-fou
+  // d'affichage uniquement (la vraie sécurité est côté serveur, dans
+  // api/admin-stats.js, qui revérifie l'id sur le JWT et renvoie 403).
+  function forbidden() {
+    if (resolved) return;
+    resolved = true;
+    reveal();
+    onDomReady(function () {
+      var root = document.getElementById('dash-root');
+      if (root) {
+        root.innerHTML = '<div class="forbidden-msg">⛔ Accès non autorisé — cette page est réservée.</div>';
+      }
+    });
+    setTimeout(function () { window.location.replace('/dashboard.html'); }, 1800);
+  }
+
+  function checkAdmin(session) {
+    if (resolved) return;
+    resolved = true;
+    if (!session.user || session.user.id !== ADMIN_USER_ID) {
+      forbidden();
+      return;
+    }
+    reveal();
+    if (typeof window.initDashboard === 'function') {
+      window.initDashboard(session);
+    } else {
+      window._pendingAdminSession = session;
+    }
+  }
+
+  authClient.auth.onAuthStateChange(function (event, session) {
+    if (session) checkAdmin(session); else denied();
+  });
+
+  authClient.auth.getSession().then(function (res) {
+    var session = res.data && res.data.session ? res.data.session : null;
+    if (session) checkAdmin(session); else denied();
+  }).catch(denied);
+
+  setTimeout(function () { denied(); }, 3000);
+})();
+</script>
+
+<!-- ══════════ DASHBOARD — chargement et rendu des données ══════════ -->
+<script>
+function fmtEUR(n) {
+  return Math.round(n || 0).toLocaleString('fr-FR') + ' €';
+}
+function fmtDate(iso) {
+  if (!iso) return '—';
+  try {
+    return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  } catch (e) {
+    return '—';
+  }
+}
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+  });
+}
+function statutBadge(agent) {
+  var status = agent.subscription_status || 'inconnu';
+  var cls = 'is-other';
+  if (status === 'active') cls = 'is-active';
+  else if (status === 'canceled' || status === 'incomplete_expired') cls = 'is-canceled';
+  return '<span class="badge"><span class="badge-dot ' + cls + '"></span>' + escapeHtml(status) + '</span>';
+}
+function nomReseauCell(agent) {
+  var nomComplet = [agent.prenom, agent.nom].filter(Boolean).join(' ').trim();
+  var nom = nomComplet || '<span style="color:var(--muted);">—</span>';
+  var reseau = agent.reseau ? '<span class="cell-sub">' + escapeHtml(agent.reseau) + '</span>' : '';
+  return nom + reseau;
+}
+function agentRowHtml(agent) {
+  return '<tr>'
+    + '<td>' + nomReseauCell(agent) + '</td>'
+    + '<td>' + escapeHtml(agent.email) + '</td>'
+    + '<td>' + fmtDate(agent.created_at) + '</td>'
+    + '<td>' + statutBadge(agent) + '</td>'
+    + '<td>' + fmtEUR(agent.mrr) + '</td>'
+    + '<td>' + (agent.nb_fiches || 0) + '</td>'
+    + '<td>' + (agent.nb_vues || 0) + '</td>'
+    + '<td>' + (agent.nb_offres || 0) + '</td>'
+    + '<td>' + fmtDate(agent.derniere_activite) + '</td>'
+    + '<td>' + (agent.profil_complete ? '✅ Oui' : '➖ Non') + '</td>'
+    + '</tr>';
+}
+function tableHtml(agents) {
+  var rows = agents.map(agentRowHtml).join('');
+  return '<table class="data-table"><thead><tr>'
+    + '<th>Nom / Réseau</th><th>Email</th><th>Inscription</th><th>Statut</th>'
+    + '<th>CA mensuel</th><th>Fiches</th><th>Vues</th><th>Offres</th>'
+    + '<th>Dernière activité</th><th>Profil complété</th>'
+    + '</tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+function renderDashboard(data) {
+  var totaux = data.totaux || {};
+  var kpis = [
+    { label: 'MRR', value: fmtEUR(totaux.mrr_total) },
+    { label: 'ARR', value: fmtEUR(totaux.arr_total) },
+    { label: 'Clients actifs', value: totaux.nb_clients_actifs || 0 },
+    { label: 'Nouvelles inscriptions (mois)', value: totaux.nb_nouvelles_inscriptions_ce_mois || 0 },
+    { label: 'Fiches créées', value: totaux.nb_fiches_total || 0 },
+    { label: 'Vues totales', value: totaux.nb_vues_total || 0 },
+    { label: 'Offres soumises', value: totaux.nb_offres_total || 0 }
+  ];
+  document.getElementById('kpi-grid').innerHTML = kpis.map(function (k) {
+    return '<div class="kpi-tile"><div class="kpi-label">' + escapeHtml(k.label) + '</div>'
+      + '<div class="kpi-value">' + k.value + '</div></div>';
+  }).join('');
+
+  var clients = (data.clients || []).slice().sort(function (a, b) {
+    return String(b.created_at || '').localeCompare(String(a.created_at || ''));
+  });
+  var clientsWrap = document.getElementById('clients-table-wrap');
+  if (clients.length === 0) {
+    clientsWrap.innerHTML = '<div class="empty-msg">Aucun client actif pour l\'instant.</div>';
+  } else {
+    clientsWrap.innerHTML = tableHtml(clients);
+  }
+
+  var internes = (data.comptes_internes || []).slice().sort(function (a, b) {
+    return String(b.created_at || '').localeCompare(String(a.created_at || ''));
+  });
+  var internalWrap = document.getElementById('internal-table-wrap');
+  internalWrap.innerHTML = internes.length === 0
+    ? '<div class="empty-msg">Aucun compte interne / test.</div>'
+    : tableHtml(internes);
+}
+
+window.initDashboard = async function (session) {
+  var statusEl = document.getElementById('dash-status');
+  var contentEl = document.getElementById('dash-content');
+  statusEl.textContent = '⏳ Chargement des statistiques…';
+  statusEl.style.display = 'block';
+  contentEl.style.display = 'none';
+
+  try {
+    var res = await fetch(PRIVENCY_API_BASE + '/api/admin-stats', {
+      headers: { 'Authorization': 'Bearer ' + session.access_token }
+    });
+    var data = await res.json();
+
+    if (!res.ok) {
+      statusEl.textContent = res.status === 403
+        ? '⛔ Accès non autorisé à ces statistiques.'
+        : '❌ ' + (data.error || ('Erreur HTTP ' + res.status));
+      statusEl.style.display = 'block';
+      return;
+    }
+
+    renderDashboard(data);
+    statusEl.style.display = 'none';
+    contentEl.style.display = 'block';
+  } catch (err) {
+    statusEl.textContent = '❌ Erreur réseau : ' + (err.message || err);
+    statusEl.style.display = 'block';
+  }
+};
+
+if (window._pendingAdminSession) {
+  window.initDashboard(window._pendingAdminSession);
+}
+</script>
+</body>
+</html>
