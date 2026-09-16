@@ -19,6 +19,7 @@ create table if not exists public.agent_profiles (
   email text,
   secteur text,
   rdv_url text,
+  site_url text,
   photo_url text,
   color_primary text,
   color_accent text,
@@ -48,3 +49,7 @@ create policy "Agent met à jour son propre profil"
   to authenticated
   using (auth.uid() = user_id)
   with check (auth.uid() = user_id);
+
+-- Ajout du lien vers le site pro de l'agent (vos autres annonces) sur une
+-- table agent_profiles déjà existante — sans effet si déjà appliqué.
+alter table public.agent_profiles add column if not exists site_url text;

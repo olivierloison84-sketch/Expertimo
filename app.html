@@ -725,6 +725,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
           <p class="hint" id="agent-photo-error" style="display:none;color:var(--danger);"></p>
           <p class="hint">Laissez vide pour utiliser vos initiales</p>
         </div>
+        <div class="form-group">
+          <label>Lien vers votre site (vos autres annonces)</label>
+          <input type="url" id="agent-site-url" placeholder="https://www.reseau-expertimo.fr/1883-mandataire/1">
+        </div>
       </div>
 
       <div class="section-title">Couleurs de marque</div>
@@ -2000,6 +2004,7 @@ function saveProfile() {
     email:         getV('agent-email'),
     secteur:       getV('agent-secteur'),
     rdv_url:       getV('agent-rdv-url'),
+    site_url:      getV('agent-site-url'),
     photo_url:     getV('agent-photo-url'),
     color_primary: getV('agent-color-primary'),
     color_accent:  getV('agent-color-accent'),
@@ -2035,6 +2040,7 @@ async function syncProfileToSupabase(profile) {
       email:           profile.email,
       secteur:         profile.secteur,
       rdv_url:         profile.rdv_url,
+      site_url:        profile.site_url,
       photo_url:       profile.photo_url,
       color_primary:   profile.color_primary,
       color_accent:    profile.color_accent,
@@ -2094,6 +2100,7 @@ async function loadProfile() {
             email:          data.email,
             secteur:        data.secteur,
             rdv_url:        data.rdv_url,
+            site_url:       data.site_url,
             photo_url:      data.photo_url,
             color_primary:  data.color_primary,
             color_accent:   data.color_accent,
@@ -2126,6 +2133,7 @@ function applyProfile(p) {
   sv('agent-email',     p.email);
   sv('agent-secteur',   p.secteur);
   sv('agent-rdv-url',   p.rdv_url);
+  sv('agent-site-url',  p.site_url);
   sv('agent-photo-url', p.photo_url);
   sv('agent-siret',            p.siret);
   sv('agent-denomination',     p.denomination);
@@ -2207,7 +2215,7 @@ function resetProfile() {
   if (!confirm('Réinitialiser le profil agent ? Les données seront effacées.')) return;
   localStorage.removeItem('_agent_profile');
   ['agent-prenom','agent-nom','agent-reseau','agent-tel','agent-email',
-   'agent-secteur','agent-rdv-url','agent-photo-url',
+   'agent-secteur','agent-rdv-url','agent-site-url','agent-photo-url',
    'agent-siret','agent-denomination','agent-forme-juridique',
    'agent-adresse-siege','agent-tva-intra','agent-code-naf'].forEach(function(id) {
     var e = document.getElementById(id); if (e) e.value = '';
@@ -2238,7 +2246,7 @@ async function deleteProfileFromSupabase() {
     if (!user) return;
     var emptyRow = {
       user_id: user.id, prenom: null, nom: null, reseau: null, tel: null,
-      email: null, secteur: null, rdv_url: null, photo_url: null,
+      email: null, secteur: null, rdv_url: null, site_url: null, photo_url: null,
       color_primary: null, color_accent: null, siret: null, denomination: null,
       forme_juridique: null, adresse_siege: null, tva_intra: null, code_naf: null,
       updated_at: new Date().toISOString()
@@ -3124,6 +3132,23 @@ function injectData(html, d, dEn) {
     avatars.forEach(function(el) { el.style.display = 'none'; });
   }
 
+  // Lien vers le site pro de l'agent (autres annonces) — ajouté à côté du
+  // bouton de RDV, même style visuel (classe .btn-rdv réutilisée telle quelle).
+  if (d.agentSiteUrl) {
+    qa('.cons-card').forEach(function(card) {
+      var rdvBtn = card.querySelector('.btn-rdv');
+      if (!rdvBtn) return;
+      var siteBtn = doc.createElement('a');
+      siteBtn.className = 'btn-rdv';
+      siteBtn.href = d.agentSiteUrl;
+      siteBtn.target = '_blank';
+      siteBtn.rel = 'noopener';
+      siteBtn.setAttribute('data-i18n', 'btn-site');
+      siteBtn.textContent = '🏠 Voir mes autres biens';
+      rdvBtn.insertAdjacentElement('afterend', siteBtn);
+    });
+  }
+
   // Embed a machine-readable JSON block so modifierFiche() can fully restore the form.
   // Injected as a string (not DOM) so attribute order is always id-then-type.
   var embedData = {};
@@ -3666,6 +3691,7 @@ function collectBienData() {
     agentTel:   agent.tel||'',
     agentEmail: agent.email||'',
     agentRdvUrl:agent.rdv_url||'',
+    agentSiteUrl:agent.site_url||'',
     agentPrimary: agent.primary || '#141414',
     agentAccent:  agent.accent  || '#b8923a',
     agentPhoto:   agent.photo_url || '',
