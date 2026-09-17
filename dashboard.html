@@ -252,6 +252,7 @@
   </div>
 
   <div class="card">
+    <p style="margin-bottom:12px;font-size:14px;color:#8a857c;">Première utilisation ? Activez votre abonnement pour commencer.</p>
     <a href="/app.html" class="btn-primary">Accéder au générateur</a>
     <button type="button" class="btn-secondary" id="subscribe-btn">Activer mon abonnement</button>
     <div class="error-message" id="error-message"></div>
@@ -263,9 +264,11 @@
   const subscribeBtn = document.getElementById('subscribe-btn');
   const errorMessage = document.getElementById('error-message');
 
+  function capitalizeName(s){ return (s||'').trim().split(/\s+/).map(w => w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join(' '); }
+
   function showUser(session) {
     const meta = (session && session.user && session.user.user_metadata) || {};
-    const fullName = [meta.prenom, meta.nom].filter(Boolean).join(' ');
+    const fullName = [capitalizeName(meta.prenom), capitalizeName(meta.nom)].filter(Boolean).join(' ');
     document.getElementById('user-name').textContent = fullName || (session && session.user && session.user.email) || '';
   }
 
