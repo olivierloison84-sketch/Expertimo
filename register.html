@@ -168,6 +168,13 @@
     display: block;
   }
 
+  .success-message.confirm-sent {
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: center;
+    padding: 24px 20px;
+  }
+
   .login-link {
     margin-top: 24px;
     text-align: center;
@@ -217,8 +224,8 @@
       </div>
       <button type="submit" class="btn-submit" id="submit-btn">Créer mon compte</button>
       <div class="error-message" id="error-message"></div>
-      <div class="success-message" id="success-message"></div>
     </form>
+    <div class="success-message" id="success-message"></div>
     <p class="login-link">Déjà un compte ? <a href="/login.html">Se connecter</a></p>
   </div>
 </div>
@@ -284,11 +291,10 @@
       return;
     }
 
-    form.reset();
-    successMessage.textContent = 'Vérifiez votre email pour confirmer votre compte.';
-    successMessage.classList.add('visible');
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Créer mon compte';
+    form.style.display = 'none';
+    document.querySelector('.login-link').style.display = 'none';
+    successMessage.textContent = '✅ Un email de confirmation a été envoyé à ' + email + '. Cliquez sur le lien qu\'il contient pour activer votre compte.';
+    successMessage.classList.add('visible', 'confirm-sent');
   });
 </script>
 
