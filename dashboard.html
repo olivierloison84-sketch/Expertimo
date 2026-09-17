@@ -263,6 +263,7 @@
 (function () {
   const subscribeBtn = document.getElementById('subscribe-btn');
   const errorMessage = document.getElementById('error-message');
+  let subscriptionActive = false;
 
   function capitalizeName(s){ return (s||'').trim().split(/\s+/).map(w => w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join(' '); }
 
@@ -272,10 +273,28 @@
     document.getElementById('user-name').textContent = fullName || (session && session.user && session.user.email) || '';
   }
 
+  async function checkSubscription(session) {
+    try {
+      const { data, error } = await window.privencyAuth
+        .from('agents')
+        .select('subscription_status')
+        .eq('id', session.user.id)
+        .single();
+      subscriptionActive = !error && !!data && data.subscription_status === 'active';
+    } catch (e) {
+      subscriptionActive = false;
+    }
+    subscribeBtn.textContent = subscriptionActive ? 'Gérer mon abonnement' : 'Activer mon abonnement';
+  }
+
   if (window.privencySession) {
     showUser(window.privencySession);
+    checkSubscription(window.privencySession);
   } else {
-    document.addEventListener('privency:session', (e) => showUser(e.detail));
+    document.addEventListener('privency:session', (e) => {
+      showUser(e.detail);
+      checkSubscription(e.detail);
+    });
   }
 
   subscribeBtn.addEventListener('click', async () => {
@@ -285,22 +304,24 @@
     errorMessage.classList.remove('visible');
     errorMessage.textContent = '';
     subscribeBtn.disabled = true;
-    subscribeBtn.textContent = 'Redirection vers le paiement…';
+    subscribeBtn.textContent = subscriptionActive ? 'Redirection vers la gestion de l’abonnement…' : 'Redirection vers le paiement…';
 
     try {
-      const response = await fetch(PRIVENCY_API_BASE + '/api/create-checkout', {
+      const endpoint = subscriptionActive ? '/api/create-portal-session' : '/api/create-checkout';
+      const body = subscriptionActive
+        ? { user_id: session.user.id }
+        : { user_id: session.user.id, email: session.user.email };
+
+      const response = await fetch(PRIVENCY_API_BASE + endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_id: session.user.id,
-          email: session.user.email
-        })
+        body: JSON.stringify(body)
       });
 
       const data = await response.json();
 
       if (!response.ok || !data.url) {
-        throw new Error(data.error || 'Impossible de créer la session de paiement.');
+        throw new Error(data.error || 'Impossible de créer la session.');
       }
 
       window.location.href = data.url;
@@ -308,7 +329,7 @@
       errorMessage.textContent = err.message || 'Une erreur est survenue. Veuillez réessayer.';
       errorMessage.classList.add('visible');
       subscribeBtn.disabled = false;
-      subscribeBtn.textContent = 'Activer mon abonnement';
+      subscribeBtn.textContent = subscriptionActive ? 'Gérer mon abonnement' : 'Activer mon abonnement';
     }
   });
 
