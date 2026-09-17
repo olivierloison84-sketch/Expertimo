@@ -648,6 +648,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
     btn.textContent = 'Déconnexion';
     btn.style.cssText = 'position:fixed;top:80px;right:12px;z-index:10000;background:var(--primary);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
     btn.addEventListener('click', async () => {
+      localStorage.removeItem('_agent_profile');
+      localStorage.removeItem('_draft_bien');
+      localStorage.removeItem('privency_draft');
+      localStorage.removeItem('privency_last_fiche');
       await authClient.auth.signOut();
       window.location.replace('/login.html');
     });
@@ -1598,7 +1602,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div id="step3-status-pub" style="margin-bottom:8px;"></div>
       <button class="btn btn-primary btn-lg" id="gh-push-btn"
               onclick="pushToGitHub()">
-        📤 Publier sur GitHub Pages
+        📤 Cliquer pour publier
       </button>
       <div id="gh-push-status"
            style="margin-top:12px;font-size:13px;line-height:1.6;"></div>
@@ -1790,8 +1794,8 @@ function showWelcomeScreen() {
     +   '<div style="font-size:14px;color:#c7ccd3;margin-bottom:22px;">'
     +     'Votre espace personnalisé est prêt</div>'
     +   '<div style="text-align:left;background:rgba(184,146,58,.08);border-radius:8px;padding:12px 16px;margin-bottom:26px;">'
-    +     checklistItem('Profil agence configuré')
-    +     checklistItem('Facture réglée')
+    +     checklistItem('Abonnement activé')
+    +     checklistItem('Facture envoyée par email')
     +     checklistItem('Prête à créer sa première fiche')
     +   '</div>'
     +   '<button type="button" id="welcome-cta-btn" style="width:100%;background:var(--accent);'
@@ -1889,16 +1893,16 @@ function showOnboardingOverlay() {
     + 'background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;'
     + 'z-index:10001;padding:20px;';
   overlay.innerHTML =
-    '<div style="position:relative;max-width:420px;width:100%;background:#141414;'
-    + 'border:1px solid rgba(184,146,58,.35);border-radius:12px;padding:36px 28px 28px;'
+    '<div style="position:relative;max-width:560px;width:100%;background:#141414;'
+    + 'border:1px solid rgba(184,146,58,.35);border-radius:12px;padding:44px 36px 32px;'
     + 'color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:inherit;">'
     +   '<button type="button" id="onboarding-skip-btn" style="position:absolute;top:12px;right:14px;'
     +     'background:none;border:none;color:#8a7550;font-size:12px;cursor:pointer;font-family:inherit;">'
     +     'Passer</button>'
-    +   '<div id="onboarding-icon" style="font-size:44px;text-align:center;margin-bottom:14px;"></div>'
-    +   '<div id="onboarding-title" style="font-size:18px;font-weight:700;text-align:center;'
+    +   '<div id="onboarding-icon" style="font-size:64px;text-align:center;margin-bottom:14px;"></div>'
+    +   '<div id="onboarding-title" style="font-size:22px;font-weight:700;text-align:center;'
     +     'color:#fff;margin-bottom:10px;"></div>'
-    +   '<div id="onboarding-text" style="font-size:13px;line-height:1.6;text-align:center;'
+    +   '<div id="onboarding-text" style="font-size:15px;line-height:1.7;text-align:center;'
     +     'color:#c7ccd3;margin-bottom:22px;"></div>'
     +   '<div id="onboarding-dots" style="display:flex;justify-content:center;gap:8px;margin-bottom:24px;"></div>'
     +   '<div style="display:flex;justify-content:space-between;gap:10px;">'
@@ -2213,6 +2217,7 @@ async function loadProfile() {
             // sans profil. Ne PAS retomber sur localStorage, qui n'est pas
             // lié à un utilisateur précis et pourrait contenir le profil
             // d'un autre agent ayant utilisé ce même navigateur.
+            localStorage.removeItem('_agent_profile');
             return null;
           }
           var profile = {
@@ -2246,11 +2251,13 @@ async function loadProfile() {
   return loadProfileSync();
 }
 
+function capitalizeName(s){ return (s||'').trim().split(/\s+/).map(w => w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join(' '); }
+
 function applyProfile(p) {
   if (!p) return;
   function sv(id, v) { var e = document.getElementById(id); if (e) e.value = v || ''; }
-  sv('agent-prenom',    p.prenom);
-  sv('agent-nom',       p.nom);
+  sv('agent-prenom',    capitalizeName(p.prenom));
+  sv('agent-nom',       capitalizeName(p.nom));
   sv('agent-reseau',    p.reseau);
   sv('agent-tel',       p.tel);
   sv('agent-email',     p.email);
@@ -4144,8 +4151,8 @@ async function pushToGitHub() {
       linkArea.innerHTML =
         block('URL de la fiche publiée', pageUrl, 'gh-page-url')
         + '<div style="font-size:12px;color:var(--muted);">'
-        + '⏳ La fiche est en ligne, mais GitHub Pages peut prendre 1 à 2 minutes pour la rendre '
-        + 'accessible. Si "Ouvrir la fiche" affiche une erreur au premier essai, réessayez dans '
+        + '⏳ La fiche est en ligne, mais la publication peut prendre 1 à 2 minutes pour être '
+        + 'accessible partout. Si "Ouvrir la fiche" affiche une erreur au premier essai, réessayez dans '
         + 'un instant.'
         + '</div>';
       _stepsComplete[4] = true;
