@@ -2830,7 +2830,23 @@ function injectData(html, d, dEn) {
   html = replaceSp(html, '_sp_pf3',      d.fort3 || '');
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
-  // _sp_agent and _sp_tel are fixed agent config — intentionally left as-is in template.
+  // _sp_agent / _sp_tel drive both the chatbot context and the offer-confirmation
+  // messages in the template — only override if the agent filled their profile.
+  if (d.agentNom) html = replaceSp(html, '_sp_agent', d.agentNom);
+  if (d.agentTel) html = replaceSp(html, '_sp_tel',   d.agentTel);
+
+  // Footer "Analyse réalisée par ..." (FR/EN) — same rule: keep the template's
+  // default contact when the agent profile doesn't have one.
+  if (d.agentNom || d.agentEmail) {
+    var footerName = d.agentNom || 'Olivier Loison';
+    var footerEmail = d.agentEmail || 'olivier.loison@expertimo.com';
+    html = srep(html,
+      'Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com',
+      'Analyse réalisée par ' + footerName + ' · Mandataire Expertimo · ' + footerEmail);
+    html = srep(html,
+      'Analysis by Olivier Loison · Expertimo Agent · olivier.loison@expertimo.com',
+      'Analysis by ' + footerName + ' · Expertimo Agent · ' + footerEmail);
+  }
 
   // ── EN variants of chatbot vars (single-file bilingual fiche) ──
   if (dEn) {
@@ -2928,6 +2944,48 @@ function injectData(html, d, dEn) {
     if (d.score) hScoreEl.textContent = d.score.toString().replace('.', ',') + '/10';
     else hScoreEl.style.display = 'none';
   }
+
+  // ── Contact agent (coordonnées de l'agence qui publie la fiche) ──
+  // Ne touche à rien si l'agent n'a pas renseigné l'info — le template garde
+  // alors ses valeurs par défaut plutôt que d'afficher un trou.
+  var agentInitials = d.agentNom ? (function(nom) {
+    var parts = String(nom).trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return '';
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return (parts[0][0] || '').toUpperCase() + (parts[parts.length - 1][0] || '').toUpperCase();
+  })(d.agentNom) : '';
+  var agentTelHref = d.agentTel ? (function(tel) {
+    var digits = String(tel).replace(/[^\d+]/g, '');
+    if (digits.charAt(0) === '+') return digits;
+    if (digits.charAt(0) === '0') return '+33' + digits.substring(1);
+    return '+33' + digits;
+  })(d.agentTel) : '';
+  qa('.cons-card').forEach(function(card) {
+    if (d.agentNom) {
+      var nameEl = card.querySelector('.cons-name');
+      if (nameEl) nameEl.textContent = d.agentNom;
+      var avatarEl = card.querySelector('.cons-avatar');
+      if (avatarEl && agentInitials) avatarEl.textContent = agentInitials;
+    }
+    if (d.agentTel) {
+      var telEl = card.querySelector('.cons-contact a[href^="tel:"]');
+      if (telEl) {
+        telEl.setAttribute('href', 'tel:' + agentTelHref);
+        telEl.textContent = '📞 ' + d.agentTel;
+      }
+    }
+    if (d.agentEmail) {
+      var mailEl = card.querySelector('.cons-contact a[href^="mailto:"]');
+      if (mailEl) {
+        mailEl.setAttribute('href', 'mailto:' + d.agentEmail);
+        mailEl.textContent = '✉️ ' + d.agentEmail;
+      }
+    }
+    if (d.agentRdvUrl) {
+      var rdvEl = card.querySelector('.btn-rdv');
+      if (rdvEl) rdvEl.setAttribute('href', d.agentRdvUrl);
+    }
+  });
 
   // ── Tab : Le Bien ──
   var piecesLabel = d.pieces ? d.pieces + ' pièce' + (parseInt(d.pieces) > 1 ? 's' : '') : '';
