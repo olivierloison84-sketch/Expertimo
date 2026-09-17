@@ -1180,14 +1180,14 @@ function submitOffer() {
     if (r.ok) {
       el.style.display = 'block';
       el.innerHTML = isEn
-        ? ('<p>✅ Your offer of <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> has been submitted. Olivier LOISON will contact you within 24h.</p>')
-        : ('<p>✅ Votre offre de <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> a été transmise. Olivier LOISON vous contactera dans les 24h.</p>');
+        ? ('<p>✅ Your offer of <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> has been submitted. ' + _sp_agent + ' will contact you within 24h.</p>')
+        : ('<p>✅ Votre offre de <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> a été transmise. ' + _sp_agent + ' vous contactera dans les 24h.</p>');
       el.scrollIntoView({behavior: 'smooth', block: 'center'});
     } else {
-      alert(isEn ? "Error sending your request. Please contact Olivier LOISON directly at 06 85 68 46 13." : "Erreur lors de l’envoi. Contactez directement Olivier LOISON au 06 85 68 46 13.");
+      alert(isEn ? ('Error sending your request. Please contact ' + _sp_agent + ' directly at ' + _sp_tel + '.') : ('Erreur lors de l’envoi. Contactez directement ' + _sp_agent + ' au ' + _sp_tel + '.'));
     }
   }).catch(function() {
-    alert(isEn ? "Network error. Please contact Olivier LOISON directly at 06 85 68 46 13." : "Erreur réseau. Contactez directement Olivier LOISON au 06 85 68 46 13.");
+    alert(isEn ? ('Network error. Please contact ' + _sp_agent + ' directly at ' + _sp_tel + '.') : ('Erreur réseau. Contactez directement ' + _sp_agent + ' au ' + _sp_tel + '.'));
   });
 }
 
