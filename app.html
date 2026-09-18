@@ -2835,17 +2835,29 @@ function injectData(html, d, dEn) {
   if (d.agentNom) html = replaceSp(html, '_sp_agent', d.agentNom);
   if (d.agentTel) html = replaceSp(html, '_sp_tel',   d.agentTel);
 
+  // Badge d'en-tête et rôle sous le nom de l'agent — présents une fois dans le
+  // HTML statique et une fois dans I18N_STATIC (FR + EN) : un srep global couvre
+  // les deux. Ne remplace que si l'agent a renseigné son réseau, sinon on garde
+  // "Expertimo" tel qu'écrit dans le template.
+  if (d.agentReseau) {
+    html = srep(html, 'Espace Acheteur Privé · Expertimo', 'Espace Acheteur Privé · ' + d.agentReseau);
+    html = srep(html, 'Private Buyer Portal · Expertimo', 'Private Buyer Portal · ' + d.agentReseau);
+    html = srep(html, 'Mandataire immobilier · Expertimo', 'Mandataire immobilier · ' + d.agentReseau);
+    html = srep(html, 'Real Estate Agent · Expertimo', 'Real Estate Agent · ' + d.agentReseau);
+  }
+
   // Footer "Analyse réalisée par ..." (FR/EN) — same rule: keep the template's
   // default contact when the agent profile doesn't have one.
-  if (d.agentNom || d.agentEmail) {
+  if (d.agentNom || d.agentEmail || d.agentReseau) {
     var footerName = d.agentNom || 'Olivier Loison';
     var footerEmail = d.agentEmail || 'olivier.loison@expertimo.com';
+    var footerReseau = d.agentReseau || 'Expertimo';
     html = srep(html,
       'Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com',
-      'Analyse réalisée par ' + footerName + ' · Mandataire Expertimo · ' + footerEmail);
+      'Analyse réalisée par ' + footerName + ' · Mandataire ' + footerReseau + ' · ' + footerEmail);
     html = srep(html,
       'Analysis by Olivier Loison · Expertimo Agent · olivier.loison@expertimo.com',
-      'Analysis by ' + footerName + ' · Expertimo Agent · ' + footerEmail);
+      'Analysis by ' + footerName + ' · ' + footerReseau + ' Agent · ' + footerEmail);
   }
 
   // ── EN variants of chatbot vars (single-file bilingual fiche) ──
@@ -2907,7 +2919,12 @@ function injectData(html, d, dEn) {
 
   // ── Header ──
   var badge = q('.hbadge');
-  if (badge) badge.textContent = 'Espace Acheteur Privé · Expertimo';
+  if (badge) badge.textContent = 'Espace Acheteur Privé · ' + (d.agentReseau || 'Expertimo');
+
+  // Grand mot "Expertimo" en bas du footer — ni classe ni data-i18n, donc pas
+  // couvert par un srep global (trop risqué sur un mot aussi générique).
+  var brandEl = q('footer > div:first-child');
+  if (d.agentReseau && brandEl) brandEl.textContent = d.agentReseau;
 
   // ── Message de bienvenue personnalisé (si prénom acheteur renseigné) ──
   var welcomeEl = q('#welcome-msg');
@@ -2984,6 +3001,9 @@ function injectData(html, d, dEn) {
     if (d.agentRdvUrl) {
       var rdvEl = card.querySelector('.btn-rdv');
       if (rdvEl) rdvEl.setAttribute('href', d.agentRdvUrl);
+    } else {
+      var rdvElHide = card.querySelector('.btn-rdv');
+      if (rdvElHide) rdvElHide.style.display = 'none';
     }
   });
 
@@ -3878,6 +3898,7 @@ function collectBienData() {
     agentEmail: agent.email||'',
     agentRdvUrl:agent.rdv_url||'',
     agentSiteUrl:agent.site_url||'',
+    agentReseau: agent.reseau || '',
     agentPrimary: agent.primary || '#141414',
     agentAccent:  agent.accent  || '#b8923a',
     agentPhoto:   agent.photo_url || '',
