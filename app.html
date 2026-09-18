@@ -743,7 +743,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
         </div>
         <div class="form-group">
           <label>Réseau / Enseigne</label>
-          <input type="text" id="agent-reseau" placeholder="Expertimo" oninput="updateAgentPreview()">
+          <input type="text" id="agent-reseau" placeholder="Ex : Orpi, IAD, Century21…" oninput="updateAgentPreview()">
         </div>
         <div class="form-group">
           <label>Téléphone</label>
@@ -755,7 +755,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
         </div>
         <div class="form-group">
           <label>Secteur / Département</label>
-          <input type="text" id="agent-secteur" placeholder="Ex : Essonne · 91" oninput="updateAgentPreview()">
+          <input type="text" id="agent-secteur" placeholder="Ex : votre département" oninput="updateAgentPreview()">
         </div>
       </div>
 
@@ -792,7 +792,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div class="grid-2">
         <div class="form-group">
           <label>Numéro SIRET</label>
-          <input type="text" id="agent-siret" placeholder="501 159 404 00059" maxlength="20">
+          <input type="text" id="agent-siret" placeholder="123 456 789 00012" maxlength="20">
         </div>
         <div class="form-group" style="display:flex;align-items:flex-end;">
           <button type="button" class="btn btn-primary" style="width:100%;" id="siret-lookup-btn" onclick="lookupSiret()">🔍 Récupérer les infos via SIRET</button>
