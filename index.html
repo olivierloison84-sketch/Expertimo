@@ -1781,7 +1781,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     function restart() {
       clearInterval(timer);
       if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      timer = setInterval(function() { if (!paused && !lbOpen() && !document.hidden) go(cur + 1); }, 5000);
+      timer = setInterval(function() { if (!paused && !lbOpen() && !document.hidden) go(cur + 1); }, 3000);
     }
     g.addEventListener('mouseenter', function() { paused = true; });
     g.addEventListener('mouseleave', function() { paused = false; });
@@ -2263,6 +2263,31 @@ document.addEventListener('DOMContentLoaded', function() {
   window.addEventListener('load', function() { schedule(true); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function() { schedule(true); });
   schedule(true);
+})();
+</script>
+<script>
+// Défilement automatique des filtres de la carte interactive (appelle filterMap ; s'arrête au premier clic utilisateur)
+(function() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cats = ['transport', 'vert', 'commerce', 'ecole'];
+  var tab = document.getElementById('quartier');
+  var btns = document.querySelectorAll('.map-filter-btn');
+  if (!tab || btns.length < cats.length) return;
+  var i = 0, nextAt = 0, timer = 0;
+  function stop() { clearInterval(timer); }
+  Array.prototype.forEach.call(btns, function(b) { b.addEventListener('click', stop); });
+  function ready() {
+    var m = window._mapMarkers;
+    return !!(m && window._mapInstance && cats.some(function(c) { return (m[c] || []).length; }));
+  }
+  timer = setInterval(function() {
+    if (!tab.classList.contains('active') || document.hidden || !ready()) { nextAt = 0; return; }
+    var now = Date.now();
+    if (now < nextAt) return;
+    filterMap(cats[i % cats.length], btns[i % cats.length]);
+    i++;
+    nextAt = now + 3000;
+  }, 250);
 })();
 </script>
 </body>
