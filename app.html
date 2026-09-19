@@ -3736,7 +3736,25 @@ function loadDraftBien() {
   if (window._editMode) return;
   var raw=localStorage.getItem('_draft_bien');
   if (!raw) return;
-  try { restoreRawFormState(JSON.parse(raw)); } catch(e) {}
+  try {
+    var draft=JSON.parse(raw);
+    restoreRawFormState(draft);
+    showDraftRestoredBanner(draft.type);
+  } catch(e) {}
+}
+
+// Un brouillon résiduel (ex. fiche Terrain abandonnée) est restauré à l'ouverture de
+// /app.html sans ?new=1 : on l'affiche clairement, avec une sortie vers une fiche vierge.
+function showDraftRestoredBanner(type) {
+  if (document.getElementById('draft-restored-banner')) return;
+  var page = document.getElementById('page-2'); if (!page) return;
+  var label = type === 'maison' ? 'Maison' : type === 'terrain' ? 'Terrain' : 'Appartement';
+  var b = document.createElement('div');
+  b.id = 'draft-restored-banner';
+  b.style.cssText = 'background:#fff8e1;border:1px solid #f0d78c;border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:13px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;';
+  b.innerHTML = '<span>📝 Brouillon précédent restauré (type : <b>' + label + '</b>).</span>'
+    + '<a href="/app.html?new=1" style="font-weight:600;color:var(--accent);">Repartir d’une fiche vierge</a>';
+  page.insertBefore(b, page.firstChild);
 }
 
 function collectRawFormState() {
