@@ -1191,14 +1191,14 @@ function submitOffer() {
     if (r.ok) {
       el.style.display = 'block';
       el.innerHTML = isEn
-        ? ('<p>✅ Your offer of <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> has been submitted. ' + _sp_agent + ' will contact you within 24h.</p>')
-        : ('<p>✅ Votre offre de <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> a été transmise. ' + _sp_agent + ' vous contactera dans les 24h.</p>');
+        ? ('<p>✅ Your offer of <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> has been submitted. ' + (_sp_agent || 'Your agent') + ' will contact you within 24h.</p>')
+        : ('<p>✅ Votre offre de <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> a été transmise. ' + (_sp_agent || 'Votre conseiller') + ' vous contactera dans les 24h.</p>');
       el.scrollIntoView({behavior: 'smooth', block: 'center'});
     } else {
-      alert(isEn ? ('Error sending your request. Please contact ' + _sp_agent + ' directly at ' + _sp_tel + '.') : ('Erreur lors de l’envoi. Contactez directement ' + _sp_agent + ' au ' + _sp_tel + '.'));
+      alert(isEn ? ('Error sending your request. Please contact ' + (_sp_agent || 'your agent') + ' directly' + (_sp_tel ? ' at ' + _sp_tel : '') + '.') : ('Erreur lors de l’envoi. Contactez directement ' + (_sp_agent || 'votre conseiller') + (_sp_tel ? ' au ' + _sp_tel : '') + '.'));
     }
   }).catch(function() {
-    alert(isEn ? ('Network error. Please contact ' + _sp_agent + ' directly at ' + _sp_tel + '.') : ('Erreur réseau. Contactez directement ' + _sp_agent + ' au ' + _sp_tel + '.'));
+    alert(isEn ? ('Network error. Please contact ' + (_sp_agent || 'your agent') + ' directly' + (_sp_tel ? ' at ' + _sp_tel : '') + '.') : ('Erreur réseau. Contactez directement ' + (_sp_agent || 'votre conseiller') + (_sp_tel ? ' au ' + _sp_tel : '') + '.'));
   });
 }
 
@@ -1475,7 +1475,7 @@ var AI_I18N = {
         + "3) Le processus d'achat immobilier en France : étapes après acceptation d'offre (compromis de vente, délai de rétractation 10 jours, financement bancaire, délai obtention prêt 45-60 jours, acte authentique chez le notaire, délais typiques 3-4 mois). "
         + "Pour les questions sur le financement, oriente vers un courtier ou conseiller bancaire. "
         + "Pour les questions juridiques complexes, oriente vers un notaire. "
-        + "Agent : " + c.agent + " — " + c.tel + ". "
+        + (c.agent ? "Agent : " + c.agent + (c.tel ? " — " + c.tel : "") + ". " : "")
         + "Si une question sort complètement du domaine immobilier, réponds poliment que tu es spécialisé immobilier."
         + " STYLE DE RÉPONSE OBLIGATOIRE : "
         + "Réponds toujours en texte fluide et naturel, comme un conseiller immobilier bienveillant qui parle à son client. "
@@ -1507,7 +1507,7 @@ var AI_I18N = {
         + "3) The French home-buying process: steps after an offer is accepted (preliminary sale agreement, 10-day cooling-off period, bank financing, 45-60 day loan approval period, final deed signing at the notary, typical timeline of 3-4 months). "
         + "For financing questions, direct them to a broker or bank advisor. "
         + "For complex legal questions, direct them to a notary. "
-        + "Agent: " + c.agent + " — " + c.tel + ". "
+        + (c.agent ? "Agent: " + c.agent + (c.tel ? " — " + c.tel : "") + ". " : "")
         + "If a question is completely outside the real estate domain, politely reply that you specialize in real estate."
         + " MANDATORY RESPONSE STYLE: "
         + "Always reply in fluent, natural text, like a warm, helpful real estate advisor speaking to their client. "
