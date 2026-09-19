@@ -33,6 +33,9 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
+@keyframes welcomeIn{0%{opacity:0;transform:translateY(30px) scale(.9);}55%{opacity:1;transform:translateY(-4px) scale(1.02);}100%{opacity:1;transform:translateY(0) scale(1);}}
+#welcome-msg{animation:welcomeIn 1.5s cubic-bezier(.22,.61,.36,1) .2s both;}
+@media(prefers-reduced-motion:reduce){#welcome-msg{animation:none;}}
 :root{--bg:#FAF9F6;--card:#fff;--ink:#14171F;--gold:#C9A227;--gold2:#8F7015;--cream:#F3E9CC;--muted:#6E6A5C;--border:#E7E3D8;--vert:#2F7A4F;--rouge:#B23F3F;--dark:#14171F;--agent-primary:#14171F;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -345,7 +348,7 @@ html,body{overflow-x:hidden;}
   </div>
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
-      <div id="welcome-msg" style="display: block; font-family: &quot;Playfair Display&quot;, serif; font-style: italic; font-size: 32px; color: var(--gold); margin-bottom: 10px;" data-fr-val="Bonjour Carole  PASTOR, bienvenue dans votre espace privé acquéreur" data-en-val="Hello Carole  PASTOR, welcome to your private buyer portal">Bonjour Carole  PASTOR, bienvenue dans votre espace privé acquéreur</div>
+      <div id="welcome-msg" style="display: block; font-family: &quot;Playfair Display&quot;, serif; font-style: italic; font-size: 32px; color: var(--gold); margin-bottom: 10px;" data-fr-val="Bienvenue Carole PASTOR" data-en-val="Welcome Carole PASTOR">Bienvenue Carole PASTOR</div>
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
         <div class="hbadge" data-i18n="hbadge" style="margin-bottom:0;">Espace Acheteur Privé · Expertimo</div>
         <div id="lang-toggle" style="display:none;">

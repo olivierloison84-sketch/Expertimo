@@ -43,8 +43,8 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .header-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:flex-start;gap:48px;position:relative;z-index:2;}
 .hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(201,162,39,.35);border-radius:99px;background:rgba(201,162,39,.08);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
 /* Apparition douce du message de bienvenue (se joue quand JS le passe en display:block) */
-@keyframes welcomeIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
-#welcome-msg{animation:welcomeIn .9s cubic-bezier(.22,.61,.36,1) .15s both;}
+@keyframes welcomeIn{0%{opacity:0;transform:translateY(30px) scale(.9);}55%{opacity:1;transform:translateY(-4px) scale(1.02);}100%{opacity:1;transform:translateY(0) scale(1);}}
+#welcome-msg{animation:welcomeIn 1.5s cubic-bezier(.22,.61,.36,1) .2s both;}
 @media(prefers-reduced-motion:reduce){#welcome-msg{animation:none;}}
 .hbadge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
