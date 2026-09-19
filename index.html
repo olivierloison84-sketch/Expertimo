@@ -130,8 +130,13 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
   .rail-dot{font-size:14px;width:28px;height:28px;}
 }
 .tab{display:none;}
-.tab.active{display:block;animation:fadeIn .3s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.tab.active{display:block;animation:tabFade .15s ease;}
+@keyframes tabFade{from{opacity:0}to{opacity:1}}
+/* Indicateur doré qui glisse vers l'onglet actif de la nav */
+.rail-ind{position:absolute;left:0;top:0;width:3px;height:0;border-radius:3px;background:var(--gold);pointer-events:none;opacity:0;transition:transform .35s cubic-bezier(.4,0,.2,1),height .35s cubic-bezier(.4,0,.2,1),opacity .2s;}
+.rail-ind.ready{opacity:1;}
+.rail-ind.instant{transition:none;}
+@media(prefers-reduced-motion:reduce){.tab.active{animation:none;}.rail-ind{transition:none;}}
 /* PAGE GRID */
 .pg{display:grid;grid-template-columns:1fr 290px;gap:22px;align-items:start;}
 /* CONSEILLER */
@@ -2225,6 +2230,40 @@ document.addEventListener('DOMContentLoaded', function() {
     if (toggle) { toggle.style.display = 'block'; applyLang('fr'); }
   }
 });
+</script>
+<script>
+// Indicateur doré glissant dans la nav (couche visuelle uniquement : suit le bouton .active posé par showTab)
+(function() {
+  var nav = document.getElementById('main-nav');
+  if (!nav) return;
+  var ind = document.createElement('span');
+  ind.className = 'rail-ind';
+  ind.setAttribute('aria-hidden', 'true');
+  nav.appendChild(ind);
+  var raf = 0, placed = false;
+  function place(instant) {
+    var b = nav.querySelector('button.active');
+    if (!b || !b.offsetHeight) return;
+    var h = Math.round(b.offsetHeight * 0.6);
+    var y = b.offsetTop + Math.round((b.offsetHeight - h) / 2);
+    if (instant || !placed) ind.classList.add('instant');
+    ind.style.height = h + 'px';
+    ind.style.transform = 'translateY(' + y + 'px)';
+    if (instant || !placed) { void ind.offsetWidth; ind.classList.remove('instant'); }
+    ind.classList.add('ready');
+    placed = true;
+  }
+  function schedule(instant) {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(function() { place(instant); });
+  }
+  new MutationObserver(function() { schedule(false); })
+    .observe(nav, {attributes: true, attributeFilter: ['class'], subtree: true});
+  window.addEventListener('resize', function() { schedule(true); });
+  window.addEventListener('load', function() { schedule(true); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function() { schedule(true); });
+  schedule(true);
+})();
 </script>
 </body>
 </html>
