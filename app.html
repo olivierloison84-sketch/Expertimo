@@ -5105,18 +5105,21 @@ async function modifierFiche(filename, sha, downloadUrl) {
     // 5. Inject values AFTER navigation, in a setTimeout so the DOM is fully settled
     setTimeout(function() {
       // Reset all step-2 fields (text values + checked states)
-      document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) {
+      // Radios/checkboxes exclus : leur .value est l'attribut value du bouton, pas une saisie.
+      document.querySelectorAll('#page-2 input:not([type=radio]):not([type=checkbox]), #page-2 select, #page-2 textarea').forEach(function(el) {
         el.value = '';
       });
       document.querySelectorAll('#page-2 input[type=radio], #page-2 input[type=checkbox]').forEach(function(el) {
         el.checked = false;
       });
 
-      injectBienData(data);
-
-      // 6. Release edit mode AFTER injection is complete
-      window._editMode = false;
-      showToast('✅ Fiche chargée — modifiez et régénérez.');
+      try {
+        injectBienData(data);
+        showToast('✅ Fiche chargée — modifiez et régénérez.');
+      } finally {
+        // 6. Release edit mode même si l'injection lève une exception
+        window._editMode = false;
+      }
     }, 500);
 
     // Second injection at 800ms to detect post-injection overwrites
