@@ -2544,6 +2544,9 @@ function addPieceRow() { var t=document.getElementById('pieces_tbody'); if(t) t.
 // STEP 2 — SWITCH TYPE
 // ═══════════════════════════════════════════════════════
 function switchType(type) {
+  // Valeur inconnue (ex. "appartement" renvoyé par un import) : repli sur Appartement
+  // plutôt qu'un état où aucune section propre au type n'est cohérente.
+  if (type !== 'appart' && type !== 'maison' && type !== 'terrain') type = 'appart';
   currentType = type;
   // Onglets actifs via data-type
   document.querySelectorAll('.type-tab').forEach(function(t) {
@@ -2562,6 +2565,9 @@ function switchType(type) {
   document.querySelectorAll('.appart-maison-only').forEach(function(el) {
     el.classList.toggle('hidden', type === 'terrain');
   });
+  // Changer d'onglet ne déclenche ni "input" ni "change" : sans ceci, le brouillon garde
+  // l'ancien type et le restaure au prochain goToStep(2) (cf. loadDraftBien).
+  if (_step2Inited) scheduleDraftSave();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -2895,6 +2901,8 @@ function injectData(html, d, dEn) {
   // Price string in JS parseFloat calls: parseFloat("260 000"...)
   html = srep(html, '"260 000"', '"' + prixFmt + '"');
   html = srep(html, "'260 000'", "'" + prixFmt + "'");
+  // Payload du formulaire d'offre (prix_affiche: "260 000 €") — le symbole € fait partie de la chaîne
+  html = srep(html, '"260 000 €"', '"' + prixFmt + ' €"');
 
   // Charges in calcBudget: parseFloat("253")
   if (chargesCopro > 0) {
@@ -3512,8 +3520,15 @@ function getDVFEditRows() {
 // ═══════════════════════════════════════════════════════
 // STEP 2 — CREDIT
 // ═══════════════════════════════════════════════════════
+// Valeur du champ correspondant au type de bien sélectionné : Terrain a ses propres
+// champs (…_t), Appartement/Maison partagent les champs de base. Un champ masqué
+// resté rempli après un changement de type ne doit jamais l'emporter.
+function getByType(baseId, terrainId) {
+  return getV(currentType === 'terrain' ? terrainId : baseId);
+}
+
 function calcCreditStep2() {
-  var prix=parseFloat(getV('prix_vente')||getV('prix_vente_t'))||0;
+  var prix=parseFloat(getByType('prix_vente','prix_vente_t'))||0;
   var el=document.getElementById('credit-preview-step2');
   if (!prix||!el){if(el)el.style.display='none';return;}
   var duree=parseInt(getV('bien_credit_duree'))||20, apport=parseFloat(getV('bien_credit_apport'))||10;
@@ -3716,6 +3731,9 @@ function saveDraftBien() {
 }
 
 function loadDraftBien() {
+  // En édition d'une fiche publiée, l'état vient de la fiche (injectBienData) : un brouillon
+  // ne doit jamais le recouvrir, ni changer le type de bien (et donc les sections visibles).
+  if (window._editMode) return;
   var raw=localStorage.getItem('_draft_bien');
   if (!raw) return;
   try { restoreRawFormState(JSON.parse(raw)); } catch(e) {}
@@ -3840,11 +3858,12 @@ function collectBienData() {
   var dpeBtn=document.querySelector('#page-2 .dpe-btn[data-group="dpe"].sel');
   var dpe=dpeBtn?dpeBtn.dataset.letter:'';
   var surface=parseFloat(getV('surface_hab'))||0, surfCarrez=parseFloat(getV('surface_carrez'))||0;
-  var prix=parseFloat(getV('prix_vente')||getV('prix_vente_t'))||0;
+  var prix=parseFloat(getByType('prix_vente','prix_vente_t'))||0;
   var prixm2=(surface&&prix)?Math.round(prix/surface):0;
-  var annee=getV('annee_construction')||getV('annee_construction_m')||'';
+  // Année : champ Appartement (annee_construction) ou Maison (annee_construction_m) ; pas de champ pour Terrain
+  var annee=currentType==='maison'?getV('annee_construction_m'):currentType==='appart'?getV('annee_construction'):'';
   var chargesCopro=parseFloat(getV('charges_copro'))||0;
-  var taxeFonciere=parseFloat(getV('taxe_fonciere')||getV('taxe_fonciere_t'))||0;
+  var taxeFonciere=parseFloat(getByType('taxe_fonciere','taxe_fonciere_t'))||0;
   var photo1=getV('bien_photo1_url')||(_photos[0]?_photos[0].dataUrl:'');
   var photo2=getV('bien_photo2_url')||(_photos[1]?_photos[1].dataUrl:'');
   var photo3=getV('bien_photo3_url')||(_photos[2]?_photos[2].dataUrl:'');
@@ -4692,7 +4711,9 @@ function injectBienData(data) {
   }
 
   // Switch to correct type
-  var type = data.type || 'appart';
+  // Sans type dans data : un import d'annonce garde le type déjà choisi par l'agent ;
+  // une fiche publiée ancienne (sans type) est rechargée en Appartement.
+  var type = data.type || (window._editMode ? 'appart' : currentType);
   switchType(type);
   document.querySelectorAll('.type-tab').forEach(function(t) { t.classList.remove('active'); });
   var typeTab = document.getElementById('tab-' + type);
@@ -5046,6 +5067,9 @@ async function modifierFiche(filename, sha, downloadUrl) {
 
     // 1. Activate edit mode BEFORE navigating so loadDraftBien() is blocked
     window._editMode = true;
+    // Un enregistrement de brouillon déjà programmé (frappe < 800 ms avant) réécrirait
+    // l'ancien formulaire, type de bien compris, par-dessus la fiche qu'on charge.
+    clearTimeout(_draftTimer);
 
     // 2. Clear draft so goToStep(2) doesn't restore stale localStorage data
     localStorage.removeItem('_draft_bien');
@@ -5081,18 +5105,21 @@ async function modifierFiche(filename, sha, downloadUrl) {
     // 5. Inject values AFTER navigation, in a setTimeout so the DOM is fully settled
     setTimeout(function() {
       // Reset all step-2 fields (text values + checked states)
-      document.querySelectorAll('#page-2 input, #page-2 select, #page-2 textarea').forEach(function(el) {
+      // Radios/checkboxes exclus : leur .value est l'attribut value du bouton, pas une saisie.
+      document.querySelectorAll('#page-2 input:not([type=radio]):not([type=checkbox]), #page-2 select, #page-2 textarea').forEach(function(el) {
         el.value = '';
       });
       document.querySelectorAll('#page-2 input[type=radio], #page-2 input[type=checkbox]').forEach(function(el) {
         el.checked = false;
       });
 
-      injectBienData(data);
-
-      // 6. Release edit mode AFTER injection is complete
-      window._editMode = false;
-      showToast('✅ Fiche chargée — modifiez et régénérez.');
+      try {
+        injectBienData(data);
+        showToast('✅ Fiche chargée — modifiez et régénérez.');
+      } finally {
+        // 6. Release edit mode même si l'injection lève une exception
+        window._editMode = false;
+      }
     }, 500);
 
     // Second injection at 800ms to detect post-injection overwrites
