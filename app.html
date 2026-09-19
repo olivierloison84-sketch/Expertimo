@@ -2831,9 +2831,10 @@ function injectData(html, d, dEn) {
   html = replaceSp(html, '_sp_vigi1',    d.vig1 || '');
   html = replaceSp(html, '_sp_vigi2',    d.vig2 || '');
   // _sp_agent / _sp_tel drive both the chatbot context and the offer-confirmation
-  // messages in the template — only override if the agent filled their profile.
-  if (d.agentNom) html = replaceSp(html, '_sp_agent', d.agentNom);
-  if (d.agentTel) html = replaceSp(html, '_sp_tel',   d.agentTel);
+  // messages in the template — toujours écrasés : vides si le profil est vide,
+  // jamais les coordonnées par défaut du template.
+  html = replaceSp(html, '_sp_agent', d.agentNom || '');
+  html = replaceSp(html, '_sp_tel',   d.agentTel || '');
 
   // Badge d'en-tête et rôle sous le nom de l'agent — présents une fois dans le
   // HTML statique et une fois dans I18N_STATIC (FR + EN) : un srep global couvre
@@ -2848,15 +2849,16 @@ function injectData(html, d, dEn) {
 
   // Footer "Analyse réalisée par ..." (FR/EN) — l'email n'apparaît que si l'agent
   // en a renseigné un : jamais d'adresse par défaut (celle du template est retirée).
-  var footerName = d.agentNom || 'Olivier Loison';
+  var footerNameFr = d.agentNom ? ' par ' + d.agentNom : '';
+  var footerNameEn = d.agentNom ? ' by ' + d.agentNom : '';
   var footerEmailSuffix = d.agentEmail ? ' · ' + d.agentEmail : '';
   var footerReseau = d.agentReseau || 'Expertimo';
   html = srep(html,
     'Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com',
-    'Analyse réalisée par ' + footerName + ' · Mandataire ' + footerReseau + footerEmailSuffix);
+    'Analyse réalisée' + footerNameFr + ' · Mandataire ' + footerReseau + footerEmailSuffix);
   html = srep(html,
     'Analysis by Olivier Loison · Expertimo Agent · olivier.loison@expertimo.com',
-    'Analysis by ' + footerName + ' · ' + footerReseau + ' Agent' + footerEmailSuffix);
+    'Analysis' + footerNameEn + ' · ' + footerReseau + ' Agent' + footerEmailSuffix);
 
   // ── EN variants of chatbot vars (single-file bilingual fiche) ──
   if (dEn) {
@@ -2976,17 +2978,23 @@ function injectData(html, d, dEn) {
     return '+33' + digits;
   })(d.agentTel) : '';
   qa('.cons-card').forEach(function(card) {
+    var nameEl = card.querySelector('.cons-name');
+    var avatarEl = card.querySelector('.cons-avatar');
     if (d.agentNom) {
-      var nameEl = card.querySelector('.cons-name');
       if (nameEl) nameEl.textContent = d.agentNom;
-      var avatarEl = card.querySelector('.cons-avatar');
       if (avatarEl && agentInitials) avatarEl.textContent = agentInitials;
+    } else {
+      // pas de nom au profil : on retire nom + initiales du template plutôt que d'afficher "OL / Olivier Loison"
+      if (nameEl) nameEl.remove();
+      if (avatarEl) avatarEl.remove();
     }
-    if (d.agentTel) {
-      var telEl = card.querySelector('.cons-contact a[href^="tel:"]');
-      if (telEl) {
+    var telEl = card.querySelector('.cons-contact a[href^="tel:"]');
+    if (telEl) {
+      if (d.agentTel) {
         telEl.setAttribute('href', 'tel:' + agentTelHref);
         telEl.textContent = '📞 ' + d.agentTel;
+      } else {
+        telEl.remove(); // pas de téléphone au profil : on masque le lien du template
       }
     }
     var mailEl = card.querySelector('.cons-contact a[href^="mailto:"]');
