@@ -1085,7 +1085,7 @@ function submitOffer() {
       message: msg,
       bien: "Centre Ville, Massy (91300)",
       reference: "ref-mandat",
-      prix_affiche: "260 000 €"
+      prix_affiche: "306 000 €"
     })
   }).then(function(r) {
     var el = document.getElementById('offer-success');
@@ -1486,16 +1486,20 @@ document.addEventListener('DOMContentLoaded', function(){
 <script>
 // Personnalisation par lien : ?prenom=Julien&nom=Dupont
 // Prioritaire sur le message injecté à la création de la fiche.
-document.addEventListener('DOMContentLoaded', function() {
+function renderWelcomeParam(lang) {
   var params = new URLSearchParams(window.location.search);
-  var prenom = params.get('prenom');
-  var nom = params.get('nom') || '';
+  var prenomRaw = params.get('prenom');
+  var nomRaw = params.get('nom') || '';
   var el = document.getElementById('welcome-msg');
-  if (prenom && el) {
-    el.textContent = 'Hello ' + prenom + (nom ? ' ' + nom : '') + ', welcome to your private buyer portal';
+  if (prenomRaw && el) {
+    var prenom = prenomRaw.trim().toLowerCase().replace(/(^|[\s-])\p{L}/gu, function(c) { return c.toUpperCase(); });
+    var nom = nomRaw.trim().toUpperCase();
+    var greeting = lang === 'en' ? 'Welcome' : 'Bienvenue';
+    el.textContent = greeting + ' ' + prenom + (nom ? ' ' + nom : '');
     el.style.display = 'block';
   }
-});
+}
+document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('en'); });
 </script>
 <script>setTimeout(function(){var b=document.getElementById('ai-proactive-bubble');if(b){b.style.display='block';setTimeout(function(){b.style.display='none';},6000);}},3000);</script>
 <script>(function() {

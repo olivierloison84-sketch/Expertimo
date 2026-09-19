@@ -1100,7 +1100,7 @@ function submitOffer() {
       message: msg,
       bien: "10 rue jean colin 91160 Longjumeau",
       reference: "ref-mandat",
-      prix_affiche: "260 000 €",
+      prix_affiche: "170 000 €",
       agentEmail: expData.agentEmail || '',
       agentNom: expData.agentNom || ''
     })
@@ -1616,13 +1616,14 @@ renderDpeInfo('fr');
 // Prioritaire sur le message injecté à la création de la fiche.
 function renderWelcomeParam(lang) {
   var params = new URLSearchParams(window.location.search);
-  var prenom = params.get('prenom');
-  var nom = params.get('nom') || '';
+  var prenomRaw = params.get('prenom');
+  var nomRaw = params.get('nom') || '';
   var el = document.getElementById('welcome-msg');
-  if (prenom && el) {
-    el.textContent = lang === 'en'
-      ? ('Hello ' + prenom + (nom ? ' ' + nom : '') + ', welcome to your private buyer portal')
-      : ('Bonjour ' + prenom + (nom ? ' ' + nom : '') + ', bienvenue dans votre espace privé acquéreur');
+  if (prenomRaw && el) {
+    var prenom = prenomRaw.trim().toLowerCase().replace(/(^|[\s-])\p{L}/gu, function(c) { return c.toUpperCase(); });
+    var nom = nomRaw.trim().toUpperCase();
+    var greeting = lang === 'en' ? 'Welcome' : 'Bienvenue';
+    el.textContent = greeting + ' ' + prenom + (nom ? ' ' + nom : '');
     el.style.display = 'block';
   }
 }
