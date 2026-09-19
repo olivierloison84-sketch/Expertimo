@@ -2930,10 +2930,12 @@ function injectData(html, d, dEn) {
   var welcomeEl = q('#welcome-msg');
   if (welcomeEl) {
     if (d.acheteur_prenom) {
-      var welcomeFr = 'Bonjour ' + d.acheteur_prenom + (d.acheteur_nom ? ' ' + d.acheteur_nom : '') + ', bienvenue dans votre espace privé acquéreur';
+      var wPrenom = String(d.acheteur_prenom).trim().toLowerCase().replace(/(^|[\s-])\p{L}/gu, function(c) { return c.toUpperCase(); });
+      var wNom = d.acheteur_nom ? String(d.acheteur_nom).trim().toUpperCase() : '';
+      var welcomeFr = 'Bienvenue ' + wPrenom + (wNom ? ' ' + wNom : '');
       welcomeEl.textContent = welcomeFr;
       welcomeEl.setAttribute('data-fr-val', welcomeFr);
-      if (dEn) welcomeEl.setAttribute('data-en-val', 'Hello ' + d.acheteur_prenom + (d.acheteur_nom ? ' ' + d.acheteur_nom : '') + ', welcome to your private buyer portal');
+      if (dEn) welcomeEl.setAttribute('data-en-val', 'Welcome ' + wPrenom + (wNom ? ' ' + wNom : ''));
       welcomeEl.style.display = 'block';
     } else {
       welcomeEl.style.display = 'none';
