@@ -3,7 +3,7 @@
 const fs = require('fs'), path = require('path');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const { netFetch, OUT } = require('./live-e2e.js');
-const file = process.argv[2] || path.join(OUT, 'TEST-fiche-ok.html');
+const file = process.argv.slice(2).find(a => !a.startsWith('--')) || path.join(OUT, 'TEST-fiche-ok.html');
 const Q = {
   fr: { taxe: 'Quelle est la taxe foncière ?', annee: "Quelle est l'année de construction ?", chauf: "Quelle est l'année d'installation du chauffage ?",
         vendeur: 'Qui est le vendeur ?', tel: 'Quel est son numéro de téléphone ?', raison: 'Pourquoi vend-il ?', marge: 'Quelle est la marge de négociation ?', min: 'Quel est le prix minimum ?', achat: 'À quel prix a-t-il acheté ?' },
@@ -48,10 +48,7 @@ async function main() {
       dom.window.close();
     }
   }
-  if (QUICK_ONLY()) { fs.writeFileSync(path.join(OUT, 'chat-results.json'), JSON.stringify(res, null, 1)); res.forEach(r => console.log('[' + r.lang + '] ' + r.q + '
-   → ' + r.a.replace(/
-/g, ' ') + '
-')); return; }
+  if (QUICK_ONLY()) { fs.writeFileSync(path.join(OUT, 'chat-results.json'), JSON.stringify(res, null, 1)); res.forEach(r => console.log('[' + r.lang + '] ' + r.q + '\n   → ' + r.a.split(String.fromCharCode(10)).join(' ') + '\n')); return; }
   // changement de langue en cours de conversation : FR -> PT -> ES dans la même session
   const { dom, w } = await session('fr'); w.toggleAI(); await new Promise(r => setTimeout(r, 300));
   res.push({ lang: 'fr→', q: Q.fr.taxe, a: await ask(w, Q.fr.taxe) });
