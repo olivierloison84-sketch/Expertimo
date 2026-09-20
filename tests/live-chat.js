@@ -29,22 +29,29 @@ async function ask(w, q, viaButton) {
   for (let i = 0; i < 90; i++) { await new Promise(r => setTimeout(r, 500)); const last = box.lastElementChild; if (box.children.length >= n + 2 && last.textContent !== '…') return last.textContent; }
   return '(pas de réponse)';
 }
+const QUICK_ONLY = () => process.argv.includes('--quick');
 async function main() {
   const res = [];
   for (const lang of ['fr', 'pt', 'es']) {
-    for (const batch of [['taxe', 'annee', 'chauf', 'SUGG'], ['vendeur', 'tel', 'raison', 'marge', 'min', 'achat']]) {
+    const QUICK = process.argv.includes('--quick');   // --quick : taxe, suggestion transports, 4 refus (vendeur, marge, prix minimum, prix d'achat)
+    const BATCHES = QUICK ? [['taxe', 'SUGG1'], ['vendeur', 'marge', 'min', 'achat']] : [['taxe', 'annee', 'chauf', 'SUGG'], ['vendeur', 'tel', 'raison', 'marge', 'min', 'achat']];
+    for (const batch of BATCHES) {
       const { dom, w } = await session(lang);
       w.toggleAI(); await new Promise(r => setTimeout(r, 300));
       if ((w._currentLang || '') !== lang) w.applyLang && w.applyLang(lang);
       for (const k of batch) {
-        if (k === 'SUGG') {
-          const sugg = [...w.document.querySelectorAll('#ai-suggestions button')].map(b => b.textContent);
+        if (k === 'SUGG' || k === 'SUGG1') {
+          let sugg = [...w.document.querySelectorAll('#ai-suggestions button')].map(b => b.textContent); if (k === 'SUGG1') sugg = sugg.slice(1, 2);
           for (const s of sugg) res.push({ lang, q: '[suggérée] ' + s, a: await ask(w, s, true) });
         } else res.push({ lang, q: Q[lang][k], a: await ask(w, Q[lang][k]) });
       }
       dom.window.close();
     }
   }
+  if (QUICK_ONLY()) { fs.writeFileSync(path.join(OUT, 'chat-results.json'), JSON.stringify(res, null, 1)); res.forEach(r => console.log('[' + r.lang + '] ' + r.q + '
+   → ' + r.a.replace(/
+/g, ' ') + '
+')); return; }
   // changement de langue en cours de conversation : FR -> PT -> ES dans la même session
   const { dom, w } = await session('fr'); w.toggleAI(); await new Promise(r => setTimeout(r, 300));
   res.push({ lang: 'fr→', q: Q.fr.taxe, a: await ask(w, Q.fr.taxe) });
