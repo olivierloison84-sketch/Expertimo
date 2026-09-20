@@ -2677,6 +2677,8 @@ function sendAI() {
   }).then(function(r){ return r.json(); })
   .then(function(data){
     var reply = (data.content && data.content[0] && data.content[0].text) || aiT('apiError', {msg: data.error && data.error.message ? data.error.message : JSON.stringify(data)}, lang);
+    // Le modèle glisse parfois du markdown malgré la consigne : la bulle affiche du texte brut (pas de ** ni de #)
+    reply = String(reply).replace(/\*+/g, '').replace(/^[ \t]*#{1,6}[ \t]+/gm, '');
     loadDiv.textContent = reply;
     _aiMessages.push({role:'assistant',content:reply});
   }).catch(function(err){
