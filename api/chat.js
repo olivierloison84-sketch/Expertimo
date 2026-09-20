@@ -49,7 +49,9 @@ module.exports = async function handler(req, res) {
   }
 
   // Plafonds de taille — limite le coût par appel côté API Anthropic
-  if (system && system.length > 3000) {
+  // 24 000 caractères : le prompt système embarque désormais le contexte complet du bien
+  // (fiche de saisie, commodités, ventes comparables) — cf. buildChatContext() dans app.html.
+  if (system && system.length > 24000) {
     return res.status(400).json({ error: 'system prompt too long' });
   }
   if (messages.length > 20) {
@@ -67,7 +69,7 @@ module.exports = async function handler(req, res) {
   try {
     const body = {
       model: 'claude-sonnet-4-5',
-      max_tokens: 300,
+      max_tokens: 600,
       messages
     };
     if (system) body.system = system;
