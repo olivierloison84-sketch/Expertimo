@@ -2934,6 +2934,37 @@ function pricePosL(lang, pm2, med) {
   return gm(lang, 'price-pos-in');
 }
 
+// ═══════════════════════════════════════════════════════
+// CONFIDENTIALITÉ — données publiques vs privées d'une fiche
+// ═══════════════════════════════════════════════════════
+// Champs de collectBienData() autorisés dans le bloc <script id="expertimo-data"> du HTML publié.
+// Tout champ absent de cette liste est PRIVÉ (dont ref, fourchetBasse/Haute et _rawState).
+var PUBLIC_EMBED_KEYS = [
+  'type','etage','adresse','quartier','acheteur_prenom','acheteur_nom','annee','description',
+  'surface','surfCarrez','pieces','dpe','prix','prixm2','mediane','tension','delai','loyer',
+  'chargesCopro','chargesDetail','taxeFonciere','score','scorePrest','scoreSecteur','scoreQP','scoreEtat',
+  'fort1','fort2','fort3','vig1','vig2','vig3','photo1','photo2','photo3','photo4','photo5',
+  'video1','video2','video3','dvf','creditDuree','creditApport','creditHaut','creditMoyen','creditBas',
+  'historiqueLibre','histVenteDate','diags','renovations',
+  'agentNom','agentTel','agentEmail','agentRdvUrl','agentSiteUrl','agentReseau','agentPrimary','agentAccent','agentPhoto'
+];
+function publicEmbedData(d) {
+  var out = {};
+  PUBLIC_EMBED_KEYS.forEach(function(k) { if (d && d[k] !== undefined) out[k] = d[k]; });
+  // Seules les photos du formulaire (contenu déjà visible dans la fiche) sont conservées ici.
+  var ph = d && d._rawState && d._rawState.photos;
+  if (ph) out._rawState = { photos: ph };
+  try { return JSON.parse(JSON.stringify(out)); } catch (e) { return {}; }
+}
+// Partie PRIVÉE d'une fiche : stockée dans Supabase (fiche_private, RLS = agent propriétaire uniquement).
+function privateFicheData(d) {
+  if (!d) return null;
+  var raw = {};
+  var rs = d._rawState || {};
+  Object.keys(rs).forEach(function(k) { if (k !== 'photos') raw[k] = rs[k]; });
+  return { ref: d.ref || '', fourchetBasse: d.fourchetBasse || 0, fourchetHaute: d.fourchetHaute || 0, _rawState: raw };
+}
+
 function injectData(html, d, dEn, dX) {
   dX = dX || {};   // {pt, es} : données traduites des autres langues (facultatif)
   var prixFmt = fmtNum(d.prix);                         // "260 000" — used for JS string matching
@@ -3035,7 +3066,9 @@ function injectData(html, d, dEn, dX) {
   }
 
   // Reference
-  html = srep(html, 'ex91-lg001', d.ref);
+  // La référence de mandat (ref_mandat) est privée : la fiche publiée utilise l'identifiant public (slug).
+  var pubRef = (typeof _lastGeneratedSlug === 'string' && _lastGeneratedSlug) ? _lastGeneratedSlug : slugify(d.adresse);
+  html = srep(html, 'ex91-lg001', pubRef);
 
   // Price string in JS parseFloat calls: parseFloat("260 000"...)
   html = srep(html, '"260 000"', '"' + prixFmt + '"');
@@ -3529,16 +3562,17 @@ function injectData(html, d, dEn, dX) {
 
   // Embed a machine-readable JSON block so modifierFiche() can fully restore the form.
   // Injected as a string (not DOM) so attribute order is always id-then-type.
-  var embedData = {};
-  try { embedData = JSON.parse(JSON.stringify(d)); } catch(e) { embedData = {}; }
+  // CONFIDENTIALITÉ : seuls les champs de PUBLIC_EMBED_KEYS partent dans le HTML publié (liste blanche).
+  // Le formulaire complet (_rawState : vendeur, notes, prix d'achat…), la référence de mandat et la
+  // fourchette de négociation sont conservés côté agent (table Supabase fiche_private), jamais ici.
+  var embedData = publicEmbedData(d);
   var dataTag = '<script id="expertimo-data" type="application/json">' + JSON.stringify(embedData) + '<\/script>';
 
   // Fiche bilingue à fichier unique : embarque les données EN pour que le bouton
   // FR|EN du template (applyLang) sache qu'il doit s'afficher.
   var dataTagEn = '';
   if (dEn) {
-    var embedDataEn = {};
-    try { embedDataEn = JSON.parse(JSON.stringify(dEn)); } catch(e) { embedDataEn = {}; }
+    var embedDataEn = publicEmbedData(dEn);
     dataTagEn = '<script id="expertimo-data-en" type="application/json">' + JSON.stringify(embedDataEn) + '<\/script>';
   }
 
@@ -4580,6 +4614,7 @@ function generatePreview() {
       try {
         var out = injectData(tmpl, d, dEn, dX);
         _lastGeneratedHTML = out;
+        window._lastPrivate = privateFicheData(d);   // partie privée : enregistrée côté agent à la publication
         var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
         _previewBlobUrlFR = URL.createObjectURL(blob);
         document.getElementById('preview-iframe').src = _previewBlobUrlFR;
@@ -4701,6 +4736,22 @@ async function pushToGitHub() {
     var session = sessionRes && sessionRes.data && sessionRes.data.session;
     if (!session || !session.access_token) throw new Error('Session expirée, reconnectez-vous.');
 
+    // Données privées (vendeur, notes, formulaire complet) : jamais dans le HTML publié, uniquement
+    // dans fiche_private (RLS : lisible par l'agent propriétaire seulement). Sert à « Modifier ».
+    var privWarn = '';
+    try {
+      if (window._lastPrivate && session.user) {
+        var pr = await window.privencyAuth.from('fiche_private').upsert({
+          agent_user_id: session.user.id, filename: frFilename,
+          data: window._lastPrivate, updated_at: new Date().toISOString()
+        }, { onConflict: 'agent_user_id,filename' });
+        if (pr.error) throw pr.error;
+      } else { privWarn = 'données privées non enregistrées'; }
+    } catch (perr) {
+      console.error('pushToGitHub: fiche_private', perr);
+      privWarn = 'sauvegarde des données privées échouée';
+    }
+
     var r = await fetch(PRIVENCY_API_BASE + '/api/fiche-publish', {
       method: 'POST',
       headers: {
@@ -4721,7 +4772,8 @@ async function pushToGitHub() {
 
     if (r.ok && resData.ok) {
       var pageUrl = resData.url || (_GH_PAGES_BASE + frFilename);
-      status.innerHTML = '✅ Publié avec succès !';
+      status.innerHTML = '✅ Publié avec succès !'
+        + (privWarn ? ' <span style="color:#b45309;">(⚠️ ' + privWarn + ' : « Modifier » ne restaurera pas tout le formulaire)</span>' : '');
       var linkArea = document.getElementById('gh-link-area');
       linkArea.style.display = 'block';
 
@@ -5547,6 +5599,25 @@ async function modifierFiche(filename, sha, downloadUrl) {
     var jsonMatch = html.match(/<script\b[^>]*\bid="expertimo-data"[^>]*>([\s\S]*?)<\/script>/i);
     if (jsonMatch) {
       try { data = JSON.parse(jsonMatch[1]); console.log('[modifierFiche] expertimo-data parsé :', data); } catch(e) {}
+    }
+
+    // 1b. Partie privée (formulaire complet, ref mandat, fourchette) : lue dans Supabase (RLS = propriétaire)
+    if (data) {
+      try {
+        var sessP = await window.privencyAuth.auth.getSession();
+        var uidP = sessP && sessP.data && sessP.data.session && sessP.data.session.user && sessP.data.session.user.id;
+        if (uidP) {
+          var pq = await window.privencyAuth.from('fiche_private').select('data')
+            .eq('agent_user_id', uidP).eq('filename', filename).maybeSingle();
+          var priv = pq && pq.data && pq.data.data;
+          if (priv) {
+            var mergedRaw = Object.assign({}, data._rawState || {}, priv._rawState || {});
+            Object.keys(priv).forEach(function(k) { if (k !== '_rawState') data[k] = priv[k]; });
+            data._rawState = mergedRaw;
+            console.log('[modifierFiche] données privées restaurées depuis fiche_private');
+          }
+        }
+      } catch (e) { console.warn('[modifierFiche] fiche_private illisible', e); }
     }
 
     // 2. Fallback: extract from old fiches (no expertimo-data block)

@@ -99,6 +99,7 @@ module.exports = async function handler(req, res) {
     if (getRes.status === 404) {
       // Déjà absent de GitHub — on nettoie quand même l'enregistrement.
       await supabaseAdmin.from('agent_fiches').delete().eq('filename', filename);
+      await supabaseAdmin.from('fiche_private').delete().eq('filename', filename);
       return res.status(200).json({ ok: true });
     }
     if (!getRes.ok) {
@@ -120,6 +121,7 @@ module.exports = async function handler(req, res) {
       return res.status(502).json({ error: errData.message || 'Erreur suppression GitHub' });
     }
 
+    await supabaseAdmin.from('fiche_private').delete().eq('filename', filename);
     const { error: delDbErr } = await supabaseAdmin.from('agent_fiches').delete().eq('filename', filename);
     if (delDbErr) {
       console.error('[api/fiche-delete] delete agent_fiches:', delDbErr);
