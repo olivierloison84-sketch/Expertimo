@@ -23,8 +23,22 @@ const TEXT_FIELDS = [
 // d'interface côté template (I18N dans index.html).
 const TARGET_LANGS = {
   en: { name: 'un anglais professionnel et immobilier', register: 'le registre d\'une agence de luxe' },
-  pt: { name: 'un portugais européen professionnel et immobilier', register: 'le registre d\'une agence de luxe, avec un ton formel (jamais de tutoiement)' },
-  es: { name: 'un espagnol professionnel et immobilier', register: 'le registre d\'une agence de luxe, avec un ton formel (usted, jamais de tutoiement)' }
+  pt: { name: 'un portugais européen professionnel et immobilier', register: 'le registre d\'une agence de luxe, avec un ton formel (jamais de tutoiement)',
+    glossary: [
+      'écris « dossier » (jamais « dossiê »), « e-mail » (avec trait d\'union), « projeto » (orthographe actuelle)',
+      '« compromis de vente » = « contrato-promessa de compra e venda » (jamais « promessa » seul)',
+      '« charges de copropriété » = « encargos de condomínio » ; « copropriété » = « condomínio »',
+      '« non meublé » = « não mobilado »',
+      '« cave » (local de rangement en sous-sol) = « arrecadação » ; garde « cave » seulement pour une cave à vin ; ne laisse jamais croire à un parking',
+      '« conseiller » = « consultor »'
+    ] },
+  es: { name: 'un espagnol professionnel et immobilier', register: 'le registre d\'une agence de luxe, avec un ton formel (usted, jamais de tutoiement)',
+    glossary: [
+      '« compromis de vente » = « promesa de compraventa »',
+      '« copropriété » = « comunidad de propietarios » ; « charges de copropriété » = « gastos de comunidad »',
+      '« conseiller » (agent) = toujours « asesor », jamais « agente » ni « consultor »',
+      '« cave » (local de rangement en sous-sol) = « trastero » ; « bodega » seulement pour une cave à vin ; ne laisse jamais croire à un parking'
+    ] }
 };
 
 function buildSystemPrompt(lang) {
@@ -51,7 +65,7 @@ function buildSystemPrompt(lang) {
   '- Un champ vide ("" ou absent) reste une chaîne vide dans la réponse — ne',
   '  l\'invente jamais.',
   '- Ne renvoie aucune clé supplémentaire, aucun commentaire, aucune explication.'
-  ].join('\n');
+  ].concat(L.glossary ? ['', 'Glossaire imposé (à appliquer strictement) :'].concat(L.glossary.map(function(g) { return '- ' + g; })) : []).join('\n');
 }
 
 function isBlank(v) {
