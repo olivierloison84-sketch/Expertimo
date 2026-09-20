@@ -19,9 +19,19 @@ const TEXT_FIELDS = [
   'vig1', 'vig2', 'vig3', 'historiqueLibre', 'tension', 'delai', 'description'
 ];
 
-const SYSTEM_PROMPT = [
+// Langues cibles supportées. Pour en ajouter une : une entrée ici + les traductions
+// d'interface côté template (I18N dans index.html).
+const TARGET_LANGS = {
+  en: { name: 'un anglais professionnel et immobilier', register: 'le registre d\'une agence de luxe' },
+  pt: { name: 'un portugais européen professionnel et immobilier', register: 'le registre d\'une agence de luxe, avec un ton formel (jamais de tutoiement)' },
+  es: { name: 'un espagnol professionnel et immobilier', register: 'le registre d\'une agence de luxe, avec un ton formel (usted, jamais de tutoiement)' }
+};
+
+function buildSystemPrompt(lang) {
+  const L = TARGET_LANGS[lang] || TARGET_LANGS.en;
+  return [
   'Tu traduis fidèlement des textes libres de fiches immobilières, du français vers',
-  'un anglais professionnel et immobilier, style agence de luxe (destiné à des',
+  L.name + ', style agence de luxe (destiné à des',
   'agences de luxe et des clients étrangers). Réponds UNIQUEMENT avec un objet JSON',
   'valide, sans texte autour, sans balises markdown ```, rien d\'autre que le JSON.',
   '',
@@ -35,14 +45,14 @@ const SYSTEM_PROMPT = [
   '"desc" respectivement.',
   '',
   'Règles strictes :',
-  '- Traduis fidèlement le sens, sans l\'enjoliver ni le résumer, dans un anglais',
-  '  immobilier professionnel (le registre d\'une agence de luxe).',
+  '- Traduis fidèlement le sens, sans l\'enjoliver ni le résumer, dans ' + L.name + ' (' + L.register + ').',
   '- Conserve tels quels les nombres, unités, montants et symboles (€, m², %, DPE,',
   '  dates) — ne les convertis pas et ne les traduis pas.',
   '- Un champ vide ("" ou absent) reste une chaîne vide dans la réponse — ne',
   '  l\'invente jamais.',
   '- Ne renvoie aucune clé supplémentaire, aucun commentaire, aucune explication.'
-].join('\n');
+  ].join('\n');
+}
 
 function isBlank(v) {
   return v === null || v === undefined || (typeof v === 'string' && !v.trim());
@@ -74,6 +84,7 @@ module.exports = async function handler(req, res) {
   }
 
   const input = req.body || {};
+  const lang = Object.prototype.hasOwnProperty.call(TARGET_LANGS, input.lang) ? input.lang : 'en';
 
   const payload = {};
   TEXT_FIELDS.forEach(function(f) { payload[f] = typeof input[f] === 'string' ? input[f] : ''; });
@@ -102,7 +113,7 @@ module.exports = async function handler(req, res) {
     const body = {
       model: 'claude-sonnet-4-5',
       max_tokens: 4000,
-      system: SYSTEM_PROMPT,
+      system: buildSystemPrompt(lang),
       messages: [
         { role: 'user', content: JSON.stringify(payload) }
       ]
