@@ -123,8 +123,27 @@ header {
   color: #fff; font-size: 11px; font-weight: 900;
 }
 .stepper > a {
-  margin-top: auto;
+  margin-top: 12px;
   border-radius: 10px;
+}
+/* Groupe « Outils commerciaux » : visuellement séparé, en bas du menu, juste avant « Nouvelle fiche » */
+.stepper-tools {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.stepper-tools-title {
+  padding: 0 12px 4px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: .8;
+  user-select: none;
 }
 
 /* ═══════════════════════════════════════
@@ -310,6 +329,11 @@ textarea { resize: vertical; min-height: 60px; }
   }
   .step-tab .step-label { display: none; }
   .step-tab.active { background: transparent; }
+  /* Groupe « Outils commerciaux » : en barre horizontale, l'onglet redevient un onglet comme les autres */
+  .stepper-tools { display: contents; }
+  .stepper-tools-title { display: none; }
+  /* Iframe Coaching Express : la barre est statique en haut, plus de colonne latérale */
+  #argu-frame { width: 100% !important; margin-left: 0 !important; height: calc(100vh - 72px - 46px) !important; height: calc(100dvh - 72px - 46px) !important; }
   /* Bouton Nouvelle fiche : compact, revient à droite de la barre horizontale */
   .stepper > a {
     margin-top: 0 !important;
@@ -704,6 +728,13 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="step-tab" id="tab-6" onclick="goToStep(6)">
     <span class="step-num" style="background:var(--muted);font-size:14px;">📂</span>
     <span class="step-label">Mes fiches</span>
+  </div>
+  <div class="stepper-tools" id="stepper-tools">
+    <div class="stepper-tools-title">Outils commerciaux</div>
+    <div class="step-tab" id="tab-7" onclick="goToStep(7)">
+      <span class="step-num" style="background:var(--muted);font-size:14px;">🎯</span>
+      <span class="step-label">Coaching Express</span>
+    </div>
   </div>
   <a href="/app.html?new=1" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;">✚ Nouvelle fiche</a>
 </nav>
@@ -1547,7 +1578,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div class="section-title">Aperçu de la fiche</div>
       <label style="display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:13px;cursor:pointer;">
         <input type="checkbox" id="chk-bilingue" style="width:16px;height:16px;">
-        🌍 Générer aussi une version anglaise (+ agences de luxe / clients étrangers)
+        🌍 Générer aussi les versions English · Português · Español (clients étrangers, réseaux internationaux)
       </label>
       <div id="step3-status" style="margin-bottom:8px;font-size:13px;"></div>
       <div style="margin-bottom:12px;display:flex;gap:10px;flex-wrap:wrap;">
@@ -1562,6 +1593,8 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div id="preview-lang-tabs" style="display:none;margin-bottom:10px;gap:8px;">
         <button type="button" class="btn btn-sm" id="preview-tab-fr" onclick="switchPreviewTab('fr')">🇫🇷 Français</button>
         <button type="button" class="btn btn-sm btn-outline" id="preview-tab-en" onclick="switchPreviewTab('en')">🇬🇧 English</button>
+        <button type="button" class="btn btn-sm btn-outline" id="preview-tab-pt" onclick="switchPreviewTab('pt')">🇵🇹 Português</button>
+        <button type="button" class="btn btn-sm btn-outline" id="preview-tab-es" onclick="switchPreviewTab('es')">🇪🇸 Español</button>
       </div>
       <iframe id="preview-iframe"
         style="width:100%;height:600px;border:1px solid var(--border);
@@ -1640,16 +1673,35 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <button id="analytics-purge-btn" class="btn btn-sm btn-danger" onclick="purgerStatsAnciennes()">🧹 Purger les statistiques de plus de...</button>
       </div>
       <div id="analytics-status" style="font-size:13px;color:var(--muted);margin-bottom:12px;">Chargement…</div>
-      <div id="analytics-table-wrap" style="display:none;overflow-x:auto;">
+
+      <div id="analytics-toolbar" style="display:none;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+        <label style="font-size:12px;color:var(--muted);">Période :</label>
+        <select id="analytics-period" onchange="renderAnalytics()" style="width:auto;">
+          <option value="all">Toutes (jusqu'aux plus anciennes)</option>
+          <option value="7">7 derniers jours</option>
+          <option value="30">30 derniers jours</option>
+          <option value="90">90 derniers jours</option>
+          <option value="older90">Plus anciennes que 90 jours</option>
+        </select>
+        <span id="analytics-count" style="font-size:12px;color:var(--muted);"></span>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <button class="btn btn-sm btn-outline" onclick="analyticsSelectAll(true)">Tout cocher</button>
+          <button class="btn btn-sm btn-outline" onclick="analyticsSelectAll(false)">Tout décocher</button>
+          <button class="btn btn-sm btn-danger" id="analytics-del-btn" onclick="deleteSelectedAnalytics()" disabled>🗑️ Supprimer la sélection</button>
+        </div>
+      </div>
+
+      <div id="analytics-table-wrap" style="display:none;overflow:auto;max-height:65vh;border:1px solid var(--border);border-radius:var(--radius);">
         <table id="analytics-table" style="width:100%;border-collapse:collapse;font-size:13px;">
           <thead>
             <tr style="background:var(--primary);color:#fff;">
-              <th style="padding:9px 12px;text-align:left;font-weight:600;">Client</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;">Bien</th>
-              <th style="padding:9px 12px;text-align:center;font-weight:600;">Nb vues</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;">Dernière activité</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;">Événements</th>
-              <th style="padding:9px 12px;text-align:center;font-weight:600;">Actions</th>
+              <th style="padding:9px 12px;width:34px;position:sticky;top:0;background:var(--primary);z-index:1;"></th>
+              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Client</th>
+              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Bien</th>
+              <th style="padding:9px 12px;text-align:center;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Nb vues</th>
+              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Dernière activité</th>
+              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Événements</th>
+              <th style="padding:9px 12px;width:44px;position:sticky;top:0;background:var(--primary);z-index:1;"></th>
             </tr>
           </thead>
           <tbody id="analytics-tbody"></tbody>
@@ -1701,6 +1753,14 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <button class="btn btn-outline" onclick="goToStep(4)">← Retour</button>
   </div>
 </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     PAGE 7 — COACHING EXPRESS (boîte à outils commerciale, chargée depuis /argumentaire.html)
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-7">
+  <iframe id="argu-frame" title="Coaching Express — boîte à outils commerciale" data-src="/argumentaire.html" loading="lazy"
+    style="display:block;border:0;width:calc(100% - 210px);margin-left:210px;height:calc(100vh - 72px);background:var(--light);"></iframe>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2031,7 +2091,7 @@ function goToStep(n) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + n).classList.add('active');
   // Update tabs
-  [1,2,3,4,5,6].forEach(function(i) {
+  [1,2,3,4,5,6,7].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
@@ -2043,11 +2103,16 @@ function goToStep(n) {
   if (n === 4) { refreshStep4Summary(); }
   if (n === 5) { loadAnalytics(); }
   if (n === 6) { loadFiches(); }
+  if (n === 7) { var af = document.getElementById('argu-frame'); if (af && !af.getAttribute('src')) af.setAttribute('src', af.getAttribute('data-src')); 
+    // Mobile : la barre d'étapes défile horizontalement, on amène l'onglet actif dans la zone visible
+    var t7 = document.getElementById('tab-7');
+    if (t7 && t7.scrollIntoView) { try { t7.scrollIntoView({inline: 'nearest', block: 'nearest'}); } catch (e) {} }
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateStepperTabs() {
-  [1,2,3,4,5,6].forEach(function(i) {
+  [1,2,3,4,5,6,7].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
@@ -2810,7 +2875,98 @@ function fetchComparablesDVF() {
 // ═══════════════════════════════════════
 // COPIED FROM generateur.html — mot pour mot
 // ═══════════════════════════════════════
-function injectData(html, d, dEn) {
+// Textes générés par fiche (data-<langue>-val) — mêmes formulations que le bloc I18N.msg du template.
+var GEN_MSG = {
+  "en": {
+    "welcome-buyer": "Welcome {name}",
+    "gallery-caption-one": "📷 Click on a photo to enlarge it · {n} photo available",
+    "gallery-caption-other": "📷 Click on a photo to enlarge it · {n} photos available",
+    "score-desc": "Score {score}/10{dpe}. {pos}.",
+    "score-dpe": ". DPE {dpe}",
+    "price-pos-above": "Price above the market",
+    "price-pos-below": "Price below the market",
+    "price-pos-in": "Price in line with the market",
+    "price-pos-tbc": "Price to be confirmed",
+    "rent-info": "Vacant property. Estimated rent: {loyer} € unfurnished. Simulate your returns below.",
+    "doc-charges-desc": "Annual statement · {n} €/month",
+    "doc-taxe-desc": "{n} € / year",
+    "offer-listed": "Listed price: {prix} €"
+  },
+  "pt": {
+    "welcome-buyer": "Bem-vindo(a) {name}",
+    "gallery-caption-one": "📷 Clique numa foto para a ampliar · {n} foto disponível",
+    "gallery-caption-other": "📷 Clique numa foto para a ampliar · {n} fotos disponíveis",
+    "score-desc": "Pontuação {score}/10{dpe}. {pos}.",
+    "score-dpe": ". DPE {dpe}",
+    "price-pos-above": "Preço acima do mercado",
+    "price-pos-below": "Preço abaixo do mercado",
+    "price-pos-in": "Preço em linha com o mercado",
+    "price-pos-tbc": "Preço a confirmar",
+    "rent-info": "Imóvel livre. Renda estimada: {loyer} € sem mobília. Simule abaixo a sua rentabilidade.",
+    "doc-charges-desc": "Extrato anual · {n} €/mês",
+    "doc-taxe-desc": "{n} € / ano",
+    "offer-listed": "Preço anunciado: {prix} €"
+  },
+  "es": {
+    "welcome-buyer": "Bienvenido/a {name}",
+    "gallery-caption-one": "📷 Haga clic en una foto para ampliarla · {n} foto disponible",
+    "gallery-caption-other": "📷 Haga clic en una foto para ampliarla · {n} fotos disponibles",
+    "score-desc": "Puntuación {score}/10{dpe}. {pos}.",
+    "score-dpe": ". DPE {dpe}",
+    "price-pos-above": "Precio por encima del mercado",
+    "price-pos-below": "Precio por debajo del mercado",
+    "price-pos-in": "Precio en línea con el mercado",
+    "price-pos-tbc": "Precio por confirmar",
+    "rent-info": "Inmueble libre. Alquiler estimado: {loyer} € sin amueblar. Simule a continuación su rentabilidad.",
+    "doc-charges-desc": "Extracto anual · {n} €/mes",
+    "doc-taxe-desc": "{n} € / año",
+    "offer-listed": "Precio anunciado: {prix} €"
+  }
+};
+function gm(lang, key, vars) {
+  var s = (GEN_MSG[lang] && GEN_MSG[lang][key]) || '';
+  return vars ? s.replace(/\{(\w+)\}/g, function(m, k) { return vars[k] != null ? vars[k] : m; }) : s;
+}
+function pricePosL(lang, pm2, med) {
+  if (!med || !pm2) return gm(lang, 'price-pos-tbc');
+  if (pm2 > med * 1.1) return gm(lang, 'price-pos-above');
+  if (pm2 < med * 0.9) return gm(lang, 'price-pos-below');
+  return gm(lang, 'price-pos-in');
+}
+
+// ═══════════════════════════════════════════════════════
+// CONFIDENTIALITÉ — données publiques vs privées d'une fiche
+// ═══════════════════════════════════════════════════════
+// Champs de collectBienData() autorisés dans le bloc <script id="expertimo-data"> du HTML publié.
+// Tout champ absent de cette liste est PRIVÉ (dont ref, fourchetBasse/Haute et _rawState).
+var PUBLIC_EMBED_KEYS = [
+  'type','etage','adresse','quartier','acheteur_prenom','acheteur_nom','annee','description',
+  'surface','surfCarrez','pieces','dpe','prix','prixm2','mediane','tension','delai','loyer',
+  'chargesCopro','chargesDetail','taxeFonciere','score','scorePrest','scoreSecteur','scoreQP','scoreEtat',
+  'fort1','fort2','fort3','vig1','vig2','vig3','photo1','photo2','photo3','photo4','photo5',
+  'video1','video2','video3','dvf','creditDuree','creditApport','creditHaut','creditMoyen','creditBas',
+  'historiqueLibre','histVenteDate','diags','renovations',
+  'agentNom','agentTel','agentEmail','agentRdvUrl','agentSiteUrl','agentReseau','agentPrimary','agentAccent','agentPhoto'
+];
+function publicEmbedData(d) {
+  var out = {};
+  PUBLIC_EMBED_KEYS.forEach(function(k) { if (d && d[k] !== undefined) out[k] = d[k]; });
+  // Seules les photos du formulaire (contenu déjà visible dans la fiche) sont conservées ici.
+  var ph = d && d._rawState && d._rawState.photos;
+  if (ph) out._rawState = { photos: ph };
+  try { return JSON.parse(JSON.stringify(out)); } catch (e) { return {}; }
+}
+// Partie PRIVÉE d'une fiche : stockée dans Supabase (fiche_private, RLS = agent propriétaire uniquement).
+function privateFicheData(d) {
+  if (!d) return null;
+  var raw = {};
+  var rs = d._rawState || {};
+  Object.keys(rs).forEach(function(k) { if (k !== 'photos') raw[k] = rs[k]; });
+  return { ref: d.ref || '', fourchetBasse: d.fourchetBasse || 0, fourchetHaute: d.fourchetHaute || 0, _rawState: raw };
+}
+
+function injectData(html, d, dEn, dX) {
+  dX = dX || {};   // {pt, es} : données traduites des autres langues (facultatif)
   var prixFmt = fmtNum(d.prix);                         // "260 000" — used for JS string matching
   var chargesCopro = Math.round(d.chargesCopro);
   var chargesAnnuelles = chargesCopro * 12 + Math.round(d.taxeFonciere);
@@ -2851,12 +3007,17 @@ function injectData(html, d, dEn) {
     html = srep(html, 'Private Buyer Portal · Expertimo', 'Private Buyer Portal · ' + d.agentReseau);
     html = srep(html, 'Mandataire immobilier · Expertimo', 'Mandataire immobilier · ' + d.agentReseau);
     html = srep(html, 'Real Estate Agent · Expertimo', 'Real Estate Agent · ' + d.agentReseau);
+    html = srep(html, 'Espaço Comprador Privado · Expertimo', 'Espaço Comprador Privado · ' + d.agentReseau);
+    html = srep(html, 'Consultor imobiliário · Expertimo', 'Consultor imobiliário · ' + d.agentReseau);
+    html = srep(html, 'Espacio Comprador Privado · Expertimo', 'Espacio Comprador Privado · ' + d.agentReseau);
+    html = srep(html, 'Agente inmobiliario · Expertimo', 'Agente inmobiliario · ' + d.agentReseau);
   }
 
   // Footer "Analyse réalisée par ..." (FR/EN) — l'email n'apparaît que si l'agent
   // en a renseigné un : jamais d'adresse par défaut (celle du template est retirée).
   var footerNameFr = d.agentNom ? ' par ' + d.agentNom : '';
   var footerNameEn = d.agentNom ? ' by ' + d.agentNom : '';
+  var footerNamePtEs = d.agentNom ? ' por ' + d.agentNom : '';
   var footerEmailSuffix = d.agentEmail ? ' · ' + d.agentEmail : '';
   var footerReseau = d.agentReseau || 'Expertimo';
   html = srep(html,
@@ -2865,6 +3026,12 @@ function injectData(html, d, dEn) {
   html = srep(html,
     'Analysis by Olivier Loison · Expertimo Agent · olivier.loison@expertimo.com',
     'Analysis' + footerNameEn + ' · ' + footerReseau + ' Agent' + footerEmailSuffix);
+  html = srep(html,
+    'Análise realizada por Olivier Loison · Consultor Expertimo · olivier.loison@expertimo.com',
+    'Análise realizada' + footerNamePtEs + ' · Consultor ' + footerReseau + footerEmailSuffix);
+  html = srep(html,
+    'Análisis realizado por Olivier Loison · Agente Expertimo · olivier.loison@expertimo.com',
+    'Análisis realizado' + footerNamePtEs + ' · Agente ' + footerReseau + footerEmailSuffix);
 
   // ── EN variants of chatbot vars (single-file bilingual fiche) ──
   if (dEn) {
@@ -2893,10 +3060,15 @@ function injectData(html, d, dEn) {
   if (_geoLat !== null && _geoLng !== null) {
     html = srep(html, 'var latFallback = parseFloat("") || 0;', 'var latFallback = ' + _geoLat + ';');
     html = srep(html, 'var lngFallback = parseFloat("") || 0;', 'var lngFallback = ' + _geoLng + ';');
+    // Même point pour les commodités que l'assistant IA transmet au chatbot
+    html = srep(html, 'var _fiche_lat = 0;', 'var _fiche_lat = ' + _geoLat + ';');
+    html = srep(html, 'var _fiche_lng = 0;', 'var _fiche_lng = ' + _geoLng + ';');
   }
 
   // Reference
-  html = srep(html, 'ex91-lg001', d.ref);
+  // La référence de mandat (ref_mandat) est privée : la fiche publiée utilise l'identifiant public (slug).
+  var pubRef = (typeof _lastGeneratedSlug === 'string' && _lastGeneratedSlug) ? _lastGeneratedSlug : slugify(d.adresse);
+  html = srep(html, 'ex91-lg001', pubRef);
 
   // Price string in JS parseFloat calls: parseFloat("260 000"...)
   html = srep(html, '"260 000"', '"' + prixFmt + '"');
@@ -2914,6 +3086,15 @@ function injectData(html, d, dEn) {
     html = html.split('id="agent-photo" src=""').join('id="agent-photo" src="' + d.agentPhoto + '"');
   }
 
+  // ── Contexte complet de l'assistant IA (liste blanche construite par buildChatContext) ──
+  // Injecté en dernier de la phase 1 : chaîne JS échappée via JSON, fonction de remplacement pour que
+  // les "$" du texte ne soient pas interprétés.
+  var chatCtx = (typeof window._chatCtx === 'string') ? window._chatCtx : '';
+  if (chatCtx) {
+    var chatCtxJs = JSON.stringify(chatCtx).replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+    html = html.replace('var _chat_ctx = "";', function() { return 'var _chat_ctx = ' + chatCtxJs + ';'; });
+  }
+
   // ── PHASE 2 : DOM manipulation ──
   var doc = new DOMParser().parseFromString(html, 'text/html');
 
@@ -2921,6 +3102,13 @@ function injectData(html, d, dEn) {
   function qa(sel) { return doc.querySelectorAll(sel); }
   function id(i)   { return doc.getElementById(i); }
   function setText(sel, txt) { var e = q(sel); if (e) e.textContent = txt; }
+  // Valeurs par langue d'un élément : data-en-val / data-pt-val / data-es-val (repli sur le français côté template)
+  function langVals(el, fn) {
+    if (!el) return;
+    [['en', dEn], ['pt', dX.pt], ['es', dX.es]].forEach(function(p) {
+      if (p[1]) el.setAttribute('data-' + p[0] + '-val', fn(p[0], p[1]));
+    });
+  }
 
   // ── Document ──
   doc.title = d.adresse + ' · Espace Acheteur Privé · Expertimo';
@@ -2943,7 +3131,7 @@ function injectData(html, d, dEn) {
       var welcomeFr = 'Bienvenue ' + wPrenom + (wNom ? ' ' + wNom : '');
       welcomeEl.textContent = welcomeFr;
       welcomeEl.setAttribute('data-fr-val', welcomeFr);
-      if (dEn) welcomeEl.setAttribute('data-en-val', 'Welcome ' + wPrenom + (wNom ? ' ' + wNom : ''));
+      langVals(welcomeEl, function(l) { return gm(l, 'welcome-buyer', {name: wPrenom + (wNom ? ' ' + wNom : '')}); });
       welcomeEl.style.display = 'block';
     } else {
       welcomeEl.style.display = 'none';
@@ -2953,13 +3141,14 @@ function injectData(html, d, dEn) {
   var htitle = q('.htitle');
   if (htitle) {
     htitle.innerHTML = esc(d.adresse) + '<br><span style="color:var(--gold);font-style:italic;" data-fr-val="' + esc(d.quartier) + '" data-en-val="' + esc(dEn ? dEn.quartier : d.quartier) + '">' + esc(d.quartier) + '</span>';
+    langVals(htitle.querySelector('span[data-fr-val]'), function(l, dl) { return dl.quartier || d.quartier; });
   }
 
   var hsub = q('.hsub');
   if (hsub) {
     hsub.textContent = d.description;
     hsub.setAttribute('data-fr-val', d.description || '');
-    if (dEn) hsub.setAttribute('data-en-val', dEn.description || '');
+    langVals(hsub, function(l, dl) { return dl.description || ''; });
   }
 
   var pamount = q('.pamount');
@@ -3034,7 +3223,7 @@ function injectData(html, d, dEn) {
   if (ssub) {
     ssub.textContent = d.description;
     ssub.setAttribute('data-fr-val', d.description || '');
-    if (dEn) ssub.setAttribute('data-en-val', dEn.description || '');
+    langVals(ssub, function(l, dl) { return dl.description || ''; });
   }
 
   // Gallery images (5 photos)
@@ -3053,10 +3242,9 @@ function injectData(html, d, dEn) {
   if (galleryEl && galleryEl.nextElementSibling) {
     var nPh = photoList.filter(Boolean).length;
     var captionFr = "📷 Cliquez sur une photo pour l'agrandir · " + nPh + " photo" + (nPh > 1 ? 's' : '') + " disponible" + (nPh > 1 ? 's' : '');
-    var captionEn = "📷 Click on a photo to enlarge it · " + nPh + " photo" + (nPh > 1 ? 's' : '') + " available";
     galleryEl.nextElementSibling.textContent = captionFr;
     galleryEl.nextElementSibling.setAttribute('data-fr-val', captionFr);
-    if (dEn) galleryEl.nextElementSibling.setAttribute('data-en-val', captionEn);
+    langVals(galleryEl.nextElementSibling, function(l) { return gm(l, nPh > 1 ? 'gallery-caption-other' : 'gallery-caption-one', {n: nPh}); });
   }
 
   // Liens vidéo (optionnel, max 3)
@@ -3083,10 +3271,9 @@ function injectData(html, d, dEn) {
       var scoreDescFr = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePos(d.prixm2, d.mediane) + '.';
       scoreDesc.textContent = scoreDescFr;
       scoreDesc.setAttribute('data-fr-val', scoreDescFr);
-      if (dEn) {
-        var scoreDescEn = 'Score ' + d.score.toString().replace('.', ',') + '/10' + (d.dpe ? '. DPE ' + d.dpe : '') + '. ' + pricePosEn(d.prixm2, d.mediane) + '.';
-        scoreDesc.setAttribute('data-en-val', scoreDescEn);
-      }
+      langVals(scoreDesc, function(l) {
+        return gm(l, 'score-desc', {score: d.score.toString().replace('.', ','), dpe: d.dpe ? gm(l, 'score-dpe', {dpe: d.dpe}) : '', pos: pricePosL(l, d.prixm2, d.mediane)});
+      });
     }
 
     var slines = qa('.sline');
@@ -3164,7 +3351,7 @@ function injectData(html, d, dEn) {
       var kvTension = kpis[2].querySelector('.kv');
       kvTension.textContent = d.tension;
       kvTension.setAttribute('data-fr-val', d.tension);
-      if (dEn) kvTension.setAttribute('data-en-val', dEn.tension || d.tension);
+      langVals(kvTension, function(l, dl) { return dl.tension || d.tension; });
     } else kpis[2].style.display = 'none';
   }
   if (kpis[3]) {
@@ -3172,7 +3359,7 @@ function injectData(html, d, dEn) {
       var kvDelai = kpis[3].querySelector('.kv');
       kvDelai.textContent = d.delai;
       kvDelai.setAttribute('data-fr-val', d.delai);
-      if (dEn) kvDelai.setAttribute('data-en-val', dEn.delai || d.delai);
+      langVals(kvDelai, function(l, dl) { return dl.delai || d.delai; });
     } else kpis[3].style.display = 'none';
   }
 
@@ -3218,7 +3405,7 @@ function injectData(html, d, dEn) {
     var loyerInfoFr = 'Bien libre. Loyer estimé : ' + fmtNum(d.loyer) + ' € nu. Simulez votre rentabilité ci-dessous.';
     loyerInfo.textContent = loyerInfoFr;
     loyerInfo.setAttribute('data-fr-val', loyerInfoFr);
-    if (dEn) loyerInfo.setAttribute('data-en-val', 'Vacant property. Estimated rent: ' + fmtNum(d.loyer) + ' € unfurnished. Simulate your returns below.');
+    langVals(loyerInfo, function(l) { return gm(l, 'rent-info', {loyer: fmtNum(d.loyer)}); });
   }
 
   // Sliders — critical: sets initial values so template's calc() runs correctly on load
@@ -3317,13 +3504,13 @@ function injectData(html, d, dEn) {
       var chargesTxtFr = 'Relevé annuel · ' + chargesCopro + ' €/mois';
       dcm.textContent = chargesTxtFr;
       dcm.setAttribute('data-fr-val', chargesTxtFr);
-      if (dEn) dcm.setAttribute('data-en-val', 'Annual statement · ' + chargesCopro + ' €/month');
+      langVals(dcm, function(l) { return gm(l, 'doc-charges-desc', {n: chargesCopro}); });
     }
     if ((nm.indexOf('taxe foncière') !== -1 || nm.indexOf('Taxe foncière') !== -1) && d.taxeFonciere > 0) {
       var taxeTxtFr = Math.round(d.taxeFonciere) + ' € / an';
       dcm.textContent = taxeTxtFr;
       dcm.setAttribute('data-fr-val', taxeTxtFr);
-      if (dEn) dcm.setAttribute('data-en-val', Math.round(d.taxeFonciere) + ' € / year');
+      langVals(dcm, function(l) { return gm(l, 'doc-taxe-desc', {n: Math.round(d.taxeFonciere)}); });
     }
   });
 
@@ -3336,7 +3523,7 @@ function injectData(html, d, dEn) {
   if (offerDiff) {
     offerDiff.textContent = 'Prix affiché : ' + prixFmt + ' €';
     offerDiff.setAttribute('data-fr-val', 'Prix affiché : ' + prixFmt + ' €');
-    if (dEn) offerDiff.setAttribute('data-en-val', 'Listed price: ' + prixFmt + ' €');
+    langVals(offerDiff, function(l) { return gm(l, 'offer-listed', {prix: prixFmt}); });
   }
 
   // Agent photo
@@ -3375,21 +3562,38 @@ function injectData(html, d, dEn) {
 
   // Embed a machine-readable JSON block so modifierFiche() can fully restore the form.
   // Injected as a string (not DOM) so attribute order is always id-then-type.
-  var embedData = {};
-  try { embedData = JSON.parse(JSON.stringify(d)); } catch(e) { embedData = {}; }
+  // CONFIDENTIALITÉ : seuls les champs de PUBLIC_EMBED_KEYS partent dans le HTML publié (liste blanche).
+  // Le formulaire complet (_rawState : vendeur, notes, prix d'achat…), la référence de mandat et la
+  // fourchette de négociation sont conservés côté agent (table Supabase fiche_private), jamais ici.
+  var embedData = publicEmbedData(d);
   var dataTag = '<script id="expertimo-data" type="application/json">' + JSON.stringify(embedData) + '<\/script>';
 
   // Fiche bilingue à fichier unique : embarque les données EN pour que le bouton
   // FR|EN du template (applyLang) sache qu'il doit s'afficher.
   var dataTagEn = '';
   if (dEn) {
-    var embedDataEn = {};
-    try { embedDataEn = JSON.parse(JSON.stringify(dEn)); } catch(e) { embedDataEn = {}; }
+    var embedDataEn = publicEmbedData(dEn);
     dataTagEn = '<script id="expertimo-data-en" type="application/json">' + JSON.stringify(embedDataEn) + '<\/script>';
   }
 
+  // Autres langues (PT/ES) : blocs allégés — uniquement les contenus libres que le template rend à
+  // l'exécution (points forts, vigilances, historique, diagnostics). Jamais de données vendeur.
+  var dataTagX = '';
+  ['pt', 'es'].forEach(function(lg) {
+    var dl = dX[lg];
+    if (!dl) return;
+    var slim = {
+      fort1: dl.fort1 || '', fort2: dl.fort2 || '', fort3: dl.fort3 || '',
+      vig1: dl.vig1 || '', vig2: dl.vig2 || '', vig3: dl.vig3 || '',
+      historiqueLibre: dl.historiqueLibre || '',
+      diags: (dl.diags || []).map(function(g) { return {icon: g.icon, name: g.name, status: g.status, result: g.result || ''}; })
+    };
+    dataTagX += '<script id="expertimo-data-' + lg + '" type="application/json">'
+      + JSON.stringify(slim).replace(/</g, '\\u003c') + '<\/script>\n';
+  });
+
   var raw = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
-  return raw.replace('</head>', dataTag + '\n' + dataTagEn + '\n</head>');
+  return raw.replace('</head>', dataTag + '\n' + dataTagEn + '\n' + dataTagX + '</head>');
 }
 
 function srep(str, find, rep) { return str.split(find).join(rep); }
@@ -3962,6 +4166,274 @@ function collectBienData() {
 }
 
 // ═══════════════════════════════════════════════════════
+// CONTEXTE COMPLET DE L'ASSISTANT IA (chatbot de la fiche acheteur)
+// ───────────────────────────────────────────────────────
+// Construit à la génération, depuis le formulaire de l'étape 2, en LISTE BLANCHE : seuls les champs
+// listés ci-dessous partent dans la fiche publiée. Tout ce qui n'est pas listé est exclu, en particulier :
+//   • carte « Propriétaire & Rendez-vous » (identité, téléphones, e-mail, mandat, prix d'achat, offres…)
+//   • carte « Questions de découverte & Notes » (notes privées de l'agent)
+//   • carte « Financement & Relogement » (dette, banque, budget de relogement du vendeur)
+//   • « Notes internes / dossier mandat » : seuls les champs qui décrivent le bien (travaux, surface du
+//     terrain, DPE/GES chiffrés, services, voisinage…) sont repris ; les autres sont exclus
+//   • marge de négociation / fourchette de prix, paramètres de simulation, prénom/nom de l'acheteur
+// Une dernière passe (scrubChatText) retire tout e-mail, téléphone et toute valeur d'identité saisie
+// (vendeur, acheteur) qui aurait été recopiée dans un champ libre.
+// ═══════════════════════════════════════════════════════
+// kinds : v = champ (input/select/textarea) · r = radio · g = grille oui/non (seuls les « Oui ») ·
+//         c = cases à cocher · b = badge d'état · d = lettre DPE/GES · x = rendu spécifique
+var CHAT_SPEC = [
+  ['Le bien', [
+    ['x', 'type', 'Type de bien'],
+    ['v', 'adresse', 'Adresse'],
+    ['v', 'quartier', 'Quartier / secteur'],
+    ['v', 'surface_hab', 'Surface habitable (m²)'],
+    ['v', 'surface_carrez', 'Surface Carrez (m²)'],
+    ['v', 'surface_terrain', 'Surface du terrain (m²)'],
+    ['v', 'surface_terrain_m', 'Surface du terrain (m²)'],
+    ['v', 'nb_pieces', 'Nombre total de pièces'],
+    ['v', 'nb_chambres', 'Chambres'],
+    ['v', 'nb_sdb', 'Salles de bains'],
+    ['v', 'nb_sde', "Salles d'eau"],
+    ['v', 'nb_wc', 'WC'],
+    ['v', 'nb_wc_sep', 'WC séparés'],
+    ['v', 'etage', 'Étage du bien'],
+    ['r', 'ascenseur', 'Ascenseur'],
+    ['v', 'nb_etages', "Nombre d'étages de l'immeuble"],
+    ['v', 'nb_etages_m', "Nombre d'étages"],
+    ['v', 'annee_construction', 'Année de construction'],
+    ['v', 'annee_construction_m', 'Année de construction'],
+    ['v', 'standard_general', 'Standing général'],
+    ['v', 'plus_appartement', 'Les + du bien']
+  ]],
+  ['Prix, charges et fiscalité', [
+    ['v', 'prix_vente', 'Prix de mise en vente (€)'],
+    ['v', 'prix_vente_t', 'Prix de mise en vente (€)'],
+    ['v', 'charges_copro', 'Charges de copropriété (€/mois)'],
+    ['v', 'charges_detail', 'Détail des charges'],
+    ['v', 'taxe_fonciere', 'Taxe foncière (€/an)'],
+    ['v', 'taxe_fonciere_t', 'Taxe foncière (€/an)'],
+    ['v', 'taxe_hab', "Taxe d'habitation (€/an)"],
+    ['v', 'bien_loyer_estime', 'Loyer mensuel estimé (€/mois)'],
+    ['v', 'loyer', 'Loyer potentiel estimé (€/mois)']
+  ]],
+  ['Énergie et diagnostics', [
+    ['d', 'dpe', 'Classe DPE'],
+    ['v', 'dpe_valeur', 'Consommation DPE (kWh/m²/an)'],
+    ['d', 'ges', 'Classe GES'],
+    ['v', 'ges_valeur', 'Émissions GES (kgCO₂/m²/an)'],
+    ['v', 'diag_amiante_status', 'Diagnostic amiante — statut'],
+    ['v', 'diag_amiante_result', 'Diagnostic amiante — résultat'],
+    ['v', 'diag_plomb_status', 'Diagnostic plomb (CREP) — statut'],
+    ['v', 'diag_plomb_result', 'Diagnostic plomb (CREP) — résultat'],
+    ['v', 'diag_termites_status', 'Diagnostic termites — statut'],
+    ['v', 'diag_termites_result', 'Diagnostic termites — résultat'],
+    ['v', 'diag_electricite_status', 'Diagnostic électricité — statut'],
+    ['v', 'diag_electricite_result', 'Diagnostic électricité — résultat'],
+    ['v', 'diag_gaz_status', 'Diagnostic gaz — statut'],
+    ['v', 'diag_gaz_result', 'Diagnostic gaz — résultat'],
+    ['v', 'diag_assain_status', 'Diagnostic assainissement — statut'],
+    ['v', 'diag_assain_result', 'Diagnostic assainissement — résultat'],
+    ['r', 'servitudes', 'Servitudes'],
+    ['r', 'droits_superf', 'Droits de superficie']
+  ]],
+  ['Copropriété et immeuble', [
+    ['v', 'syndic_nom', 'Syndic'],
+    ['r', 'travaux_ag', 'Travaux votés en assemblée générale'],
+    ['v', 'travaux_ag_detail', 'Travaux votés en AG — quoi et combien'],
+    ['v', 'travaux_recents_immeuble', "Travaux récents de l'immeuble"]
+  ]],
+  ['Travaux et historique du bien', [
+    ['x', 'renovations', 'Travaux et rénovations réalisés'],
+    ['v', 'travaux_recents', 'Travaux récents'],
+    ['v', 'historique_libre', 'Informations complémentaires (copropriété, exposition, rénovations, équipements…)']
+  ]],
+  ['Construction, matériaux et chauffage', [
+    ['c', 'toit_type_group', 'Toit — matériau'],
+    ['b', 'toit_etat', 'Toit — état'],
+    ['c', 'facade_type_group', 'Façade — matériau'],
+    ['b', 'facade_etat', 'Façade — état'],
+    ['c', 'sols_type_group', 'Sols — revêtement'],
+    ['b', 'sols_etat', 'Sols — état'],
+    ['c', 'vitrage_type_group', 'Vitrage'],
+    ['c', 'vitrage_materiau_group', 'Menuiseries — matériau'],
+    ['r', 'volets_elec', 'Volets roulants électriques'],
+    ['c', 'chauf_type_group', 'Chauffage — type'],
+    ['c', 'chauf_energie_group', 'Chauffage — énergie'],
+    ['c', 'chauf_diffusion_group', 'Chauffage — diffusion'],
+    ['v', 'chauf_annee', "Chauffage — année d'installation"],
+    ['c', 'ecs_group', 'Eau chaude sanitaire'],
+    ['b', 'etat_general', 'État général']
+  ]],
+  ['Équipements, extérieur et annexes', [
+    ['g', 'equip_general_grid', 'Équipements généraux'],
+    ['g', 'equip_cuisine_grid', 'Équipements de cuisine'],
+    ['r', 'plaque_cuisson', 'Plaque de cuisson'],
+    ['g', 'exterieur_grid', 'Extérieur'],
+    ['v', 'equip_autre', 'Autres équipements'],
+    ['v', 'parking_int', 'Parking — places intérieures'],
+    ['v', 'parking_ext', 'Parking — places extérieures'],
+    ['v', 'parking_box', 'Parking — box fermés'],
+    ['g', 'pieces_utiles_grid', 'Pièces utiles / annexes']
+  ]],
+  ['Pièces (plan détaillé)', [
+    ['x', 'pieces', 'Détail des pièces']
+  ]],
+  ['Localisation et environnement', [
+    ['c', 'exposition_group', 'Exposition'],
+    ['r', 'expo_sonore', 'Exposition sonore'],
+    ['c', 'transport_group', 'Transports à proximité (saisis par l\'agent)'],
+    ['v', 'services_prox', 'Services de proximité'],
+    ['v', 'voisinage', 'Voisinage']
+  ]],
+  ['Points forts et points de vigilance', [
+    ['v', 'bien_fort1', 'Point fort 1'],
+    ['v', 'bien_fort2', 'Point fort 2'],
+    ['v', 'bien_fort3', 'Point fort 3'],
+    ['v', 'bien_vig1', 'Point de vigilance 1'],
+    ['v', 'bien_vig2', 'Point de vigilance 2'],
+    ['v', 'bien_vig3', 'Point de vigilance 3'],
+    ['g', 'vigilances_grid', 'Autres points de vigilance cochés'],
+    ['v', 'vigilances_texte', 'Vigilances complémentaires'],
+    ['g', 'defauts_grid', 'Défauts et risques constatés']
+  ]],
+  ['Marché et analyse', [
+    ['v', 'bien_score', 'Note globale du bien (/10)'],
+    ['v', 'bien_mediane', 'Prix médian du secteur (€/m²)'],
+    ['v', 'bien_tension', 'Tension locative'],
+    ['v', 'bien_delai', 'Délai de vente moyen']
+  ]],
+  ['Terrain', [
+    ['v', 'zone_plu', 'Zone PLU'],
+    ['v', 'superficie_totale', 'Superficie totale (m²)'],
+    ['v', 'superficie_constructible', 'Superficie constructible (m²)'],
+    ['v', 'forme_terrain', 'Forme du terrain'],
+    ['v', 'acces_terrain', 'Accès / voirie'],
+    ['v', 'cos_ces', 'COS / CES'],
+    ['v', 'hauteur_max', 'Hauteur maximale autorisée (m)'],
+    ['v', 'projet_terrain', 'Projet envisagé'],
+    ['g', 'viab_grid', 'Viabilisation'],
+    ['g', 'risques_terrain_grid', 'Risques'],
+    ['r', 'etude_sol', 'Étude de sol'],
+    ['r', 'cert_urba', "Certificat d'urbanisme"]
+  ]]
+];
+
+function _chatClean(s, max) {
+  s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+  return s.length > (max || 1500) ? s.slice(0, max || 1500) + '…' : s;
+}
+function _chatVisible(el) { return !!el && !el.closest('.hidden'); }
+
+// Retire e-mails, téléphones et valeurs d'identité (vendeur / acheteur) d'un texte destiné au chatbot.
+function scrubChatText(text, sensitiveValues) {
+  var out = String(text || '');
+  out = out.replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, '[coordonnée masquée]');
+  out = out.replace(/(?:\+|00)\d{1,3}[\s.\-]?(?:\(0\)[\s.\-]?)?\d(?:[\s.\-]?\d){7,12}/g, '[coordonnée masquée]');
+  out = out.replace(/(^|[^\d])0[1-9](?:[\s.\-]?\d{2}){4}(?!\d)/g, function(m, p1) { return p1 + '[coordonnée masquée]'; });
+  (sensitiveValues || []).forEach(function(v) {
+    v = String(v || '').trim();
+    if (v.length < 3) return;
+    var re = new RegExp('(^|[^\\p{L}\\p{N}])' + v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '(?![\\p{L}\\p{N}])', 'giu');
+    out = out.replace(re, function(m, p1) { return p1 + '[information masquée]'; });
+  });
+  return out;
+}
+
+function buildChatContext(d) {
+  var page = document.getElementById('page-2');
+  if (!page) return '';
+  function fld(id) { var e = document.getElementById(id); return (e && _chatVisible(e)) ? e : null; }
+  function radioLabel(name) {
+    var r = page.querySelector('input[type=radio][name="' + name + '"]:checked');
+    if (!r || !_chatVisible(r)) return '';
+    var t = (r.parentNode && r.parentNode.textContent || r.value).replace(/[^\p{L}\p{N}\s'’\-–—.,/()²]/gu, '').trim();
+    return t && t !== '—' ? t : '';
+  }
+  function gridItems(id) {
+    var c = document.getElementById(id);
+    if (!c || !_chatVisible(c)) return [];
+    var out = [];
+    c.querySelectorAll('.defaut-item, .viab-item').forEach(function(it) {
+      var on = it.querySelector('input[type=radio][value="oui"]');
+      if (!on || !on.checked) return;
+      var sp = it.querySelector('span');
+      var lab = sp ? sp.textContent.trim() : '';
+      var m2 = it.querySelector('input[type=number]');
+      out.push(lab + (m2 && m2.value ? ' (' + m2.value + ' m²)' : ''));
+    });
+    return out;
+  }
+  function checked(id) {
+    var c = document.getElementById(id);
+    if (!c || !_chatVisible(c)) return [];
+    var out = [];
+    c.querySelectorAll('input:checked').forEach(function(i) {
+      var v = i.value;
+      if (v === 'Autre') {
+        var t = c.querySelector('input[type=text]');
+        v = t && t.value.trim() ? 'Autre (' + t.value.trim() + ')' : 'Autre';
+      }
+      out.push(v);
+    });
+    return out;
+  }
+
+  var sections = [], missing = [], seen = {};
+  CHAT_SPEC.forEach(function(sec) {
+    var lines = [];
+    sec[1].forEach(function(f) {
+      var kind = f[0], key = f[1], label = f[2], val = '';
+      if (kind === 'v') {
+        var el = fld(key);
+        if (!el) return;
+        val = el.tagName === 'SELECT' ? (el.selectedIndex > 0 ? el.options[el.selectedIndex].text : '') : el.value;
+      } else if (kind === 'r') {
+        var r0 = page.querySelector('input[type=radio][name="' + key + '"]');
+        if (!r0 || !_chatVisible(r0)) return;
+        val = radioLabel(key);
+      } else if (kind === 'g') { val = gridItems(key).join(', ');
+      } else if (kind === 'c') { val = checked(key).join(', ');
+      } else if (kind === 'b') {
+        var bd = page.querySelector('.rating-badge.sel[data-name="' + key + '"]'); val = bd ? bd.dataset.val : '';
+      } else if (kind === 'd') {
+        var bt = page.querySelector('.dpe-btn.sel[data-group="' + key + '"]'); val = bt ? bt.dataset.letter : '';
+      } else if (kind === 'x') {
+        if (key === 'type') val = d.type === 'maison' ? 'Maison' : d.type === 'terrain' ? 'Terrain' : 'Appartement';
+        else if (key === 'renovations') {
+          val = (d.renovations || []).map(function(r) {
+            return [r.annee ? String(r.annee) : '', r.desc || ''].filter(Boolean).join(' — ') + (r.montant ? ' (' + Math.round(r.montant).toLocaleString('fr-FR') + ' €)' : '');
+          }).filter(Boolean).join(' ; ');
+        } else if (key === 'pieces') {
+          var rows = [];
+          document.querySelectorAll('#pieces_tbody tr').forEach(function(tr) {
+            var c = Array.prototype.map.call(tr.querySelectorAll('td input[type=text],td input[type=number]'), function(i) { return i.value.trim(); });
+            if (!c[0] || !(c[1] || c[2] || c[3])) return;
+            rows.push(c[0] + (c[1] ? ' ' + c[1] + ' m²' : '') + (c[2] ? ', étage ' + c[2] : '') + (c[3] ? ' — ' + c[3] : ''));
+          });
+          val = rows.join(' ; ');
+          if (!_chatVisible(document.getElementById('pieces_tbody'))) val = '';
+        }
+      }
+      val = _chatClean(val);
+      if (val) lines.push('- ' + label + ' : ' + val);
+      else if (kind !== 'g' && kind !== 'c' && kind !== 'x' && !seen[label]) { seen[label] = 1; missing.push(label); }
+    });
+    if (lines.length) sections.push('## ' + sec[0] + '\n' + lines.join('\n'));
+  });
+  // Champs laissés vides : permet à l'assistant de répondre « non renseigné » sans rien deviner.
+  missing = missing.filter(function(l) { return !sections.join('\n').includes('- ' + l + ' :'); });
+  if (missing.length) sections.push('## Informations NON renseignées dans la fiche (à signaler comme telles, ne jamais deviner)\n' + missing.join(' ; '));
+
+  var sensitive = [];
+  ['proprio_prenom', 'proprio_nom', 'tel_mobile', 'tel_fixe', 'email_proprio', 'acheteur_prenom', 'acheteur_nom', 'ref_mandat', 'banque'].forEach(function(id) {
+    var e = document.getElementById(id); if (e && e.value) sensitive.push(e.value);
+  });
+  if (d && d.acheteur_prenom) sensitive.push(d.acheteur_prenom);
+  if (d && d.acheteur_nom) sensitive.push(d.acheteur_nom);
+  return scrubChatText(sections.join('\n\n'), sensitive);
+}
+
+// ═══════════════════════════════════════════════════════
 // STEP 2 — onAdresseChange : geocoding + DVF auto-fill
 // ═══════════════════════════════════════════════════════
 var _adresseTimer = null;
@@ -4033,9 +4505,17 @@ function refreshStep3Summary() {
     + '</div>';
 }
 
-// Traduit les champs texte libre d'une fiche via l'API serveur (mode bilingue).
-async function translateFicheFields(d) {
+// Langues cibles de la version multilingue (le français est la langue source).
+var FICHE_LANGS = ['en', 'pt', 'es'];
+var FICHE_LANG_META = {
+  fr: {flag: '🇫🇷', name: 'Français'}, en: {flag: '🇬🇧', name: 'English'},
+  pt: {flag: '🇵🇹', name: 'Português'}, es: {flag: '🇪🇸', name: 'Español'}
+};
+
+// Traduit les champs texte libre d'une fiche via l'API serveur (mode multilingue).
+async function translateFicheFields(d, lang) {
   var payload = {
+    lang:            lang || 'en',
     quartier:        d.quartier || '',
     chargesDetail:   d.chargesDetail || '',
     fort1: d.fort1 || '', fort2: d.fort2 || '', fort3: d.fort3 || '',
@@ -4051,7 +4531,7 @@ async function translateFicheFields(d) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
-    signal: AbortSignal.timeout(45000)
+    signal: AbortSignal.timeout(60000)
   });
   var translated = await res.json();
   if (!res.ok) throw new Error(translated.error || ('Erreur serveur (' + res.status + ')'));
@@ -4061,8 +4541,8 @@ async function translateFicheFields(d) {
 // Construit _bienData_en : copie de d avec les champs texte libre remplacés par
 // leur traduction. Les diags/renovations sont ré-associés par index (même ordre,
 // même longueur, garanti par api/translate-fiche.js).
-function buildBienDataEn(d, translated) {
-  var dEn = Object.assign({}, d);
+function buildBienDataLang(d, translated) {
+  var dEn = Object.assign({}, d);   // (nom historique : valable pour toutes les langues)
   ['quartier','chargesDetail','fort1','fort2','fort3','vig1','vig2','vig3',
    'historiqueLibre','tension','delai','description'].forEach(function(f) {
     if (typeof translated[f] === 'string') dEn[f] = translated[f];
@@ -4082,26 +4562,36 @@ function buildBienDataEn(d, translated) {
   return dEn;
 }
 
+// Traduit vers toutes les langues cibles en parallèle : {en, pt, es} (les échecs sont absents), + erreurs.
+function translateAllLangs(d) {
+  return Promise.all(FICHE_LANGS.map(function(lg) {
+    return translateFicheFields(d, lg)
+      .then(function(tr) { return {lang: lg, data: buildBienDataLang(d, tr)}; })
+      .catch(function(err) { console.error('[translate ' + lg + ']', err); return {lang: lg, error: err}; });
+  })).then(function(results) {
+    var out = {ok: {}, failed: []};
+    results.forEach(function(r) { if (r.data) out.ok[r.lang] = r.data; else out.failed.push(r.lang); });
+    return out;
+  });
+}
+
 function switchPreviewTab(lang) {
   var iframe = document.getElementById('preview-iframe');
-  var btnFr  = document.getElementById('preview-tab-fr');
-  var btnEn  = document.getElementById('preview-tab-en');
   try {
     if (iframe && iframe.contentWindow && typeof iframe.contentWindow.applyLang === 'function') {
       iframe.contentWindow.applyLang(lang);
     }
   } catch(e) { console.error('[switchPreviewTab]', e); }
-  if (lang === 'en') {
-    if (btnFr) btnFr.className = 'btn btn-sm btn-outline';
-    if (btnEn) btnEn.className = 'btn btn-sm';
-  } else {
-    if (btnFr) btnFr.className = 'btn btn-sm';
-    if (btnEn) btnEn.className = 'btn btn-sm btn-outline';
-  }
+  ['fr', 'en', 'pt', 'es'].forEach(function(code) {
+    var btn = document.getElementById('preview-tab-' + code);
+    if (btn) btn.className = 'btn btn-sm' + (code === lang ? '' : ' btn-outline');
+  });
 }
 
 function generatePreview() {
   window._bienData = collectBienData();
+  // Contexte complet du chatbot (liste blanche, sans donnée vendeur) — lu dans le formulaire de l'étape 2
+  try { window._chatCtx = buildChatContext(window._bienData); } catch(e) { console.error('[buildChatContext]', e); window._chatCtx = ''; }
   var bilingue = !!(document.getElementById('chk-bilingue') && document.getElementById('chk-bilingue').checked);
 
   var doGenerate = function(tmpl) {
@@ -4115,10 +4605,16 @@ function generatePreview() {
       ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
       : slugify(d.adresse);
 
-    var publishSingle = function(dEn) {
+    // langs : {en, pt, es} → données traduites des langues réussies (vide = fiche française seule)
+    var publishSingle = function(langs, failed) {
+      langs = langs || {};
+      var dEn = langs.en || null;
+      var dX = {pt: langs.pt || null, es: langs.es || null};
+      var done = ['fr'].concat(FICHE_LANGS.filter(function(l) { return !!langs[l]; }));
       try {
-        var out = injectData(tmpl, d, dEn || null);
+        var out = injectData(tmpl, d, dEn, dX);
         _lastGeneratedHTML = out;
+        window._lastPrivate = privateFicheData(d);   // partie privée : enregistrée côté agent à la publication
         var blob = new Blob([out], { type: 'text/html;charset=utf-8' });
         _previewBlobUrlFR = URL.createObjectURL(blob);
         document.getElementById('preview-iframe').src = _previewBlobUrlFR;
@@ -4126,13 +4622,20 @@ function generatePreview() {
         var btnC = document.getElementById('btn-step3-continue');
         if (btnC) btnC.disabled = false;
         var tabsEl = document.getElementById('preview-lang-tabs');
-        if (tabsEl) tabsEl.style.display = dEn ? 'flex' : 'none';
+        if (tabsEl) tabsEl.style.display = done.length > 1 ? 'flex' : 'none';
+        ['en', 'pt', 'es'].forEach(function(l) {
+          var b = document.getElementById('preview-tab-' + l);
+          if (b) b.style.display = langs[l] ? '' : 'none';
+        });
+        switchPreviewTab('fr');
         _stepsComplete[3] = true;
         updateStepperTabs();
-        document.getElementById('step3-status').innerHTML = dEn
-          ? ('✅ Fiche générée (FR + EN, fichier unique) — <strong>' + esc(d.adresse) + '</strong>')
+        var langLabel = done.map(function(l) { return l.toUpperCase(); }).join(' + ');
+        document.getElementById('step3-status').innerHTML = done.length > 1
+          ? ('✅ Fiche générée (' + langLabel + ', fichier unique) — <strong>' + esc(d.adresse) + '</strong>'
+             + ((failed && failed.length) ? ' <span style="color:#b45309;">(⚠️ traduction ' + failed.map(function(l) { return l.toUpperCase(); }).join(', ') + ' échouée : ces langues restent en français)</span>' : ''))
           : ('✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong>');
-        showToast(dEn ? '✅ Fiche bilingue générée !' : '✅ Aperçu généré !');
+        showToast(done.length > 1 ? '✅ Fiche multilingue générée !' : '✅ Aperçu généré !');
       } catch(err) {
         document.getElementById('step3-status').textContent = '❌ ' + err.message;
         console.error(err);
@@ -4142,16 +4645,14 @@ function generatePreview() {
     if (!bilingue) { publishSingle(null); return; }
 
     document.getElementById('step3-status').innerHTML =
-      '⏳ Fiche générée — traduction anglaise en cours…';
-    translateFicheFields(d).then(function(translated) {
-      var dEn = buildBienDataEn(d, translated);
-      publishSingle(dEn);
+      '⏳ Traduction en cours (English, Português, Español)…';
+    translateAllLangs(d).then(function(res) {
+      if (res.failed.length) showToast('⚠️ Traduction échouée : ' + res.failed.join(', ').toUpperCase(), true);
+      publishSingle(res.ok, res.failed);
     }).catch(function(err) {
-      console.error('[generatePreview] échec traduction EN', err);
-      showToast('❌ Traduction EN échouée : ' + err.message, true);
-      publishSingle(null);
-      document.getElementById('step3-status').innerHTML =
-        '✅ Fiche générée — <strong>' + esc(d.adresse) + '</strong> (⚠️ version EN échouée, fiche FR uniquement)';
+      console.error('[generatePreview] échec traductions', err);
+      showToast('❌ Traductions échouées : ' + err.message, true);
+      publishSingle(null, FICHE_LANGS);
     });
   };
 
@@ -4235,6 +4736,22 @@ async function pushToGitHub() {
     var session = sessionRes && sessionRes.data && sessionRes.data.session;
     if (!session || !session.access_token) throw new Error('Session expirée, reconnectez-vous.');
 
+    // Données privées (vendeur, notes, formulaire complet) : jamais dans le HTML publié, uniquement
+    // dans fiche_private (RLS : lisible par l'agent propriétaire seulement). Sert à « Modifier ».
+    var privWarn = '';
+    try {
+      if (window._lastPrivate && session.user) {
+        var pr = await window.privencyAuth.from('fiche_private').upsert({
+          agent_user_id: session.user.id, filename: frFilename,
+          data: window._lastPrivate, updated_at: new Date().toISOString()
+        }, { onConflict: 'agent_user_id,filename' });
+        if (pr.error) throw pr.error;
+      } else { privWarn = 'données privées non enregistrées'; }
+    } catch (perr) {
+      console.error('pushToGitHub: fiche_private', perr);
+      privWarn = 'sauvegarde des données privées échouée';
+    }
+
     var r = await fetch(PRIVENCY_API_BASE + '/api/fiche-publish', {
       method: 'POST',
       headers: {
@@ -4255,7 +4772,8 @@ async function pushToGitHub() {
 
     if (r.ok && resData.ok) {
       var pageUrl = resData.url || (_GH_PAGES_BASE + frFilename);
-      status.innerHTML = '✅ Publié avec succès !';
+      status.innerHTML = '✅ Publié avec succès !'
+        + (privWarn ? ' <span style="color:#b45309;">(⚠️ ' + privWarn + ' : « Modifier » ne restaurera pas tout le formulaire)</span>' : '');
       var linkArea = document.getElementById('gh-link-area');
       linkArea.style.display = 'block';
 
@@ -4396,15 +4914,17 @@ function refreshStep4Summary() {
 // ═══════════════════════════════════════════════════════
 // PAGE 5 — ANALYTICS
 // ═══════════════════════════════════════════════════════
+var _analyticsGroups = [];   // groupes (client + bien) avec la liste des ids de lignes
+var _analyticsAuth   = null; // { url, key, token }
+
 async function loadAnalytics() {
-  var status  = document.getElementById('analytics-status');
-  var wrap    = document.getElementById('analytics-table-wrap');
-  var tbody   = document.getElementById('analytics-tbody');
-  var empty   = document.getElementById('analytics-empty');
-  status.textContent = '⏳ Chargement des données…';
+  var status = document.getElementById('analytics-status');
+  var wrap   = document.getElementById('analytics-table-wrap');
+  var tool   = document.getElementById('analytics-toolbar');
+  var empty  = document.getElementById('analytics-empty');
+  status.textContent = '⏳ Chargement de tout l’historique…';
   status.style.display = 'block';
-  wrap.style.display   = 'none';
-  empty.style.display  = 'none';
+  wrap.style.display = 'none'; tool.style.display = 'none'; empty.style.display = 'none';
 
   try {
     var session = null;
@@ -4416,87 +4936,157 @@ async function loadAnalytics() {
     var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
     var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
     var authToken = (session && session.access_token) ? session.access_token : SUPABASE_KEY;
+    _analyticsAuth = { url: SUPABASE_URL, key: SUPABASE_KEY, token: authToken };
 
-    var r = await fetch(SUPABASE_URL + '/rest/v1/fiche_views?order=created_at.desc&limit=100', {
-      headers: {
-        'apikey':        SUPABASE_KEY,
-        'Authorization': 'Bearer ' + authToken
-      }
-    });
+    // Pagination : on récupère TOUTES les lignes, par paquets de 1000
+    var rows = [], PAGE = 1000, offset = 0;
+    while (true) {
+      var r = await fetch(SUPABASE_URL + '/rest/v1/fiche_views?select=id,client_nom,bien_adresse,evenement,created_at'
+        + '&order=created_at.desc&limit=' + PAGE + '&offset=' + offset, {
+        headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      var chunk = await r.json();
+      rows = rows.concat(chunk);
+      if (chunk.length < PAGE) break;
+      offset += PAGE;
+      status.textContent = '⏳ Chargement… ' + rows.length + ' lignes';
+    }
 
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    var rows = await r.json();
-
-    if (!rows || rows.length === 0) {
+    if (!rows.length) {
+      _analyticsGroups = [];
       status.style.display = 'none';
       empty.style.display  = 'block';
       return;
     }
 
-    // Grouper par (client_nom + bien_adresse)
     var groups = {};
     rows.forEach(function(row) {
       var key = (row.client_nom || 'inconnu') + '|||' + (row.bien_adresse || '—');
       if (!groups[key]) {
-        groups[key] = {
-          client:    row.client_nom  || 'inconnu',
-          adresse:   row.bien_adresse || '—',
-          fichePath: row.fiche_path  || '',
-          count:     0,
-          last:      row.created_at  || '',
-          events:    {}
-        };
+        groups[key] = { key: key, client: row.client_nom || 'inconnu', adresse: row.bien_adresse || '—',
+                        count: 0, last: row.created_at || '', events: {}, ids: [] };
       }
-      groups[key].count++;
-      if (!row.created_at || row.created_at > groups[key].last) groups[key].last = row.created_at;
+      var g = groups[key];
+      g.count++; g.ids.push(row.id);
+      if (!row.created_at || row.created_at > g.last) g.last = row.created_at;
       var ev = row.evenement || 'inconnu';
-      groups[key].events[ev] = (groups[key].events[ev] || 0) + 1;
+      g.events[ev] = (g.events[ev] || 0) + 1;
     });
 
-    // Trier par date desc
-    var sorted = Object.values(groups).sort(function(a, b) {
+    _analyticsGroups = Object.values(groups).sort(function(a, b) {
       return (b.last || '').localeCompare(a.last || '');
     });
 
-    tbody.innerHTML = '';
-    sorted.forEach(function(g, idx) {
-      var tr = document.createElement('tr');
-      tr.style.background = idx % 2 === 0 ? '#fff' : '#f8fafc';
-
-      // Date formattée
-      var dateStr = '—';
-      if (g.last) {
-        try { dateStr = new Date(g.last).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e) {}
-      }
-
-      // Événements en badges
-      var evHtml = Object.keys(g.events).map(function(ev) {
-        var cnt = g.events[ev];
-        var bg = ev === 'fiche_ouverte' ? '#e8f0fe' : ev.startsWith('onglet') ? '#fff8e6' : '#e8f8f0';
-        var col = ev === 'fiche_ouverte' ? '#1a56db' : ev.startsWith('onglet') ? '#b8923a' : '#27ae60';
-        return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
-          + esc(ev) + ' ×' + cnt + '</span>';
-      }).join(' ');
-
-      tr.innerHTML =
-        '<td style="padding:9px 12px;font-weight:600;">' + esc(g.client) + '</td>'
-        + '<td style="padding:9px 12px;color:var(--muted);font-size:12px;">' + esc(g.adresse) + '</td>'
-        + '<td style="padding:9px 12px;text-align:center;"><span style="display:inline-block;background:var(--primary);color:#fff;border-radius:50%;width:28px;height:28px;line-height:28px;font-weight:700;font-size:13px;">' + g.count + '</span></td>'
-        + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + esc(dateStr) + '</td>'
-        + '<td style="padding:9px 12px;">' + evHtml + '</td>'
-        + '<td style="padding:9px 12px;text-align:center;">'
-        +   '<button class="btn btn-sm btn-danger" title="Supprimer ces statistiques" '
-        +           'data-fiche-path="' + esc(g.fichePath) + '" data-client="' + esc(g.client) + '" '
-        +           'data-adresse="' + esc(g.adresse) + '" data-count="' + g.count + '" '
-        +           'onclick="supprimerStatsLigne(this)">🗑️</button>'
-        + '</td>';
-      tbody.appendChild(tr);
-    });
-
     status.style.display = 'none';
-    wrap.style.display   = 'block';
+    renderAnalytics();
   } catch(err) {
     status.textContent = '❌ Erreur chargement : ' + err.message;
+  }
+}
+
+function renderAnalytics() {
+  var tbody = document.getElementById('analytics-tbody');
+  var wrap  = document.getElementById('analytics-table-wrap');
+  var tool  = document.getElementById('analytics-toolbar');
+  var empty = document.getElementById('analytics-empty');
+  var period = (document.getElementById('analytics-period') || {}).value || 'all';
+  var now = Date.now(), DAY = 86400000;
+
+  var list = _analyticsGroups.filter(function(g) {
+    if (period === 'all') return true;
+    var age = (now - new Date(g.last).getTime()) / DAY;
+    if (period === 'older90') return age > 90;
+    return age <= parseInt(period, 10);
+  });
+
+  tool.style.display = 'flex';
+  var totalViews = list.reduce(function(s, g) { return s + g.count; }, 0);
+  document.getElementById('analytics-count').textContent =
+    list.length + ' ligne' + (list.length > 1 ? 's' : '') + ' · ' + totalViews + ' événements';
+
+  if (!list.length) {
+    wrap.style.display = 'none';
+    empty.style.display = 'block';
+    empty.textContent = 'Aucune activité pour cette période.';
+    updateAnalyticsDelBtn();
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = '';
+  list.forEach(function(g, idx) {
+    var tr = document.createElement('tr');
+    tr.style.background = idx % 2 === 0 ? '#fff' : '#f8fafc';
+    var dateStr = '—';
+    if (g.last) {
+      try { dateStr = new Date(g.last).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e) {}
+    }
+    var evHtml = Object.keys(g.events).map(function(ev) {
+      var bg  = ev === 'fiche_ouverte' ? '#e8f0fe' : ev.startsWith('onglet') ? '#fff8e6' : '#e8f8f0';
+      var col = ev === 'fiche_ouverte' ? '#1a56db' : ev.startsWith('onglet') ? '#b8923a' : '#27ae60';
+      return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
+        + esc(ev) + ' ×' + g.events[ev] + '</span>';
+    }).join(' ');
+
+    tr.innerHTML =
+      '<td style="padding:9px 12px;"><input type="checkbox" class="analytics-cb" data-key="' + esc(g.key) + '" onchange="updateAnalyticsDelBtn()" style="width:auto;cursor:pointer;"></td>'
+      + '<td style="padding:9px 12px;font-weight:600;">' + esc(g.client) + '</td>'
+      + '<td style="padding:9px 12px;color:var(--muted);font-size:12px;">' + esc(g.adresse) + '</td>'
+      + '<td style="padding:9px 12px;text-align:center;"><span style="display:inline-block;background:var(--primary);color:#fff;border-radius:50%;min-width:28px;height:28px;line-height:28px;font-weight:700;font-size:13px;">' + g.count + '</span></td>'
+      + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + esc(dateStr) + '</td>'
+      + '<td style="padding:9px 12px;">' + evHtml + '</td>'
+      + '<td style="padding:9px 12px;text-align:center;"><button class="btn btn-sm btn-danger" title="Supprimer cette ligne" data-key="' + esc(g.key) + '" onclick="deleteAnalyticsGroups([this.dataset.key])">🗑️</button></td>';
+    tbody.appendChild(tr);
+  });
+  wrap.style.display = 'block';
+  updateAnalyticsDelBtn();
+}
+
+function analyticsSelectAll(on) {
+  document.querySelectorAll('.analytics-cb').forEach(function(cb) { cb.checked = on; });
+  updateAnalyticsDelBtn();
+}
+
+function updateAnalyticsDelBtn() {
+  var n = document.querySelectorAll('.analytics-cb:checked').length;
+  var btn = document.getElementById('analytics-del-btn');
+  if (!btn) return;
+  btn.disabled = n === 0;
+  btn.textContent = n ? '🗑️ Supprimer la sélection (' + n + ')' : '🗑️ Supprimer la sélection';
+}
+
+function deleteSelectedAnalytics() {
+  var keys = Array.from(document.querySelectorAll('.analytics-cb:checked')).map(function(cb) { return cb.dataset.key; });
+  if (keys.length) deleteAnalyticsGroups(keys);
+}
+
+async function deleteAnalyticsGroups(keys) {
+  var groups = _analyticsGroups.filter(function(g) { return keys.indexOf(g.key) !== -1; });
+  if (!groups.length || !_analyticsAuth) return;
+  var nbEv = groups.reduce(function(s, g) { return s + g.count; }, 0);
+  if (!confirm('Supprimer définitivement ' + groups.length + ' ligne(s) de stats (' + nbEv + ' événements) ? Cette action est irréversible.')) return;
+
+  var ids = [];
+  groups.forEach(function(g) { ids = ids.concat(g.ids); });
+  var deleted = 0;
+  try {
+    for (var i = 0; i < ids.length; i += 100) {
+      var part = ids.slice(i, i + 100);
+      var r = await fetch(_analyticsAuth.url + '/rest/v1/fiche_views?id=in.(' + part.join(',') + ')', {
+        method: 'DELETE',
+        headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token, 'Prefer': 'return=representation' }
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      var done = await r.json();
+      deleted += done.length;
+    }
+    if (deleted === 0) throw new Error('aucune ligne supprimée (droits insuffisants ?)');
+    showToast('✅ ' + deleted + ' événement(s) supprimé(s).');
+    await loadAnalytics();
+  } catch(err) {
+    showToast('❌ ' + err.message, true);
+    await loadAnalytics();
   }
 }
 
@@ -5009,6 +5599,25 @@ async function modifierFiche(filename, sha, downloadUrl) {
     var jsonMatch = html.match(/<script\b[^>]*\bid="expertimo-data"[^>]*>([\s\S]*?)<\/script>/i);
     if (jsonMatch) {
       try { data = JSON.parse(jsonMatch[1]); console.log('[modifierFiche] expertimo-data parsé :', data); } catch(e) {}
+    }
+
+    // 1b. Partie privée (formulaire complet, ref mandat, fourchette) : lue dans Supabase (RLS = propriétaire)
+    if (data) {
+      try {
+        var sessP = await window.privencyAuth.auth.getSession();
+        var uidP = sessP && sessP.data && sessP.data.session && sessP.data.session.user && sessP.data.session.user.id;
+        if (uidP) {
+          var pq = await window.privencyAuth.from('fiche_private').select('data')
+            .eq('agent_user_id', uidP).eq('filename', filename).maybeSingle();
+          var priv = pq && pq.data && pq.data.data;
+          if (priv) {
+            var mergedRaw = Object.assign({}, data._rawState || {}, priv._rawState || {});
+            Object.keys(priv).forEach(function(k) { if (k !== '_rawState') data[k] = priv[k]; });
+            data._rawState = mergedRaw;
+            console.log('[modifierFiche] données privées restaurées depuis fiche_private');
+          }
+        }
+      } catch (e) { console.warn('[modifierFiche] fiche_private illisible', e); }
     }
 
     // 2. Fallback: extract from old fiches (no expertimo-data block)
