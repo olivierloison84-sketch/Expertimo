@@ -201,7 +201,7 @@ tr:nth-child(even) td { background: #f8fafc; }
     <button class="btn btn-outline" onclick="newFiche()">➕ Nouvelle fiche</button>
     <button class="btn btn-primary" onclick="saveFiche()">💾 Sauvegarder</button>
     <button class="btn btn-outline" onclick="exportJSON()">⬇ JSON</button>
-    <button class="btn btn-outline" onclick="saveToGitHub()">☁️ Sauvegarder sur GitHub</button>
+    <button class="btn btn-outline" onclick="saveToGitHub()">💾 Exporter en fichier (JSON)</button>
     <button class="btn btn-outline" onclick="window.print()">🖨 Imprimer</button>
   </div>
 </header>
@@ -1310,6 +1310,7 @@ function getFicheData() {
   const data = { type: currentType, photos: photos, _saved: new Date().toISOString() };
   // all inputs, selects, textareas
   document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
+    if (el.id === 'gh-token-input') return;   // ne jamais exporter le jeton GitHub du bandeau
     data[el.id] = el.value;
   });
   // radios
@@ -1684,50 +1685,22 @@ function ghSlug(str) {
     .replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'inconnu';
 }
 
+// CONFIDENTIALITÉ : cette fiche contient l'identité du vendeur, ses coordonnées, prix d'achat, notes…
+// Elle n'est PLUS poussée dans le dépôt GitHub (dossier fiches-rdv/ servi publiquement par GitHub Pages) :
+// elle est exportée en fichier JSON local, à ranger côté agent.
 function saveToGitHub() {
-  const token = localStorage.getItem('_gh_token');
-  if (!token) {
-    document.getElementById('gh-banner').style.display = 'flex';
-    showToast('⚠️ Saisissez votre token GitHub dans le bandeau', true);
-    return;
-  }
   const data     = getFicheData();
   const nom      = ghSlug(data.proprio_nom);
   const prenom   = ghSlug(data.proprio_prenom);
   const date     = new Date().toISOString().slice(0, 10);
   const filename = nom + '-' + prenom + '-' + date + '.json';
-  const path     = 'fiches-rdv/' + filename;
-  const apiUrl   = 'https://api.github.com/repos/olivierloison84-sketch/Expertimo/contents/' + path;
-  const headers  = {
-    'Authorization': 'token ' + token,
-    'Accept': 'application/vnd.github+json',
-    'Content-Type': 'application/json'
-  };
-  const jsonStr = JSON.stringify(data, null, 2);
-  showToast('⏳ Push GitHub en cours…');
-
-  // Récupère le SHA si le fichier existe déjà (nécessaire pour update)
-  fetch(apiUrl, { headers })
-    .then(r => r.ok ? r.json() : null)
-    .then(existing => {
-      const body = {
-        message: 'feat: fiche RDV ' + nom + '-' + prenom + ' (' + date + ')',
-        content: toBase64UTF8(jsonStr),
-        branch: 'main'
-      };
-      if (existing && existing.sha) body.sha = existing.sha;
-      return fetch(apiUrl, { method: 'PUT', headers, body: JSON.stringify(body) });
-    })
-    .then(r => r.json().then(d => ({ ok: r.ok, status: r.status, data: d })))
-    .then(res => {
-      if (res.ok) {
-        const ghUrl = 'https://github.com/olivierloison84-sketch/Expertimo/blob/main/fiches-rdv/' + filename;
-        showToastLink('☁️ Sauvegardé sur GitHub !', ghUrl, filename);
-      } else {
-        showToast('❌ ' + res.status + ' : ' + (res.data.message || 'Erreur GitHub'), true);
-      }
-    })
-    .catch(err => showToast('❌ ' + (err && err.message ? err.message : String(err)), true));
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  showToast('💾 Fiche exportée en fichier local : ' + filename);
 }
 
 function showToastLink(label, url, linkText) {
