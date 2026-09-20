@@ -33,9 +33,6 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
-@keyframes welcomeIn{0%{opacity:0;transform:translateY(30px) scale(.9);}55%{opacity:1;transform:translateY(-4px) scale(1.02);}100%{opacity:1;transform:translateY(0) scale(1);}}
-#welcome-msg{animation:welcomeIn 1.5s cubic-bezier(.22,.61,.36,1) .2s both;}
-@media(prefers-reduced-motion:reduce){#welcome-msg{animation:none;}}
 :root{--bg:#FAF9F6;--card:#fff;--ink:#14171F;--gold:#C9A227;--gold2:#8F7015;--cream:#F3E9CC;--muted:#6E6A5C;--border:#E7E3D8;--vert:#2F7A4F;--rouge:#B23F3F;--dark:#14171F;--agent-primary:#14171F;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -45,6 +42,10 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .header::before{content:'';position:absolute;width:500px;height:500px;background:radial-gradient(circle,rgba(201,162,39,.12),transparent 70%);top:-200px;right:-80px;border-radius:50%;}
 .header-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;justify-content:space-between;align-items:flex-start;gap:48px;position:relative;z-index:2;}
 .hbadge{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border:1px solid rgba(201,162,39,.35);border-radius:99px;background:rgba(201,162,39,.08);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+/* Apparition douce du message de bienvenue (se joue quand JS le passe en display:block) */
+@keyframes welcomeIn{0%{opacity:0;transform:translateY(30px) scale(.9);}55%{opacity:1;transform:translateY(-4px) scale(1.02);}100%{opacity:1;transform:translateY(0) scale(1);}}
+#welcome-msg{animation:welcomeIn 1.5s cubic-bezier(.22,.61,.36,1) .2s both;}
+@media(prefers-reduced-motion:reduce){#welcome-msg{animation:none;}}
 .hbadge::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .htitle{font-family:'Playfair Display',serif;font-size:clamp(18px,2.6vw,30px);font-weight:300;color:white;line-height:1.2;margin-bottom:12px;}
@@ -329,14 +330,28 @@ textarea.field{min-height:95px;resize:vertical;}
   .dg{grid-template-columns:1fr;}
 }
 @media(max-width:768px){
-  .header-inner{flex-direction:column;gap:24px;padding:0 20px;}
+  .header-inner{flex-direction:column;gap:8px;padding:0 20px;}
+  .header-inner>div:first-child{max-width:100%!important;flex:none!important;width:100%;}
   .price-card{min-width:100%;max-width:100%;}
   .pamount{font-size:48px;}
   .htitle{font-size:18px;}
-  #welcome-msg{font-size:22px!important;margin-bottom:4px!important;}
+  .header{padding:18px 0 14px;min-height:0;}
+  #welcome-msg{font-size:22px!important;margin-bottom:2px!important;}
+  .hrow{margin-bottom:6px!important;gap:8px!important;}
+  .htitle{font-size:16px;margin-bottom:3px;}
+  .hsub{font-size:12px;line-height:1.5;margin-top:2px;}
+  .hbadge{margin-bottom:0;padding:5px 12px;}
+  .price-card{padding:12px 16px;display:grid;grid-template-columns:1fr auto;column-gap:12px;align-items:center;}
+  .plabel{grid-column:1;margin-bottom:2px;}
+  .pamount{font-size:32px;margin-bottom:0;grid-column:1;}
+  .pmeta{grid-column:1/-1;margin-top:6px;margin-bottom:0;padding-bottom:0;border-bottom:none;font-size:9px;}
+  .hkpis{grid-column:2;grid-row:1/3;display:block;}
+  .hkpi{display:flex;align-items:baseline;gap:6px;padding:4px 12px;border:1px solid rgba(201,162,39,.3);border-radius:99px;}
+  .hkpi .hl{margin-bottom:0;}
+  .hkpi .hv{font-size:16px;}
 }
 @media(max-width:560px){
-  .header{padding:26px 0;}
+  .header{padding:16px 0 12px;}
   .container{padding:16px 12px 50px;}
   .kpi-grid,.rg{grid-template-columns:1fr;}
   .nav{padding:0 8px;}
@@ -351,9 +366,11 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"rdc","adresse":"27, Rue Jean Jaurès - 91160 Champlan","quartier":"Champlan (limite Longjumeau)","acheteur_prenom":"","acheteur_nom":"","annee":"1970","description":"Appartement 2 pièces de 43,08 m² · rdc · DPE E","surface":43.08,"surfCarrez":0,"pieces":"2","dpe":"E","prix":117500,"prixm2":2727,"mediane":0,"tension":"","delai":"","loyer":730,"chargesCopro":35,"chargesDetail":"","taxeFonciere":595,"score":"8.25","scorePrest":"7","scoreSecteur":"9","scoreQP":"9","scoreEtat":"8","fort1":"Vendu loué 730€/mois - rendement net 6%","fort2":"Proche gare Longjumeau et tram 12","fort3":"Grande chambre 18m²","vig1":"Fin de bail en Avril 2028","vig2":"Petits travaux de peinture à prévoir","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/fzsg2t72hlnwhd1bxm8x.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"02/2025","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"18","prix":51000,"prixm2":2833},{"date":"11/2024","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":95000,"prixm2":3519},{"date":"01/2024","adresse":"Rue Mancelle (à ~278 m)","surface":"144","prix":250000,"prixm2":1736},{"date":"11/2023","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":85000,"prixm2":3148},{"date":"03/2022","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":70000,"prixm2":2593},{"date":"05/2021","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"37","prix":136300,"prixm2":3684}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Situé au niveau -1 d'une maison divisée en appartements.\nDate de construction : 1970.\nAppartement de 43m² en bon état général.\nPetits travaux de rafraichissement à prévoir : peinture \nVendu Loué : 730 €/mois CC. Fin du bail (non meublé) : Avril 2028.\nBon locataire : aucun retard de paiement et bon entretien de l'appartement.\nCharges de copropriété : 35€/mois\nTaxe foncière : 595€/an\nRendement net de 6% !\nSitué à proximité de la gare de Longjumeau, du tram 12, des commerces et des écoles.\n\nTrès bons diagnostics : pas d'amiante, installation électrique conforme, assainissement aux normes.\n","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/fzsg2t72hlnwhd1bxm8x.jpg","caption":"","uploading":false}]}}</script>
-<script id="expertimo-data-en" type="application/json">{"type":"appart","etage":"rdc","adresse":"27, Rue Jean Jaurès - 91160 Champlan","quartier":"Champlan (border of Longjumeau)","acheteur_prenom":"","acheteur_nom":"","annee":"1970","description":"2-room apartment of 43.08 m² · ground floor · DPE E","surface":43.08,"surfCarrez":0,"pieces":"2","dpe":"E","prix":117500,"prixm2":2727,"mediane":0,"tension":"","delai":"","loyer":730,"chargesCopro":35,"chargesDetail":"","taxeFonciere":595,"score":"8.25","scorePrest":"7","scoreSecteur":"9","scoreQP":"9","scoreEtat":"8","fort1":"Sold tenanted at €730/month - 6% net yield","fort2":"Close to Longjumeau train station and tram 12","fort3":"Large bedroom 18m²","vig1":"Lease ending in April 2028","vig2":"Minor painting works required","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/fzsg2t72hlnwhd1bxm8x.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"02/2025","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"18","prix":51000,"prixm2":2833},{"date":"11/2024","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":95000,"prixm2":3519},{"date":"01/2024","adresse":"Rue Mancelle (à ~278 m)","surface":"144","prix":250000,"prixm2":1736},{"date":"11/2023","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":85000,"prixm2":3148},{"date":"03/2022","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":70000,"prixm2":2593},{"date":"05/2021","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"37","prix":136300,"prixm2":3684}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Located on level -1 of a house divided into apartments.\nConstruction date: 1970.\n43m² apartment in good overall condition.\nMinor refurbishment works required: painting.\nSold Tenanted: €730/month including charges. End of lease (unfurnished): April 2028.\nReliable tenant: no payment delays and proper maintenance of the apartment.\nService charges: €35/month\nProperty tax: €595/year\n6% net yield!\nLocated close to Longjumeau train station, tram 12, shops and schools.\n\nExcellent diagnostics: no asbestos, compliant electrical installation, sanitation up to standard.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the survey, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1 January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Internal installation without anomaly."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to collective network compliant."}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/fzsg2t72hlnwhd1bxm8x.jpg","caption":"","uploading":false}]}}</script>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script></head>
+<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"rdc","adresse":"27, Rue Jean Jaurès - 91160 Champlan","quartier":"Champlan (limite Longjumeau)","acheteur_prenom":"","acheteur_nom":"","annee":"1970","description":"Appartement 2 pièces de 43,08 m² · rdc · DPE E","surface":43.08,"surfCarrez":0,"pieces":"2","dpe":"E","prix":117500,"prixm2":2727,"mediane":0,"tension":"","delai":"","loyer":730,"chargesCopro":35,"chargesDetail":"","taxeFonciere":595,"score":"8.25","scorePrest":"7","scoreSecteur":"9","scoreQP":"9","scoreEtat":"8","fort1":"Vendu loué 730€/mois - rendement net 6%","fort2":"Proche gare Longjumeau et tram 12","fort3":"Grande chambre 18m²","vig1":"Fin de bail en Avril 2028","vig2":"Petits travaux de peinture à prévoir","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/fzsg2t72hlnwhd1bxm8x.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"02/2025","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"18","prix":51000,"prixm2":2833},{"date":"11/2024","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":95000,"prixm2":3519},{"date":"01/2024","adresse":"Rue Mancelle (à ~278 m)","surface":"144","prix":250000,"prixm2":1736},{"date":"11/2023","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":85000,"prixm2":3148},{"date":"03/2022","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":70000,"prixm2":2593},{"date":"05/2021","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"37","prix":136300,"prixm2":3684}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Situé au niveau -1 d'une maison divisée en appartements.\nDate de construction : 1970.\nAppartement de 43m² en bon état général.\nPetits travaux de rafraichissement à prévoir : peinture \nVendu Loué : 730 €/mois CC. Fin du bail (non meublé) : Avril 2028.\nBon locataire : aucun retard de paiement et bon entretien de l'appartement.\nCharges de copropriété : 35€/mois\nTaxe foncière : 595€/an\nRendement net de 6% !\nSitué à proximité de la gare de Longjumeau, du tram 12, des commerces et des écoles.\n\nTrès bons diagnostics : pas d'amiante, installation électrique conforme, assainissement aux normes.\n","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/fzsg2t72hlnwhd1bxm8x.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-en" type="application/json">{"type":"appart","etage":"rdc","adresse":"27, Rue Jean Jaurès - 91160 Champlan","quartier":"Champlan (border of Longjumeau)","acheteur_prenom":"","acheteur_nom":"","annee":"1970","description":"2-room apartment of 43.08 m² · ground floor · DPE E","surface":43.08,"surfCarrez":0,"pieces":"2","dpe":"E","prix":117500,"prixm2":2727,"mediane":0,"tension":"","delai":"","loyer":730,"chargesCopro":35,"chargesDetail":"","taxeFonciere":595,"score":"8.25","scorePrest":"7","scoreSecteur":"9","scoreQP":"9","scoreEtat":"8","fort1":"Sold tenanted at €730/month - 6% net yield","fort2":"Close to Longjumeau train station and tram 12","fort3":"Large 18m² bedroom","vig1":"Lease ending in April 2028","vig2":"Minor painting work required","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/fzsg2t72hlnwhd1bxm8x.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"02/2025","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"18","prix":51000,"prixm2":2833},{"date":"11/2024","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":95000,"prixm2":3519},{"date":"01/2024","adresse":"Rue Mancelle (à ~278 m)","surface":"144","prix":250000,"prixm2":1736},{"date":"11/2023","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":85000,"prixm2":3148},{"date":"03/2022","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"27","prix":70000,"prixm2":2593},{"date":"05/2021","adresse":"Rue Jean Jaurès (à ~18 m)","surface":"37","prix":136300,"prixm2":3684}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Located on level -1 of a house divided into apartments.\nConstruction date: 1970.\n43m² apartment in good general condition.\nMinor refurbishment work required: painting.\nSold Tenanted: €730/month including charges. End of lease (unfurnished): April 2028.\nReliable tenant: no late payments and good maintenance of the apartment.\nService charges: €35/month\nProperty tax: €595/year\n6% net yield!\nLocated near Longjumeau train station, tram 12, shops and schools.\n\nExcellent diagnostics: no asbestos, electrical installation compliant, sanitation up to standard.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the inspection, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1 January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Internal installation without anomaly."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to collective network compliant."}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/fzsg2t72hlnwhd1bxm8x.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-pt" type="application/json">{"fort1":"Vendido arrendado 730€/mês - rendibilidade líquida 6%","fort2":"Próximo da estação de Longjumeau e do elétrico 12","fort3":"Quarto amplo de 18m²","vig1":"Fim do contrato de arrendamento em Abril de 2028","vig2":"Pequenos trabalhos de pintura a prever","vig3":"","historiqueLibre":"Situado no piso -1 de uma moradia dividida em apartamentos.\nData de construção: 1970.\nApartamento de 43m² em bom estado geral.\nPequenos trabalhos de renovação a prever: pintura\nVendido Arrendado: 730€/mês com encargos incluídos. Fim do contrato de arrendamento (não mobilado): Abril de 2028.\nBom inquilino: nenhum atraso no pagamento e boa manutenção do apartamento.\nEncargos de condomínio: 35€/mês\nImposto predial: 595€/ano\nRendibilidade líquida de 6%!\nSituado nas proximidades da estação de Longjumeau, do elétrico 12, do comércio e das escolas.\n\nDiagnósticos muito bons: sem amianto, instalação elétrica conforme, saneamento dentro das normas.\n","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram identificados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito - edifício construído após 1 de janeiro de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a decreto prefeitoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Instalação interior sem anomalias."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Não sujeito - Instalação com menos de 15 anos."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede coletiva conforme."}]}</script>
+<script id="expertimo-data-es" type="application/json">{"fort1":"Vendido alquilado 730€/mes - rentabilidad neta 6%","fort2":"Cerca de la estación de Longjumeau y tranvía 12","fort3":"Amplio dormitorio de 18m²","vig1":"Fin del contrato en abril de 2028","vig2":"Pequeños trabajos de pintura a prever","vig3":"","historiqueLibre":"Situado en el nivel -1 de una casa dividida en apartamentos.\nFecha de construcción: 1970.\nApartamento de 43m² en buen estado general.\nPequeños trabajos de renovación a prever: pintura\nVendido alquilado: 730 €/mes CC. Fin del contrato (sin amueblar): abril de 2028.\nBuen inquilino: ningún retraso de pago y buen mantenimiento del apartamento.\nGastos de comunidad: 35€/mes\nImpuesto sobre bienes inmuebles: 595€/año\nRentabilidad neta de 6%\nSituado cerca de la estación de Longjumeau, del tranvía 12, de los comercios y de las escuelas.\n\nExcelentes diagnósticos: sin amianto, instalación eléctrica conforme, saneamiento según normas.","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la misión, no se han identificado materiales y productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sometido - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sometido a decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Instalación interior sin anomalías."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"No sometido - Instalación de menos de 15 años."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme."}]}</script>
+</head>
 <body>
 
 
@@ -369,15 +386,12 @@ html,body{overflow-x:hidden;}
   <div class="header-inner">
     <div style="flex:1;max-width:55%;">
       <div id="welcome-msg" style="display:none;font-family:'Playfair Display',serif;font-style:italic;font-size:32px;color:var(--gold);margin-bottom:10px;"></div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
+      <div class="hrow" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;">
         <div class="hbadge" data-i18n="hbadge" style="margin-bottom:0;">Espace Acheteur Privé · Expertimo</div>
-        <div id="lang-toggle" style="display:none;">
-          <button id="lang-toggle-fr" onclick="applyLang('fr')" class="active" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;padding:5px 10px;border:1px solid rgba(201,162,39,.4);background:transparent;color:rgba(255,255,255,.5);cursor:pointer;border-radius:6px 0 0 6px;">FR</button>
-          <button id="lang-toggle-en" onclick="applyLang('en')" style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;padding:5px 10px;border:1px solid rgba(201,162,39,.4);border-left:none;background:transparent;color:rgba(255,255,255,.5);cursor:pointer;border-radius:0 6px 6px 0;">EN</button>
-        </div>
+        <div id="lang-toggle" style="display:none;" role="group" aria-label="Langue / Language"></div>
       </div>
-      <h1 class="htitle">27, Rue Jean Jaurès - 91160 Champlan<br><span style="color:var(--gold);font-style:italic;" data-fr-val="Champlan (limite Longjumeau)" data-en-val="Champlan (border of Longjumeau)">Champlan (limite Longjumeau)</span></h1>
-      <p class="hsub" data-fr-val="Appartement 2 pièces de 43,08 m² · rdc · DPE E" data-en-val="2-room apartment of 43.08 m² · ground floor · DPE E">Appartement 2 pièces de 43,08 m² · rdc · DPE E</p>
+      <h1 class="htitle">27, Rue Jean Jaurès - 91160 Champlan<br><span style="color:var(--gold);font-style:italic;" data-fr-val="Champlan (limite Longjumeau)" data-en-val="Champlan (border of Longjumeau)" data-pt-val="Champlan (limite Longjumeau)" data-es-val="Champlan (límite Longjumeau)">Champlan (limite Longjumeau)</span></h1>
+      <p class="hsub" data-fr-val="Appartement 2 pièces de 43,08 m² · rdc · DPE E" data-en-val="2-room apartment of 43.08 m² · ground floor · DPE E" data-pt-val="Apartamento de 2 assoalhadas com 43,08 m² · r/c · DPE E" data-es-val="Apartamento de 2 habitaciones de 43,08 m² · planta baja · DPE E">Appartement 2 pièces de 43,08 m² · rdc · DPE E</p>
     </div>
     <div class="price-card">
       <div class="plabel" data-i18n="price-label">Prix affiché</div>
@@ -414,7 +428,7 @@ html,body{overflow-x:hidden;}
   <div class="card">
     <div class="lbl" data-i18n="lbl-le-bien">Le bien</div>
     <h2 class="stitle">27, Rue Jean Jaurès - 91160 Champlan · 2 pièces · rdc</h2>
-    <p class="ssub" data-fr-val="Appartement 2 pièces de 43,08 m² · rdc · DPE E" data-en-val="2-room apartment of 43.08 m² · ground floor · DPE E">Appartement 2 pièces de 43,08 m² · rdc · DPE E</p>
+    <p class="ssub" data-fr-val="Appartement 2 pièces de 43,08 m² · rdc · DPE E" data-en-val="2-room apartment of 43.08 m² · ground floor · DPE E" data-pt-val="Apartamento de 2 assoalhadas com 43,08 m² · r/c · DPE E" data-es-val="Apartamento de 2 habitaciones de 43,08 m² · planta baja · DPE E">Appartement 2 pièces de 43,08 m² · rdc · DPE E</p>
     <div class="gallery" id="gallery-grid">
     <img id="photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/uhqteilh4wbdg8ruzdww.jpg" alt="27, Rue Jean Jaurès - 91160 Champlan - Vue principale" class="gm" onclick="openLightbox(this.src)">
     <img id="photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166661/kvgfovr7rtyjtuqyncyz.jpg" alt="27, Rue Jean Jaurès - 91160 Champlan" onclick="openLightbox(this.src)">
@@ -422,14 +436,14 @@ html,body{overflow-x:hidden;}
     <img id="photo4" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/y8utattykmjer2vfzl3n.jpg" alt="27, Rue Jean Jaurès - 91160 Champlan" onclick="openLightbox(this.src)">
     <img id="photo5" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1788166662/tfdsl5jmzcr6zsrvyypt.jpg" alt="27, Rue Jean Jaurès - 91160 Champlan" onclick="openLightbox(this.src)">
   </div>
-  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption" data-fr-val="📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles" data-en-val="📷 Click on a photo to enlarge it · 5 photos available">📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles</div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption" data-fr-val="📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles" data-en-val="📷 Click on a photo to enlarge it · 5 photos available" data-pt-val="📷 Clique numa foto para a ampliar · 5 fotos disponíveis" data-es-val="📷 Haga clic en una foto para ampliarla · 5 fotos disponibles">📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles</div>
   <div id="video-links-section" style="display:none;margin-bottom:18px;">
     <div id="video-links-list"></div>
   </div>
-  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>Vendu loué 730€/mois - rendement net 6%</li><li>Proche gare Longjumeau et tram 12</li><li>Grande chambre 18m²</li></ul><ul id="pf-list-en" style="display:none;"><li>Sold tenanted at €730/month - 6% net yield</li><li>Close to Longjumeau train station and tram 12</li><li>Large bedroom 18m²</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>Fin de bail en Avril 2028</li><li>Petits travaux de peinture à prévoir</li></ul><ul id="vg-list-en" style="display:none;"><li>Lease ending in April 2028</li><li>Minor painting works required</li></ul></div></div><div class="score-box">
+  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>Vendu loué 730€/mois - rendement net 6%</li><li>Proche gare Longjumeau et tram 12</li><li>Grande chambre 18m²</li></ul><ul id="pf-list-en" style="display:none;"><li>Sold tenanted at €730/month - 6% net yield</li><li>Close to Longjumeau train station and tram 12</li><li>Large 18m² bedroom</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>Fin de bail en Avril 2028</li><li>Petits travaux de peinture à prévoir</li></ul><ul id="vg-list-en" style="display:none;"><li>Lease ending in April 2028</li><li>Minor painting work required</li></ul></div></div><div class="score-box">
   <div class="lbl" style="color:#6a6358;" data-i18n="score-title">Score Qualité du Bien</div>
   <div class="score-num">8,25</div>
-  <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;margin-top:8px;" id="score-desc" data-fr-val="Score 8,25/10. DPE E. Prix à confirmer." data-en-val="Score 8,25/10. DPE E. Price to be confirmed.">Score 8,25/10. DPE E. Prix à confirmer.</p>
+  <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;margin-top:8px;" id="score-desc" data-fr-val="Score 8,25/10. DPE E. Prix à confirmer." data-en-val="Score 8,25/10. DPE E. Price to be confirmed." data-pt-val="Pontuação 8,25/10. DPE E. Preço a confirmar." data-es-val="Puntuación 8,25/10. DPE E. Precio por confirmar.">Score 8,25/10. DPE E. Prix à confirmer.</p>
   <div class="sline"><span data-i18n="score-prestations">Prestations &amp; standing</span><div><strong>7/10</strong><div class="sbar"><div class="sbar-fill" style="width: 70%;"></div></div></div></div>
   <div class="sline"><span data-i18n="score-secteur">Secteur &amp; environnement</span><div><strong>9/10</strong><div class="sbar"><div class="sbar-fill" style="width:90%"></div></div></div></div>
   <div class="sline"><span data-i18n="score-qp">Rapport qualité/prix</span><div><strong>9/10</strong><div class="sbar"><div class="sbar-fill" style="width: 90%;"></div></div></div></div>
@@ -439,13 +453,13 @@ html,body{overflow-x:hidden;}
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-name">Olivier LOISON</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="tel:+33685684613">📞 0685684613</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a>
+  <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
   <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
@@ -469,7 +483,7 @@ html,body{overflow-x:hidden;}
       <h2 class="stitle" data-i18n="stitle-comparables">Comparables réels</h2>
       <div class="dvft-wrap" style="overflow-x:auto;-webkit-overflow-scrolling:touch;">
       <table class="dvft">
-        <thead><tr><th>Date</th><th data-i18n="th-adresse">Adresse</th><th>Surface</th><th data-i18n="th-prix-vendu">Prix vendu</th><th>€/m²</th></tr></thead>
+        <thead><tr><th data-i18n="th-date">Date</th><th data-i18n="th-adresse">Adresse</th><th data-i18n="th-surface">Surface</th><th data-i18n="th-prix-vendu">Prix vendu</th><th>€/m²</th></tr></thead>
         <tbody><tr class="dvf-row" data-date="02/2025"><td>02/2025</td><td>Rue Jean Jaurès (à ~18 m)</td><td class="mono">18 m²</td><td class="mono">51 000 €</td><td class="mono">2 833 €</td></tr><tr class="dvf-row" data-date="11/2024"><td>11/2024</td><td>Rue Jean Jaurès (à ~18 m)</td><td class="mono">27 m²</td><td class="mono">95 000 €</td><td class="mono">3 519 €</td></tr><tr class="dvf-row" data-date="01/2024"><td>01/2024</td><td>Rue Mancelle (à ~278 m)</td><td class="mono">144 m²</td><td class="mono">250 000 €</td><td class="mono">1 736 €</td></tr><tr class="dvf-row" data-date="11/2023"><td>11/2023</td><td>Rue Jean Jaurès (à ~18 m)</td><td class="mono">27 m²</td><td class="mono">85 000 €</td><td class="mono">3 148 €</td></tr><tr class="dvf-row" data-date="03/2022"><td>03/2022</td><td>Rue Jean Jaurès (à ~18 m)</td><td class="mono">27 m²</td><td class="mono">70 000 €</td><td class="mono">2 593 €</td></tr><tr class="dvf-row" data-date="05/2021"><td>05/2021</td><td>Rue Jean Jaurès (à ~18 m)</td><td class="mono">37 m²</td><td class="mono">136 300 €</td><td class="mono">3 684 €</td></tr></tbody>
       </table>
       </div>
@@ -497,13 +511,13 @@ html,body{overflow-x:hidden;}
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-name">Olivier LOISON</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="tel:+33685684613">📞 0685684613</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a>
+  <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
   <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
@@ -518,7 +532,7 @@ html,body{overflow-x:hidden;}
     <div class="card">
       <div class="lbl" data-i18n="lbl-simulateur">Simulateur investisseur temps réel</div>
       <h2 class="stitle" data-i18n="stitle-simulateur">Simulateur investisseur interactif</h2>
-      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info" data-fr-val="Bien libre. Loyer estimé : 730 € nu. Simulez votre rentabilité ci-dessous." data-en-val="Vacant property. Estimated rent: 730 € unfurnished. Simulate your returns below.">Bien libre. Loyer estimé : 730 € nu. Simulez votre rentabilité ci-dessous.</div>
+      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info" data-fr-val="Bien libre. Loyer estimé : 730 € nu. Simulez votre rentabilité ci-dessous." data-en-val="Vacant property. Estimated rent: 730 € unfurnished. Simulate your returns below." data-pt-val="Imóvel livre. Renda estimada: 730 € sem mobília. Simule abaixo a sua rentabilidade." data-es-val="Inmueble libre. Alquiler estimado: 730 € sin amueblar. Simule a continuación su rentabilidad.">Bien libre. Loyer estimé : 730 € nu. Simulez votre rentabilité ci-dessous.</div>
       <div class="srow"><div class="slbl"><span data-i18n="slbl-prix-achat">Prix d'achat</span><small data-i18n="slbl-prix-achat-sm">Votre offre</small></div><input type="range" id="prix" min="105750" max="129250" value="117500" step="500" oninput="calc()"><div class="sval" id="v-prix">117 500 €</div></div>
       <div class="srow"><div class="slbl"><span data-i18n="slbl-loyer-simule">Loyer simulé</span><small data-i18n="slbl-loyer-simule-sm">Post-rénovation</small></div><input type="range" id="loyer" min="365" max="1825" value="730" step="10" oninput="calc()"><div class="sval" id="v-loyer">730 €</div></div>
       <div class="srow"><div class="slbl"><span data-i18n="slbl-apport">Apport</span><small data-i18n="slbl-apport-sm">% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
@@ -540,13 +554,13 @@ html,body{overflow-x:hidden;}
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-name">Olivier LOISON</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="tel:+33685684613">📞 0685684613</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a>
+  <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
   <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
@@ -562,20 +576,20 @@ html,body{overflow-x:hidden;}
       <div class="lbl" data-i18n="lbl-infos-complementaires">Informations complémentaires</div>
       <h2 class="stitle" data-i18n="tab-historique">Tout savoir sur ce bien</h2>
       <ul class="info-list" style="margin-top:13px;" id="historique-timeline-fr"><li class="info-item">Situé au niveau -1 d'une maison divisée en appartements.</li><li class="info-item">Date de construction : 1970.</li><li class="info-item">Appartement de 43m² en bon état général.</li><li class="info-item">Petits travaux de rafraichissement à prévoir : peinture</li><li class="info-item">Vendu Loué : 730 €/mois CC. Fin du bail (non meublé) : Avril 2028.</li><li class="info-item">Bon locataire : aucun retard de paiement et bon entretien de l'appartement.</li><li class="info-item">Charges de copropriété : 35€/mois</li><li class="info-item">Taxe foncière : 595€/an</li><li class="info-item">Rendement net de 6% !</li><li class="info-item">Situé à proximité de la gare de Longjumeau, du tram 12, des commerces et des écoles.</li><li class="info-item">Très bons diagnostics : pas d'amiante, installation électrique conforme, assainissement aux normes.</li></ul>
-      <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en"><li class="info-item">Located on level -1 of a house divided into apartments.</li><li class="info-item">Construction date: 1970.</li><li class="info-item">43m² apartment in good overall condition.</li><li class="info-item">Minor refurbishment works required: painting.</li><li class="info-item">Sold Tenanted: €730/month including charges. End of lease (unfurnished): April 2028.</li><li class="info-item">Reliable tenant: no payment delays and proper maintenance of the apartment.</li><li class="info-item">Service charges: €35/month</li><li class="info-item">Property tax: €595/year</li><li class="info-item">6% net yield!</li><li class="info-item">Located close to Longjumeau train station, tram 12, shops and schools.</li><li class="info-item">Excellent diagnostics: no asbestos, compliant electrical installation, sanitation up to standard.</li></ul>
+      <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en"><li class="info-item">Located on level -1 of a house divided into apartments.</li><li class="info-item">Construction date: 1970.</li><li class="info-item">43m² apartment in good general condition.</li><li class="info-item">Minor refurbishment work required: painting.</li><li class="info-item">Sold Tenanted: €730/month including charges. End of lease (unfurnished): April 2028.</li><li class="info-item">Reliable tenant: no late payments and good maintenance of the apartment.</li><li class="info-item">Service charges: €35/month</li><li class="info-item">Property tax: €595/year</li><li class="info-item">6% net yield!</li><li class="info-item">Located near Longjumeau train station, tram 12, shops and schools.</li><li class="info-item">Excellent diagnostics: no asbestos, electrical installation compliant, sanitation up to standard.</li></ul>
     </div>
   </div>
 </div>
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-name">Olivier LOISON</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="tel:+33685684613">📞 0685684613</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a>
+  <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
   <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
@@ -588,24 +602,24 @@ html,body{overflow-x:hidden;}
 <div>
   <div id="sub-diagnostics">
     <div class="card">
-      <div class="lbl">Diagnostics réglementaires</div>
+      <div class="lbl" data-i18n="lbl-diag-reg">Diagnostics réglementaires</div>
       <h2 class="stitle" data-i18n="stitle-diagnostics">Diagnostics Techniques</h2>
       <p class="ssub" data-i18n="ssub-diagnostics">Résultats officiels des diagnostics réglementaires</p>
       <div class="diag-grid" id="diag-grid-fr"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis - bâtiment construit après le 1er janvier 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis à un arrêté préfectoral.</div></div><div class="diag-card diag-ok"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">Installation intérieure sans anomalie.</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Non soumis - Installation de moins de 15 ans.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Raccordement au réseau collectif conforme.</div></div></div>
-      <div class="diag-grid" id="diag-grid-en" style="display:none;"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Asbestos</div><div class="diag-result">As part of the survey, no materials or products likely to contain asbestos were identified.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Lead (CREP)</div><div class="diag-result">Not subject - building constructed after 1 January 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Not subject to a prefectural order.</div></div><div class="diag-card diag-ok"><div class="diag-icon">⚡</div><div class="diag-name">Electricity</div><div class="diag-result">Internal installation without anomaly.</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gas</div><div class="diag-result">Not subject - Installation less than 15 years old.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Sanitation</div><div class="diag-result">Connection to collective network compliant.</div></div></div>
+      <div class="diag-grid" id="diag-grid-en" style="display:none;"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Asbestos</div><div class="diag-result">As part of the inspection, no materials or products likely to contain asbestos were identified.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Lead (CREP)</div><div class="diag-result">Not subject - building constructed after 1 January 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Not subject to a prefectural order.</div></div><div class="diag-card diag-ok"><div class="diag-icon">⚡</div><div class="diag-name">Electricity</div><div class="diag-result">Internal installation without anomaly.</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gas</div><div class="diag-result">Not subject - Installation less than 15 years old.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Sanitation</div><div class="diag-result">Connection to collective network compliant.</div></div></div>
     </div>
   </div>
 </div>
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-name">Olivier LOISON</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="tel:+33685684613">📞 0685684613</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a>
+  <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
   <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
@@ -620,6 +634,8 @@ html,body{overflow-x:hidden;}
     <h2 class="stitle" data-i18n="stitle-budget">Ce bien est-il fait pour vous ?</h2>
     <p class="ssub" data-i18n="ssub-budget">Entrez votre situation pour le savoir en 30 secondes</p>
     <div class="f2" style="margin-top:20px;">
+      <div><label class="lbl" data-i18n="lbl-prix-vente">Prix de vente (€)</label>
+      <input type="number" class="field" id="bgt-prix" min="0" step="1000"></div>
       <div>
         <label class="lbl" data-i18n="lbl-revenu">Revenu net mensuel du foyer (€)</label>
         <input type="number" class="field" id="bgt-revenu" placeholder="3500" min="0">
@@ -635,6 +651,10 @@ html,body{overflow-x:hidden;}
           <option value="20" selected="" data-i18n="opt-20ans">20 ans</option>
           <option value="25" data-i18n="opt-25ans">25 ans</option>
         </select>
+      </div>
+      <div>
+        <label class="lbl" data-i18n="lbl-taux-budget">Taux du crédit (%)</label>
+        <input type="number" class="field" id="bgt-taux" min="0.5" max="8" step="0.05" value="3.4">
       </div>
     </div>
     <button onclick="calcBudget()" style="margin-top:20px;padding:12px 28px;background:var(--dark);color:var(--gold);border:none;border-radius:99px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;" data-i18n="btn-calc-budget">Calculer mon accessibilité</button>
@@ -689,9 +709,9 @@ html,body{overflow-x:hidden;}
       <div id="doc-success" class="alert vert" style="margin-top:13px;margin-bottom:14px;"><h4 data-i18n="doc-success-title">✅ Accès déverrouillé</h4><p data-i18n="doc-success-txt">Votre demande a été transmise. Le conseiller vous contactera dans les 24h avec les documents complets.</p></div>
       <div class="dg">
         <div class="dc"><div class="dci">📄</div><div class="dcn" data-i18n="doc-pv-ag">PV Assemblée Générale</div><div class="dcm" data-i18n="doc-pv-ag-desc">Dernière AG copropriété</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">📊</div><div class="dcn">Appels de charges</div><div class="dcm" id="doc-charges-desc" data-fr-val="Relevé annuel · 35 €/mois" data-en-val="Annual statement · 35 €/month">Relevé annuel · 35 €/mois</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
+        <div class="dc"><div class="dci">📊</div><div class="dcn" data-i18n="doc-charges">Appels de charges</div><div class="dcm" id="doc-charges-desc" data-fr-val="Relevé annuel · 35 €/mois" data-en-val="Annual statement · 35 €/month" data-pt-val="Extrato anual · 35 €/mês" data-es-val="Extracto anual · 35 €/mes">Relevé annuel · 35 €/mois</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
         <div class="dc"><div class="dci">🏠</div><div class="dcn" data-i18n="doc-diag-tech">Diagnostics techniques</div><div class="dcm" data-i18n="doc-diag-tech-desc">DPE, amiante, plomb...</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">🏛️</div><div class="dcn">Avis taxe foncière</div><div class="dcm" id="doc-taxe-desc" data-fr-val="595 € / an" data-en-val="595 € / year">595 € / an</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
+        <div class="dc"><div class="dci">🏛️</div><div class="dcn" data-i18n="doc-taxe">Avis taxe foncière</div><div class="dcm" id="doc-taxe-desc" data-fr-val="595 € / an" data-en-val="595 € / year" data-pt-val="595 € / ano" data-es-val="595 € / año">595 € / an</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
         <div class="dc"><div class="dci">🔨</div><div class="dcn" data-i18n="doc-factures">Factures &amp; devis travaux</div><div class="dcm" data-i18n="doc-factures-desc">Rénovations réalisées</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
         <div class="dc"><div class="dci">📋</div><div class="dcn" data-i18n="doc-reglement">Règlement copropriété</div><div class="dcm" data-i18n="doc-reglement-desc">Documents de la copro</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
       </div>
@@ -701,13 +721,13 @@ html,body{overflow-x:hidden;}
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-name">Olivier LOISON</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="tel:+33685684613">📞 0685684613</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a>
+  <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
   <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
@@ -786,7 +806,7 @@ html,body{overflow-x:hidden;}
   <div class="card-dark" style="margin-bottom:18px;">
     <div class="lbl" style="color:#6a6358;margin-bottom:6px;" data-i18n="lbl-votre-offre">Votre offre</div>
     <div style="font-family:'Playfair Display',serif;font-size:42px;color:var(--gold);line-height:1;" id="offer-display">117 500 €</div>
-    <div style="font-size:11px;color:#7a7264;margin-top:4px;" id="offer-diff" data-fr-val="Prix affiché : 117 500 €" data-en-val="Listed price: 117 500 €">Prix affiché : 117 500 €</div>
+    <div style="font-size:11px;color:#7a7264;margin-top:4px;" id="offer-diff" data-fr-val="Prix affiché : 117 500 €" data-en-val="Listed price: 117 500 €" data-pt-val="Preço anunciado: 117 500 €" data-es-val="Precio anunciado: 117 500 €">Prix affiché : 117 500 €</div>
     <div style="margin-top:14px;padding-top:13px;border-top:1px solid rgba(255,255,255,.06);font-size:12px;color:#7a7264;line-height:1.8;font-weight:300;">
       <span data-i18n="marge-negociation-prefix">Marge de négociation estimée :</span> <strong style="color:var(--gold);">3 à 7%</strong> <span data-i18n="marge-negociation-suffix">selon le DPE et les DVF du secteur.</span>
     </div>
@@ -794,13 +814,13 @@ html,body{overflow-x:hidden;}
   <div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-name">Olivier LOISON</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
-    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="tel:+33685684613">📞 0685684613</a>
     <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
   </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a>
+  <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
   <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div>
@@ -815,6 +835,1172 @@ html,body{overflow-x:hidden;}
 
 </div>
 </div>
+
+<script>
+// ═══ I18N — SOURCE UNIQUE DES TRADUCTIONS (une entrée par langue) ═══
+// Ajouter une langue = ajouter son code dans LANGS + un bloc I18N.xx = { label, name, ui, msg, dpe, ai }.
+// Toute clé absente d'une langue retombe automatiquement sur le français (I18N.fr).
+//   ui  : libellés statiques ([data-i18n] / [data-i18n-placeholder])
+//   msg : messages dynamiques (alertes, simulateurs, phrases composées) → tr('clé', {variables})
+//   dpe : messages DPE   |   ai : assistant IA (accueil, questions suggérées, consignes de langue)
+var LANGS = ['fr', 'en', 'pt', 'es'];
+var LANG_DEFAULT = 'fr';
+var LANG_STORAGE_KEY = 'privency_lang';
+var I18N = {
+  fr: {
+    label: "FR", name: "Français",
+    ui: {
+    "doc-charges": "Appels de charges",
+    "doc-taxe": "Avis taxe foncière",
+    "lbl-diag-reg": "Diagnostics réglementaires",
+    "diag-carrez": "Loi Carrez",
+    "th-date": "Date",
+    "th-surface": "Surface",
+    'hbadge': 'Espace Acheteur Privé · Expertimo',
+    'price-label': 'Prix affiché',
+    'price-meta': "Frais d'agence inclus · Données temps réel",
+    'rail-progress-suffix': ' / 10 sections explorées',
+    'tab-bien': 'Le Bien',
+    'tab-marche': 'Ventes comparables',
+    'tab-rentabilite': 'Simulateur investisseur',
+    'tab-historique': 'Tout savoir sur ce bien',
+    'tab-budget': 'Mon Budget',
+    'tab-quartier': 'Carte interactive',
+    'tab-offre': 'Faire une offre',
+    'lbl-le-bien': 'Le bien',
+    'score-title': 'Score Qualité du Bien',
+    'score-prestations': 'Prestations & standing',
+    'score-secteur': 'Secteur & environnement',
+    'score-qp': 'Rapport qualité/prix',
+    'score-etat': 'État général',
+    'cons-role': 'Mandataire immobilier · Expertimo',
+    'btn-rdv': '📅 Prendre rendez-vous',
+    'btn-site': '🏠 Voir mes autres biens',
+    'btn-offre': '✍️ Faire une offre',
+    'kpi-prixm2': 'Prix m² · ce bien',
+    'kpi-mediane': 'Médiane Longjumeau / Essonne 91',
+    'kpi-tension': 'Tension locative',
+    'kpi-delai': 'Délai vente moyen',
+    'lbl-dvf': 'Transactions DVF officielles',
+    'stitle-comparables': 'Comparables réels',
+    'th-adresse': 'Adresse',
+    'th-prix-vendu': 'Prix vendu',
+    'comparables-title': '📊 Positionnement prix',
+    'comparables-justification': 'Le prix de présentation a été établi sur la base des transactions récentes du secteur et des caractéristiques propres au bien.',
+    'lbl-dpe-reglementation': 'DPE & réglementation',
+    'lbl-simulateur': 'Simulateur investisseur temps réel',
+    'stitle-simulateur': 'Simulateur investisseur interactif',
+    'slbl-prix-achat': "Prix d'achat",
+    'slbl-prix-achat-sm': 'Votre offre',
+    'slbl-loyer-simule': 'Loyer simulé',
+    'slbl-loyer-simule-sm': 'Post-rénovation',
+    'slbl-apport': 'Apport',
+    'slbl-apport-sm': '% du coût total',
+    'slbl-taux': 'Taux crédit',
+    'slbl-taux-sm': 'Oct. 2025 : 3,22%',
+    'slbl-duree': 'Durée',
+    'slbl-duree-sm': 'Années',
+    'slbl-charges': 'Charges ann.',
+    'slbl-charges-sm': 'Copro+assur+TF',
+    'charges-detail-default': 'Eau froide, nettoyage et entretien des parties communes, ascenseur',
+    'slbl-travaux': 'Budget travaux',
+    'slbl-travaux-sm': 'Rénovation DPE',
+    'rcl-prix-achat': "Prix d'achat",
+    'rcl-notaire': 'Frais notaire',
+    'rcl-apport-requis': 'Apport requis',
+    'rcl-rendement': 'Rendement brut',
+    'rcl-mensualite': 'Mensualité crédit',
+    'lbl-infos-complementaires': 'Informations complémentaires',
+    'stitle-diagnostics': 'Diagnostics Techniques',
+    'ssub-diagnostics': 'Résultats officiels des diagnostics réglementaires',
+    'lbl-simulateur-perso': 'Simulateur personnel',
+    'stitle-budget': 'Ce bien est-il fait pour vous ?',
+    'ssub-budget': 'Entrez votre situation pour le savoir en 30 secondes',
+    'lbl-prix-vente': 'Prix de vente (€)',
+    'lbl-revenu': 'Revenu net mensuel du foyer (€)',
+    'lbl-apport-dispo': 'Apport disponible (€)',
+    'lbl-duree-credit': 'Durée du crédit souhaitée',
+    'lbl-taux-budget': 'Taux du crédit (%)',
+    'opt-15ans': '15 ans',
+    'opt-20ans': '20 ans',
+    'opt-25ans': '25 ans',
+    'btn-calc-budget': 'Calculer mon accessibilité',
+    'disclaimer-budget': "⚠️ Cette simulation est fournie à titre indicatif uniquement, sur la base des taux moyens du marché et des règles bancaires courantes. Elle ne constitue pas un accord de financement, une offre de prêt, ni un engagement d'un établissement bancaire. Les résultats dépendent de votre situation personnelle complète (revenus, charges, historique bancaire). Seul un établissement de crédit agréé peut vous délivrer une offre de prêt valable. Consultez votre banquier ou un courtier pour une analyse personnalisée.",
+    'lbl-quartier': 'Vie du quartier',
+    'stitle-quartier': 'Carte du quartier',
+    'ssub-quartier': 'Transports, commerces, écoles et espaces verts dans un rayon de 800m',
+    'filter-transport': '🚇 Transports',
+    'filter-vert': '🌳 Espaces verts',
+    'filter-commerce': '🛒 Commerces',
+    'filter-ecole': '🏫 Écoles',
+    'filter-all': '👁️ Tout afficher',
+    'cnt-transport-lbl': 'transports',
+    'cnt-vert-lbl': 'espaces verts',
+    'cnt-commerce-lbl': 'commerces',
+    'cnt-ecole-lbl': 'établissements scolaires',
+    'radius-lbl': '· rayon 800m',
+    'lbl-docs': 'Espace documentaire sécurisé',
+    'stitle-docs': 'Documents disponibles',
+    'ssub-docs': 'Renseignez vos coordonnées pour accéder aux documents. Votre demande est transmise au conseiller.',
+    'lbl-prenom-nom': 'Prénom et nom',
+    'btn-unlock-docs': '🔓 Accéder aux documents',
+    'doc-success-title': '✅ Accès déverrouillé',
+    'doc-success-txt': 'Votre demande a été transmise. Le conseiller vous contactera dans les 24h avec les documents complets.',
+    'doc-pv-ag': 'PV Assemblée Générale',
+    'doc-pv-ag-desc': 'Dernière AG copropriété',
+    'doc-dispo': '🔓 Disponible',
+    'doc-diag-tech': 'Diagnostics techniques',
+    'doc-diag-tech-desc': 'DPE, amiante, plomb...',
+    'doc-factures': 'Factures & devis travaux',
+    'doc-factures-desc': 'Rénovations réalisées',
+    'doc-reglement': 'Règlement copropriété',
+    'doc-reglement-desc': 'Documents de la copro',
+    'offre-progress-prefix': 'Vous avez exploré',
+    'offre-progress-suffix': ' / 10 sections',
+    'offre-progress-sub': 'Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.',
+    'lbl-processus': "Processus d'acquisition",
+    'step-visite': 'Visite',
+    'step-offre': 'Offre',
+    'step-negociation': 'Négociation',
+    'step-promesse': 'Promesse',
+    'step-10jours': '10 jours',
+    'step-financement': 'Financement',
+    'step-signature': 'Signature',
+    'lbl-offre-tunnel': "Tunnel d'offre sécurisé",
+    'stitle-offre': 'Votre offre d\'achat',
+    'ssub-offre': 'Renseignez votre proposition. Elle sera transmise au conseiller et au vendeur sous 24h.',
+    'lbl-montant-offre': 'Montant de votre offre (€)',
+    'lbl-financement': 'Mode de financement',
+    'opt-financement-bancaire': 'Financement bancaire',
+    'opt-comptant': 'Comptant',
+    'lbl-apport-perso': 'Apport personnel (€)',
+    'lbl-delai-souhaite': 'Délai souhaité',
+    'opt-3mois': '3 mois (standard)',
+    'opt-2mois': '2 mois (rapide)',
+    'opt-4mois': '4 mois ou plus',
+    'lbl-message-vendeur': 'Message au vendeur (facultatif)',
+    'btn-submit-offre': '✍️ Transmettre mon offre sécurisée',
+    'lbl-apres-offre': 'Après votre offre — la suite',
+    'etape1-titre': 'ÉTAPE 1 · RÉPONSE DU VENDEUR',
+    'etape1-txt': 'Acceptation, refus ou contre-proposition. Délai habituel : 2–5 jours.',
+    'etape2-titre': 'ÉTAPE 2 · SIGNATURE PROMESSE',
+    'etape2-txt': "Chez le notaire, 8–10 jours après l'accord. Dépôt de garantie de 5–10%.",
+    'etape3-titre': 'ÉTAPE 3 · 10 JOURS RÉTRACTATION',
+    'etape3-txt': 'Délai légal sans pénalité. Vérifiez tous les documents.',
+    'etape4-titre': 'ÉTAPE 4 · VALIDATION BANCAIRE',
+    'etape4-txt': 'Votre banque dispose d\'environ 60 jours pour valider votre prêt.',
+    'etape5-titre': 'ÉTAPE 5 · SIGNATURE DÉFINITIVE 🔑',
+    'etape5-txt': "Environ 3 mois après la promesse — acte authentique et remise des clés.",
+    'lbl-votre-offre': 'Votre offre',
+    'marge-negociation-prefix': 'Marge de négociation estimée :',
+    'marge-negociation-suffix': 'selon le DPE et les DVF du secteur.',
+    'footer-title': 'Espace Acheteur Privé',
+    'footer-subtitle': 'une expérience immobilière nouvelle génération',
+    'footer-desc': "Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.",
+    'ai-bubble': 'Une question sur ce bien ? Je suis là 👋',
+    'ai-ask-btn': 'Poser une question',
+    'ai-modal-title': 'Assistant Privency',
+    'ai-modal-available': 'Disponible 24h/24',
+    'footer-tagline': "L'immobilier avec l'expertise d'un professionnel",
+    'footer-analyse-par': 'Analyse réalisée par Olivier LOISON · Mandataire Expertimo · olivier.loison@expertimo.com',
+    'footer-mentions': 'Mentions légales',
+    'footer-cgv': 'CGV',
+    'footer-confidentialite': 'Politique de confidentialité',
+    'ai-input-placeholder': 'Votre question...',
+    'placeholder-nom': 'Jean Dupont',
+    'placeholder-email': 'jean@email.com',
+    'placeholder-offer-msg': "Présentez votre projet... Un message sincère rassure le vendeur."
+    },
+    msg: {
+      "years-suffix": " ans",
+      "offer-diff-below": " vs prix affiché",
+      "offer-diff-above": " au-dessus du prix affiché",
+      "offer-diff-at": "Au prix affiché",
+      "offer-missing": "Merci de remplir au moins le montant, votre nom et votre email.",
+      "offer-sent": "<p>✅ Votre offre de <strong>{montant} €</strong> a été transmise. {agent} vous contactera dans les 24h.</p>",
+      "agent-fallback": "votre conseiller",
+      "at-phone": " au {tel}",
+      "offer-err": "Erreur lors de l’envoi. Contactez directement {agent}{tel}.",
+      "offer-neterr": "Erreur réseau. Contactez directement {agent}{tel}.",
+      "docs-missing": "Merci de renseigner votre nom et email.",
+      "diag-not-subject": "Non soumis à obligation",
+      "welcome-greeting": "Bienvenue",
+      "welcome-buyer": "Bienvenue {name}",
+      "bgt-basis": "Simulation basée sur un prix de {prix} et un taux de {taux}%.",
+      "bgt-monthly": "Mensualité estimée",
+      "bgt-debt": "Taux d'endettement",
+      "bgt-max": "Budget max accessible",
+      "bgt-effort": "Effort total",
+      "bgt-effort-sm": "(crédit + charges)",
+      "bgt-effort-sub": "À titre informatif",
+      "bgt-note": "Simulation basée sur un apport minimum de 10% du coût total (frais de notaire compris), règle appliquée par la majorité des banques. Certaines banques financent jusqu'à 110% du prix (sans apport), mais cette pratique reste de plus en plus rare.",
+      "bgt-need-income": "Veuillez renseigner votre revenu mensuel.",
+      "bgt-ok-title": "✅ Ce bien est accessible pour vous",
+      "bgt-cond-title": "⚠️ Accessible sous conditions",
+      "bgt-cond-text": "Taux d'endettement {taux}% — certaines banques acceptent jusqu'à 38% selon votre profil. Votre budget max estimé : {max}.",
+      "bgt-ko-title": "❌ Hors budget pour ce bien",
+      "bgt-ko-text": "Avec un revenu de {revenu} €/mois et un apport de {apport} €, votre budget max est estimé à <strong>{max} €</strong> vs {prix} € pour ce bien.",
+      "gallery-caption-one": "📷 Cliquez sur une photo pour l'agrandir · {n} photo disponible",
+      "gallery-caption-other": "📷 Cliquez sur une photo pour l'agrandir · {n} photos disponibles",
+      "score-desc": "Score {score}/10{dpe}. {pos}.",
+      "score-dpe": ". DPE {dpe}",
+      "price-pos-above": "Prix au-dessus du marché",
+      "price-pos-below": "Prix sous le marché",
+      "price-pos-in": "Prix dans le marché",
+      "price-pos-tbc": "Prix à confirmer",
+      "rent-info": "Bien libre. Loyer estimé : {loyer} € nu. Simulez votre rentabilité ci-dessous.",
+      "doc-charges-desc": "Relevé annuel · {n} €/mois",
+      "doc-taxe-desc": "{n} € / an",
+      "diag-name-amiante": "Amiante",
+      "diag-name-plomb": "Plomb (CREP)",
+      "diag-name-termites": "Termites",
+      "diag-name-electricite": "Électricité",
+      "diag-name-gaz": "Gaz",
+      "diag-name-assainissement": "Assainissement"
+    },
+    dpe: {
+    A: {t:"✅ DPE A — Excellent", txt:"Bien très performant énergétiquement. Aucune contrainte réglementaire.", cls:"vert"},
+    B: {t:"✅ DPE B — Très bon", txt:"Bien performant. Pas de contrainte de location.", cls:"vert"},
+    C: {t:"✅ DPE C — Bon", txt:"Bien correct. Pas de contrainte de location.", cls:"vert"},
+    D: {t:"✅ DPE D — Correct", txt:"Pas de contrainte réglementaire de location.", cls:"vert"},
+    E: {t:"⚠️ DPE E — Attention", txt:"Location toujours autorisée. Nouveau bail possible jusqu'en 2034. Rénovation conseillée.", cls:"amber"},
+    F: {t:"⚠️ DPE F — Passoire thermique", txt:"Nouveau bail interdit depuis jan. 2025. Bail en cours valide, loyer gelé. Rénovation nécessaire avant relocation.", cls:"amber"},
+    G: {t:"🚫 DPE G — Interdit à la location", txt:"Nouveau bail interdit. Loyer gelé. Rénovation obligatoire avant toute relocation (5–12k€, MaPrimeRénov éligible).", cls:"rouge"},
+    ceBien: 'CE BIEN'
+    },
+    ai: {
+      "welcome": "Bonjour ! Je suis l'assistant de {adresse}. Je réponds à vos questions à partir des informations de la fiche : prix, diagnostics, DPE, charges, travaux, quartier et plus encore. Que souhaitez-vous savoir ?",
+      "sessionStart": "(début de session)",
+      "suggestions": [
+        "Quel est le DPE et le coût du chauffage ?",
+        "Quelles écoles, commerces et transports sont à proximité ?",
+        "Quels travaux ont été réalisés dans le bien ?"
+      ],
+      "networkError": "Erreur réseau : {msg}",
+      "apiError": "Erreur : {msg}",
+      "reply": {
+        "name": "français",
+        "address": "Vouvoiement systématique : tu t'adresses toujours au visiteur avec « vous », jamais avec « tu ».",
+        "notProvided": "Cette information n'est pas renseignée dans la fiche."
+      }
+    }
+  },
+  en: {
+    label: "EN", name: "English",
+    ui: {
+    "doc-charges": "Service charge statements",
+    "doc-taxe": "Property tax notice (taxe foncière)",
+    "lbl-diag-reg": "Statutory diagnostics",
+    "diag-carrez": "Carrez Law",
+    "th-date": "Date",
+    "th-surface": "Area",
+    'hbadge': 'Private Buyer Portal · Expertimo',
+    'price-label': 'Listed price',
+    'price-meta': 'Agency fees included · Real-time data',
+    'rail-progress-suffix': ' / 10 sections explored',
+    'tab-bien': 'The Property',
+    'tab-marche': 'Comparable Sales',
+    'tab-rentabilite': 'Investor Simulator',
+    'tab-historique': 'Everything About This Property',
+    'tab-budget': 'My Budget',
+    'tab-quartier': 'Interactive Map',
+    'tab-offre': 'Make an Offer',
+    'lbl-le-bien': 'The property',
+    'score-title': 'Property Quality Score',
+    'score-prestations': 'Amenities & standing',
+    'score-secteur': 'Area & environment',
+    'score-qp': 'Value for money',
+    'score-etat': 'Overall condition',
+    'cons-role': 'Real Estate Agent · Expertimo',
+    'btn-rdv': '📅 Book an Appointment',
+    'btn-site': '🏠 See my other listings',
+    'btn-offre': '✍️ Make an Offer',
+    'kpi-prixm2': 'Price/m² · this property',
+    'kpi-mediane': 'Median Longjumeau / Essonne 91',
+    'kpi-tension': 'Rental demand',
+    'kpi-delai': 'Average time to sell',
+    'lbl-dvf': 'Official DVF transactions',
+    'stitle-comparables': 'Real comparables',
+    'th-adresse': 'Address',
+    'th-prix-vendu': 'Sale Price',
+    'comparables-title': '📊 Price Positioning',
+    'comparables-justification': "The listed price was established based on recent transactions in the area and the property's specific characteristics.",
+    'lbl-dpe-reglementation': 'DPE & regulations',
+    'lbl-simulateur': 'Real-time investor simulator',
+    'stitle-simulateur': 'Interactive investor simulator',
+    'slbl-prix-achat': 'Purchase price',
+    'slbl-prix-achat-sm': 'Your offer',
+    'slbl-loyer-simule': 'Simulated rent',
+    'slbl-loyer-simule-sm': 'Post-renovation',
+    'slbl-apport': 'Down payment',
+    'slbl-apport-sm': '% of total cost',
+    'slbl-taux': 'Interest rate',
+    'slbl-taux-sm': 'Oct. 2025: 3.22%',
+    'slbl-duree': 'Duration',
+    'slbl-duree-sm': 'Years',
+    'slbl-charges': 'Annual charges',
+    'slbl-charges-sm': 'HOA+insurance+property tax',
+    'charges-detail-default': 'Cold water, cleaning and maintenance of common areas, elevator',
+    'slbl-travaux': 'Renovation budget',
+    'slbl-travaux-sm': 'DPE renovation',
+    'rcl-prix-achat': 'Purchase price',
+    'rcl-notaire': 'Notary fees',
+    'rcl-apport-requis': 'Required down payment',
+    'rcl-rendement': 'Gross yield',
+    'rcl-mensualite': 'Monthly payment',
+    'lbl-infos-complementaires': 'Additional information',
+    'stitle-diagnostics': 'Technical Diagnostics',
+    'ssub-diagnostics': 'Official results of regulatory diagnostics',
+    'lbl-simulateur-perso': 'Personal simulator',
+    'stitle-budget': 'Is this property right for you?',
+    'ssub-budget': 'Enter your situation to find out in 30 seconds',
+    'lbl-prix-vente': 'Sale price (€)',
+    'lbl-revenu': 'Net monthly household income (€)',
+    'lbl-apport-dispo': 'Available down payment (€)',
+    'lbl-duree-credit': 'Desired loan term',
+    'lbl-taux-budget': 'Loan interest rate (%)',
+    'opt-15ans': '15 years',
+    'opt-20ans': '20 years',
+    'opt-25ans': '25 years',
+    'btn-calc-budget': 'Calculate my affordability',
+    'disclaimer-budget': '⚠️ This simulation is provided for indicative purposes only, based on average market rates and standard banking rules. It does not constitute a financing agreement, loan offer, or commitment from any banking institution. Results depend on your complete personal situation (income, expenses, credit history). Only an authorized lending institution can issue a valid loan offer. Consult your banker or a broker for a personalized analysis.',
+    'lbl-quartier': 'Neighborhood life',
+    'stitle-quartier': 'Neighborhood map',
+    'ssub-quartier': 'Transport, shops, schools and green spaces within 800m',
+    'filter-transport': '🚇 Transport',
+    'filter-vert': '🌳 Green Spaces',
+    'filter-commerce': '🛒 Shops',
+    'filter-ecole': '🏫 Schools',
+    'filter-all': '👁️ Show All',
+    'cnt-transport-lbl': 'transport links',
+    'cnt-vert-lbl': 'green spaces',
+    'cnt-commerce-lbl': 'shops',
+    'cnt-ecole-lbl': 'schools',
+    'radius-lbl': '· 800m radius',
+    'lbl-docs': 'Secure document space',
+    'stitle-docs': 'Available documents',
+    'ssub-docs': 'Enter your contact details to access the documents. Your request will be forwarded to the agent.',
+    'lbl-prenom-nom': 'First and last name',
+    'btn-unlock-docs': '🔓 Access Documents',
+    'doc-success-title': '✅ Access Unlocked',
+    'doc-success-txt': 'Your request has been sent. The agent will contact you within 24h with the complete documents.',
+    'doc-pv-ag': 'General Meeting Minutes',
+    'doc-pv-ag-desc': 'Latest HOA general meeting',
+    'doc-dispo': '🔓 Available',
+    'doc-diag-tech': 'Technical Diagnostics',
+    'doc-diag-tech-desc': 'DPE, asbestos, lead...',
+    'doc-factures': 'Invoices & Renovation Quotes',
+    'doc-factures-desc': 'Completed renovations',
+    'doc-reglement': 'Condominium Bylaws',
+    'doc-reglement-desc': 'HOA documents',
+    'offre-progress-prefix': "You've explored",
+    'offre-progress-suffix': ' / 10 sections',
+    'offre-progress-sub': "The more you explore this file, the more confident you'll feel making an offer.",
+    'lbl-processus': 'Acquisition process',
+    'step-visite': 'Viewing',
+    'step-offre': 'Offer',
+    'step-negociation': 'Negotiation',
+    'step-promesse': 'Agreement',
+    'step-10jours': '10 days',
+    'step-financement': 'Financing',
+    'step-signature': 'Signing',
+    'lbl-offre-tunnel': 'Secure offer process',
+    'stitle-offre': 'Your Purchase Offer',
+    'ssub-offre': 'Enter your proposal. It will be forwarded to the agent and seller within 24h.',
+    'lbl-montant-offre': 'Your offer amount (€)',
+    'lbl-financement': 'Financing method',
+    'opt-financement-bancaire': 'Bank financing',
+    'opt-comptant': 'Cash',
+    'lbl-apport-perso': 'Personal down payment (€)',
+    'lbl-delai-souhaite': 'Desired timeline',
+    'opt-3mois': '3 months (standard)',
+    'opt-2mois': '2 months (fast)',
+    'opt-4mois': '4 months or more',
+    'lbl-message-vendeur': 'Message to the seller (optional)',
+    'btn-submit-offre': '✍️ Submit My Secure Offer',
+    'lbl-apres-offre': "After Your Offer — What's Next",
+    'etape1-titre': "STEP 1 · SELLER'S RESPONSE",
+    'etape1-txt': 'Acceptance, refusal, or counter-offer. Usual timeframe: 2–5 days.',
+    'etape2-titre': 'STEP 2 · PRELIMINARY AGREEMENT SIGNING',
+    'etape2-txt': "At the notary's office, 8–10 days after agreement. Security deposit of 5–10%.",
+    'etape3-titre': 'STEP 3 · 10-DAY COOLING-OFF PERIOD',
+    'etape3-txt': 'Legal period with no penalty. Review all documents.',
+    'etape4-titre': 'STEP 4 · BANK APPROVAL',
+    'etape4-txt': 'Your bank has about 60 days to approve your loan.',
+    'etape5-titre': 'STEP 5 · FINAL SIGNING 🔑',
+    'etape5-txt': 'About 3 months after the preliminary agreement — deed signing and key handover.',
+    'lbl-votre-offre': 'Your Offer',
+    'marge-negociation-prefix': 'Estimated negotiation margin:',
+    'marge-negociation-suffix': 'based on DPE and local DVF data.',
+    'footer-title': 'Private Buyer Portal',
+    'footer-subtitle': 'a new generation real estate experience',
+    'footer-desc': 'Property analysis, real DVF data, interactive simulator and AI assistant — everything you need to decide with confidence.',
+    'ai-bubble': "Have a question about this property? I'm here 👋",
+    'ai-ask-btn': 'Ask a Question',
+    'ai-modal-title': 'Privency Assistant',
+    'ai-modal-available': 'Available 24/7',
+    'footer-tagline': 'Real estate with professional expertise',
+    'footer-analyse-par': 'Analysis by Olivier LOISON · Expertimo Agent · olivier.loison@expertimo.com',
+    'footer-mentions': 'Legal Notice',
+    'footer-cgv': 'Terms & Conditions',
+    'footer-confidentialite': 'Privacy Policy',
+    'ai-input-placeholder': 'Your question...',
+    'placeholder-nom': 'John Smith',
+    'placeholder-email': 'john@email.com',
+    'placeholder-offer-msg': 'Introduce your project... A sincere message reassures the seller.'
+    },
+    msg: {
+      "years-suffix": " years",
+      "offer-diff-below": " vs listed price",
+      "offer-diff-above": " above listed price",
+      "offer-diff-at": "At listed price",
+      "offer-missing": "Please fill in at least the amount, your name and your email.",
+      "offer-sent": "<p>✅ Your offer of <strong>{montant} €</strong> has been submitted. {agent} will contact you within 24h.</p>",
+      "agent-fallback": "your agent",
+      "at-phone": " at {tel}",
+      "offer-err": "Error sending your request. Please contact {agent} directly{tel}.",
+      "offer-neterr": "Network error. Please contact {agent} directly{tel}.",
+      "docs-missing": "Please enter your name and email.",
+      "diag-not-subject": "Not subject to requirement",
+      "welcome-greeting": "Welcome",
+      "welcome-buyer": "Welcome {name}",
+      "bgt-basis": "Simulation based on a price of {prix} and a rate of {taux}%.",
+      "bgt-monthly": "Estimated monthly payment",
+      "bgt-debt": "Debt ratio",
+      "bgt-max": "Max affordable budget",
+      "bgt-effort": "Total effort",
+      "bgt-effort-sm": "(loan + charges)",
+      "bgt-effort-sub": "For informational purposes",
+      "bgt-note": "Simulation based on a minimum down payment of 10% of total cost (notary fees included), a rule applied by most banks. Some banks finance up to 110% of the price (no down payment), but this practice is becoming increasingly rare.",
+      "bgt-need-income": "Please enter your monthly income.",
+      "bgt-ok-title": "✅ This property is affordable for you",
+      "bgt-cond-title": "⚠️ Affordable under conditions",
+      "bgt-cond-text": "Debt ratio {taux}% — some banks accept up to 38% depending on your profile. Your estimated max budget: {max}.",
+      "bgt-ko-title": "❌ Outside your budget for this property",
+      "bgt-ko-text": "With an income of {revenu} €/month and a down payment of {apport} €, your estimated max budget is <strong>{max} €</strong> vs {prix} € for this property.",
+      "gallery-caption-one": "📷 Click on a photo to enlarge it · {n} photo available",
+      "gallery-caption-other": "📷 Click on a photo to enlarge it · {n} photos available",
+      "score-desc": "Score {score}/10{dpe}. {pos}.",
+      "score-dpe": ". DPE {dpe}",
+      "price-pos-above": "Price above the market",
+      "price-pos-below": "Price below the market",
+      "price-pos-in": "Price in line with the market",
+      "price-pos-tbc": "Price to be confirmed",
+      "rent-info": "Vacant property. Estimated rent: {loyer} € unfurnished. Simulate your returns below.",
+      "doc-charges-desc": "Annual statement · {n} €/month",
+      "doc-taxe-desc": "{n} € / year",
+      "diag-name-amiante": "Asbestos",
+      "diag-name-plomb": "Lead (CREP)",
+      "diag-name-termites": "Termites",
+      "diag-name-electricite": "Electricity",
+      "diag-name-gaz": "Gas",
+      "diag-name-assainissement": "Sanitation"
+    },
+    dpe: {
+    A: {t:"✅ DPE A — Excellent", txt:"Very energy-efficient property. No regulatory restrictions.", cls:"vert"},
+    B: {t:"✅ DPE B — Very good", txt:"Energy-efficient property. No rental restrictions.", cls:"vert"},
+    C: {t:"✅ DPE C — Good", txt:"Decent property. No rental restrictions.", cls:"vert"},
+    D: {t:"✅ DPE D — Fair", txt:"No regulatory rental restrictions.", cls:"vert"},
+    E: {t:"⚠️ DPE E — Caution", txt:"Renting still allowed. New leases possible until 2034. Renovation recommended.", cls:"amber"},
+    F: {t:"⚠️ DPE F — Energy sieve", txt:"New leases banned since Jan. 2025. Existing leases remain valid, rent frozen. Renovation required before re-letting.", cls:"amber"},
+    G: {t:"🚫 DPE G — Rental banned", txt:"New leases prohibited. Rent frozen. Renovation mandatory before any re-letting (€5–12k, eligible for MaPrimeRénov grant).", cls:"rouge"},
+    ceBien: 'THIS PROPERTY'
+    },
+    ai: {
+      "welcome": "Hello! I'm the assistant for {adresse}. I answer your questions using the information in this listing: price, diagnostics, DPE, charges, renovation work, neighborhood and more. What would you like to know?",
+      "sessionStart": "(session start)",
+      "suggestions": [
+        "What is the DPE rating and the heating cost?",
+        "Which schools, shops and public transport are nearby?",
+        "What renovation work has been done on the property?"
+      ],
+      "networkError": "Network error: {msg}",
+      "apiError": "Error: {msg}",
+      "reply": {
+        "name": "anglais",
+        "address": "Adopte un ton poli et professionnel.",
+        "notProvided": "This information isn't provided in the listing."
+      }
+    }
+  },
+  pt: {
+    label: "PT", name: "Português",
+    ui: {
+    "doc-charges": "Chamadas de encargos",
+    "doc-taxe": "Aviso de imposto predial (taxe foncière)",
+    "lbl-diag-reg": "Diagnósticos regulamentares",
+    "diag-carrez": "Lei Carrez",
+    "th-date": "Data",
+    "th-surface": "Área",
+    "hbadge": "Espaço Comprador Privado · Expertimo",
+    "price-label": "Preço anunciado",
+    "price-meta": "Comissão de agência incluída · Dados em tempo real",
+    "rail-progress-suffix": " / 10 secções exploradas",
+    "tab-bien": "O Imóvel",
+    "tab-marche": "Vendas comparáveis",
+    "tab-rentabilite": "Simulador de investimento",
+    "tab-historique": "Tudo sobre este imóvel",
+    "tab-budget": "O meu orçamento",
+    "tab-quartier": "Mapa interativo",
+    "tab-offre": "Fazer uma proposta",
+    "lbl-le-bien": "O imóvel",
+    "score-title": "Pontuação de qualidade do imóvel",
+    "score-prestations": "Acabamentos e standing",
+    "score-secteur": "Zona e envolvente",
+    "score-qp": "Relação qualidade/preço",
+    "score-etat": "Estado geral",
+    "cons-role": "Consultor imobiliário · Expertimo",
+    "btn-rdv": "📅 Marcar uma reunião",
+    "btn-site": "🏠 Ver os meus outros imóveis",
+    "btn-offre": "✍️ Fazer uma proposta",
+    "kpi-prixm2": "Preço m² · este imóvel",
+    "kpi-mediane": "Mediana Longjumeau / Essonne 91",
+    "kpi-tension": "Procura de arrendamento",
+    "kpi-delai": "Prazo médio de venda",
+    "lbl-dvf": "Transações DVF oficiais",
+    "stitle-comparables": "Comparáveis reais",
+    "th-adresse": "Morada",
+    "th-prix-vendu": "Preço de venda",
+    "comparables-title": "📊 Posicionamento de preço",
+    "comparables-justification": "O preço de apresentação foi definido com base nas transações recentes da zona e nas características próprias do imóvel.",
+    "lbl-dpe-reglementation": "DPE e regulamentação",
+    "lbl-simulateur": "Simulador de investimento em tempo real",
+    "stitle-simulateur": "Simulador de investimento interativo",
+    "slbl-prix-achat": "Preço de compra",
+    "slbl-prix-achat-sm": "A sua proposta",
+    "slbl-loyer-simule": "Renda simulada",
+    "slbl-loyer-simule-sm": "Após obras",
+    "slbl-apport": "Entrada",
+    "slbl-apport-sm": "% do custo total",
+    "slbl-taux": "Taxa do crédito",
+    "slbl-taux-sm": "Out. 2025: 3,22%",
+    "slbl-duree": "Duração",
+    "slbl-duree-sm": "Anos",
+    "slbl-charges": "Encargos anuais",
+    "slbl-charges-sm": "Cond.+seguro+imposto predial",
+    "charges-detail-default": "Água fria, limpeza e manutenção das partes comuns, elevador",
+    "slbl-travaux": "Orçamento de obras",
+    "slbl-travaux-sm": "Renovação energética (DPE)",
+    "rcl-prix-achat": "Preço de compra",
+    "rcl-notaire": "Custos notariais",
+    "rcl-apport-requis": "Entrada necessária",
+    "rcl-rendement": "Rendimento bruto",
+    "rcl-mensualite": "Prestação do crédito",
+    "lbl-infos-complementaires": "Informações complementares",
+    "stitle-diagnostics": "Diagnósticos técnicos",
+    "ssub-diagnostics": "Resultados oficiais dos diagnósticos regulamentares",
+    "lbl-simulateur-perso": "Simulador pessoal",
+    "stitle-budget": "Este imóvel é feito para si?",
+    "ssub-budget": "Indique a sua situação e descubra em 30 segundos",
+    "lbl-prix-vente": "Preço de venda (€)",
+    "lbl-revenu": "Rendimento líquido mensal do agregado (€)",
+    "lbl-apport-dispo": "Entrada disponível (€)",
+    "lbl-duree-credit": "Duração do crédito pretendida",
+    "lbl-taux-budget": "Taxa do crédito (%)",
+    "opt-15ans": "15 anos",
+    "opt-20ans": "20 anos",
+    "opt-25ans": "25 anos",
+    "btn-calc-budget": "Calcular a minha capacidade",
+    "disclaimer-budget": "⚠️ Esta simulação é fornecida a título meramente indicativo, com base nas taxas médias de mercado e nas regras bancárias correntes. Não constitui um acordo de financiamento, uma oferta de crédito nem um compromisso de qualquer instituição bancária. Os resultados dependem da sua situação pessoal completa (rendimentos, encargos, historial bancário). Apenas uma instituição de crédito autorizada pode emitir uma oferta de crédito válida. Consulte o seu banco ou um intermediário de crédito para uma análise personalizada.",
+    "lbl-quartier": "Vida do bairro",
+    "stitle-quartier": "Mapa do bairro",
+    "ssub-quartier": "Transportes, comércios, escolas e espaços verdes num raio de 800 m",
+    "filter-transport": "🚇 Transportes",
+    "filter-vert": "🌳 Espaços verdes",
+    "filter-commerce": "🛒 Comércios",
+    "filter-ecole": "🏫 Escolas",
+    "filter-all": "👁️ Mostrar tudo",
+    "cnt-transport-lbl": "transportes",
+    "cnt-vert-lbl": "espaços verdes",
+    "cnt-commerce-lbl": "comércios",
+    "cnt-ecole-lbl": "estabelecimentos de ensino",
+    "radius-lbl": "· raio de 800 m",
+    "lbl-docs": "Espaço documental seguro",
+    "stitle-docs": "Documentos disponíveis",
+    "ssub-docs": "Indique os seus contactos para aceder aos documentos. O seu pedido é transmitido ao consultor.",
+    "lbl-prenom-nom": "Nome e apelido",
+    "btn-unlock-docs": "🔓 Aceder aos documentos",
+    "doc-success-title": "✅ Acesso desbloqueado",
+    "doc-success-txt": "O seu pedido foi transmitido. O consultor entrará em contacto nas próximas 24 h com os documentos completos.",
+    "doc-pv-ag": "Ata da Assembleia Geral",
+    "doc-pv-ag-desc": "Última assembleia do condomínio",
+    "doc-dispo": "🔓 Disponível",
+    "doc-diag-tech": "Diagnósticos técnicos",
+    "doc-diag-tech-desc": "DPE, amianto, chumbo...",
+    "doc-factures": "Faturas e orçamentos de obras",
+    "doc-factures-desc": "Obras realizadas",
+    "doc-reglement": "Regulamento do condomínio",
+    "doc-reglement-desc": "Documentos do condomínio",
+    "offre-progress-prefix": "Explorou",
+    "offre-progress-suffix": " / 10 secções",
+    "offre-progress-sub": "Quanto mais explorar o dossiê, mais confiança terá para fazer uma proposta.",
+    "lbl-processus": "Processo de aquisição",
+    "step-visite": "Visita",
+    "step-offre": "Proposta",
+    "step-negociation": "Negociação",
+    "step-promesse": "Promessa",
+    "step-10jours": "10 dias",
+    "step-financement": "Financiamento",
+    "step-signature": "Assinatura",
+    "lbl-offre-tunnel": "Processo de proposta seguro",
+    "stitle-offre": "A sua proposta de compra",
+    "ssub-offre": "Indique a sua proposta. Será transmitida ao consultor e ao vendedor em 24 h.",
+    "lbl-montant-offre": "Valor da sua proposta (€)",
+    "lbl-financement": "Forma de financiamento",
+    "opt-financement-bancaire": "Financiamento bancário",
+    "opt-comptant": "Pronto pagamento",
+    "lbl-apport-perso": "Entrada pessoal (€)",
+    "lbl-delai-souhaite": "Prazo pretendido",
+    "opt-3mois": "3 meses (padrão)",
+    "opt-2mois": "2 meses (rápido)",
+    "opt-4mois": "4 meses ou mais",
+    "lbl-message-vendeur": "Mensagem ao vendedor (facultativa)",
+    "btn-submit-offre": "✍️ Enviar a minha proposta segura",
+    "lbl-apres-offre": "Depois da sua proposta — os passos seguintes",
+    "etape1-titre": "PASSO 1 · RESPOSTA DO VENDEDOR",
+    "etape1-txt": "Aceitação, recusa ou contraproposta. Prazo habitual: 2–5 dias.",
+    "etape2-titre": "PASSO 2 · ASSINATURA DA PROMESSA",
+    "etape2-txt": "No notário, 8–10 dias após o acordo. Sinal de 5–10%.",
+    "etape3-titre": "PASSO 3 · 10 DIAS DE RETRATAÇÃO",
+    "etape3-txt": "Prazo legal sem penalização. Verifique todos os documentos.",
+    "etape4-titre": "PASSO 4 · VALIDAÇÃO BANCÁRIA",
+    "etape4-txt": "O seu banco dispõe de cerca de 60 dias para aprovar o crédito.",
+    "etape5-titre": "PASSO 5 · ESCRITURA DEFINITIVA 🔑",
+    "etape5-txt": "Cerca de 3 meses após a promessa — escritura e entrega das chaves.",
+    "lbl-votre-offre": "A sua proposta",
+    "marge-negociation-prefix": "Margem de negociação estimada:",
+    "marge-negociation-suffix": "com base no DPE e nas transações DVF da zona.",
+    "footer-title": "Espaço Comprador Privado",
+    "footer-subtitle": "uma experiência imobiliária de nova geração",
+    "footer-desc": "Análise patrimonial, dados DVF reais, simulador interativo e assistente de IA — tudo o que precisa para decidir com confiança.",
+    "ai-bubble": "Tem uma pergunta sobre este imóvel? Estou aqui 👋",
+    "ai-ask-btn": "Fazer uma pergunta",
+    "ai-modal-title": "Assistente Privency",
+    "ai-modal-available": "Disponível 24 h/24",
+    "footer-tagline": "Imobiliário com a experiência de um profissional",
+    "footer-analyse-par": "Análise realizada por Olivier LOISON · Consultor Expertimo · olivier.loison@expertimo.com",
+    "footer-mentions": "Menções legais",
+    "footer-cgv": "Condições gerais de venda",
+    "footer-confidentialite": "Política de privacidade",
+    "ai-input-placeholder": "A sua pergunta...",
+    "placeholder-nom": "João Silva",
+    "placeholder-email": "joao@email.com",
+    "placeholder-offer-msg": "Apresente o seu projeto... Uma mensagem sincera tranquiliza o vendedor."
+    },
+    msg: {
+      "years-suffix": " anos",
+      "offer-diff-below": " face ao preço anunciado",
+      "offer-diff-above": " acima do preço anunciado",
+      "offer-diff-at": "Ao preço anunciado",
+      "offer-missing": "Preencha pelo menos o valor, o seu nome e o seu email.",
+      "offer-sent": "<p>✅ A sua proposta de <strong>{montant} €</strong> foi transmitida. {agent} entrará em contacto nas próximas 24 h.</p>",
+      "agent-fallback": "o seu consultor",
+      "at-phone": " pelo número {tel}",
+      "offer-err": "Erro ao enviar o pedido. Contacte diretamente {agent}{tel}.",
+      "offer-neterr": "Erro de rede. Contacte diretamente {agent}{tel}.",
+      "docs-missing": "Indique o seu nome e o seu email.",
+      "diag-not-subject": "Não sujeito a obrigação",
+      "welcome-greeting": "Bem-vindo(a)",
+      "welcome-buyer": "Bem-vindo(a) {name}",
+      "bgt-basis": "Simulação baseada num preço de {prix} e numa taxa de {taux}%.",
+      "bgt-monthly": "Prestação estimada",
+      "bgt-debt": "Taxa de esforço",
+      "bgt-max": "Orçamento máximo acessível",
+      "bgt-effort": "Esforço total",
+      "bgt-effort-sm": "(crédito + encargos)",
+      "bgt-effort-sub": "A título informativo",
+      "bgt-note": "Simulação baseada numa entrada mínima de 10% do custo total (custos notariais incluídos), regra aplicada pela maioria dos bancos. Alguns bancos financiam até 110% do preço (sem entrada), mas esta prática é cada vez mais rara.",
+      "bgt-need-income": "Indique o seu rendimento mensal.",
+      "bgt-ok-title": "✅ Este imóvel é acessível para si",
+      "bgt-cond-title": "⚠️ Acessível sob condições",
+      "bgt-cond-text": "Taxa de esforço de {taux}% — alguns bancos aceitam até 38% consoante o seu perfil. O seu orçamento máximo estimado: {max}.",
+      "bgt-ko-title": "❌ Fora do orçamento para este imóvel",
+      "bgt-ko-text": "Com um rendimento de {revenu} €/mês e uma entrada de {apport} €, o seu orçamento máximo estimado é de <strong>{max} €</strong> face a {prix} € para este imóvel.",
+      "gallery-caption-one": "📷 Clique numa foto para a ampliar · {n} foto disponível",
+      "gallery-caption-other": "📷 Clique numa foto para a ampliar · {n} fotos disponíveis",
+      "score-desc": "Pontuação {score}/10{dpe}. {pos}.",
+      "score-dpe": ". DPE {dpe}",
+      "price-pos-above": "Preço acima do mercado",
+      "price-pos-below": "Preço abaixo do mercado",
+      "price-pos-in": "Preço em linha com o mercado",
+      "price-pos-tbc": "Preço a confirmar",
+      "rent-info": "Imóvel livre. Renda estimada: {loyer} € sem mobília. Simule abaixo a sua rentabilidade.",
+      "doc-charges-desc": "Extrato anual · {n} €/mês",
+      "doc-taxe-desc": "{n} € / ano",
+      "diag-name-amiante": "Amianto",
+      "diag-name-plomb": "Chumbo (CREP)",
+      "diag-name-termites": "Térmitas",
+      "diag-name-electricite": "Eletricidade",
+      "diag-name-gaz": "Gás",
+      "diag-name-assainissement": "Saneamento"
+    },
+    dpe: {
+    "A": {"t": "✅ DPE A — Excelente", "txt": "Imóvel muito eficiente do ponto de vista energético. Sem restrições regulamentares.", "cls": "vert"},
+    "B": {"t": "✅ DPE B — Muito bom", "txt": "Imóvel eficiente. Sem restrições ao arrendamento.", "cls": "vert"},
+    "C": {"t": "✅ DPE C — Bom", "txt": "Imóvel correto. Sem restrições ao arrendamento.", "cls": "vert"},
+    "D": {"t": "✅ DPE D — Razoável", "txt": "Sem restrições regulamentares ao arrendamento.", "cls": "vert"},
+    "E": {"t": "⚠️ DPE E — Atenção", "txt": "Arrendamento ainda permitido. Novos contratos possíveis até 2034. Renovação recomendada.", "cls": "amber"},
+    "F": {"t": "⚠️ DPE F — Imóvel muito ineficiente", "txt": "Novos contratos proibidos desde jan. 2025. Contratos em curso válidos, renda congelada. Renovação necessária antes de novo arrendamento.", "cls": "amber"},
+    "G": {"t": "🚫 DPE G — Arrendamento proibido", "txt": "Novos contratos proibidos. Renda congelada. Renovação obrigatória antes de qualquer novo arrendamento (5–12 mil €, elegível para o MaPrimeRénov).", "cls": "rouge"},
+    "ceBien": "ESTE IMÓVEL"
+    },
+    ai: {
+      "welcome": "Olá! Sou o assistente de {adresse}. Respondo às suas perguntas com base nas informações da ficha: preço, diagnósticos, DPE, encargos, obras, bairro e muito mais. O que gostaria de saber?",
+      "sessionStart": "(início de sessão)",
+      "suggestions": [
+        "Qual é o DPE (certificado energético) e o custo do aquecimento?",
+        "Que escolas, comércios e transportes existem nas proximidades?",
+        "Que obras foram realizadas no imóvel?"
+      ],
+      "networkError": "Erro de rede: {msg}",
+      "apiError": "Erro: {msg}",
+      "reply": {
+        "name": "portugais européen",
+        "address": "Utilise un registre formel (« o senhor / a senhora » ou des tournures impersonnelles), jamais le tutoiement.",
+        "notProvided": "Esta informação não está indicada na ficha."
+      }
+    }
+  },
+  es: {
+    label: "ES", name: "Español",
+    ui: {
+    "doc-charges": "Llamadas de gastos",
+    "doc-taxe": "Aviso del impuesto de bienes inmuebles (taxe foncière)",
+    "lbl-diag-reg": "Diagnósticos reglamentarios",
+    "diag-carrez": "Ley Carrez",
+    "th-date": "Fecha",
+    "th-surface": "Superficie",
+    "hbadge": "Espacio Comprador Privado · Expertimo",
+    "price-label": "Precio anunciado",
+    "price-meta": "Honorarios de agencia incluidos · Datos en tiempo real",
+    "rail-progress-suffix": " / 10 secciones exploradas",
+    "tab-bien": "La vivienda",
+    "tab-marche": "Ventas comparables",
+    "tab-rentabilite": "Simulador de inversión",
+    "tab-historique": "Todo sobre esta vivienda",
+    "tab-budget": "Mi presupuesto",
+    "tab-quartier": "Mapa interactivo",
+    "tab-offre": "Hacer una oferta",
+    "lbl-le-bien": "La vivienda",
+    "score-title": "Puntuación de calidad de la vivienda",
+    "score-prestations": "Prestaciones y categoría",
+    "score-secteur": "Zona y entorno",
+    "score-qp": "Relación calidad-precio",
+    "score-etat": "Estado general",
+    "cons-role": "Agente inmobiliario · Expertimo",
+    "btn-rdv": "📅 Concertar una cita",
+    "btn-site": "🏠 Ver mis otros inmuebles",
+    "btn-offre": "✍️ Hacer una oferta",
+    "kpi-prixm2": "Precio m² · esta vivienda",
+    "kpi-mediane": "Mediana Longjumeau / Essonne 91",
+    "kpi-tension": "Demanda de alquiler",
+    "kpi-delai": "Plazo medio de venta",
+    "lbl-dvf": "Transacciones DVF oficiales",
+    "stitle-comparables": "Comparables reales",
+    "th-adresse": "Dirección",
+    "th-prix-vendu": "Precio de venta",
+    "comparables-title": "📊 Posicionamiento de precio",
+    "comparables-justification": "El precio de presentación se ha establecido a partir de las transacciones recientes de la zona y de las características propias de la vivienda.",
+    "lbl-dpe-reglementation": "DPE y normativa",
+    "lbl-simulateur": "Simulador de inversión en tiempo real",
+    "stitle-simulateur": "Simulador de inversión interactivo",
+    "slbl-prix-achat": "Precio de compra",
+    "slbl-prix-achat-sm": "Su oferta",
+    "slbl-loyer-simule": "Alquiler simulado",
+    "slbl-loyer-simule-sm": "Tras la reforma",
+    "slbl-apport": "Entrada",
+    "slbl-apport-sm": "% del coste total",
+    "slbl-taux": "Tipo del préstamo",
+    "slbl-taux-sm": "Oct. 2025: 3,22%",
+    "slbl-duree": "Duración",
+    "slbl-duree-sm": "Años",
+    "slbl-charges": "Gastos anuales",
+    "slbl-charges-sm": "Comunidad+seguro+imp. inmuebles",
+    "charges-detail-default": "Agua fría, limpieza y mantenimiento de zonas comunes, ascensor",
+    "slbl-travaux": "Presupuesto de obras",
+    "slbl-travaux-sm": "Reforma energética (DPE)",
+    "rcl-prix-achat": "Precio de compra",
+    "rcl-notaire": "Gastos notariales",
+    "rcl-apport-requis": "Entrada necesaria",
+    "rcl-rendement": "Rentabilidad bruta",
+    "rcl-mensualite": "Cuota del préstamo",
+    "lbl-infos-complementaires": "Información complementaria",
+    "stitle-diagnostics": "Diagnósticos técnicos",
+    "ssub-diagnostics": "Resultados oficiales de los diagnósticos reglamentarios",
+    "lbl-simulateur-perso": "Simulador personal",
+    "stitle-budget": "¿Es esta vivienda para usted?",
+    "ssub-budget": "Indique su situación y lo sabrá en 30 segundos",
+    "lbl-prix-vente": "Precio de venta (€)",
+    "lbl-revenu": "Ingresos netos mensuales del hogar (€)",
+    "lbl-apport-dispo": "Entrada disponible (€)",
+    "lbl-duree-credit": "Duración del préstamo deseada",
+    "lbl-taux-budget": "Tipo del préstamo (%)",
+    "opt-15ans": "15 años",
+    "opt-20ans": "20 años",
+    "opt-25ans": "25 años",
+    "btn-calc-budget": "Calcular mi capacidad",
+    "disclaimer-budget": "⚠️ Esta simulación se ofrece únicamente a título indicativo, sobre la base de los tipos medios de mercado y de las reglas bancarias habituales. No constituye un acuerdo de financiación, una oferta de préstamo ni un compromiso de ninguna entidad bancaria. Los resultados dependen de su situación personal completa (ingresos, gastos, historial bancario). Solo una entidad de crédito autorizada puede emitir una oferta de préstamo válida. Consulte con su banco o con un intermediario de crédito para un análisis personalizado.",
+    "lbl-quartier": "Vida del barrio",
+    "stitle-quartier": "Mapa del barrio",
+    "ssub-quartier": "Transportes, comercios, colegios y zonas verdes en un radio de 800 m",
+    "filter-transport": "🚇 Transportes",
+    "filter-vert": "🌳 Zonas verdes",
+    "filter-commerce": "🛒 Comercios",
+    "filter-ecole": "🏫 Colegios",
+    "filter-all": "👁️ Mostrar todo",
+    "cnt-transport-lbl": "transportes",
+    "cnt-vert-lbl": "zonas verdes",
+    "cnt-commerce-lbl": "comercios",
+    "cnt-ecole-lbl": "centros educativos",
+    "radius-lbl": "· radio de 800 m",
+    "lbl-docs": "Espacio documental seguro",
+    "stitle-docs": "Documentos disponibles",
+    "ssub-docs": "Indique sus datos de contacto para acceder a los documentos. Su solicitud se transmite al agente.",
+    "lbl-prenom-nom": "Nombre y apellidos",
+    "btn-unlock-docs": "🔓 Acceder a los documentos",
+    "doc-success-title": "✅ Acceso desbloqueado",
+    "doc-success-txt": "Su solicitud ha sido transmitida. El agente se pondrá en contacto con usted en 24 h con los documentos completos.",
+    "doc-pv-ag": "Acta de la Junta General",
+    "doc-pv-ag-desc": "Última junta de la comunidad",
+    "doc-dispo": "🔓 Disponible",
+    "doc-diag-tech": "Diagnósticos técnicos",
+    "doc-diag-tech-desc": "DPE, amianto, plomo...",
+    "doc-factures": "Facturas y presupuestos de obras",
+    "doc-factures-desc": "Obras realizadas",
+    "doc-reglement": "Estatutos de la comunidad",
+    "doc-reglement-desc": "Documentos de la comunidad",
+    "offre-progress-prefix": "Ha explorado",
+    "offre-progress-suffix": " / 10 secciones",
+    "offre-progress-sub": "Cuanto más explore el expediente, con más confianza podrá hacer una oferta.",
+    "lbl-processus": "Proceso de adquisición",
+    "step-visite": "Visita",
+    "step-offre": "Oferta",
+    "step-negociation": "Negociación",
+    "step-promesse": "Compromiso",
+    "step-10jours": "10 días",
+    "step-financement": "Financiación",
+    "step-signature": "Firma",
+    "lbl-offre-tunnel": "Proceso de oferta seguro",
+    "stitle-offre": "Su oferta de compra",
+    "ssub-offre": "Indique su propuesta. Será transmitida al agente y al vendedor en un plazo de 24 h.",
+    "lbl-montant-offre": "Importe de su oferta (€)",
+    "lbl-financement": "Forma de financiación",
+    "opt-financement-bancaire": "Financiación bancaria",
+    "opt-comptant": "Al contado",
+    "lbl-apport-perso": "Aportación personal (€)",
+    "lbl-delai-souhaite": "Plazo deseado",
+    "opt-3mois": "3 meses (estándar)",
+    "opt-2mois": "2 meses (rápido)",
+    "opt-4mois": "4 meses o más",
+    "lbl-message-vendeur": "Mensaje al vendedor (opcional)",
+    "btn-submit-offre": "✍️ Enviar mi oferta segura",
+    "lbl-apres-offre": "Después de su oferta — los siguientes pasos",
+    "etape1-titre": "PASO 1 · RESPUESTA DEL VENDEDOR",
+    "etape1-txt": "Aceptación, rechazo o contraoferta. Plazo habitual: 2–5 días.",
+    "etape2-titre": "PASO 2 · FIRMA DEL COMPROMISO",
+    "etape2-txt": "En la notaría, 8–10 días después del acuerdo. Depósito de garantía del 5–10%.",
+    "etape3-titre": "PASO 3 · 10 DÍAS DE DESISTIMIENTO",
+    "etape3-txt": "Plazo legal sin penalización. Revise todos los documentos.",
+    "etape4-titre": "PASO 4 · VALIDACIÓN BANCARIA",
+    "etape4-txt": "Su banco dispone de unos 60 días para aprobar su préstamo.",
+    "etape5-titre": "PASO 5 · ESCRITURA DEFINITIVA 🔑",
+    "etape5-txt": "Unos 3 meses después del compromiso — escritura pública y entrega de llaves.",
+    "lbl-votre-offre": "Su oferta",
+    "marge-negociation-prefix": "Margen de negociación estimado:",
+    "marge-negociation-suffix": "según el DPE y las transacciones DVF de la zona.",
+    "footer-title": "Espacio Comprador Privado",
+    "footer-subtitle": "una experiencia inmobiliaria de nueva generación",
+    "footer-desc": "Análisis patrimonial, datos DVF reales, simulador interactivo y asistente de IA: todo lo que necesita para decidir con confianza.",
+    "ai-bubble": "¿Tiene una pregunta sobre esta vivienda? Estoy aquí 👋",
+    "ai-ask-btn": "Hacer una pregunta",
+    "ai-modal-title": "Asistente Privency",
+    "ai-modal-available": "Disponible 24 h/24",
+    "footer-tagline": "Inmobiliaria con la experiencia de un profesional",
+    "footer-analyse-par": "Análisis realizado por Olivier LOISON · Agente Expertimo · olivier.loison@expertimo.com",
+    "footer-mentions": "Aviso legal",
+    "footer-cgv": "Condiciones generales de venta",
+    "footer-confidentialite": "Política de privacidad",
+    "ai-input-placeholder": "Su pregunta...",
+    "placeholder-nom": "Juan García",
+    "placeholder-email": "juan@email.com",
+    "placeholder-offer-msg": "Presente su proyecto... Un mensaje sincero tranquiliza al vendedor."
+    },
+    msg: {
+      "years-suffix": " años",
+      "offer-diff-below": " respecto al precio anunciado",
+      "offer-diff-above": " por encima del precio anunciado",
+      "offer-diff-at": "Al precio anunciado",
+      "offer-missing": "Rellene al menos el importe, su nombre y su correo electrónico.",
+      "offer-sent": "<p>✅ Su oferta de <strong>{montant} €</strong> ha sido transmitida. {agent} se pondrá en contacto con usted en 24 h.</p>",
+      "agent-fallback": "su agente",
+      "at-phone": " en el {tel}",
+      "offer-err": "Error al enviar su solicitud. Contacte directamente con {agent}{tel}.",
+      "offer-neterr": "Error de red. Contacte directamente con {agent}{tel}.",
+      "docs-missing": "Indique su nombre y su correo electrónico.",
+      "diag-not-subject": "No sujeto a obligación",
+      "welcome-greeting": "Bienvenido/a",
+      "welcome-buyer": "Bienvenido/a {name}",
+      "bgt-basis": "Simulación basada en un precio de {prix} y un tipo del {taux}%.",
+      "bgt-monthly": "Cuota mensual estimada",
+      "bgt-debt": "Tasa de endeudamiento",
+      "bgt-max": "Presupuesto máximo accesible",
+      "bgt-effort": "Esfuerzo total",
+      "bgt-effort-sm": "(préstamo + gastos)",
+      "bgt-effort-sub": "A título informativo",
+      "bgt-note": "Simulación basada en una entrada mínima del 10% del coste total (gastos notariales incluidos), regla aplicada por la mayoría de los bancos. Algunos bancos financian hasta el 110% del precio (sin entrada), pero esta práctica es cada vez menos frecuente.",
+      "bgt-need-income": "Indique sus ingresos mensuales.",
+      "bgt-ok-title": "✅ Esta vivienda es accesible para usted",
+      "bgt-cond-title": "⚠️ Accesible bajo condiciones",
+      "bgt-cond-text": "Tasa de endeudamiento del {taux}% — algunos bancos aceptan hasta el 38% según su perfil. Su presupuesto máximo estimado: {max}.",
+      "bgt-ko-title": "❌ Fuera de presupuesto para esta vivienda",
+      "bgt-ko-text": "Con unos ingresos de {revenu} €/mes y una entrada de {apport} €, su presupuesto máximo estimado es de <strong>{max} €</strong> frente a {prix} € de esta vivienda.",
+      "gallery-caption-one": "📷 Haga clic en una foto para ampliarla · {n} foto disponible",
+      "gallery-caption-other": "📷 Haga clic en una foto para ampliarla · {n} fotos disponibles",
+      "score-desc": "Puntuación {score}/10{dpe}. {pos}.",
+      "score-dpe": ". DPE {dpe}",
+      "price-pos-above": "Precio por encima del mercado",
+      "price-pos-below": "Precio por debajo del mercado",
+      "price-pos-in": "Precio en línea con el mercado",
+      "price-pos-tbc": "Precio por confirmar",
+      "rent-info": "Inmueble libre. Alquiler estimado: {loyer} € sin amueblar. Simule a continuación su rentabilidad.",
+      "doc-charges-desc": "Extracto anual · {n} €/mes",
+      "doc-taxe-desc": "{n} € / año",
+      "diag-name-amiante": "Amianto",
+      "diag-name-plomb": "Plomo (CREP)",
+      "diag-name-termites": "Termitas",
+      "diag-name-electricite": "Electricidad",
+      "diag-name-gaz": "Gas",
+      "diag-name-assainissement": "Saneamiento"
+    },
+    dpe: {
+    "A": {"t": "✅ DPE A — Excelente", "txt": "Vivienda muy eficiente energéticamente. Sin restricciones normativas.", "cls": "vert"},
+    "B": {"t": "✅ DPE B — Muy bueno", "txt": "Vivienda eficiente. Sin restricciones de alquiler.", "cls": "vert"},
+    "C": {"t": "✅ DPE C — Bueno", "txt": "Vivienda correcta. Sin restricciones de alquiler.", "cls": "vert"},
+    "D": {"t": "✅ DPE D — Aceptable", "txt": "Sin restricciones normativas de alquiler.", "cls": "vert"},
+    "E": {"t": "⚠️ DPE E — Atención", "txt": "Alquiler todavía permitido. Nuevos contratos posibles hasta 2034. Se recomienda reformar.", "cls": "amber"},
+    "F": {"t": "⚠️ DPE F — Vivienda muy ineficiente", "txt": "Nuevos contratos prohibidos desde ene. 2025. Contratos en curso válidos, alquiler congelado. Reforma necesaria antes de volver a alquilar.", "cls": "amber"},
+    "G": {"t": "🚫 DPE G — Alquiler prohibido", "txt": "Nuevos contratos prohibidos. Alquiler congelado. Reforma obligatoria antes de cualquier nuevo alquiler (5–12 mil €, con derecho a la ayuda MaPrimeRénov).", "cls": "rouge"},
+    "ceBien": "ESTA VIVIENDA"
+    },
+    ai: {
+      "welcome": "¡Hola! Soy el asistente de {adresse}. Respondo a sus preguntas a partir de la información de la ficha: precio, diagnósticos, DPE, gastos, obras, barrio y mucho más. ¿Qué le gustaría saber?",
+      "sessionStart": "(inicio de sesión)",
+      "suggestions": [
+        "¿Cuál es el DPE (certificado energético) y el coste de la calefacción?",
+        "¿Qué colegios, comercios y transportes hay cerca?",
+        "¿Qué obras se han realizado en la vivienda?"
+      ],
+      "networkError": "Error de red: {msg}",
+      "apiError": "Error: {msg}",
+      "reply": {
+        "name": "espagnol",
+        "address": "Utilise toujours le registre formel « usted », jamais « tú ».",
+        "notProvided": "Esta información no consta en la ficha."
+      }
+    }
+  }
+};
+
+// ═══ OUTILS I18N (lecture de la source unique ci-dessus) ═══
+function _fill(s, vars) {
+  if (s == null) return s;
+  return vars ? String(s).replace(/\{(\w+)\}/g, function(m, k) { return vars[k] != null ? vars[k] : m; }) : String(s);
+}
+function _langPack(lang) { return I18N[lang] || I18N[LANG_DEFAULT]; }
+// Libellés statiques ([data-i18n]) — repli sur le français si la clé manque
+function uiText(key, lang) {
+  var v = _langPack(lang || _currentLang).ui[key];
+  return v != null ? v : I18N[LANG_DEFAULT].ui[key];
+}
+// Messages dynamiques — tr('clé', {variables}, langue?) ; repli sur le français
+function tr(key, vars, lang) {
+  var v = _langPack(lang || _currentLang).msg[key];
+  if (v == null) v = I18N[LANG_DEFAULT].msg[key];
+  return v == null ? key : _fill(v, vars);
+}
+// Assistant IA — accueil, questions suggérées, erreurs, consignes de langue
+function aiT(key, vars, lang) {
+  var v = _langPack(lang || _currentLang).ai[key];
+  if (v == null) v = I18N[LANG_DEFAULT].ai[key];
+  return typeof v === 'string' ? _fill(v, vars) : v;
+}
+function aiSuggestions(lang) {
+  var v = _langPack(lang || _currentLang).ai.suggestions;
+  return (v && v.length) ? v : I18N[LANG_DEFAULT].ai.suggestions;
+}
+function dpeMessages(lang) {
+  var out = {}, base = I18N[LANG_DEFAULT].dpe, over = _langPack(lang).dpe || {};
+  Object.keys(base).forEach(function(k) { out[k] = over[k] != null ? over[k] : base[k]; });
+  return out;
+}
+function capFirst(s) { s = String(s == null ? '' : s); return s.charAt(0).toUpperCase() + s.slice(1); }
+function escHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) {
+    return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c];
+  });
+}
+
+// ═══ LANGUE CHOISIE : mémorisée (localStorage) — ?lang=xx dans l'URL prioritaire ═══
+function getSavedLang() {
+  try {
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q && LANGS.indexOf(q) !== -1) return q;
+  } catch (e) {}
+  try {
+    var s = localStorage.getItem(LANG_STORAGE_KEY);
+    if (s && LANGS.indexOf(s) !== -1) return s;
+  } catch (e) {}
+  return LANG_DEFAULT;
+}
+function saveLang(lang) { try { localStorage.setItem(LANG_STORAGE_KEY, lang); } catch (e) {} }
+
+// Boutons de langue générés depuis LANGS (même style que les boutons FR/EN d'origine)
+function renderLangToggle() {
+  var box = document.getElementById('lang-toggle');
+  if (!box || box.children.length) return;
+  LANGS.forEach(function(code, i) {
+    var b = document.createElement('button');
+    b.id = 'lang-toggle-' + code;
+    b.type = 'button';
+    b.textContent = _langPack(code).label;
+    b.setAttribute('aria-label', _langPack(code).name);
+    b.setAttribute('onclick', "applyLang('" + code + "')");
+    var first = i === 0, last = i === LANGS.length - 1;
+    b.style.cssText = "font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;padding:5px 10px;border:1px solid rgba(201,162,39,.4);"
+      + (first ? '' : 'border-left:none;') + 'background:transparent;color:rgba(255,255,255,.5);cursor:pointer;'
+      + 'border-radius:' + (first ? '6px 0 0 6px' : last ? '0 6px 6px 0' : '0') + ';';
+    box.appendChild(b);
+  });
+}
+
+// ═══ COMMODITÉS (Geoapify) — partagé entre la carte et l'assistant IA ═══
+var _poiCache = {};
+function fetchPoiFeatures(lat, lng) {
+  var k = lat + ',' + lng;
+  if (!_poiCache[k]) {
+    _poiCache[k] = fetch('https://expertimo-phi.vercel.app/api/geoapify?lat=' + lat + '&lng=' + lng)
+      .then(function(r) { return r.json(); })
+      .then(function(data) { return (data && data.features) || []; })
+      .catch(function(err) { delete _poiCache[k]; console.log('[Geoapify] Erreur requête POI :', err); return []; });
+  }
+  return _poiCache[k];
+}
+function poiCategoryOf(props) {
+  var cats = (props && props.categories) || [];
+  if (cats.indexOf('public_transport') !== -1 || cats.indexOf('public_transport.bus') !== -1) return 'transport';
+  if (cats.indexOf('leisure.park') !== -1) return 'vert';
+  if (cats.indexOf('commercial.supermarket') !== -1 || cats.indexOf('commercial.food_and_drink') !== -1 || cats.indexOf('healthcare.pharmacy') !== -1) return 'commerce';
+  if (cats.indexOf('education.school') !== -1 || cats.indexOf('childcare.kindergarten') !== -1) return 'ecole';
+  return null;
+}
+function getFicheCoords() {
+  if (typeof _fiche_lat !== 'undefined' && _fiche_lat && _fiche_lng) return {lat: _fiche_lat, lng: _fiche_lng};
+  if (window._ficheCoords) return window._ficheCoords;
+  return null;
+}
+function _haversine(lat1, lng1, lat2, lng2) {
+  var R = 6371000, r = Math.PI / 180;
+  var a = Math.sin((lat2 - lat1) * r / 2) * Math.sin((lat2 - lat1) * r / 2)
+    + Math.cos(lat1 * r) * Math.cos(lat2 * r) * Math.sin((lng2 - lng1) * r / 2) * Math.sin((lng2 - lng1) * r / 2);
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+}
+// Commodités dans un rayon de 800 m → texte (noms propres tels quels)
+function buildPoiContext() {
+  var c = getFicheCoords();
+  if (!c) return Promise.resolve('');
+  return fetchPoiFeatures(c.lat, c.lng).then(function(features) {
+    if (!features.length) return '';
+    var groups = {transport: [], vert: [], commerce: [], ecole: []};
+    features.forEach(function(f) {
+      var p = f.properties || {}, cat = poiCategoryOf(p);
+      if (!cat) return;
+      var la = p.lat != null ? p.lat : f.geometry.coordinates[1];
+      var lo = p.lon != null ? p.lon : f.geometry.coordinates[0];
+      var d = _haversine(c.lat, c.lng, la, lo);
+      groups[cat].push({name: p.name || '', d: d});
+    });
+    var labels = {transport: 'Transports', ecole: 'Écoles et crèches', commerce: 'Commerces et pharmacies', vert: 'Espaces verts'};
+    var lines = [];
+    ['transport', 'ecole', 'commerce', 'vert'].forEach(function(cat) {
+      var g = groups[cat].sort(function(a, b) { return a.d - b.d; }).slice(0, 8);
+      if (!g.length) return;
+      lines.push('- ' + labels[cat] + ' : ' + g.map(function(x) {
+        return (x.name || '(sans nom)') + ' (' + x.d + ' m, ~' + Math.ceil(x.d / 80) + ' min à pied)';
+      }).join(' ; '));
+    });
+    return lines.length ? lines.join('\n') : '';
+  });
+}
+
+// ═══ VENTES COMPARABLES (tableau DVF affiché dans la fiche) ═══
+function buildComparablesContext() {
+  var rows = document.querySelectorAll('.dvf-row');
+  var lines = [];
+  rows.forEach(function(tr_) {
+    var cells = tr_.querySelectorAll('td');
+    if (cells.length < 5) return;
+    var t = function(i) { return (cells[i].textContent || '').replace(/[★\s]+$/, '').replace(/\s+/g, ' ').trim(); };
+    lines.push('- ' + t(0) + ' · ' + t(1) + ' · ' + t(2) + ' · ' + t(3) + ' · ' + t(4) + '/m²');
+  });
+  return lines.join('\n');
+}
+
+// ═══ CONTEXTE DE L'ASSISTANT IA ═══
+// Repli si la fiche n'embarque pas de contexte complet (anciennes fiches) : uniquement les champs
+// publics de la fiche. JAMAIS d'identité/coordonnées du vendeur ni de notes internes.
+function legacyChatContext() {
+  var L = [];
+  function add(label, v) { if (v != null && String(v).trim() && String(v).trim() !== '—') L.push('- ' + label + ' : ' + String(v).trim()); }
+  add('Adresse', _sp_adresse);
+  add('Prix', _sp_prix ? _sp_prix + ' €' : '');
+  add('Surface', _sp_surface ? _sp_surface + ' m²' : '');
+  add('Étage', _sp_etage);
+  add('DPE', _sp_dpe);
+  add('Charges de copropriété', _sp_charges ? _sp_charges + ' €/mois' : '');
+  add('Détail des charges', _sp_detail);
+  add('Taxe foncière', _sp_tf ? _sp_tf + ' €/an' : '');
+  add('Loyer estimé', _sp_loyer ? _sp_loyer + ' €/mois' : '');
+  add('Points forts', [_sp_pf1, _sp_pf2, _sp_pf3].filter(function(x) { return x && x !== '—'; }).join(' ; '));
+  add('Points de vigilance', [_sp_vigi1, _sp_vigi2].filter(function(x) { return x && x !== '—'; }).join(' ; '));
+  return L.join('\n');
+}
+function buildAiContext() {
+  var base = (typeof _chat_ctx === 'string' && _chat_ctx.trim()) ? _chat_ctx : legacyChatContext();
+  return buildPoiContext().then(function(poi) { return poi; }, function() { return ''; }).then(function(poi) {
+    var out = base;
+    out += '\n\n## Quartier et commodités à proximité (rayon 800 m, données cartographiques)\n'
+      + (poi || 'Données de proximité non disponibles pour ce bien.');
+    var comps = buildComparablesContext();
+    out += '\n\n## Ventes comparables du secteur (transactions DVF)\n' + (comps || 'Non renseigné.');
+    return out.length > 20000 ? out.slice(0, 20000) : out;
+  });
+}
+function buildAiSystemPrompt(lang, ctx) {
+  var name = aiT('reply', null, lang) || {};
+  var fallback = I18N[LANG_DEFAULT].ai.reply;
+  var langName = _langPack(lang).name + ' (' + ({fr: 'French', en: 'English', pt: 'European Portuguese', es: 'Spanish'}[lang] || lang) + ')';
+  var addr = name.address || fallback.address;
+  var notProvided = name.notProvided || fallback.notProvided;
+  var agent = (typeof _sp_agent === 'string' && _sp_agent) ? _sp_agent : '';
+  var tel = (typeof _sp_tel === 'string' && _sp_tel) ? _sp_tel : '';
+  return "You are the virtual assistant of an interactive real-estate listing sheet for the property at " + (_sp_adresse || '') + ". "
+    + "LANGUAGE — reply ONLY in " + langName + ". " + addr + " (The data below is written in French: translate it naturally into " + langName + ".) "
+    + "SOURCE OF TRUTH — answer questions about this property, its neighbourhood, its costs, works, diagnostics and its comparable sales ONLY from the data between <fiche> and </fiche>. "
+    + "Never invent, estimate or guess a figure, a date, a name or a fact. "
+    + "If the requested information is missing, empty or marked as not provided, say so clearly (for example: \"" + notProvided + "\", said in " + langName + ") "
+    + "and offer to put the visitor in touch with the advisor" + (agent ? " (" + agent + (tel ? ", " + tel : "") + ")" : "") + ". "
+    + "You may explain in general terms how a French property purchase works (offer, preliminary agreement, 10-day withdrawal period, financing, notary deed), "
+    + "but never state anything specific about this property that is not in the data. For financing questions refer to a broker or bank, for complex legal questions to a notary. "
+    + "CONFIDENTIALITY — you never know, never mention and never guess: the seller's identity or contact details, any internal information of the agency or agent "
+    + "(negotiation margin, minimum or floor price, private notes, mandate terms). If asked, answer that you cannot share this information and invite the visitor to make an offer "
+    + "through the offer tab or to contact the advisor. The only contact you may give is the advisor's. "
+    + "If a question is entirely outside real estate, politely say you specialise in real estate. "
+    + "STYLE — fluent, natural, warm text like a caring real-estate advisor. Never use markdown headings, bullet lists or bold. "
+    + "3 to 5 sentences maximum, concrete and precise, and end with a natural invitation to ask another question or to contact the advisor. "
+    + "\n<fiche>\n" + ctx + "\n</fiche>";
+}
+
+</script>
 
 <script>
 var _currentLang = 'fr';
@@ -852,7 +2038,7 @@ function showTabAssistant(btn) {
 function renderAISuggestions() {
   var wrap = document.getElementById('ai-suggestions');
   if (!wrap) return;
-  var qs = (AI_I18N[_currentLang] || AI_I18N.fr).suggestions;
+  var qs = aiSuggestions(_currentLang);
   wrap.innerHTML = '';
   qs.forEach(function(q) {
     var b = document.createElement('button');
@@ -889,10 +2075,9 @@ function dockAI() {
   _aiOpen = true;
   if (msgsEl && msgsEl.children.length === 0) {
     _aiInit = true;
-    var dict = AI_I18N[_currentLang] || AI_I18N.fr;
-    var welcome = dict.welcome(_sp_adresse);
+    var welcome = aiT('welcome', {adresse: _sp_adresse});
     addAIMsg(welcome, 'assistant');
-    _aiMessages.push({role:'user',content:dict.sessionStart});
+    _aiMessages.push({role:'user',content:aiT('sessionStart')});
     _aiMessages.push({role:'assistant',content:welcome});
     renderAISuggestions();
   }
@@ -1026,7 +2211,7 @@ function _calc() {
   document.getElementById('v-loyer').textContent = loyer + ' €';
   document.getElementById('v-apport').textContent = ap + '%';
   document.getElementById('v-taux').textContent = tx.toFixed(2).replace('.', ',') + '%';
-  document.getElementById('v-duree').textContent = du + (_currentLang === 'en' ? ' years' : ' ans');
+  document.getElementById('v-duree').textContent = du + tr('years-suffix');
   document.getElementById('v-charges').textContent = ch + ' €';
   document.getElementById('v-travaux').textContent = fmt(tv);
 
@@ -1063,12 +2248,11 @@ function updateOffer() {
   var v = parseFloat(document.getElementById('offer-amount').value) || prixBase;
   document.getElementById('offer-display').textContent = fmt(v);
   var diff = prixBase - v;
-  var isEn = _currentLang === 'en';
   document.getElementById('offer-diff').textContent = diff > 0
-    ? '-' + fmt(diff) + (isEn ? ' vs listed price' : ' vs prix affiché')
+    ? '-' + fmt(diff) + tr('offer-diff-below')
     : diff < 0
-    ? '+' + fmt(-diff) + (isEn ? ' above listed price' : ' au-dessus du prix affiché')
-    : (isEn ? 'At listed price' : 'Au prix affiché');
+    ? '+' + fmt(-diff) + tr('offer-diff-above')
+    : tr('offer-diff-at');
 }
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1091,48 +2275,45 @@ function submitOffer() {
   var email = document.getElementById('offer-email').value;
   var msg = document.getElementById('offer-msg').value;
 
-  var isEn = _currentLang === 'en';
+  var agentName = _sp_agent || tr('agent-fallback');
+  var telTxt = _sp_tel ? tr('at-phone', {tel: _sp_tel}) : '';
   if (!nom || !email || !montant) {
-    alert(isEn ? 'Please fill in at least the amount, your name and your email.' : 'Merci de remplir au moins le montant, votre nom et votre email.');
+    alert(tr('offer-missing'));
     return;
   }
 
-  var formspreeId = "xpqbnkjj";
-  var _ob = '[' + '[';
-  if (!formspreeId || formspreeId.indexOf(_ob) !== -1) {
-    alert(isEn ? 'Form not configured. Please contact Olivier Loison directly at 06 85 68 46 13.' : 'Formulaire non configuré. Contactez directement Olivier Loison au 06 85 68 46 13.');
-    return;
-  }
+  var expData = {};
+  try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
 
-  fetch('https://formspree.io/f/' + formspreeId, {
+  fetch('https://expertimo-phi.vercel.app/api/send-lead', {
     method: 'POST',
-    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
-      _subject: "Offre d'achat — 27, Rue Jean Jaurès - 91160 Champlan — " + montant + ' €',
-      montant: montant + ' €',
+      type: 'offre',
+      montant: montant,
       financement: financement,
-      apport: apport + ' €',
+      apport: apport,
       delai: delai,
       nom: nom,
       email: email,
       message: msg,
       bien: "27, Rue Jean Jaurès - 91160 Champlan",
-      reference: "ref-mandat",
-      prix_affiche: "117 500 €"
+      reference: "27-rue-jean-jaures-91160-champlan",
+      prix_affiche: "117 500 €",
+      agentEmail: expData.agentEmail || '',
+      agentNom: expData.agentNom || ''
     })
   }).then(function(r) {
     var el = document.getElementById('offer-success');
     if (r.ok) {
       el.style.display = 'block';
-      el.innerHTML = isEn
-        ? ('<p>✅ Your offer of <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> has been submitted. Olivier LOISON will contact you within 24h.</p>')
-        : ('<p>✅ Votre offre de <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> a été transmise. Olivier LOISON vous contactera dans les 24h.</p>');
+      el.innerHTML = tr('offer-sent', {montant: parseInt(montant).toLocaleString('fr-FR'), agent: capFirst(agentName)});
       el.scrollIntoView({behavior: 'smooth', block: 'center'});
     } else {
-      alert(isEn ? "Error sending your request. Please contact Olivier LOISON directly at 06 85 68 46 13." : "Erreur lors de l’envoi. Contactez directement Olivier LOISON au 06 85 68 46 13.");
+      alert(tr('offer-err', {agent: agentName, tel: telTxt}));
     }
   }).catch(function() {
-    alert(isEn ? "Network error. Please contact Olivier LOISON directly at 06 85 68 46 13." : "Erreur réseau. Contactez directement Olivier LOISON au 06 85 68 46 13.");
+    alert(tr('offer-neterr', {agent: agentName, tel: telTxt}));
   });
 }
 
@@ -1140,27 +2321,28 @@ function unlockDocs() {
   var nom = document.getElementById('doc-nom').value;
   var email = document.getElementById('doc-email').value;
   if (!nom || !email) {
-    alert(_currentLang === 'en' ? 'Please enter your name and email.' : 'Merci de renseigner votre nom et email.');
+    alert(tr('docs-missing'));
     return;
   }
   document.getElementById('doc-gate').style.display = 'none';
   document.getElementById('doc-content').style.display = 'block';
-  var formspreeId = "xpqbnkjj";
-  var _ob = '[' + '[';
-  if (formspreeId && formspreeId.indexOf(_ob) === -1) {
-    fetch('https://formspree.io/f/' + formspreeId, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
-      body: JSON.stringify({
-        _subject: "Demande de documents — 27, Rue Jean Jaurès - 91160 Champlan",
-        nom: nom,
-        email: email,
-        bien: "27, Rue Jean Jaurès - 91160 Champlan",
-        reference: "ref-mandat",
-        demande: "Acces aux documents du bien"
-      })
-    }).catch(function(){});
-  }
+
+  var expData = {};
+  try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
+
+  fetch('https://expertimo-phi.vercel.app/api/send-lead', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      type: 'documents',
+      nom: nom,
+      email: email,
+      bien: "27, Rue Jean Jaurès - 91160 Champlan",
+      reference: "27-rue-jean-jaures-91160-champlan",
+      agentEmail: expData.agentEmail || '',
+      agentNom: expData.agentNom || ''
+    })
+  }).catch(function(){});
 }
 
 // ═══ INIT — loyer slider initialisé depuis _sp_loyer ═══
@@ -1180,15 +2362,25 @@ calc();
 calcBank();
 
 // ═══ MON BUDGET ═══
+document.addEventListener('DOMContentLoaded', function() {
+  var bgtPrix = document.getElementById('bgt-prix');
+  if (bgtPrix && !bgtPrix.value) {
+    bgtPrix.value = parseFloat("117 500".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  }
+});
 function calcBudget() {
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
-  var prixBien = parseFloat("117 500".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
+  var bgtPrixEl = document.getElementById('bgt-prix');
+  var bgtPrixVal = bgtPrixEl ? parseFloat(bgtPrixEl.value) || 0 : 0;
+  var prixBien = bgtPrixVal > 0 ? bgtPrixVal : (parseFloat("117 500".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0);
   var fraisNotaire = prixBien * 0.075;
   var coutTotal = prixBien + fraisNotaire;
   var capital = Math.max(0, coutTotal - apport);
-  var tauxAnnuel = 3.4;
+  var bgtTauxEl = document.getElementById('bgt-taux');
+  var bgtTauxVal = bgtTauxEl ? parseFloat(bgtTauxEl.value) : NaN;
+  var tauxAnnuel = (bgtTauxVal >= 0.5 && bgtTauxVal <= 8) ? bgtTauxVal : 3.4;
   var tauxMensuel = tauxAnnuel / 100 / 12;
   var n = duree * 12;
   var mens = capital > 0 ? capital * tauxMensuel / (1 - Math.pow(1 + tauxMensuel, -n)) : 0;
@@ -1202,43 +2394,31 @@ function calcBudget() {
   var budgetMax = capitalMax + apport - fraisNotaire;
   var res = document.getElementById('bgt-result');
   res.style.display = 'block';
+  var tauxLigneTxt = tauxAnnuel.toFixed(2);
+  if (_currentLang !== 'en') tauxLigneTxt = tauxLigneTxt.replace('.', ',');
+  var nb = function(n) { return Math.round(n).toLocaleString('fr-FR'); };
+  var prixLigne = '<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">' + tr('bgt-basis', {prix: fmt(prixBien), taux: tauxLigneTxt}) + '</p>';
   var html = '';
-  var isEn = _currentLang === 'en';
-  var infoLigne = isEn
-    ? ('<div class="rc"><div class="rcl">Estimated monthly payment</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
-      + '<div class="rc"><div class="rcl">Debt ratio</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
-      + '<div class="rc"><div class="rcl">Max affordable budget</div><div class="rcv mono">' + fmt(Math.max(0, budgetMax)) + '</div></div>'
-      + '<div class="rc"><div class="rcl">Total effort <small style="font-size:9px;color:var(--muted);">(loan + charges)</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">For informational purposes</div></div>'
-      + '<p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5;">Simulation based on a minimum down payment of 10% of total cost (notary fees included), a rule applied by most banks. Some banks finance up to 110% of the price (no down payment), but this practice is becoming increasingly rare.</p>')
-    : ('<div class="rc"><div class="rcl">Mensualité estimée</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
-      + '<div class="rc"><div class="rcl">Taux d\'endettement</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
-      + '<div class="rc"><div class="rcl">Budget max accessible</div><div class="rcv mono">' + fmt(Math.max(0, budgetMax)) + '</div></div>'
-      + '<div class="rc"><div class="rcl">Effort total <small style="font-size:9px;color:var(--muted);">(crédit + charges)</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">À titre informatif</div></div>'
-      + '<p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5;">Simulation basée sur un apport minimum de 10% du coût total (frais de notaire compris), règle appliquée par la majorité des banques. Certaines banques financent jusqu\'à 110% du prix (sans apport), mais cette pratique reste de plus en plus rare.</p>');
+  var infoLigne = '<div class="rc"><div class="rcl">' + tr('bgt-monthly') + '</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
+    + '<div class="rc"><div class="rcl">' + tr('bgt-debt') + '</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
+    + '<div class="rc"><div class="rcl">' + tr('bgt-max') + '</div><div class="rcv mono">' + fmt(Math.max(0, budgetMax)) + '</div></div>'
+    + '<div class="rc"><div class="rcl">' + tr('bgt-effort') + ' <small style="font-size:9px;color:var(--muted);">' + tr('bgt-effort-sm') + '</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">' + tr('bgt-effort-sub') + '</div></div>'
+    + '<p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5;">' + tr('bgt-note') + '</p>';
+  var bgtBox = function(bg, bar, titleColor, title, body) {
+    return '<div class="alert" style="background:' + bg + ';border-left:3px solid ' + bar + ';padding:16px;border-radius:11px;"><h4 style="color:' + titleColor + ';font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">' + title + '</h4>' + body + '</div>';
+  };
   if (revenu === 0) {
-    html = isEn
-      ? '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;">Please enter your monthly income.</div>'
-      : '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;">Veuillez renseigner votre revenu mensuel.</div>';
+    html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;">' + tr('bgt-need-income') + '</div>';
   } else if (tauxEndettement <= 33) {
-    html = isEn
-      ? ('<div class="alert" style="background:#f0faf0;border-left:3px solid #4caf50;padding:16px;border-radius:11px;"><h4 style="color:#2e7d32;font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">✅ This property is affordable for you</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div></div>')
-      : ('<div class="alert" style="background:#f0faf0;border-left:3px solid #4caf50;padding:16px;border-radius:11px;"><h4 style="color:#2e7d32;font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">✅ Ce bien est accessible pour vous</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div></div>');
+    html = bgtBox('#f0faf0', '#4caf50', '#2e7d32', tr('bgt-ok-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>');
   } else if (tauxEndettement <= 38 || budgetMax >= prixBien) {
-    html = isEn
-      ? ('<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;padding:16px;border-radius:11px;"><h4 style="color:#e65100;font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">⚠️ Affordable under conditions</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-        + '<p style="font-size:12px;color:#e65100;margin-top:10px;">Debt ratio ' + tauxEndettement.toFixed(1) + '% — some banks accept up to 38% depending on your profile. Your estimated max budget: ' + fmt(Math.max(0, budgetMax)) + '.</p></div>')
-      : ('<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;padding:16px;border-radius:11px;"><h4 style="color:#e65100;font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">⚠️ Accessible sous conditions</h4><div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-        + '<p style="font-size:12px;color:#e65100;margin-top:10px;">Taux d\'endettement ' + tauxEndettement.toFixed(1) + '% — certaines banques acceptent jusqu\'à 38% selon votre profil. Votre budget max estimé : ' + fmt(Math.max(0, budgetMax)) + '.</p></div>');
+    html = bgtBox('#fff8e1', '#ff9800', '#e65100', tr('bgt-cond-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
+      + '<p style="font-size:12px;color:#e65100;margin-top:10px;">' + tr('bgt-cond-text', {taux: tauxEndettement.toFixed(1), max: fmt(Math.max(0, budgetMax))}) + '</p>');
   } else {
-    html = isEn
-      ? ('<div class="alert" style="background:#fff0f0;border-left:3px solid #f44336;padding:16px;border-radius:11px;"><h4 style="color:#c62828;font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">❌ Outside your budget for this property</h4>'
-        + '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-        + '<p style="font-size:12px;color:#c62828;margin-top:10px;">With an income of ' + fmt(revenu) + ' €/month and a down payment of ' + fmt(apport) + ' €, your estimated max budget is <strong>' + fmt(Math.max(0, budgetMax)) + ' €</strong> vs ' + fmt(prixBien) + ' € for this property.</p></div>')
-      : ('<div class="alert" style="background:#fff0f0;border-left:3px solid #f44336;padding:16px;border-radius:11px;"><h4 style="color:#c62828;font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">❌ Hors budget pour ce bien</h4>'
-        + '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-        + '<p style="font-size:12px;color:#c62828;margin-top:10px;">Avec un revenu de ' + fmt(revenu) + ' €/mois et un apport de ' + fmt(apport) + ' €, votre budget max est estimé à <strong>' + fmt(Math.max(0, budgetMax)) + ' €</strong> vs ' + fmt(prixBien) + ' € pour ce bien.</p></div>');
+    html = bgtBox('#fff0f0', '#f44336', '#c62828', tr('bgt-ko-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
+      + '<p style="font-size:12px;color:#c62828;margin-top:10px;">' + tr('bgt-ko-text', {revenu: nb(revenu), apport: nb(apport), max: nb(Math.max(0, budgetMax)), prix: nb(prixBien)}) + '</p>');
   }
-  res.innerHTML = html;
+  res.innerHTML = (revenu === 0 ? '' : prixLigne) + html;
 }
 
 // ═══ CARTE QUARTIER ═══
@@ -1247,10 +2427,11 @@ function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
   var adresse = "27, Rue Jean Jaurès - 91160 Champlan";
-  var latFallback = 48.7011293;
-  var lngFallback = 2.2896958;
+  var latFallback = 48.422253;
+  var lngFallback = 1.9587378;
 
   function buildMap(lat, lng) {
+    window._ficheCoords = {lat: lat, lng: lng};
     var map = L.map('map-quartier', {cursor:'default'}).setView([lat, lng], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors'
@@ -1268,18 +2449,12 @@ function initMapQuartier() {
     window._mapMarkers = {transport:[], vert:[], commerce:[], ecole:[]};
     window._mapInstance = map;
 
-    setTimeout(function() { fetch('https://expertimo-phi.vercel.app/api/geoapify?lat=' + lat + '&lng=' + lng)
-      .then(function(r){return r.json();})
-      .then(function(data){
-        (data.features||[]).forEach(function(feature) {
-          var cat;
+    setTimeout(function() { fetchPoiFeatures(lat, lng)
+      .then(function(features){
+        features.forEach(function(feature) {
           var props = feature.properties || {};
-          var cats = props.categories || [];
-          if (cats.indexOf('public_transport') !== -1 || cats.indexOf('public_transport.bus') !== -1) { cat = 'transport'; }
-          else if (cats.indexOf('leisure.park') !== -1) { cat = 'vert'; }
-          else if (cats.indexOf('commercial.supermarket') !== -1 || cats.indexOf('commercial.food_and_drink') !== -1 || cats.indexOf('healthcare.pharmacy') !== -1) { cat = 'commerce'; }
-          else if (cats.indexOf('education.school') !== -1 || cats.indexOf('childcare.kindergarten') !== -1) { cat = 'ecole'; }
-          else return;
+          var cat = poiCategoryOf(props);
+          if (!cat) return;
           counts[cat]++;
           var meta = catMeta[cat];
           var poiLat = props.lat != null ? props.lat : feature.geometry.coordinates[1];
@@ -1358,85 +2533,24 @@ var _sp_pf3       = "Grande chambre 18m²";
 var _sp_vigi1     = "Fin de bail en Avril 2028";
 var _sp_vigi2     = "Petits travaux de peinture à prévoir";
 var _sp_agent     = "Olivier LOISON";
-var _sp_tel       = "06 85 68 46 13";
+var _sp_tel       = "0685684613";
 var _sp_pf1_en = "Sold tenanted at €730/month - 6% net yield";
 var _sp_pf2_en = "Close to Longjumeau train station and tram 12";
-var _sp_pf3_en = "Large bedroom 18m²";
+var _sp_pf3_en = "Large 18m² bedroom";
 var _sp_vigi1_en = "Lease ending in April 2028";
-var _sp_vigi2_en = "Minor painting works required";
+var _sp_vigi2_en = "Minor painting work required";
 var _sp_detail_en = "";
+// Contexte complet du bien pour l'assistant IA (liste blanche construite par app.html à la génération :
+// jamais de données vendeur ni de notes internes). Vide → repli sur les variables _sp_* ci-dessus.
+var _chat_ctx = "## Le bien\n- Type de bien : Appartement\n- Adresse : 27, Rue Jean Jaurès - 91160 Champlan\n- Quartier / secteur : Champlan (limite Longjumeau)\n- Surface habitable (m²) : 43.08\n- Nombre total de pièces : 2\n- Chambres : 1\n- Salles d'eau : 1\n- Étage du bien : rdc\n- Année de construction : 1970\n\n## Prix, charges et fiscalité\n- Prix de mise en vente (€) : 117500\n- Charges de copropriété (€/mois) : 35\n- Taxe foncière (€/an) : 595\n- Loyer potentiel estimé (€/mois) : 730\n\n## Énergie et diagnostics\n- Classe DPE : E\n- Classe GES : E\n- Diagnostic amiante — statut : Favorable\n- Diagnostic amiante — résultat : Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.\n- Diagnostic plomb (CREP) — statut : Non soumis\n- Diagnostic plomb (CREP) — résultat : Non soumis - bâtiment construit après le 1er janvier 1949.\n- Diagnostic termites — statut : Non soumis\n- Diagnostic termites — résultat : Non soumis à un arrêté préfectoral.\n- Diagnostic électricité — statut : Favorable\n- Diagnostic électricité — résultat : Installation intérieure sans anomalie.\n- Diagnostic gaz — statut : Non soumis\n- Diagnostic gaz — résultat : Non soumis - Installation de moins de 15 ans.\n- Diagnostic assainissement — statut : Favorable\n- Diagnostic assainissement — résultat : Raccordement au réseau collectif conforme.\n\n## Travaux et historique du bien\n- Informations complémentaires (copropriété, exposition, rénovations, équipements…) : Situé au niveau -1 d'une maison divisée en appartements. Date de construction : 1970. Appartement de 43m² en bon état général. Petits travaux de rafraichissement à prévoir : peinture Vendu Loué : 730 €/mois CC. Fin du bail (non meublé) : Avril 2028. Bon locataire : aucun retard de paiement et bon entretien de l'appartement. Charges de copropriété : 35€/mois Taxe foncière : 595€/an Rendement net de 6% ! Situé à proximité de la gare de Longjumeau, du tram 12, des commerces et des écoles. Très bons diagnostics : pas d'amiante, installation électrique conforme, assainissement aux normes.\n\n## Construction, matériaux et chauffage\n- Toit — état : Soigné\n- Façade — état : Comme neuf\n- Eau chaude sanitaire : Électricité\n- État général : Moyen\n\n## Localisation et environnement\n- Exposition sonore : Normal\n- Transports à proximité (saisis par l'agent) : Bus, Tram\n\n## Points forts et points de vigilance\n- Point fort 1 : Vendu loué 730€/mois - rendement net 6%\n- Point fort 2 : Proche gare Longjumeau et tram 12\n- Point fort 3 : Grande chambre 18m²\n- Point de vigilance 1 : Fin de bail en Avril 2028\n- Point de vigilance 2 : Petits travaux de peinture à prévoir\n\n## Marché et analyse\n- Note globale du bien (/10) : 8.25\n\n## Informations NON renseignées dans la fiche (à signaler comme telles, ne jamais deviner)\nSurface Carrez (m²) ; Salles de bains ; WC ; WC séparés ; Ascenseur ; Nombre d'étages de l'immeuble ; Nombre d'étages ; Standing général ; Les + du bien ; Détail des charges ; Taxe d'habitation (€/an) ; Loyer mensuel estimé (€/mois) ; Consommation DPE (kWh/m²/an) ; Émissions GES (kgCO₂/m²/an) ; Servitudes ; Droits de superficie ; Syndic ; Travaux votés en assemblée générale ; Travaux votés en AG — quoi et combien ; Travaux récents de l'immeuble ; Travaux récents ; Sols — état ; Volets roulants électriques ; Chauffage — année d'installation ; Plaque de cuisson ; Autres équipements ; Parking — places intérieures ; Parking — places extérieures ; Parking — box fermés ; Services de proximité ; Voisinage ; Point de vigilance 3 ; Vigilances complémentaires ; Prix médian du secteur (€/m²) ; Tension locative ; Délai de vente moyen";
+// Coordonnées du bien (injectées à la génération) — utilisées pour les commodités du chatbot.
+var _fiche_lat = 48.422253;
+var _fiche_lng = 1.9587378;
 
 function spv(base) {
   if (_currentLang === 'en' && window[base + '_en']) return window[base + '_en'];
   return window[base];
 }
-
-var AI_I18N = {
-  fr: {
-    welcome: function(adresse) { return "Bonjour ! Je suis l'assistant de " + adresse + ". Je connais tout de ce bien : prix, diagnostics, charges, DPE, points forts et plus encore. Que souhaitez-vous savoir ?"; },
-    sessionStart: '(début de session)',
-    suggestions: ['Quel est le montant des charges ?', 'Puis-je négocier le prix ?', 'Comment prendre rendez-vous ?'],
-    networkError: function(msg) { return 'Erreur réseau : ' + msg; },
-    apiError: function(msg) { return 'Erreur : ' + msg; },
-    systemPrompt: function(c) {
-      return "Tu es un assistant immobilier expert, spécialisé sur le bien situé au " + c.adresse + ". "
-        + "Tu réponds en français, de façon claire et concise. "
-        + "Tu as accès aux informations suivantes sur ce bien : "
-        + "Prix : " + c.prix + " € | Surface : " + c.surface + " m² | Étage : " + c.etage
-        + " | DPE : " + c.dpe + " | Charges : " + c.charges + " €/mois"
-        + " | Taxe foncière : " + c.tf + " € | Loyer estimé : " + c.loyer + " €/mois"
-        + " | Points forts : " + c.pf1 + ", " + c.pf2 + ", " + c.pf3
-        + " | Points de vigilance : " + c.vigi1 + ", " + c.vigi2
-        + ". "
-        + "Tu peux répondre sur TROIS domaines : "
-        + "1) Les caractéristiques et détails de CE bien (surface, DPE, charges, équipements, points forts, vigilances, rentabilité). "
-        + "2) Le quartier et ses commodités (transports, écoles, commerces, parcs à proximité — utilise tes connaissances générales sur la ville et le secteur). "
-        + "3) Le processus d'achat immobilier en France : étapes après acceptation d'offre (compromis de vente, délai de rétractation 10 jours, financement bancaire, délai obtention prêt 45-60 jours, acte authentique chez le notaire, délais typiques 3-4 mois). "
-        + "Pour les questions sur le financement, oriente vers un courtier ou conseiller bancaire. "
-        + "Pour les questions juridiques complexes, oriente vers un notaire. "
-        + "Agent : " + c.agent + " — " + c.tel + ". "
-        + "Si une question sort complètement du domaine immobilier, réponds poliment que tu es spécialisé immobilier."
-        + " STYLE DE RÉPONSE OBLIGATOIRE : "
-        + "Réponds toujours en texte fluide et naturel, comme un conseiller immobilier bienveillant qui parle à son client. "
-        + "N'utilise jamais de titres markdown (##, ###), jamais de listes à puces (- ou *), jamais de texte en gras (**). "
-        + "Donne des réponses chaleureuses, rassurantes et pédagogiques avec des délais et chiffres concrets quand c'est pertinent. "
-        + "Tes réponses doivent faire 3 à 5 phrases maximum — concises mais complètes. "
-        + "Termine toujours par une invitation naturelle à contacter le vendeur ou à poser une autre question.";
-    }
-  },
-  en: {
-    welcome: function(adresse) { return "Hello! I'm the assistant for " + adresse + ". I know everything about this property: price, diagnostics, charges, DPE, key features and more. What would you like to know?"; },
-    sessionStart: '(session start)',
-    suggestions: ['What are the monthly charges?', 'Can I negotiate the price?', 'How do I book a viewing?'],
-    networkError: function(msg) { return 'Network error: ' + msg; },
-    apiError: function(msg) { return 'Error: ' + msg; },
-    systemPrompt: function(c) {
-      return "You are an expert real estate assistant, specialized in the property located at " + c.adresse + ". "
-        + "You reply in English, clearly and concisely. "
-        + "You have access to the following information about this property: "
-        + "Price: " + c.prix + " € | Surface: " + c.surface + " m² | Floor: " + c.etage
-        + " | DPE: " + c.dpe + " | Charges: " + c.charges + " €/month"
-        + " | Property tax: " + c.tf + " € | Estimated rent: " + c.loyer + " €/month"
-        + " | Key features: " + c.pf1 + ", " + c.pf2 + ", " + c.pf3
-        + " | Points to note: " + c.vigi1 + ", " + c.vigi2
-        + ". "
-        + "You can answer on THREE topics: "
-        + "1) The characteristics and details of THIS property (surface, DPE, charges, features, strengths, points of note, investment returns). "
-        + "2) The neighborhood and its amenities (transport, schools, shops, parks nearby — use your general knowledge of the town and area). "
-        + "3) The French home-buying process: steps after an offer is accepted (preliminary sale agreement, 10-day cooling-off period, bank financing, 45-60 day loan approval period, final deed signing at the notary, typical timeline of 3-4 months). "
-        + "For financing questions, direct them to a broker or bank advisor. "
-        + "For complex legal questions, direct them to a notary. "
-        + "Agent: " + c.agent + " — " + c.tel + ". "
-        + "If a question is completely outside the real estate domain, politely reply that you specialize in real estate."
-        + " MANDATORY RESPONSE STYLE: "
-        + "Always reply in fluent, natural text, like a warm, helpful real estate advisor speaking to their client. "
-        + "Never use markdown headings (##, ###), never bullet lists (- or *), never bold text (**). "
-        + "Give warm, reassuring and educational answers with concrete timelines and figures when relevant. "
-        + "Your replies must be 3 to 5 sentences maximum — concise but complete. "
-        + "Always end with a natural invitation to contact the seller or ask another question.";
-    }
-  }
-};
 
 function toggleAI() {
   markVisited('assistant');
@@ -1446,10 +2560,9 @@ function toggleAI() {
   modal.style.flexDirection = 'column';
   if (_aiOpen && !_aiInit) {
     _aiInit = true;
-    var dict = AI_I18N[_currentLang] || AI_I18N.fr;
-    var welcome = dict.welcome(_sp_adresse);
+    var welcome = aiT('welcome', {adresse: _sp_adresse});
     addAIMsg(welcome, 'assistant');
-    _aiMessages.push({role:'user',content:dict.sessionStart});
+    _aiMessages.push({role:'user',content:aiT('sessionStart')});
     _aiMessages.push({role:'assistant',content:welcome});
     renderAISuggestions();
   }
@@ -1475,35 +2588,28 @@ function sendAI() {
   addAIMsg(q, 'user');
   _aiMessages.push({role:'user',content:q});
   var loadDiv = addAIMsg('…', 'assistant');
-  var aiDict = AI_I18N[_currentLang] || AI_I18N.fr;
-  var systemPrompt = aiDict.systemPrompt({
-    adresse: _sp_adresse, prix: _sp_prix, surface: _sp_surface, etage: _sp_etage,
-    dpe: _sp_dpe, charges: _sp_charges, tf: _sp_tf, loyer: _sp_loyer,
-    pf1: spv('_sp_pf1'), pf2: spv('_sp_pf2'), pf3: spv('_sp_pf3'),
-    vigi1: spv('_sp_vigi1'), vigi2: spv('_sp_vigi2'),
-    agent: _sp_agent, tel: _sp_tel
-  });
+  var lang = _currentLang;
   var msgs = _aiMessages.filter(function(m,i){return i>1;});
-  fetch('https://expertimo-phi.vercel.app/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ system: systemPrompt, messages: msgs })
+  buildAiContext().then(function(ctx) {
+    return fetch('https://expertimo-phi.vercel.app/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ system: buildAiSystemPrompt(lang, ctx), messages: msgs })
+    });
   }).then(function(r){ return r.json(); })
   .then(function(data){
-    var reply = (data.content && data.content[0] && data.content[0].text) || aiDict.apiError(data.error && data.error.message ? data.error.message : JSON.stringify(data));
+    var reply = (data.content && data.content[0] && data.content[0].text) || aiT('apiError', {msg: data.error && data.error.message ? data.error.message : JSON.stringify(data)}, lang);
     loadDiv.textContent = reply;
     _aiMessages.push({role:'assistant',content:reply});
   }).catch(function(err){
-    loadDiv.textContent = (AI_I18N[_currentLang] || AI_I18N.fr).networkError(err && err.message ? err.message : String(err));
+    loadDiv.textContent = aiT('networkError', {msg: err && err.message ? err.message : String(err)}, lang);
   });
 }
 
 // ═══ DIAGNOSTICS ═══
 document.querySelectorAll('.diag-result').forEach(function(el) {
   if (!el.textContent.trim() || el.textContent.trim() === '—') {
-    var isEn = !!el.closest('#diag-grid-en');
-    var txt = isEn ? 'Not subject to requirement' : 'Non soumis à obligation';
-    el.innerHTML = '<span style="color:var(--muted);font-size:11px;">ℹ️ ' + txt + '</span>';
+    el.innerHTML = '<span style="color:var(--muted);font-size:11px;" data-tr="diag-not-subject">ℹ️ ' + tr('diag-not-subject') + '</span>';
   }
 });
 </script>
@@ -1553,7 +2659,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <footer style="text-align:center;padding:24px 20px;background:#14171F;border-top:1px solid rgba(201,162,39,.15);">
   <div style="font-family:'Playfair Display',serif;font-size:18px;color:#C9A227;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
   <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;" data-i18n="footer-tagline">L'immobilier avec l'expertise d'un professionnel</div>
-  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'Work Sans',sans-serif;"><span data-i18n="footer-analyse-par">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</span></div>
+  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'Work Sans',sans-serif;"><span data-i18n="footer-analyse-par">Analyse réalisée par Olivier LOISON · Mandataire Expertimo · olivier.loison@expertimo.com</span></div>
   <div style="margin-top:10px;font-size:10px;font-family:'Work Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;" data-i18n="footer-mentions">Mentions légales</a> · <a href="/cgv.html" style="color:#8a7550;text-decoration:none;" data-i18n="footer-cgv">CGV</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;" data-i18n="footer-confidentialite">Politique de confidentialité</a></div>
 </footer>
 
@@ -1562,30 +2668,8 @@ document.addEventListener('DOMContentLoaded', function(){
 // ═══ DPE DYNAMIQUE ═══
 var dpe = "E";
 var DPE_COLORS = {A:"#319834",B:"#33CC33",C:"#CBEC31",D:"#F7EC1B",E:"#F0A60E",F:"#E3711F",G:"#CF1B1B"};
-var DPE_MSGS = {
-  fr: {
-    A: {t:"✅ DPE A — Excellent", txt:"Bien très performant énergétiquement. Aucune contrainte réglementaire.", cls:"vert"},
-    B: {t:"✅ DPE B — Très bon", txt:"Bien performant. Pas de contrainte de location.", cls:"vert"},
-    C: {t:"✅ DPE C — Bon", txt:"Bien correct. Pas de contrainte de location.", cls:"vert"},
-    D: {t:"✅ DPE D — Correct", txt:"Pas de contrainte réglementaire de location.", cls:"vert"},
-    E: {t:"⚠️ DPE E — Attention", txt:"Location toujours autorisée. Nouveau bail possible jusqu'en 2034. Rénovation conseillée.", cls:"amber"},
-    F: {t:"⚠️ DPE F — Passoire thermique", txt:"Nouveau bail interdit depuis jan. 2025. Bail en cours valide, loyer gelé. Rénovation nécessaire avant relocation.", cls:"amber"},
-    G: {t:"🚫 DPE G — Interdit à la location", txt:"Nouveau bail interdit. Loyer gelé. Rénovation obligatoire avant toute relocation (5–12k€, MaPrimeRénov éligible).", cls:"rouge"},
-    ceBien: 'CE BIEN'
-  },
-  en: {
-    A: {t:"✅ DPE A — Excellent", txt:"Very energy-efficient property. No regulatory restrictions.", cls:"vert"},
-    B: {t:"✅ DPE B — Very good", txt:"Energy-efficient property. No rental restrictions.", cls:"vert"},
-    C: {t:"✅ DPE C — Good", txt:"Decent property. No rental restrictions.", cls:"vert"},
-    D: {t:"✅ DPE D — Fair", txt:"No regulatory rental restrictions.", cls:"vert"},
-    E: {t:"⚠️ DPE E — Caution", txt:"Renting still allowed. New leases possible until 2034. Renovation recommended.", cls:"amber"},
-    F: {t:"⚠️ DPE F — Energy sieve", txt:"New leases banned since Jan. 2025. Existing leases remain valid, rent frozen. Renovation required before re-letting.", cls:"amber"},
-    G: {t:"🚫 DPE G — Rental banned", txt:"New leases prohibited. Rent frozen. Renovation mandatory before any re-letting (€5–12k, eligible for MaPrimeRénov grant).", cls:"rouge"},
-    ceBien: 'THIS PROPERTY'
-  }
-};
 function renderDpeInfo(lang) {
-  var dict = DPE_MSGS[lang] || DPE_MSGS.fr;
+  var dict = dpeMessages(lang);
   var letters = ["A","B","C","D","E","F","G"];
   letters.forEach(function(l){
     var rect = document.getElementById("dperect-"+l);
@@ -1623,7 +2707,7 @@ function renderWelcomeParam(lang) {
   if (prenomRaw && el) {
     var prenom = prenomRaw.trim().toLowerCase().replace(/(^|[\s-])\p{L}/gu, function(c) { return c.toUpperCase(); });
     var nom = nomRaw.trim().toUpperCase();
-    var greeting = lang === 'en' ? 'Welcome' : 'Bienvenue';
+    var greeting = tr('welcome-greeting', null, lang);
     el.textContent = greeting + ' ' + prenom + (nom ? ' ' + nom : '');
     el.style.display = 'block';
   }
@@ -1727,352 +2811,111 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
 })();</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
-// ═══ I18N — bascule de langue FR/EN pour les fiches bilingues ═══
-var I18N_STATIC = {
-  fr: {
-    'hbadge': 'Espace Acheteur Privé · Expertimo',
-    'price-label': 'Prix affiché',
-    'price-meta': "Frais d'agence inclus · Données temps réel",
-    'rail-progress-suffix': ' / 10 sections explorées',
-    'tab-bien': 'Le Bien',
-    'tab-marche': 'Ventes comparables',
-    'tab-rentabilite': 'Simulateur investisseur',
-    'tab-historique': 'Tout savoir sur ce bien',
-    'tab-budget': 'Mon Budget',
-    'tab-quartier': 'Carte interactive',
-    'tab-offre': 'Faire une offre',
-    'lbl-le-bien': 'Le bien',
-    'score-title': 'Score Qualité du Bien',
-    'score-prestations': 'Prestations & standing',
-    'score-secteur': 'Secteur & environnement',
-    'score-qp': 'Rapport qualité/prix',
-    'score-etat': 'État général',
-    'cons-role': 'Mandataire immobilier · Expertimo',
-    'btn-rdv': '📅 Prendre rendez-vous',
-    'btn-offre': '✍️ Faire une offre',
-    'kpi-prixm2': 'Prix m² · ce bien',
-    'kpi-mediane': 'Médiane Longjumeau / Essonne 91',
-    'kpi-tension': 'Tension locative',
-    'kpi-delai': 'Délai vente moyen',
-    'lbl-dvf': 'Transactions DVF officielles',
-    'stitle-comparables': 'Comparables réels',
-    'th-adresse': 'Adresse',
-    'th-prix-vendu': 'Prix vendu',
-    'comparables-title': '📊 Positionnement prix',
-    'comparables-justification': 'Le prix de présentation a été établi sur la base des transactions récentes du secteur et des caractéristiques propres au bien.',
-    'lbl-dpe-reglementation': 'DPE & réglementation',
-    'lbl-simulateur': 'Simulateur investisseur temps réel',
-    'stitle-simulateur': 'Simulateur investisseur interactif',
-    'slbl-prix-achat': "Prix d'achat",
-    'slbl-prix-achat-sm': 'Votre offre',
-    'slbl-loyer-simule': 'Loyer simulé',
-    'slbl-loyer-simule-sm': 'Post-rénovation',
-    'slbl-apport': 'Apport',
-    'slbl-apport-sm': '% du coût total',
-    'slbl-taux': 'Taux crédit',
-    'slbl-taux-sm': 'Oct. 2025 : 3,22%',
-    'slbl-duree': 'Durée',
-    'slbl-duree-sm': 'Années',
-    'slbl-charges': 'Charges ann.',
-    'slbl-charges-sm': 'Copro+assur+TF',
-    'charges-detail-default': 'Eau froide, nettoyage et entretien des parties communes, ascenseur',
-    'slbl-travaux': 'Budget travaux',
-    'slbl-travaux-sm': 'Rénovation DPE',
-    'rcl-prix-achat': "Prix d'achat",
-    'rcl-notaire': 'Frais notaire',
-    'rcl-apport-requis': 'Apport requis',
-    'rcl-rendement': 'Rendement brut',
-    'rcl-mensualite': 'Mensualité crédit',
-    'lbl-infos-complementaires': 'Informations complémentaires',
-    'stitle-diagnostics': 'Diagnostics Techniques',
-    'ssub-diagnostics': 'Résultats officiels des diagnostics réglementaires',
-    'lbl-simulateur-perso': 'Simulateur personnel',
-    'stitle-budget': 'Ce bien est-il fait pour vous ?',
-    'ssub-budget': 'Entrez votre situation pour le savoir en 30 secondes',
-    'lbl-revenu': 'Revenu net mensuel du foyer (€)',
-    'lbl-apport-dispo': 'Apport disponible (€)',
-    'lbl-duree-credit': 'Durée du crédit souhaitée',
-    'opt-15ans': '15 ans',
-    'opt-20ans': '20 ans',
-    'opt-25ans': '25 ans',
-    'btn-calc-budget': 'Calculer mon accessibilité',
-    'disclaimer-budget': "⚠️ Cette simulation est fournie à titre indicatif uniquement, sur la base des taux moyens du marché et des règles bancaires courantes. Elle ne constitue pas un accord de financement, une offre de prêt, ni un engagement d'un établissement bancaire. Les résultats dépendent de votre situation personnelle complète (revenus, charges, historique bancaire). Seul un établissement de crédit agréé peut vous délivrer une offre de prêt valable. Consultez votre banquier ou un courtier pour une analyse personnalisée.",
-    'lbl-quartier': 'Vie du quartier',
-    'stitle-quartier': 'Carte du quartier',
-    'ssub-quartier': 'Transports, commerces, écoles et espaces verts dans un rayon de 800m',
-    'filter-transport': '🚇 Transports',
-    'filter-vert': '🌳 Espaces verts',
-    'filter-commerce': '🛒 Commerces',
-    'filter-ecole': '🏫 Écoles',
-    'filter-all': '👁️ Tout afficher',
-    'cnt-transport-lbl': 'transports',
-    'cnt-vert-lbl': 'espaces verts',
-    'cnt-commerce-lbl': 'commerces',
-    'cnt-ecole-lbl': 'établissements scolaires',
-    'radius-lbl': '· rayon 800m',
-    'lbl-docs': 'Espace documentaire sécurisé',
-    'stitle-docs': 'Documents disponibles',
-    'ssub-docs': 'Renseignez vos coordonnées pour accéder aux documents. Votre demande est transmise au conseiller.',
-    'lbl-prenom-nom': 'Prénom et nom',
-    'btn-unlock-docs': '🔓 Accéder aux documents',
-    'doc-success-title': '✅ Accès déverrouillé',
-    'doc-success-txt': 'Votre demande a été transmise. Le conseiller vous contactera dans les 24h avec les documents complets.',
-    'doc-pv-ag': 'PV Assemblée Générale',
-    'doc-pv-ag-desc': 'Dernière AG copropriété',
-    'doc-dispo': '🔓 Disponible',
-    'doc-diag-tech': 'Diagnostics techniques',
-    'doc-diag-tech-desc': 'DPE, amiante, plomb...',
-    'doc-factures': 'Factures & devis travaux',
-    'doc-factures-desc': 'Rénovations réalisées',
-    'doc-reglement': 'Règlement copropriété',
-    'doc-reglement-desc': 'Documents de la copro',
-    'offre-progress-prefix': 'Vous avez exploré',
-    'offre-progress-suffix': ' / 10 sections',
-    'offre-progress-sub': 'Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.',
-    'lbl-processus': "Processus d'acquisition",
-    'step-visite': 'Visite',
-    'step-offre': 'Offre',
-    'step-negociation': 'Négociation',
-    'step-promesse': 'Promesse',
-    'step-10jours': '10 jours',
-    'step-financement': 'Financement',
-    'step-signature': 'Signature',
-    'lbl-offre-tunnel': "Tunnel d'offre sécurisé",
-    'stitle-offre': 'Votre offre d\'achat',
-    'ssub-offre': 'Renseignez votre proposition. Elle sera transmise au conseiller et au vendeur sous 24h.',
-    'lbl-montant-offre': 'Montant de votre offre (€)',
-    'lbl-financement': 'Mode de financement',
-    'opt-financement-bancaire': 'Financement bancaire',
-    'opt-comptant': 'Comptant',
-    'lbl-apport-perso': 'Apport personnel (€)',
-    'lbl-delai-souhaite': 'Délai souhaité',
-    'opt-3mois': '3 mois (standard)',
-    'opt-2mois': '2 mois (rapide)',
-    'opt-4mois': '4 mois ou plus',
-    'lbl-message-vendeur': 'Message au vendeur (facultatif)',
-    'btn-submit-offre': '✍️ Transmettre mon offre sécurisée',
-    'lbl-apres-offre': 'Après votre offre — la suite',
-    'etape1-titre': 'ÉTAPE 1 · RÉPONSE DU VENDEUR',
-    'etape1-txt': 'Acceptation, refus ou contre-proposition. Délai habituel : 2–5 jours.',
-    'etape2-titre': 'ÉTAPE 2 · SIGNATURE PROMESSE',
-    'etape2-txt': "Chez le notaire, 8–10 jours après l'accord. Dépôt de garantie de 5–10%.",
-    'etape3-titre': 'ÉTAPE 3 · 10 JOURS RÉTRACTATION',
-    'etape3-txt': 'Délai légal sans pénalité. Vérifiez tous les documents.',
-    'etape4-titre': 'ÉTAPE 4 · VALIDATION BANCAIRE',
-    'etape4-txt': 'Votre banque dispose d\'environ 60 jours pour valider votre prêt.',
-    'etape5-titre': 'ÉTAPE 5 · SIGNATURE DÉFINITIVE 🔑',
-    'etape5-txt': "Environ 3 mois après la promesse — acte authentique et remise des clés.",
-    'lbl-votre-offre': 'Votre offre',
-    'marge-negociation-prefix': 'Marge de négociation estimée :',
-    'marge-negociation-suffix': 'selon le DPE et les DVF du secteur.',
-    'footer-title': 'Espace Acheteur Privé',
-    'footer-subtitle': 'une expérience immobilière nouvelle génération',
-    'footer-desc': "Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.",
-    'ai-bubble': 'Une question sur ce bien ? Je suis là 👋',
-    'ai-ask-btn': 'Poser une question',
-    'ai-modal-title': 'Assistant Privency',
-    'ai-modal-available': 'Disponible 24h/24',
-    'footer-tagline': "L'immobilier avec l'expertise d'un professionnel",
-    'footer-analyse-par': 'Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com',
-    'footer-mentions': 'Mentions légales',
-    'footer-cgv': 'CGV',
-    'footer-confidentialite': 'Politique de confidentialité',
-    'ai-input-placeholder': 'Votre question...',
-    'placeholder-nom': 'Jean Dupont',
-    'placeholder-email': 'jean@email.com',
-    'placeholder-offer-msg': "Présentez votre projet... Un message sincère rassure le vendeur."
-  },
-  en: {
-    'hbadge': 'Private Buyer Portal · Expertimo',
-    'price-label': 'Listed price',
-    'price-meta': 'Agency fees included · Real-time data',
-    'rail-progress-suffix': ' / 10 sections explored',
-    'tab-bien': 'The Property',
-    'tab-marche': 'Comparable Sales',
-    'tab-rentabilite': 'Investor Simulator',
-    'tab-historique': 'Everything About This Property',
-    'tab-budget': 'My Budget',
-    'tab-quartier': 'Interactive Map',
-    'tab-offre': 'Make an Offer',
-    'lbl-le-bien': 'The property',
-    'score-title': 'Property Quality Score',
-    'score-prestations': 'Amenities & standing',
-    'score-secteur': 'Area & environment',
-    'score-qp': 'Value for money',
-    'score-etat': 'Overall condition',
-    'cons-role': 'Real Estate Agent · Expertimo',
-    'btn-rdv': '📅 Book an Appointment',
-    'btn-offre': '✍️ Make an Offer',
-    'kpi-prixm2': 'Price/m² · this property',
-    'kpi-mediane': 'Median Longjumeau / Essonne 91',
-    'kpi-tension': 'Rental demand',
-    'kpi-delai': 'Average time to sell',
-    'lbl-dvf': 'Official DVF transactions',
-    'stitle-comparables': 'Real comparables',
-    'th-adresse': 'Address',
-    'th-prix-vendu': 'Sale Price',
-    'comparables-title': '📊 Price Positioning',
-    'comparables-justification': "The listed price was established based on recent transactions in the area and the property's specific characteristics.",
-    'lbl-dpe-reglementation': 'DPE & regulations',
-    'lbl-simulateur': 'Real-time investor simulator',
-    'stitle-simulateur': 'Interactive investor simulator',
-    'slbl-prix-achat': 'Purchase price',
-    'slbl-prix-achat-sm': 'Your offer',
-    'slbl-loyer-simule': 'Simulated rent',
-    'slbl-loyer-simule-sm': 'Post-renovation',
-    'slbl-apport': 'Down payment',
-    'slbl-apport-sm': '% of total cost',
-    'slbl-taux': 'Interest rate',
-    'slbl-taux-sm': 'Oct. 2025: 3.22%',
-    'slbl-duree': 'Duration',
-    'slbl-duree-sm': 'Years',
-    'slbl-charges': 'Annual charges',
-    'slbl-charges-sm': 'HOA+insurance+property tax',
-    'charges-detail-default': 'Cold water, cleaning and maintenance of common areas, elevator',
-    'slbl-travaux': 'Renovation budget',
-    'slbl-travaux-sm': 'DPE renovation',
-    'rcl-prix-achat': 'Purchase price',
-    'rcl-notaire': 'Notary fees',
-    'rcl-apport-requis': 'Required down payment',
-    'rcl-rendement': 'Gross yield',
-    'rcl-mensualite': 'Monthly payment',
-    'lbl-infos-complementaires': 'Additional information',
-    'stitle-diagnostics': 'Technical Diagnostics',
-    'ssub-diagnostics': 'Official results of regulatory diagnostics',
-    'lbl-simulateur-perso': 'Personal simulator',
-    'stitle-budget': 'Is this property right for you?',
-    'ssub-budget': 'Enter your situation to find out in 30 seconds',
-    'lbl-revenu': 'Net monthly household income (€)',
-    'lbl-apport-dispo': 'Available down payment (€)',
-    'lbl-duree-credit': 'Desired loan term',
-    'opt-15ans': '15 years',
-    'opt-20ans': '20 years',
-    'opt-25ans': '25 years',
-    'btn-calc-budget': 'Calculate my affordability',
-    'disclaimer-budget': '⚠️ This simulation is provided for indicative purposes only, based on average market rates and standard banking rules. It does not constitute a financing agreement, loan offer, or commitment from any banking institution. Results depend on your complete personal situation (income, expenses, credit history). Only an authorized lending institution can issue a valid loan offer. Consult your banker or a broker for a personalized analysis.',
-    'lbl-quartier': 'Neighborhood life',
-    'stitle-quartier': 'Neighborhood map',
-    'ssub-quartier': 'Transport, shops, schools and green spaces within 800m',
-    'filter-transport': '🚇 Transport',
-    'filter-vert': '🌳 Green Spaces',
-    'filter-commerce': '🛒 Shops',
-    'filter-ecole': '🏫 Schools',
-    'filter-all': '👁️ Show All',
-    'cnt-transport-lbl': 'transport links',
-    'cnt-vert-lbl': 'green spaces',
-    'cnt-commerce-lbl': 'shops',
-    'cnt-ecole-lbl': 'schools',
-    'radius-lbl': '· 800m radius',
-    'lbl-docs': 'Secure document space',
-    'stitle-docs': 'Available documents',
-    'ssub-docs': 'Enter your contact details to access the documents. Your request will be forwarded to the agent.',
-    'lbl-prenom-nom': 'First and last name',
-    'btn-unlock-docs': '🔓 Access Documents',
-    'doc-success-title': '✅ Access Unlocked',
-    'doc-success-txt': 'Your request has been sent. The agent will contact you within 24h with the complete documents.',
-    'doc-pv-ag': 'General Meeting Minutes',
-    'doc-pv-ag-desc': 'Latest HOA general meeting',
-    'doc-dispo': '🔓 Available',
-    'doc-diag-tech': 'Technical Diagnostics',
-    'doc-diag-tech-desc': 'DPE, asbestos, lead...',
-    'doc-factures': 'Invoices & Renovation Quotes',
-    'doc-factures-desc': 'Completed renovations',
-    'doc-reglement': 'Condominium Bylaws',
-    'doc-reglement-desc': 'HOA documents',
-    'offre-progress-prefix': "You've explored",
-    'offre-progress-suffix': ' / 10 sections',
-    'offre-progress-sub': "The more you explore this file, the more confident you'll feel making an offer.",
-    'lbl-processus': 'Acquisition process',
-    'step-visite': 'Viewing',
-    'step-offre': 'Offer',
-    'step-negociation': 'Negotiation',
-    'step-promesse': 'Agreement',
-    'step-10jours': '10 days',
-    'step-financement': 'Financing',
-    'step-signature': 'Signing',
-    'lbl-offre-tunnel': 'Secure offer process',
-    'stitle-offre': 'Your Purchase Offer',
-    'ssub-offre': 'Enter your proposal. It will be forwarded to the agent and seller within 24h.',
-    'lbl-montant-offre': 'Your offer amount (€)',
-    'lbl-financement': 'Financing method',
-    'opt-financement-bancaire': 'Bank financing',
-    'opt-comptant': 'Cash',
-    'lbl-apport-perso': 'Personal down payment (€)',
-    'lbl-delai-souhaite': 'Desired timeline',
-    'opt-3mois': '3 months (standard)',
-    'opt-2mois': '2 months (fast)',
-    'opt-4mois': '4 months or more',
-    'lbl-message-vendeur': 'Message to the seller (optional)',
-    'btn-submit-offre': '✍️ Submit My Secure Offer',
-    'lbl-apres-offre': "After Your Offer — What's Next",
-    'etape1-titre': "STEP 1 · SELLER'S RESPONSE",
-    'etape1-txt': 'Acceptance, refusal, or counter-offer. Usual timeframe: 2–5 days.',
-    'etape2-titre': 'STEP 2 · PRELIMINARY AGREEMENT SIGNING',
-    'etape2-txt': "At the notary's office, 8–10 days after agreement. Security deposit of 5–10%.",
-    'etape3-titre': 'STEP 3 · 10-DAY COOLING-OFF PERIOD',
-    'etape3-txt': 'Legal period with no penalty. Review all documents.',
-    'etape4-titre': 'STEP 4 · BANK APPROVAL',
-    'etape4-txt': 'Your bank has about 60 days to approve your loan.',
-    'etape5-titre': 'STEP 5 · FINAL SIGNING 🔑',
-    'etape5-txt': 'About 3 months after the preliminary agreement — deed signing and key handover.',
-    'lbl-votre-offre': 'Your Offer',
-    'marge-negociation-prefix': 'Estimated negotiation margin:',
-    'marge-negociation-suffix': 'based on DPE and local DVF data.',
-    'footer-title': 'Private Buyer Portal',
-    'footer-subtitle': 'a new generation real estate experience',
-    'footer-desc': 'Property analysis, real DVF data, interactive simulator and AI assistant — everything you need to decide with confidence.',
-    'ai-bubble': "Have a question about this property? I'm here 👋",
-    'ai-ask-btn': 'Ask a Question',
-    'ai-modal-title': 'Privency Assistant',
-    'ai-modal-available': 'Available 24/7',
-    'footer-tagline': 'Real estate with professional expertise',
-    'footer-analyse-par': 'Analysis by Olivier Loison · Expertimo Agent · olivier.loison@expertimo.com',
-    'footer-mentions': 'Legal Notice',
-    'footer-cgv': 'Terms & Conditions',
-    'footer-confidentialite': 'Privacy Policy',
-    'ai-input-placeholder': 'Your question...',
-    'placeholder-nom': 'John Smith',
-    'placeholder-email': 'john@email.com',
-    'placeholder-offer-msg': 'Introduce your project... A sincere message reassures the seller.'
+// ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══
+// Contenus libres traduits (points forts, vigilances, historique, diagnostics) : lus dans les blocs JSON
+// #expertimo-data-en / -pt / -es injectés par app.html. FR et EN utilisent leurs blocs -fr/-en existants ;
+// PT/ES sont rendus ici dans un bloc frère "-x" (même balise, mêmes classes). Repli sur le français si absent.
+var _LANG_BLOCKS = ['pf-list', 'vg-list', 'renov-list', 'diag-grid', 'historique-timeline'];
+var _langDataCache = {};
+function getLangData(lang) {
+  if (_langDataCache[lang] !== undefined) return _langDataCache[lang];
+  var el = document.getElementById('expertimo-data-' + lang), data = null;
+  if (el) { try { data = JSON.parse(el.textContent); } catch (e) { data = null; } }
+  return (_langDataCache[lang] = data);
+}
+var _DIAG_STATUS_CLASS = {favorable: 'diag-ok', attention: 'diag-attention', defavorable: 'diag-alerte', 'non-soumis': 'diag-'};
+var _DIAG_NAME_KEY = {'Amiante': 'amiante', 'Plomb (CREP)': 'plomb', 'Termites': 'termites', 'Électricité': 'electricite', 'Gaz': 'gaz', 'Assainissement': 'assainissement'};
+function _renderLangBlock(base, lang, data) {
+  var lis = function(arr) { return arr.filter(Boolean).map(function(t) { return '<li>' + escHtml(t) + '</li>'; }).join(''); };
+  if (base === 'pf-list') return lis([data.fort1, data.fort2, data.fort3]);
+  if (base === 'vg-list') return lis([data.vig1, data.vig2, data.vig3]);
+  if (base === 'historique-timeline') {
+    var html = '';
+    (data.historiqueLibre || '').split('\n').forEach(function(ligne) {
+      ligne = ligne.trim();
+      if (!ligne) return;
+      var i = ligne.indexOf('—');
+      html += '<li class="info-item">' + (i !== -1 ? '<b>' + escHtml(ligne.substring(0, i).trim()) + '</b> — ' + escHtml(ligne.substring(i + 1).trim()) : escHtml(ligne)) + '</li>';
+    });
+    return html;
   }
-};
+  if (base === 'diag-grid') {
+    return (data.diags || []).map(function(diag) {
+      var key = _DIAG_NAME_KEY[diag.name];
+      var nm = key ? tr('diag-name-' + key, null, lang) : diag.name;
+      var res = (diag.result && diag.result !== '—') ? escHtml(diag.result)
+        : '<span style="color:var(--muted);font-size:11px;" data-tr="diag-not-subject">ℹ️ ' + escHtml(tr('diag-not-subject', null, lang)) + '</span>';
+      return '<div class="diag-card ' + (_DIAG_STATUS_CLASS[diag.status] || 'diag-ok') + '"><div class="diag-icon">' + diag.icon + '</div>'
+        + '<div class="diag-name">' + escHtml(nm) + '</div><div class="diag-result">' + res + '</div></div>';
+    }).join('');
+  }
+  return '';
+}
+function applyTranslatedContent(lang) {
+  var data = (lang === 'pt' || lang === 'es') ? getLangData(lang) : null;
+  _LANG_BLOCKS.forEach(function(base) {
+    var fr = document.getElementById(base + '-fr') || document.getElementById(base);
+    if (!fr) return;
+    var en = document.getElementById(base + '-en');
+    var x = document.getElementById(base + '-x');
+    var show = fr;
+    if (lang === 'en' && en && en.children.length) show = en;
+    else if (data) {
+      var html = _renderLangBlock(base, lang, data);
+      if (html) {
+        if (!x) {
+          x = fr.cloneNode(false);
+          x.id = base + '-x';
+          (en || fr).parentNode.insertBefore(x, (en || fr).nextSibling);
+        }
+        x.innerHTML = html;
+        show = x;
+      }
+    }
+    [fr, en, x].forEach(function(el) { if (el) el.style.display = (el === show) ? (el.getAttribute('data-disp') || '') : 'none'; });
+  });
+}
+
+function updateLangToggle(lang) {
+  LANGS.forEach(function(code) {
+    var b = document.getElementById('lang-toggle-' + code);
+    if (!b) return;
+    var on = code === lang;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.style.background = on ? 'var(--gold)' : 'transparent';
+    b.style.color = on ? 'var(--dark)' : 'rgba(255,255,255,.5)';
+  });
+}
 
 function applyLang(lang) {
-  lang = (lang === 'en') ? 'en' : 'fr';
+  lang = (LANGS.indexOf(lang) !== -1) ? lang : LANG_DEFAULT;
+  var _prevLang = _currentLang;
   _currentLang = lang;
+  saveLang(lang);
   document.documentElement.lang = lang;
 
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    var dict = I18N_STATIC[lang] || I18N_STATIC.fr;
-    if (dict[el.dataset.i18n] != null) el.textContent = dict[el.dataset.i18n];
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
-    var dict = I18N_STATIC[lang] || I18N_STATIC.fr;
-    var key = el.getAttribute('data-i18n-placeholder');
-    if (dict[key] != null) el.setAttribute('placeholder', dict[key]);
-  });
-  document.querySelectorAll('[data-fr-val]').forEach(function(el) {
-    var v = lang === 'en' ? el.getAttribute('data-en-val') : el.getAttribute('data-fr-val');
+    var v = uiText(el.dataset.i18n, lang);
     if (v != null) el.textContent = v;
   });
-  ['pf-list', 'vg-list', 'renov-list', 'diag-grid', 'historique-timeline'].forEach(function(base) {
-    var elFr = document.getElementById(base + '-fr');
-    var elEn = document.getElementById(base + '-en');
-    if (elFr && elEn) {
-      elFr.style.display = lang === 'en' ? 'none' : '';
-      elEn.style.display = lang === 'en' ? '' : 'none';
-    }
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var v = uiText(el.getAttribute('data-i18n-placeholder'), lang);
+    if (v != null) el.setAttribute('placeholder', v);
   });
-  var btnFr = document.getElementById('lang-toggle-fr');
-  var btnEn = document.getElementById('lang-toggle-en');
-  if (btnFr && btnEn) {
-    btnFr.classList.toggle('active', lang !== 'en');
-    btnEn.classList.toggle('active', lang === 'en');
-    btnFr.style.background = lang !== 'en' ? 'var(--gold)' : 'transparent';
-    btnFr.style.color = lang !== 'en' ? 'var(--dark)' : 'rgba(255,255,255,.5)';
-    btnEn.style.background = lang === 'en' ? 'var(--gold)' : 'transparent';
-    btnEn.style.color = lang === 'en' ? 'var(--dark)' : 'rgba(255,255,255,.5)';
-  }
+  // Valeurs générées par fiche : data-<langue>-val, repli sur le français
+  document.querySelectorAll('[data-fr-val]').forEach(function(el) {
+    var v = lang === 'fr' ? null : el.getAttribute('data-' + lang + '-val');
+    if (v == null) v = el.getAttribute('data-fr-val');
+    if (v != null) el.textContent = v;
+  });
+  applyTranslatedContent(lang);
+  // Mentions générées côté JS (ex. « non soumis à obligation »)
+  document.querySelectorAll('[data-tr]').forEach(function(el) {
+    el.textContent = 'ℹ️ ' + tr(el.getAttribute('data-tr'), null, lang);
+  });
+
+  updateLangToggle(lang);
 
   // Rafraîchit les blocs calculés dynamiquement (dépendent de _currentLang)
   if (typeof renderDpeInfo === 'function') renderDpeInfo(lang);
@@ -2083,22 +2926,38 @@ function applyLang(lang) {
     try { calcBudget(); } catch(e) {}
   }
   try { updateOffer(); } catch(e) {}
-  var aiSuggestions = document.getElementById('ai-suggestions');
-  if (aiSuggestions && aiSuggestions.style.display !== 'none' && aiSuggestions.children.length) {
+
+  // L'assistant IA a déjà démarré une conversation dans l'ancienne langue :
+  // on la relance dans la nouvelle pour ne pas mélanger historique et consignes.
+  if (_aiInit && _prevLang !== lang) {
+    var aiMsgsEl = document.getElementById('ai-messages');
+    if (aiMsgsEl) aiMsgsEl.innerHTML = '';
+    _aiMessages = [];
+    var welcomeReset = aiT('welcome', {adresse: _sp_adresse}, lang);
+    addAIMsg(welcomeReset, 'assistant');
+    _aiMessages.push({role:'user',content:aiT('sessionStart', null, lang)});
+    _aiMessages.push({role:'assistant',content:welcomeReset});
+    var aiSuggestionsEl = document.getElementById('ai-suggestions');
+    if (aiSuggestionsEl) aiSuggestionsEl.style.display = '';
+  }
+
+  var aiSug = document.getElementById('ai-suggestions');
+  if (aiSug && aiSug.style.display !== 'none' && aiSug.children.length) {
     try { renderAISuggestions(); } catch(e) {}
   }
 }
 
-// Le bouton FR|EN n'est visible que si la fiche a été générée en bilingue
-// (présence du bloc JSON #expertimo-data-en injecté par app.html).
+// Sélecteur de langue toujours visible (FR / EN / PT / ES). La langue choisie est mémorisée ;
+// les textes non traduits d'une fiche retombent sur le français.
 document.addEventListener('DOMContentLoaded', function() {
-  if (document.getElementById('expertimo-data-en')) {
-    var toggle = document.getElementById('lang-toggle');
-    if (toggle) { toggle.style.display = 'block'; applyLang('fr'); }
-  }
+  renderLangToggle();
+  var toggle = document.getElementById('lang-toggle');
+  if (toggle) toggle.style.display = 'block';
+  // Français (défaut) : le HTML généré fait foi, on ne le réécrit pas ; autre langue mémorisée : on l'applique.
+  var saved = getSavedLang();
+  if (saved !== LANG_DEFAULT) applyLang(saved); else updateLangToggle(saved);
 });
 </script>
-
 <script>
 // Indicateur doré glissant dans la nav (couche visuelle uniquement : suit le bouton .active posé par showTab)
 (function() {
@@ -2158,6 +3017,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 250);
 })();
 </script>
+
 
 <script>window.PRIVENCY_AGENT_ID = "79e4e432-2232-4d2c-b41d-8c7c907c4dec";</script>
 </body></html>
