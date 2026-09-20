@@ -14,7 +14,9 @@ const SENSITIVE_IDS = ['proprio_prenom','proprio_nom','tel_mobile','tel_fixe','e
   'cles_chez','agences','date_r1','date_r2','vente_depuis','delai_vente','nb_visites','loyer_actuel_location','bien_fourchette_milieu','gh-token-input'];
 const Q = String.fromCharCode(34);
 const RE = id => new RegExp('(<script[^>]*id=' + Q + id + Q + '[^>]*>)([^]*?)(</script>)', 'i');
-const pub = d => { const o = {}; KEYS.forEach(k => { if (d[k] !== undefined) o[k] = d[k]; }); if (d._rawState && d._rawState.photos) o._rawState = { photos: d._rawState.photos }; return o; };
+const OVERRIDES = { '2-allee-du-vivier-sud-91410-saint-escobille-FINAL.html': { acheteur_prenom: '', acheteur_nom: '' } };  // acheteur = vendeur (saisie erronée) : effacé du HTML public
+let _ov = {};
+const pub = d => { const o = {}; KEYS.forEach(k => { if (d[k] !== undefined) o[k] = d[k]; }); if (d._rawState && d._rawState.photos) o._rawState = { photos: d._rawState.photos }; Object.assign(o, _ov); return o; };
 const files = fs.readdirSync(dir).filter(f => f.endsWith('.html')).sort();
 const rows = [], log = [];
 if (mode === 'extract' && !fs.existsSync(out)) fs.mkdirSync(out);
@@ -36,10 +38,13 @@ for (const f of files) {
     continue;
   }
   // nettoyage (mode clean) ou simulation (report)
+  _ov = OVERRIDES[f] || {};
   html = html.replace(RE('expertimo-data'), (a, o, j, c) => o + JSON.stringify(pub(d)) + c);
   const me = html.match(RE('expertimo-data-en'));
   if (me) { try { const de = JSON.parse(me[2]); html = html.replace(RE('expertimo-data-en'), (a, o, j, c) => o + JSON.stringify(pub(de)) + c); } catch (e) { log.push([f, 'attention', 'bloc EN illisible']); } }
   if (d.ref && d.ref !== 'ref-mandat') html = html.split(d.ref).join(slug);
+  // Acheteur effacé (override) : le message de bienvenue nominatif est masqué, comme le fait injectData sans prénom.
+  if (OVERRIDES[f]) html = html.replace(/(<div id="welcome-msg" style=")display: block;([^>]*>)Bienvenue [^<]*(<[/]div>)/, '$1display: none;$2$3');
   const left = secrets.filter(s => html.includes(s));
   const before = fs.readFileSync(path.join(dir, f), 'utf8').length;
   if (left.length) { log.push([f, 'NON NETTOYÉE (chaînes résiduelles)', left.map(s => s.slice(0, 20)).join(' | ')]); continue; }
