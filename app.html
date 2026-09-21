@@ -553,13 +553,12 @@ details[open] summary .chevron { transform: rotate(90deg); }
 </script>
 <!-- ══════════ AUTH GUARD (Supabase) ══════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/auth-client.js"></script>
 <script>
 (function () {
-  const AUTH_SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
-  const AUTH_SUPABASE_KEY = 'sb_publishable_Asv3-Q2Q9XSA_gvV1nB74Q_0N6prN2E';
-
-  const authClient = supabase.createClient(AUTH_SUPABASE_URL, AUTH_SUPABASE_KEY);
-  window.privencyAuth = authClient;
+  // Client du compte actif de CET onglet (session « privency-auth-<uid> »,
+  // voir auth-client.js) : plusieurs agents peuvent utiliser le même navigateur.
+  const authClient = PrivencyAuth.getClient();
 
   // resolved : une seule décision (révéler ou rediriger), quel que soit le
   // premier signal arrivé (onAuthStateChange, getSession ou timeout).
@@ -584,6 +583,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
   async function checkSubscription(session) {
     if (resolved) return;
     resolved = true;
+    PrivencyAuth.refreshTitle(session);
     try {
       const { data, error } = await authClient
         .from('agents')
@@ -653,6 +653,15 @@ details[open] summary .chevron { transform: rotate(90deg); }
   authClient.auth.onAuthStateChange((event, session) => {
     if (session) {
       checkSubscription(session);
+    } else if (event === 'SIGNED_OUT' && resolved) {
+      if (window.__privencyLoggingOut) return; // déconnexion lancée depuis cet onglet : le bouton redirige déjà
+      // Déconnexion du même compte depuis un autre onglet (BroadcastChannel
+      // propre à ce compte) : on quitte la page, les autres comptes ne sont pas touchés.
+      // Le signal peut venir d'un autre onglet du même compte (BroadcastChannel du storageKey) :
+      // on ne quitte la page que si NOTRE session (localStorage ou sessionStorage) a vraiment disparu.
+      authClient.auth.getSession().then(function (r) {
+        if (!(r && r.data && r.data.session)) window.location.replace('/login.html');
+      });
     } else {
       denied();
     }
@@ -671,19 +680,29 @@ details[open] summary .chevron { transform: rotate(90deg); }
   setTimeout(() => { denied(); }, 3000);
 
   document.addEventListener('DOMContentLoaded', () => {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'position:fixed;top:80px;right:12px;z-index:10000;display:flex;gap:6px;';
+    const btnStyle = 'background:var(--primary);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
+
+    const switchBtn = document.createElement('button');
+    switchBtn.id = 'switch-account-btn';
+    switchBtn.textContent = 'Changer de compte';
+    switchBtn.style.cssText = btnStyle;
+    switchBtn.addEventListener('click', () => { PrivencyAuth.switchAccount(); });
+
     const btn = document.createElement('button');
     btn.id = 'logout-btn';
     btn.textContent = 'Déconnexion';
-    btn.style.cssText = 'position:fixed;top:80px;right:12px;z-index:10000;background:var(--primary);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
+    btn.style.cssText = btnStyle;
     btn.addEventListener('click', async () => {
-      localStorage.removeItem('_agent_profile');
-      localStorage.removeItem('_draft_bien');
-      localStorage.removeItem('privency_draft');
-      localStorage.removeItem('privency_last_fiche');
-      await authClient.auth.signOut();
+      // Ne déconnecte que le compte de cet onglet (session + cache de ce compte).
+      await PrivencyAuth.signOutActive();
       window.location.replace('/login.html');
     });
-    document.body.appendChild(btn);
+
+    wrap.appendChild(switchBtn);
+    wrap.appendChild(btn);
+    document.body.appendChild(wrap);
   });
 })();
 </script>
@@ -1787,9 +1806,9 @@ var _editingFiche = null;
 
 // Handle ?new=1 — clear draft so a fresh form loads
 if (new URLSearchParams(window.location.search).get('new') === '1') {
-  localStorage.removeItem('_draft_bien');
-  localStorage.removeItem('privency_draft');
-  localStorage.removeItem('privency_last_fiche');
+  PrivencyAuth.lsRemove('_draft_bien');
+  PrivencyAuth.lsRemove('privency_draft');
+  PrivencyAuth.lsRemove('privency_last_fiche');
   // Remove the param from the URL without reloading
   history.replaceState(null, '', window.location.pathname);
 }
@@ -2037,10 +2056,10 @@ var _CONTEXT_TIPS = {
 };
 
 function contextTipSeen(key) {
-  try { return localStorage.getItem('privency_tip_' + key) === '1'; } catch (e) { return false; }
+  try { return PrivencyAuth.lsGet('privency_tip_' + key) === '1'; } catch (e) { return false; }
 }
 function markContextTipSeen(key) {
-  try { localStorage.setItem('privency_tip_' + key, '1'); } catch (e) {}
+  try { PrivencyAuth.lsSet('privency_tip_' + key, '1'); } catch (e) {}
 }
 
 function showContextTip(key) {
@@ -2211,7 +2230,8 @@ function saveProfile() {
     tvaIntra:       getV('agent-tva-intra'),
     codeNaf:        getV('agent-code-naf')
   };
-  localStorage.setItem('_agent_profile', JSON.stringify(profile));
+  PrivencyAuth.lsSet('_agent_profile', JSON.stringify(profile));
+  PrivencyAuth.refreshTitle();
   document.getElementById('profile-saved-badge').style.display = 'inline-flex';
   syncProfileToSupabase(profile);
   return profile;
@@ -2259,7 +2279,7 @@ async function syncProfileToSupabase(profile) {
 // qui ne peuvent pas attendre la version asynchrone (ex: collecte de données
 // pendant la génération de fiche, une fois le profil déjà chargé au step 1).
 function loadProfileSync() {
-  var raw = localStorage.getItem('_agent_profile');
+  var raw = PrivencyAuth.lsGet('_agent_profile');
   if (!raw) return null;
   try { return JSON.parse(raw); } catch(e) { return null; }
 }
@@ -2286,7 +2306,7 @@ async function loadProfile() {
             // sans profil. Ne PAS retomber sur localStorage, qui n'est pas
             // lié à un utilisateur précis et pourrait contenir le profil
             // d'un autre agent ayant utilisé ce même navigateur.
-            localStorage.removeItem('_agent_profile');
+            PrivencyAuth.lsRemove('_agent_profile');
             return null;
           }
           var profile = {
@@ -2308,7 +2328,8 @@ async function loadProfile() {
             tvaIntra:       data.tva_intra,
             codeNaf:        data.code_naf
           };
-          localStorage.setItem('_agent_profile', JSON.stringify(profile));
+          PrivencyAuth.lsSet('_agent_profile', JSON.stringify(profile));
+          PrivencyAuth.refreshTitle();
           return profile;
         }
         console.error('loadProfile: échec lecture Supabase, repli sur localStorage', error);
@@ -2412,7 +2433,7 @@ function saveProfileAndContinue() {
 
 function resetProfile() {
   if (!confirm('Réinitialiser le profil agent ? Les données seront effacées.')) return;
-  localStorage.removeItem('_agent_profile');
+  PrivencyAuth.lsRemove('_agent_profile');
   ['agent-prenom','agent-nom','agent-reseau','agent-tel','agent-email',
    'agent-secteur','agent-rdv-url','agent-site-url','agent-photo-url',
    'agent-siret','agent-denomination','agent-forme-juridique',
@@ -3932,7 +3953,7 @@ function scheduleDraftSave() { clearTimeout(_draftTimer); _draftTimer = setTimeo
 function saveDraftBien() {
   try {
     var draft = collectRawFormState();
-    localStorage.setItem('_draft_bien', JSON.stringify(draft));
+    PrivencyAuth.lsSet('_draft_bien', JSON.stringify(draft));
     var badge=document.getElementById('draft-saved-badge');
     if (badge){badge.style.display='inline';setTimeout(function(){badge.style.display='none';},2000);}
   } catch(e) {}
@@ -3942,7 +3963,7 @@ function loadDraftBien() {
   // En édition d'une fiche publiée, l'état vient de la fiche (injectBienData) : un brouillon
   // ne doit jamais le recouvrir, ni changer le type de bien (et donc les sections visibles).
   if (window._editMode) return;
-  var raw=localStorage.getItem('_draft_bien');
+  var raw=PrivencyAuth.lsGet('_draft_bien');
   if (!raw) return;
   try {
     var draft=JSON.parse(raw);
@@ -4807,8 +4828,8 @@ async function pushToGitHub() {
       updateStepperTabs();
       showToast('✅ Fiche publiée !');
       try {
-        var nbPublications = parseInt(localStorage.getItem('privency_nb_fiches_publiees') || '0', 10) + 1;
-        localStorage.setItem('privency_nb_fiches_publiees', String(nbPublications));
+        var nbPublications = parseInt(PrivencyAuth.lsGet('privency_nb_fiches_publiees') || '0', 10) + 1;
+        PrivencyAuth.lsSet('privency_nb_fiches_publiees', String(nbPublications));
         if (nbPublications === 1) showContextTip('premiere_fiche_publiee');
       } catch (e) {}
     } else {
@@ -5703,9 +5724,9 @@ async function modifierFiche(filename, sha, downloadUrl) {
     clearTimeout(_draftTimer);
 
     // 2. Clear draft so goToStep(2) doesn't restore stale localStorage data
-    localStorage.removeItem('_draft_bien');
-    localStorage.removeItem('privency_draft');
-    localStorage.removeItem('privency_last_fiche');
+    PrivencyAuth.lsRemove('_draft_bien');
+    PrivencyAuth.lsRemove('privency_draft');
+    PrivencyAuth.lsRemove('privency_last_fiche');
 
     // 3. Remember which fiche we're editing
     _editingFiche = { filename: filename, sha: sha };

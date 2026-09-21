@@ -160,6 +160,33 @@
     text-decoration: underline;
   }
 
+  .remember-box {
+    margin-bottom: 4px;
+  }
+
+  .remember-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #b3aea4;
+    cursor: pointer;
+  }
+
+  .remember-label input {
+    width: 16px;
+    height: 16px;
+    accent-color: #b8923a;
+    cursor: pointer;
+  }
+
+  .remember-help {
+    margin: 6px 0 0 26px;
+    font-size: 12px;
+    color: #8a857c;
+    line-height: 1.4;
+  }
+
   .forgot-link {
     text-align: right;
     margin-top: -12px;
@@ -192,6 +219,121 @@
   .success-message.visible {
     display: block;
   }
+
+  /* ── « Qui êtes-vous ? » : comptes connus sur cet ordinateur ── */
+  .account-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .account-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: #141414;
+    border: 1px solid #333;
+    border-radius: 10px;
+    transition: border-color 0.2s ease;
+  }
+
+  .account-item:hover {
+    border-color: #b8923a;
+  }
+
+  .account-pick {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+    background: none;
+    border: none;
+    color: inherit;
+    font-family: 'DM Sans', sans-serif;
+    text-align: left;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .account-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    color: #b8923a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 16px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .account-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .account-text {
+    min-width: 0;
+  }
+
+  .account-name {
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .account-email {
+    font-size: 12px;
+    color: #8a857c;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .account-remove {
+    background: none;
+    border: none;
+    color: #8a857c;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 4px 6px;
+    flex-shrink: 0;
+  }
+
+  .account-remove:hover {
+    color: #e07b6e;
+    text-decoration: underline;
+  }
+
+  .btn-secondary {
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    color: #b8923a;
+    border: 1px solid #b8923a;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .btn-secondary:hover {
+    background: #b8923a;
+    color: #141414;
+  }
 </style>
 <script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjfjzv3a2");</script></head>
 <body>
@@ -200,6 +342,13 @@
   <div class="brand">
     <h1>Priven<span>cy</span></h1>
     <p>Votre espace immobilier professionnel</p>
+  </div>
+
+  <div class="form-box" id="chooser-box" style="display:none;">
+    <h2>Qui êtes-vous ?</h2>
+    <ul class="account-list" id="account-list"></ul>
+    <button type="button" class="btn-secondary" id="add-account-btn">Ajouter un compte</button>
+    <div class="error-message" id="chooser-error"></div>
   </div>
 
   <div class="form-box" id="login-box">
@@ -214,11 +363,19 @@
         <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
       </div>
       <p class="forgot-link"><a href="#" id="forgot-password-link">Mot de passe oublié ?</a></p>
+      <div class="remember-box">
+        <label class="remember-label" for="remember">
+          <input type="checkbox" id="remember" name="remember">
+          <span>Mémoriser ce compte sur cet ordinateur</span>
+        </label>
+        <p class="remember-help">À cocher uniquement sur votre ordinateur personnel ou professionnel.</p>
+      </div>
       <button type="submit" class="btn-submit" id="submit-btn">Se connecter</button>
       <div class="error-message" id="error-message"></div>
       <div class="success-message" id="success-message"></div>
     </form>
     <p class="register-link">Pas encore de compte ? <a href="#" id="show-signup-link">Créer un compte</a></p>
+    <p class="register-link" id="back-to-chooser" style="display:none;"><a href="#" id="back-to-chooser-link">← Choisir un compte existant</a></p>
   </div>
 
   <div class="form-box" id="signup-box" style="display:none;">
@@ -245,11 +402,11 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/auth-client.js"></script>
 <script>
-  const SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_Asv3-Q2Q9XSA_gvV1nB74Q_0N6prN2E';
-
-  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Client jetable (rien n'est écrit dans le storage) : la session du compte
+  // est enregistrée par PrivencyAuth sous « privency-auth-<uid> ».
+  const client = PrivencyAuth.createTempClient();
 
   const form = document.getElementById('login-form');
   const submitBtn = document.getElementById('submit-btn');
@@ -301,7 +458,7 @@
     submitBtn.disabled = true;
     submitBtn.textContent = 'Connexion…';
 
-    const { error } = await client.auth.signInWithPassword({ email, password });
+    const { error } = await PrivencyAuth.signInWithPassword(email, password, document.getElementById('remember').checked);
 
     if (error) {
       errorMessage.textContent = error.message === 'Invalid login credentials'
@@ -313,7 +470,7 @@
       return;
     }
 
-    window.location.href = '/dashboard.html';
+    window.location.href = '/app.html';
   });
 
   // ─── Inscription (signup) ───────────────────────────────
@@ -336,7 +493,9 @@
 
   function showLoginBox() {
     signupBox.style.display = 'none';
+    chooserBox.style.display = 'none';
     loginBox.style.display = 'block';
+    backToChooser.style.display = PrivencyAuth.listAccounts().length ? 'block' : 'none';
   }
 
   showSignupLink.addEventListener('click', (e) => {
@@ -357,6 +516,119 @@
       'Signup requires a valid password': 'Veuillez saisir un mot de passe valide.'
     };
     return translations[message] || message;
+  }
+
+  // ─── « Qui êtes-vous ? » : comptes connus sur cet ordinateur ───
+  const chooserBox = document.getElementById('chooser-box');
+  const accountList = document.getElementById('account-list');
+  const chooserError = document.getElementById('chooser-error');
+  const backToChooser = document.getElementById('back-to-chooser');
+
+  function initialsOf(a) {
+    const i = ((a.prenom || '').charAt(0) + (a.nom || '').charAt(0)).toUpperCase();
+    return i || (a.email || '?').charAt(0).toUpperCase();
+  }
+
+  function renderChooser() {
+    const accounts = PrivencyAuth.listAccounts();
+    accountList.textContent = '';
+    if (!accounts.length) {
+      chooserBox.style.display = 'none';
+      loginBox.style.display = 'block';
+      backToChooser.style.display = 'none';
+      return;
+    }
+    signupBox.style.display = 'none';
+    loginBox.style.display = 'none';
+    chooserBox.style.display = 'block';
+    chooserError.classList.remove('visible');
+
+    accounts.forEach((a) => {
+      const li = document.createElement('li');
+      li.className = 'account-item';
+
+      const pick = document.createElement('button');
+      pick.type = 'button';
+      pick.className = 'account-pick';
+
+      const avatar = document.createElement('span');
+      avatar.className = 'account-avatar';
+      if (/^https:\/\//i.test(a.photo)) {
+        const img = document.createElement('img');
+        img.alt = '';
+        img.referrerPolicy = 'no-referrer';
+        img.src = a.photo;
+        img.addEventListener('error', () => { img.remove(); avatar.textContent = initialsOf(a); });
+        avatar.appendChild(img);
+      } else {
+        avatar.textContent = initialsOf(a);
+      }
+
+      const text = document.createElement('span');
+      text.className = 'account-text';
+      const name = document.createElement('div');
+      name.className = 'account-name';
+      name.textContent = [a.prenom, a.nom].filter(Boolean).join(' ') || a.email;
+      const mail = document.createElement('div');
+      mail.className = 'account-email';
+      mail.textContent = a.email;
+      text.appendChild(name);
+      text.appendChild(mail);
+
+      pick.appendChild(avatar);
+      pick.appendChild(text);
+      pick.addEventListener('click', () => chooseAccount(a, pick));
+
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'account-remove';
+      remove.textContent = 'Retirer ce compte';
+      remove.addEventListener('click', async () => {
+        if (!confirm('Retirer ce compte de cet ordinateur ? Il faudra ressaisir son mot de passe pour le réutiliser.')) return;
+        remove.disabled = true;
+        await PrivencyAuth.removeAccount(a.uid);
+        renderChooser();
+      });
+
+      li.appendChild(pick);
+      li.appendChild(remove);
+      accountList.appendChild(li);
+    });
+  }
+
+  async function chooseAccount(a, pick) {
+    chooserError.classList.remove('visible');
+    pick.disabled = true;
+    const ok = await PrivencyAuth.activate(a.uid);
+    if (ok) {
+      window.location.href = '/app.html';
+      return;
+    }
+    // Refresh token expiré ou révoqué : on redemande le mot de passe.
+    pick.disabled = false;
+    showLoginBox();
+    document.getElementById('email').value = a.email;
+    document.getElementById('remember').checked = true; // c'était un compte mémorisé
+    errorMessage.textContent = 'Votre session a expiré, saisissez à nouveau votre mot de passe.';
+    errorMessage.classList.add('visible');
+    document.getElementById('password').focus();
+  }
+
+  document.getElementById('add-account-btn').addEventListener('click', () => {
+    showLoginBox();
+  });
+
+  document.getElementById('back-to-chooser-link').addEventListener('click', (e) => {
+    e.preventDefault();
+    renderChooser();
+  });
+
+  // Retour par lien email (confirmation, magic link) : session déjà enregistrée
+  // par auth-client.js sous le bon compte → on entre directement.
+  if (PrivencyAuth.consumedUrlSession) {
+    window.location.replace('/app.html');
+  } else {
+    renderChooser();
   }
 
   signupForm.addEventListener('submit', async (e) => {
@@ -420,6 +692,15 @@
     // Si Supabase renvoie une session immédiatement, la confirmation par
     // email n'est pas requise (configuration du projet) : on connecte direct.
     if (data && data.session) {
+      try {
+        await PrivencyAuth.storeSession(data.session, false); // inscription : non mémorisé par défaut
+      } catch (err) {
+        signupErrorMessage.textContent = err.message || 'Connexion impossible.';
+        signupErrorMessage.classList.add('visible');
+        signupSubmitBtn.disabled = false;
+        signupSubmitBtn.textContent = 'Créer mon compte';
+        return;
+      }
       window.location.href = '/app.html';
       return;
     }
