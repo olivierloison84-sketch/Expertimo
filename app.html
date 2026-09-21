@@ -333,8 +333,6 @@ textarea { resize: vertical; min-height: 60px; }
      d'onglets) pour ne plus recouvrir aucun onglet, notamment le 7e « Coaching Express ». Mobile uniquement. */
   #logout-btn { top: 6px !important; right: 8px !important; padding: 3px 10px !important; font-size: 11px !important; }
   #revoir-tutoriel-btn { top: 38px !important; right: 8px !important; padding: 3px 10px !important; font-size: 11px !important; }
-  #gerer-abonnement-btn { top: 70px !important; right: 8px !important; padding: 3px 10px !important; font-size: 11px !important; }
-  #gerer-abonnement-msg { top: 100px !important; right: 8px !important; }
   /* Groupe « Outils commerciaux » : en barre horizontale, l'onglet redevient un onglet comme les autres */
   .stepper-tools { display: contents; }
   .stepper-tools-title { display: none; }
@@ -734,6 +732,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="step-tab" id="tab-6" onclick="goToStep(6)">
     <span class="step-num" style="background:var(--muted);font-size:14px;">📂</span>
     <span class="step-label">Mes fiches</span>
+  </div>
+  <div class="step-tab" id="tab-8" onclick="goToStep(8)">
+    <span class="step-num" style="background:var(--muted);font-size:14px;">💳</span>
+    <span class="step-label">Mon abonnement</span>
   </div>
   <div class="stepper-tools" id="stepper-tools">
     <div class="stepper-tools-title">Outils commerciaux</div>
@@ -1769,6 +1771,22 @@ details[open] summary .chevron { transform: rotate(90deg); }
     style="display:block;border:0;width:calc(100% - 210px);margin-left:210px;height:calc(100vh - 72px);background:var(--light);"></iframe>
 </div>
 
+<!-- ══════════════════════════════════════════════════════
+     PAGE 8 — MON ABONNEMENT (portail Stripe ou démarrage d'abonnement)
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-8">
+<div class="container">
+  <div class="card">
+    <div class="card-header">💳 Mon abonnement</div>
+    <div class="card-body">
+      <p style="font-size:14px;line-height:1.6;margin-bottom:16px;">14 jours d'essai gratuits, puis 69 € par mois. Tu peux annuler ou reprendre à tout moment.</p>
+      <button class="btn btn-primary" id="abonnement-btn" onclick="ouvrirAbonnement()">Gérer mon abonnement</button>
+      <div id="abonnement-error" role="alert" style="display:none;margin-top:12px;background:#fef2f2;color:#b91c1c;border:1px solid #fca5a5;border-radius:6px;padding:8px 12px;font-size:13px;line-height:1.4;"></div>
+    </div>
+  </div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2021,73 +2039,6 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-// Bouton discret « Gérer mon abonnement » : abonné → portail Stripe (annulation / reprise
-// à tout moment) ; jamais abonné → « Démarrer mon abonnement » (Checkout, essai inclus).
-// Les erreurs s'affichent dans une petite bulle sous le bouton, jamais en alert().
-document.addEventListener('DOMContentLoaded', function() {
-  var btn = document.createElement('button');
-  btn.id = 'gerer-abonnement-btn';
-  btn.textContent = 'Gérer mon abonnement';
-  btn.style.cssText = 'position:fixed;top:152px;right:12px;z-index:10000;background:var(--primary);'
-    + 'color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;'
-    + 'font-size:12px;font-family:inherit;cursor:pointer;';
-  var msg = document.createElement('div');
-  msg.id = 'gerer-abonnement-msg';
-  msg.setAttribute('role', 'alert');
-  msg.style.cssText = 'display:none;position:fixed;top:186px;right:12px;z-index:10000;max-width:260px;'
-    + 'background:#fff;color:#b91c1c;border:1px solid #fca5a5;border-radius:6px;padding:8px 12px;'
-    + 'font-size:12px;font-family:inherit;line-height:1.4;box-shadow:0 2px 8px rgba(0,0,0,.15);';
-  document.body.appendChild(btn);
-  document.body.appendChild(msg);
-
-  var abonne = true;
-
-  function showError(text) {
-    msg.textContent = text;
-    msg.style.display = 'block';
-  }
-
-  // Libellé selon le statut : best-effort, « Gérer » par défaut si la lecture échoue.
-  (async function() {
-    try {
-      var s = await window.privencyAuth.auth.getSession();
-      var session = s && s.data && s.data.session;
-      if (!session) return;
-      var r = await window.privencyAuth.from('agents').select('stripe_customer_id')
-        .eq('id', session.user.id).maybeSingle();
-      if (r && !r.error && r.data && !r.data.stripe_customer_id) {
-        abonne = false;
-        btn.textContent = 'Démarrer mon abonnement';
-      }
-    } catch (e) { /* on garde « Gérer mon abonnement » */ }
-  })();
-
-  btn.addEventListener('click', async function() {
-    var label = btn.textContent;
-    msg.style.display = 'none';
-    btn.disabled = true;
-    btn.textContent = 'Redirection…';
-    try {
-      var s = await window.privencyAuth.auth.getSession();
-      var session = s && s.data && s.data.session;
-      if (!session) throw new Error('Session expirée. Reconnectez-vous puis réessayez.');
-      var res = await fetch(PRIVENCY_API_BASE + (abonne ? '/api/create-portal-session' : '/api/create-checkout'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(abonne
-          ? { user_id: session.user.id }
-          : { user_id: session.user.id, email: session.user.email })
-      });
-      var data = await res.json().catch(function() { return {}; });
-      if (!res.ok || !data.url) throw new Error(data.error || 'Impossible d’ouvrir la gestion de l’abonnement.');
-      window.location.href = data.url;
-    } catch (err) {
-      showError((err && err.message) || 'Une erreur est survenue. Veuillez réessayer.');
-      btn.disabled = false;
-      btn.textContent = label;
-    }
-  });
-});
 // ═══════════════════════════════════════════════════════
 // CONSEILS CONTEXTUELS — micro-conseils déclenchés au bon moment
 // ═══════════════════════════════════════════════════════
@@ -2165,7 +2116,7 @@ function goToStep(n) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + n).classList.add('active');
   // Update tabs
-  [1,2,3,4,5,6,7].forEach(function(i) {
+  [1,2,3,4,5,6,7,8].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
@@ -2177,6 +2128,7 @@ function goToStep(n) {
   if (n === 4) { refreshStep4Summary(); }
   if (n === 5) { loadAnalytics(); }
   if (n === 6) { loadFiches(); }
+  if (n === 8) { majLibelleAbonnement(); }
   if (n === 7) { var af = document.getElementById('argu-frame'); if (af && !af.getAttribute('src')) af.setAttribute('src', af.getAttribute('data-src')); 
     // Mobile : la barre d'étapes défile horizontalement, on amène l'onglet actif dans la zone visible
     var t7 = document.getElementById('tab-7');
@@ -2186,13 +2138,68 @@ function goToStep(n) {
 }
 
 function updateStepperTabs() {
-  [1,2,3,4,5,6,7].forEach(function(i) {
+  [1,2,3,4,5,6,7,8].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
     if (i === _currentStep)      tab.classList.add('active');
     else if (_stepsComplete[i])  tab.classList.add('done');
   });
+}
+
+// ═══════════════════════════════════════════════════════
+// MON ABONNEMENT — portail Stripe (abonné) ou Checkout (jamais abonné)
+// ═══════════════════════════════════════════════════════
+var _abonne = true;
+
+function _abonnementErreur(text) {
+  var el = document.getElementById('abonnement-error');
+  if (!el) return;
+  el.textContent = text || '';
+  el.style.display = text ? 'block' : 'none';
+}
+
+// Libellé selon le statut : best-effort, « Gérer » par défaut si la lecture échoue.
+async function majLibelleAbonnement() {
+  var btn = document.getElementById('abonnement-btn');
+  try {
+    var s = await window.privencyAuth.auth.getSession();
+    var session = s && s.data && s.data.session;
+    if (!session) return;
+    var r = await window.privencyAuth.from('agents').select('stripe_customer_id')
+      .eq('id', session.user.id).maybeSingle();
+    if (r && !r.error && r.data && !r.data.stripe_customer_id) {
+      _abonne = false;
+      btn.textContent = 'Démarrer mon abonnement';
+    }
+  } catch (e) { /* on garde « Gérer mon abonnement » */ }
+}
+
+async function ouvrirAbonnement() {
+  var btn = document.getElementById('abonnement-btn');
+  var label = btn.textContent;
+  _abonnementErreur('');
+  btn.disabled = true;
+  btn.textContent = 'Redirection…';
+  try {
+    var s = await window.privencyAuth.auth.getSession();
+    var session = s && s.data && s.data.session;
+    if (!session) throw new Error('Session expirée. Reconnectez-vous puis réessayez.');
+    var res = await fetch(PRIVENCY_API_BASE + (_abonne ? '/api/create-portal-session' : '/api/create-checkout'), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(_abonne
+        ? { user_id: session.user.id }
+        : { user_id: session.user.id, email: session.user.email })
+    });
+    var data = await res.json().catch(function() { return {}; });
+    if (!res.ok || !data.url) throw new Error(data.error || 'Impossible d’ouvrir la gestion de l’abonnement.');
+    window.location.href = data.url;
+  } catch (err) {
+    _abonnementErreur((err && err.message) || 'Une erreur est survenue. Veuillez réessayer.');
+    btn.disabled = false;
+    btn.textContent = label;
+  }
 }
 
 // ═══════════════════════════════════════════════════════
