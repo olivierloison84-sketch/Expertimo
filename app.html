@@ -147,6 +147,42 @@ header {
 }
 
 /* ═══════════════════════════════════════
+   ONGLET VIDÉOS — cartes de tutoriels
+═══════════════════════════════════════ */
+.videos-intro { font-size: 14px; line-height: 1.6; margin-bottom: 18px; }
+.videos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.video-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.video-card-head { padding: 14px 16px 10px; }
+.video-card-title { font-size: 14px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.video-card-meta { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-top: 3px; }
+.video-card-desc { font-size: 13px; line-height: 1.5; color: var(--text); margin-top: 8px; }
+.video-badge-vue {
+  display: none;
+  font-size: 10px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase;
+  color: #fff; background: var(--vert);
+  padding: 2px 8px; border-radius: 999px;
+}
+.video-card.vue .video-badge-vue { display: inline-block; }
+.video-card video, .video-card-soon {
+  display: block; width: 100%; aspect-ratio: 16 / 9;
+  background: #000; object-fit: contain;
+}
+.video-card-soon {
+  background: var(--light); color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600;
+}
+.videos-support { font-size: 13px; color: var(--muted); margin-top: 18px; }
+.videos-support a { color: var(--primary); font-weight: 600; }
+
+/* ═══════════════════════════════════════
    PAGES
 ═══════════════════════════════════════ */
 .page { display: none; }
@@ -331,7 +367,8 @@ textarea { resize: vertical; min-height: 60px; }
   .step-tab.active { background: transparent; }
   /* Boutons flottants « Déconnexion » / « Revoir le tutoriel » : ils passent dans l'en-tête (au-dessus de la barre
      d'onglets) pour ne plus recouvrir aucun onglet, notamment le 7e « Coaching Express ». Mobile uniquement. */
-  #logout-btn { top: 6px !important; right: 8px !important; padding: 3px 10px !important; font-size: 11px !important; }
+  #auth-actions { top: 6px !important; right: 8px !important; gap: 4px !important; }
+  #auth-actions button { padding: 3px 10px !important; font-size: 11px !important; }
   #revoir-tutoriel-btn { top: 38px !important; right: 8px !important; padding: 3px 10px !important; font-size: 11px !important; }
   /* Groupe « Outils commerciaux » : en barre horizontale, l'onglet redevient un onglet comme les autres */
   .stepper-tools { display: contents; }
@@ -681,6 +718,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
   document.addEventListener('DOMContentLoaded', () => {
     const wrap = document.createElement('div');
+    wrap.id = 'auth-actions';
     wrap.style.cssText = 'position:fixed;top:80px;right:12px;z-index:10000;display:flex;gap:6px;';
     const btnStyle = 'background:var(--primary);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
 
@@ -761,6 +799,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <div class="step-tab" id="tab-7" onclick="goToStep(7)">
       <span class="step-num" style="background:var(--muted);font-size:14px;">🎯</span>
       <span class="step-label">Coaching Express</span>
+    </div>
+    <div class="step-tab" id="tab-9" onclick="goToStep(9)">
+      <span class="step-num" style="background:var(--muted);font-size:14px;">🎬</span>
+      <span class="step-label">Vidéos</span>
     </div>
   </div>
   <a href="/app.html?new=1" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;">✚ Nouvelle fiche</a>
@@ -1806,6 +1848,22 @@ details[open] summary .chevron { transform: rotate(90deg); }
 </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════
+     PAGE 9 — VIDÉOS (tutoriels courts ; cartes rendues à la première visite, cf. initVideosTab)
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-9">
+<div class="container">
+  <div class="card">
+    <div class="card-header">🎬 Vidéos</div>
+    <div class="card-body">
+      <p class="videos-intro">Des tutoriels courts (moins de 2 minutes) pour prendre en main Privency.</p>
+      <div class="videos-grid" id="videos-grid"></div>
+      <p class="videos-support" id="videos-support"></p>
+    </div>
+  </div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2135,7 +2193,7 @@ function goToStep(n) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + n).classList.add('active');
   // Update tabs
-  [1,2,3,4,5,6,7,8].forEach(function(i) {
+  [1,2,3,4,5,6,7,8,9].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
@@ -2153,17 +2211,128 @@ function goToStep(n) {
     var t7 = document.getElementById('tab-7');
     if (t7 && t7.scrollIntoView) { try { t7.scrollIntoView({inline: 'nearest', block: 'nearest'}); } catch (e) {} }
   }
+  if (n === 9) {
+    initVideosTab();
+    // Mobile : on amène l'onglet actif dans la zone visible de la barre horizontale
+    var t9 = document.getElementById('tab-9');
+    if (t9 && t9.scrollIntoView) { try { t9.scrollIntoView({inline: 'nearest', block: 'nearest'}); } catch (e) {} }
+  } else {
+    pauseAllVideos();
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateStepperTabs() {
-  [1,2,3,4,5,6,7,8].forEach(function(i) {
+  [1,2,3,4,5,6,7,8,9].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
     if (i === _currentStep)      tab.classList.add('active');
     else if (_stepsComplete[i])  tab.classList.add('done');
   });
+}
+
+// ═══════════════════════════════════════════════════════
+// ONGLET VIDÉOS — tutoriels
+// Pour changer l'hébergement, ne modifier que les `url` ci-dessous (fichiers attendus dans /videos/).
+// Une `url` vide, ou un fichier introuvable, affiche « Bientôt disponible ».
+// ═══════════════════════════════════════════════════════
+var VIDEOS_TUTOS = [
+  { id: 'creer-profil',        titre: 'Créer son profil agent',              duree: '1 min 11',
+    description: 'À faire une seule fois : vos coordonnées, vos liens et vos informations légales.',
+    url: '/videos/tuto-01-creer-son-profil.mp4' },
+  { id: 'fiche-annonce',       titre: 'Créer une fiche depuis une annonce',  duree: '1 min 44',
+    description: 'Importer une annonce, compléter, générer (versions EN/PT/ES) et publier.',
+    url: '/videos/tuto-02-fiche-depuis-annonce.mp4' },
+  { id: 'fiche-manuelle',      titre: 'Créer une fiche manuellement',        duree: '1 min 13',
+    description: 'Saisir un bien à la main, choisir le DPE, générer la fiche.',
+    url: '/videos/tuto-03-fiche-manuelle.mp4' },
+  { id: 'coaching-express',    titre: 'Le Coaching Express',                 duree: '1 min 33',
+    description: 'Votre argumentaire étape par étape pour vos rendez-vous vendeur et acquéreur.',
+    url: '/videos/tuto-04-coaching-express.mp4' }
+];
+var VIDEOS_SUPPORT_EMAIL = 'olivier.loison@expertimo.com';
+var _videosInited = false;
+
+function videosVues() {
+  try { var v = JSON.parse(PrivencyAuth.lsGet('privency_videos_vues') || '{}'); return (v && typeof v === 'object') ? v : {}; }
+  catch (e) { return {}; }
+}
+
+function videoMarquerVue(id, card) {
+  var vues = videosVues();
+  vues[id] = true;
+  PrivencyAuth.lsSet('privency_videos_vues', JSON.stringify(vues));
+  card.classList.add('vue');
+}
+
+function videoBientot(card, player) {
+  var soon = document.createElement('div');
+  soon.className = 'video-card-soon';
+  soon.textContent = 'Bientôt disponible';
+  if (player && player.parentNode) player.parentNode.replaceChild(soon, player);
+  else card.appendChild(soon);
+}
+
+function pauseAllVideos(except) {
+  document.querySelectorAll('#videos-grid video').forEach(function(v) { if (v !== except) v.pause(); });
+}
+
+function initVideosTab() {
+  if (_videosInited) return;
+  _videosInited = true;
+  var grid = document.getElementById('videos-grid');
+  if (!grid) return;
+  var vues = videosVues();
+
+  VIDEOS_TUTOS.forEach(function(v) {
+    var card = document.createElement('div');
+    card.className = 'video-card' + (vues[v.id] ? ' vue' : '');
+    card.setAttribute('data-video-id', v.id);
+
+    var head = document.createElement('div');
+    head.className = 'video-card-head';
+    var title = document.createElement('div');
+    title.className = 'video-card-title';
+    var t = document.createElement('span'); t.textContent = v.titre;
+    var badge = document.createElement('span'); badge.className = 'video-badge-vue'; badge.textContent = 'Vue';
+    title.appendChild(t); title.appendChild(badge);
+    var meta = document.createElement('div');
+    meta.className = 'video-card-meta'; meta.textContent = v.duree;
+    var desc = document.createElement('div');
+    desc.className = 'video-card-desc'; desc.textContent = v.description;
+    head.appendChild(title); head.appendChild(meta); head.appendChild(desc);
+    card.appendChild(head);
+
+    if (!v.url) {
+      videoBientot(card, null);
+    } else {
+      var player = document.createElement('video');
+      player.controls = true;
+      player.setAttribute('preload', 'metadata');
+      player.setAttribute('playsinline', '');
+      player.setAttribute('aria-label', v.titre);
+      // Fichier absent ou illisible : « Bientôt disponible » à la place d'un lecteur cassé.
+      player.addEventListener('error', function() { videoBientot(card, player); });
+      // Une seule vidéo à la fois.
+      player.addEventListener('play', function() { pauseAllVideos(player); });
+      // Lue jusqu'au bout → badge « Vue », mémorisé par compte.
+      player.addEventListener('ended', function() { videoMarquerVue(v.id, card); });
+      player.src = v.url;
+      card.appendChild(player);
+    }
+    grid.appendChild(card);
+  });
+
+  var support = document.getElementById('videos-support');
+  if (support) {
+    support.appendChild(document.createTextNode('Une question qui n\'est pas couverte ? '));
+    var a = document.createElement('a');
+    a.href = 'mailto:' + VIDEOS_SUPPORT_EMAIL;
+    a.textContent = 'Écrivez-nous';
+    support.appendChild(a);
+    support.appendChild(document.createTextNode('.'));
+  }
 }
 
 // ═══════════════════════════════════════════════════════
