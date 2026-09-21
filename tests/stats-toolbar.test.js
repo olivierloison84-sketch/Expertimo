@@ -19,6 +19,7 @@ const { JSDOM, VirtualConsole } = require('jsdom');
     };
     const q = { select: () => q, eq: () => q, maybeSingle: async () => ({ data: null }), then: f => f({ data: [] }) };
     w.supabase = { createClient: () => ({ auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }), getUser: async () => ({ data: { user: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }) }, from: () => q }) };
+    w.eval(require('fs').readFileSync(require('path').join(__dirname, '..', 'auth-client.js'), 'utf8')); w.sessionStorage.setItem('privency_active_uid', 'test-uid');
   } });
   const w = dom.window, d = w.document;
   await new Promise(r => setTimeout(r, 300));

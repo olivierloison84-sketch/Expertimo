@@ -21,7 +21,7 @@ async function makeApp(failLang) {
   const vc = new VirtualConsole(); vc.on('jsdomError', () => {});
   const dom = await JSDOM.fromFile(path.join(root, 'app.html'), { runScripts: 'dangerously', virtualConsole: vc, url: 'http://localhost/app.html', pretendToBeVisual: true, beforeParse(w) {
     w.scrollTo = () => {}; w.URL.createObjectURL = () => 'blob:test'; w.matchMedia = () => ({ matches: false, addListener() {}, addEventListener() {} });
-    w.localStorage.setItem('_agent_profile', JSON.stringify({ prenom: 'Olivier', nom: 'TEST-Agent', tel: '06 00 00 00 00', email: 'agent-test@exemple.test', reseau: 'Expertimo' }));
+    w.localStorage.setItem('_agent_profile:test-uid', JSON.stringify({ prenom: 'Olivier', nom: 'TEST-Agent', tel: '06 00 00 00 00', email: 'agent-test@exemple.test', reseau: 'Expertimo' }));
     w.fetch = async (u, o) => {
       u = String(u);
       if (/index\.html/.test(u)) return { ok: true, status: 200, text: async () => fs.readFileSync(path.join(root, 'index.html'), 'utf8') };
@@ -34,6 +34,7 @@ async function makeApp(failLang) {
     };
     const q = { select: () => q, eq: () => q, maybeSingle: async () => ({ data: null }), then: f => f({ data: [] }) };
     w.supabase = { createClient: () => ({ auth: { getSession: async () => ({ data: { session: null } }), getUser: async () => ({ data: { user: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }) }, from: () => q }) };
+    w.eval(require('fs').readFileSync(require('path').join(__dirname, '..', 'auth-client.js'), 'utf8')); w.sessionStorage.setItem('privency_active_uid', 'test-uid');
   } });
   const w = dom.window, d = w.document;
   await new Promise(r => setTimeout(r, 300));

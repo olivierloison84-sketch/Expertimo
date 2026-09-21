@@ -374,6 +374,7 @@ html[data-dir="back"]::view-transition-new(root){animation-name:vtInL}
   <nav class="tabs" role="tablist" aria-label="Sections" id="tabs"></nav>
 </header>
 <main id="app"></main>
+<script src="/auth-client.js"></script>
 <script type="module">
 /* ===== Contenu de la boîte à outils (agents → vendeurs et acquéreurs) =====
    Règles : aucune statistique inventée, aucun faux témoignage.
@@ -816,7 +817,8 @@ let sb = null;
 if (CFG.tabs.idees){
   try{
     const { createClient } = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm');
-    sb = createClient(SUPABASE_URL, SUPABASE_KEY);
+    // Session du compte actif de cet onglet (voir auth-client.js).
+    sb = PrivencyAuth.getClient(createClient);
   }catch{}
 }
 

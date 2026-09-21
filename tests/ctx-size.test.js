@@ -6,6 +6,7 @@ const { JSDOM, VirtualConsole } = require('jsdom');
     w.fetch = () => Promise.resolve({ ok: false, json: async () => ({}), text: async () => '' });
     const q = { select: () => q, eq: () => q, maybeSingle: async () => ({ data: null }), then: f => f({ data: [] }) };
     w.supabase = { createClient: () => ({ auth: { getSession: async () => ({ data: { session: null } }), getUser: async () => ({ data: { user: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe() {} } } }) }, from: () => q }) };
+    w.eval(require('fs').readFileSync(require('path').join(__dirname, '..', 'auth-client.js'), 'utf8')); w.sessionStorage.setItem('privency_active_uid', 'test-uid');
     w.scrollTo = () => {};
   } });
   const w = dom.window, doc = w.document;

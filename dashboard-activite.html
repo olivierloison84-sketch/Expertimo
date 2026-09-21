@@ -52,12 +52,12 @@ header {
 }
 .header-brand h1 { font-family: 'Playfair Display', serif; font-weight: 500; font-size: 17px; }
 .header-brand p  { font-size: 11px; opacity: .75; margin-top: 1px; }
-#logout-btn {
+#logout-btn, #switch-account-btn {
   background: transparent; border: 1.5px solid rgba(255,255,255,.35); color: #fff;
   border-radius: var(--radius); padding: 7px 14px; font-size: 12px; font-family: inherit;
   cursor: pointer; transition: opacity .2s;
 }
-#logout-btn:hover { opacity: .8; }
+#logout-btn:hover, #switch-account-btn:hover { opacity: .8; }
 
 /* ═══════════════════════════════════════
    LAYOUT
@@ -176,7 +176,10 @@ details.card summary.card-header { justify-content: flex-start; }
       <p>Vue d'ensemble des comptes agents Privency</p>
     </div>
   </div>
-  <button id="logout-btn" onclick="window.privencyAuth.auth.signOut().then(function(){ window.location.replace('/login.html'); });">Déconnexion</button>
+  <div style="display:flex;gap:8px;">
+    <button id="switch-account-btn" onclick="PrivencyAuth.switchAccount();">Changer de compte</button>
+    <button id="logout-btn" onclick="PrivencyAuth.signOutActive().then(function(){ window.location.replace('/login.html'); });">Déconnexion</button>
+  </div>
 </header>
 
 <div class="container" id="dash-root">
@@ -214,14 +217,13 @@ details.card summary.card-header { justify-content: flex-start; }
 </script>
 <!-- ══════════ AUTH GUARD (Supabase) + garde-fou admin ══════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/auth-client.js"></script>
 <script>
 (function () {
-  const AUTH_SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
-  const AUTH_SUPABASE_KEY = 'sb_publishable_Asv3-Q2Q9XSA_gvV1nB74Q_0N6prN2E';
   const ADMIN_USER_ID = '79e4e432-2232-4d2c-b41d-8c7c907c4dec';
 
-  const authClient = supabase.createClient(AUTH_SUPABASE_URL, AUTH_SUPABASE_KEY);
-  window.privencyAuth = authClient;
+  // Client du compte actif de CET onglet (voir auth-client.js).
+  const authClient = PrivencyAuth.getClient();
 
   // resolved : une seule décision (révéler, refuser ou rediriger), quel que
   // soit le premier signal arrivé (onAuthStateChange, getSession ou timeout).

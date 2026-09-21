@@ -231,11 +231,11 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/auth-client.js"></script>
 <script>
-  const SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_Asv3-Q2Q9XSA_gvV1nB74Q_0N6prN2E';
-
-  const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  // Client jetable : l'inscription ne doit jamais écraser la session d'un
+  // autre compte déjà ouvert dans ce navigateur.
+  const client = PrivencyAuth.createTempClient();
 
   const form = document.getElementById('register-form');
   const submitBtn = document.getElementById('submit-btn');

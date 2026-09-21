@@ -57,6 +57,11 @@
     transition: background 0.2s ease, color 0.2s ease;
   }
 
+  .header-actions {
+    display: flex;
+    gap: 8px;
+  }
+
   .btn-logout:hover {
     background: #b8923a;
     color: #141414;
@@ -176,13 +181,11 @@
 </script>
 <!-- ══════════ AUTH GUARD (Supabase) ══════════ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/auth-client.js"></script>
 <script>
 (function () {
-  const AUTH_SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
-  const AUTH_SUPABASE_KEY = 'sb_publishable_Asv3-Q2Q9XSA_gvV1nB74Q_0N6prN2E';
-
-  const authClient = supabase.createClient(AUTH_SUPABASE_URL, AUTH_SUPABASE_KEY);
-  window.privencyAuth = authClient;
+  // Client du compte actif de CET onglet (voir auth-client.js).
+  const authClient = PrivencyAuth.getClient();
   window.privencySession = null;
 
   // resolved : une seule décision (révéler ou rediriger), quel que soit le
@@ -193,6 +196,7 @@
     if (resolved) return;
     resolved = true;
     window.privencySession = session;
+    PrivencyAuth.refreshTitle(session);
     // Une règle !important en feuille de style ne peut pas être surpassée
     // par un style inline : on supprime la balise <style> du voile.
     const apply = () => {
@@ -219,6 +223,14 @@
   authClient.auth.onAuthStateChange((event, session) => {
     if (session) {
       reveal(session);
+    } else if (event === 'SIGNED_OUT' && resolved) {
+      if (window.__privencyLoggingOut) return; // déconnexion lancée depuis cet onglet : le bouton redirige déjà
+      // Déconnexion du même compte depuis un autre onglet : on quitte la page.
+      // Le signal peut venir d'un autre onglet du même compte (BroadcastChannel du storageKey) :
+      // on ne quitte la page que si NOTRE session (localStorage ou sessionStorage) a vraiment disparu.
+      authClient.auth.getSession().then(function (r) {
+        if (!(r && r.data && r.data.session)) window.location.replace('/login.html');
+      });
     } else {
       denied();
     }
@@ -242,7 +254,10 @@
 
 <header>
   <div class="logo">Priven<span>cy</span></div>
-  <button type="button" class="btn-logout" id="logout-btn">Déconnexion</button>
+  <div class="header-actions">
+    <button type="button" class="btn-logout" id="switch-account-btn">Changer de compte</button>
+    <button type="button" class="btn-logout" id="logout-btn">Déconnexion</button>
+  </div>
 </header>
 
 <main>
@@ -334,8 +349,13 @@
   });
 
   document.getElementById('logout-btn').addEventListener('click', async () => {
-    await window.privencyAuth.auth.signOut();
+    // Ne déconnecte que le compte de cet onglet.
+    await PrivencyAuth.signOutActive();
     window.location.replace('/login.html');
+  });
+
+  document.getElementById('switch-account-btn').addEventListener('click', () => {
+    PrivencyAuth.switchAccount();
   });
 })();
 </script>
