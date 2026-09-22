@@ -1,0 +1,37 @@
+/* Plus Jakarta Sans only. Titles bold, sentence case — never ALL CAPS.
+   Figures and data always tabular (--numeric-tabular). */
+:root{
+  --font-sans:'Plus Jakarta Sans','Plus Jakarta Display',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-display:'Plus Jakarta Display','Plus Jakarta Sans',system-ui,sans-serif;
+  --font-data:var(--font-sans);
+  --numeric-tabular:tabular-nums lining-nums; /* @kind other */
+
+  --weight-light:300;
+  --weight-regular:400;
+  --weight-medium:500;
+  --weight-bold:700;
+
+  /* Display — --font-display, bold, tight */
+  --text-display-xl:56px;   --leading-display-xl:1.04; --tracking-display-xl:-0.022em;
+  --text-display-lg:44px;   --leading-display-lg:1.08; --tracking-display-lg:-0.020em;
+  --text-display-md:36px;   --leading-display-md:1.14; --tracking-display-md:-0.016em;
+
+  /* Headings — --font-sans */
+  --text-h1:30px; --leading-h1:1.20; --tracking-h1:-0.014em;
+  --text-h2:24px; --leading-h2:1.25; --tracking-h2:-0.011em;
+  --text-h3:20px; --leading-h3:1.32; --tracking-h3:-0.008em;
+  --text-h4:17px; --leading-h4:1.40; --tracking-h4:-0.004em;
+
+  /* Body */
+  --text-lead:19px;  --leading-lead:1.62;
+  --text-body:16px;  --leading-body:1.62;
+  --text-sm:14px;    --leading-sm:1.55;
+  --text-xs:13px;    --leading-xs:1.50;
+  --text-micro:11px; --leading-micro:1.45; --tracking-micro:0.04em;
+
+  /* Data — tabular figures, medium weight */
+  --text-metric-xl:40px; --text-metric-lg:30px; --text-metric-md:22px; --text-metric-sm:16px;
+
+  /* Eyebrows / labels: sentence case, letterspaced, never uppercase for sentences */
+  --tracking-label:0.06em;
+}

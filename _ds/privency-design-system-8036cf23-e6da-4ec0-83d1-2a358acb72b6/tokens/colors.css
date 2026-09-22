@@ -1,0 +1,97 @@
+/* PRIVENCY COLOR SYSTEM
+   One accent only: emerald. 90% of any screen stays neutral (white / grey / ink).
+   Emerald 500 is a BACKGROUND colour (white text on it). For green TEXT use --emerald-700. */
+:root{
+  /* Emerald — the single accent */
+  --emerald-50:#ECFDF5;
+  --emerald-100:#D3F5E6;
+  --emerald-200:#A8E9CD;
+  --emerald-300:#6FD8AE;
+  --emerald-400:#2FBB8B;
+  --emerald-500:#0E9F6E;
+  --emerald-600:#0C8A5F;
+  --emerald-700:#0A6F4D;
+  --emerald-800:#075A3F;
+  --emerald-900:#05432F;
+
+  /* Neutrals — white, grey, ink */
+  --white:#FFFFFF;
+  --grey-25:#FBFCFC;
+  --grey-50:#F6F8F7;
+  --grey-100:#EEF1F0;
+  --grey-200:#E2E6E5;
+  --grey-300:#CBD2D0;
+  --grey-400:#A2ACAA;
+  --grey-500:#78827F;
+  --grey-600:#586460;
+  --grey-700:#3E4744;
+  --grey-800:#262D2B;
+  --grey-900:#141A18;
+
+  /* Semantic hues — status only, never decoration */
+  --amber-50:#FFFBEB;
+  --amber-100:#FEF0C7;
+  --amber-500:#D97706;
+  --amber-700:#92400E;
+  --red-50:#FEF2F2;
+  --red-100:#FEE2E2;
+  --red-500:#DC2626;
+  --red-700:#991B1B;
+
+  /* ── Semantic aliases: use THESE in product code ── */
+  --text-strong:var(--grey-900);
+  --text-body:var(--grey-700);
+  --text-muted:var(--grey-500);
+  --text-subtle:var(--grey-400);
+  --text-on-accent:var(--white);
+  --text-accent:var(--emerald-700);
+  --text-inverse:var(--white);
+  --text-inverse-muted:rgba(255,255,255,.66);
+
+  --surface-page:var(--white);
+  --surface-page-alt:var(--grey-50);
+  --surface-card:var(--white);
+  --surface-sunken:var(--grey-50);
+  --surface-hover:var(--grey-50);
+  --surface-accent-soft:var(--emerald-50);
+  --surface-accent:var(--emerald-500);
+  --surface-ink:var(--grey-900);
+
+  --border-subtle:var(--grey-100);
+  --border-default:var(--grey-200);
+  --border-strong:var(--grey-300);
+  --border-accent:var(--emerald-500);
+  --border-accent-soft:var(--emerald-200);
+
+  --action-primary:var(--emerald-500);
+  --action-primary-hover:var(--emerald-600);
+  --action-primary-active:var(--emerald-700);
+  --action-disabled-bg:var(--grey-100);
+  --action-disabled-text:var(--grey-400);
+
+  --status-valid-bg:var(--emerald-50);
+  --status-valid-text:var(--emerald-700);
+  --status-valid-dot:var(--emerald-500);
+  --status-warn-bg:var(--amber-50);
+  --status-warn-text:var(--amber-700);
+  --status-warn-dot:var(--amber-500);
+  --status-alert-bg:var(--red-50);
+  --status-alert-text:var(--red-700);
+  --status-alert-dot:var(--red-500);
+  --status-neutral-bg:var(--grey-100);
+  --status-neutral-text:var(--grey-600);
+  --status-neutral-dot:var(--grey-400);
+
+  --focus-ring-color:rgba(14,159,110,.30);
+
+  /* DPE / GES — official French energy-label scale. Regulatory colours: never restyle. */
+  --dpe-a:#319834;
+  --dpe-b:#33CC33;
+  --dpe-c:#CBEC31;
+  --dpe-d:#F7EC1B;
+  --dpe-e:#F0A60E;
+  --dpe-f:#E3711F;
+  --dpe-g:#CF1B1B;
+  --dpe-ink-light:#FFFFFF;
+  --dpe-ink-dark:#2B2B0A;
+}
