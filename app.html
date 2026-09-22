@@ -723,7 +723,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
     const wrap = document.createElement('div');
     wrap.id = 'auth-actions';
     wrap.style.cssText = 'position:fixed;top:80px;right:12px;z-index:10000;display:flex;gap:6px;';
-    const btnStyle = 'background:var(--primary);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;';
+    const btnStyle = 'background:var(--light);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);';
 
     const switchBtn = document.createElement('button');
     switchBtn.id = 'switch-account-btn';
@@ -2111,9 +2111,9 @@ document.addEventListener('DOMContentLoaded', function() {
   var btn = document.createElement('button');
   btn.id = 'revoir-tutoriel-btn';
   btn.textContent = '❓ Revoir le tutoriel';
-  btn.style.cssText = 'position:fixed;top:116px;right:12px;z-index:10000;background:var(--primary);'
-    + 'color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:5px 12px;'
-    + 'font-size:12px;font-family:inherit;cursor:pointer;';
+  btn.style.cssText = 'position:fixed;top:116px;right:12px;z-index:10000;background:var(--light);'
+    + 'color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 12px;'
+    + 'font-size:12px;font-family:inherit;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);';
   btn.addEventListener('click', function() { showOnboardingOverlay(); });
   document.body.appendChild(btn);
 });
