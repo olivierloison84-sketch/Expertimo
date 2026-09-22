@@ -6,227 +6,121 @@
 <title>Inscription — Privency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/design-system.css">
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  body{
+    background:var(--gray-50);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
   }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #141414;
-    color: #f0ede6;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+  .auth-wrap{
+    width:100%;
+    max-width:440px;
   }
 
-  .register-card {
-    width: 100%;
-    max-width: 420px;
+  .auth-brand{
+    text-align:center;
+    margin-bottom:var(--s-6);
   }
 
-  .brand {
-    text-align: center;
-    margin-bottom: 40px;
+  .auth-brand .logo{
+    font-weight:800;
+    font-size:1.5rem;
+    letter-spacing:-.02em;
+    color:var(--ink);
   }
 
-  .brand h1 {
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: #f0ede6;
+  .auth-brand .logo b{
+    color:var(--brand-500);
+    font-weight:800;
   }
 
-  .brand h1 span {
-    color: #b8923a;
+  .auth-brand p{
+    margin:8px 0 0;
+    font-size:var(--text-sm);
+    color:var(--muted);
   }
 
-  .brand p {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #8a857c;
-    font-weight: 300;
+  .card-title{
+    text-align:center;
+    margin-bottom:var(--s-6);
   }
 
-  .form-box {
-    background: #1c1c1c;
-    border: 1px solid #2a2a2a;
-    border-radius: 12px;
-    padding: 36px 32px;
+  .field-row{
+    display:flex;
+    gap:14px;
   }
 
-  .form-box h2 {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 28px;
-    text-align: center;
+  .field-row .field-group{
+    flex:1;
   }
 
-  .field-row {
-    display: flex;
-    gap: 14px;
+  .field-group{
+    margin-bottom:var(--s-5);
   }
 
-  .field-row .field {
-    flex: 1;
+  .alert-success.confirm-sent{
+    text-align:center;
+    padding:var(--s-6) var(--s-5);
+    font-size:var(--text-base);
+    line-height:1.6;
   }
 
-  .field {
-    margin-bottom: 20px;
+  .auth-switch{
+    margin-top:var(--s-6);
+    text-align:center;
+    font-size:var(--text-sm);
+    color:var(--muted);
   }
 
-  .field label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: #b3aea4;
-    margin-bottom: 8px;
-    letter-spacing: 0.3px;
+  .auth-switch a{
+    font-weight:600;
   }
 
-  .field input {
-    width: 100%;
-    padding: 13px 14px;
-    background: #141414;
-    border: 1px solid #333;
-    border-radius: 8px;
-    color: #f0ede6;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    transition: border-color 0.2s ease;
-  }
-
-  .field input:focus {
-    outline: none;
-    border-color: #b8923a;
-  }
-
-  .field input::placeholder {
-    color: #5c574e;
-  }
-
-  .btn-submit {
-    width: 100%;
-    padding: 14px;
-    margin-top: 8px;
-    background: #b8923a;
-    color: #141414;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: background 0.2s ease, opacity 0.2s ease;
-  }
-
-  .btn-submit:hover {
-    background: #c9a14a;
-  }
-
-  .btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .error-message {
-    display: none;
-    margin-top: 16px;
-    padding: 12px 14px;
-    background: rgba(192, 57, 43, 0.12);
-    border: 1px solid rgba(192, 57, 43, 0.4);
-    border-radius: 8px;
-    color: #e07b6e;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .error-message.visible {
-    display: block;
-  }
-
-  .success-message {
-    display: none;
-    margin-top: 16px;
-    padding: 12px 14px;
-    background: rgba(184, 146, 58, 0.12);
-    border: 1px solid rgba(184, 146, 58, 0.4);
-    border-radius: 8px;
-    color: #b8923a;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .success-message.visible {
-    display: block;
-  }
-
-  .success-message.confirm-sent {
-    font-size: 16px;
-    line-height: 1.6;
-    text-align: center;
-    padding: 24px 20px;
-  }
-
-  .login-link {
-    margin-top: 24px;
-    text-align: center;
-    font-size: 14px;
-    color: #8a857c;
-  }
-
-  .login-link a {
-    color: #b8923a;
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .login-link a:hover {
-    text-decoration: underline;
+  .auth-switch a:hover{
+    text-decoration:underline;
   }
 </style>
 <script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjfjzv3a2");</script></head>
 <body>
 
-<div class="register-card">
-  <div class="brand">
-    <h1>Priven<span>cy</span></h1>
+<div class="auth-wrap">
+  <div class="auth-brand">
+    <div class="logo">Priven<b>cy</b></div>
     <p>Votre espace immobilier professionnel</p>
   </div>
 
-  <div class="form-box">
-    <h2>Créer un compte</h2>
+  <div class="card">
+    <h2 class="h3 card-title">Créer un compte</h2>
     <form id="register-form" novalidate>
       <div class="field-row">
-        <div class="field">
-          <label for="prenom">Prénom</label>
-          <input type="text" id="prenom" name="prenom" placeholder="Jean" autocomplete="given-name" required>
+        <div class="field-group">
+          <label class="label" for="prenom">Prénom</label>
+          <input class="field" type="text" id="prenom" name="prenom" placeholder="Jean" autocomplete="given-name" required>
         </div>
-        <div class="field">
-          <label for="nom">Nom</label>
-          <input type="text" id="nom" name="nom" placeholder="Dupont" autocomplete="family-name" required>
+        <div class="field-group">
+          <label class="label" for="nom">Nom</label>
+          <input class="field" type="text" id="nom" name="nom" placeholder="Dupont" autocomplete="family-name" required>
         </div>
       </div>
-      <div class="field">
-        <label for="email">Adresse email</label>
-        <input type="email" id="email" name="email" placeholder="vous@exemple.fr" autocomplete="email" required>
+      <div class="field-group">
+        <label class="label" for="email">Adresse email</label>
+        <input class="field" type="email" id="email" name="email" placeholder="vous@exemple.fr" autocomplete="email" required>
       </div>
-      <div class="field">
-        <label for="password">Mot de passe</label>
-        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password" required>
+      <div class="field-group">
+        <label class="label" for="password">Mot de passe</label>
+        <input class="field" type="password" id="password" name="password" placeholder="••••••••" autocomplete="new-password" required>
       </div>
-      <button type="submit" class="btn-submit" id="submit-btn">Créer mon compte</button>
-      <div class="error-message" id="error-message"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Créer mon compte</button>
+      <div class="alert alert-error" id="error-message"></div>
     </form>
-    <div class="success-message" id="success-message"></div>
-    <p class="login-link">Déjà un compte ? <a href="/login.html">Se connecter</a></p>
+    <div class="alert alert-success" id="success-message"></div>
+    <p class="auth-switch">Déjà un compte ? <a href="/login.html">Se connecter</a></p>
   </div>
 </div>
 
@@ -292,7 +186,7 @@
     }
 
     form.style.display = 'none';
-    document.querySelector('.login-link').style.display = 'none';
+    document.querySelector('.auth-switch').style.display = 'none';
     successMessage.textContent = '✅ Un email de confirmation a été envoyé à ' + email + '. Cliquez sur le lien qu\'il contient pour activer votre compte.';
     successMessage.classList.add('visible', 'confirm-sent');
   });
