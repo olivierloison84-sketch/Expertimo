@@ -7,11 +7,11 @@
 <title>Expertimo · Générateur Fiche Acheteur</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<meta name="theme-color" content="#14171F">
+<meta name="theme-color" content="#0E9F6E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Expertimo">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -19,32 +19,33 @@
    VARIABLES — overridable per agent
 ═══════════════════════════════════════ */
 :root {
-  --primary: #14171F;
-  --accent:  #C9A227;
-  --light:   #FAF9F6;
-  --border:  #E7E3D8;
-  --text:    #14171F;
-  --muted:   #6E6A5C;
-  --danger:  #c0392b;
-  --success: #27ae60;
+  --primary: #0F1A16;
+  --accent:  #0E9F6E;
+  --light:   #F7F8FB;
+  --border:  #E5E9EF;
+  --text:    #0F1A16;
+  --muted:   #667085;
+  --danger:  #F04438;
+  --success: #0E9F6E;
   --radius:  14px;
   --shadow:  0 2px 8px rgba(0,0,0,.12);
-  --gold2:   #8F7015;
-  --vert:    #2F7A4F;
+  --gold2:   #0A6F4D;
+  --vert:    #0E9F6E;
 }
 
 /* ═══════════════════════════════════════
    RESET & BASE
 ═══════════════════════════════════════ */
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Work Sans', sans-serif; font-size: 14px; background: var(--light); color: var(--text); }
+body { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; background: var(--light); color: var(--text); }
 
 /* ═══════════════════════════════════════
    HEADER
 ═══════════════════════════════════════ */
 header {
-  background: var(--primary);
-  color: #fff;
+  background: #fff;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
   padding: 14px 24px;
   display: flex;
   align-items: center;
@@ -52,7 +53,6 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 10px rgba(0,0,0,.2);
 }
 .header-brand { display: flex; align-items: center; gap: 14px; }
 .logo-circle {
@@ -63,7 +63,7 @@ header {
   flex-shrink: 0; overflow: hidden;
 }
 .logo-circle img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 50%; }
-.header-brand h1 { font-family: 'Playfair Display', serif; font-weight: 500; font-size: 17px; }
+.header-brand h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 17px; }
 .header-brand p  { font-size: 11px; opacity: .75; margin-top: 1px; }
 .header-right { font-size: 11px; opacity: .7; text-align: right; }
 
@@ -194,15 +194,17 @@ header {
 ═══════════════════════════════════════ */
 .card {
   background: #fff;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   margin-bottom: 20px;
   overflow: hidden;
 }
 .card-header {
-  background: var(--primary); color: #fff;
+  background: var(--light); color: var(--text);
+  border-bottom: 1px solid var(--border);
   padding: 11px 18px;
-  font-family: 'Playfair Display', serif; font-weight: 500; font-size: 13px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 13px;
   letter-spacing: .4px; text-transform: uppercase;
   display: flex; align-items: center; gap: 8px;
 }
@@ -232,14 +234,15 @@ input[type=color], select, textarea {
   width: 100%; padding: 8px 10px;
   border: 1.5px solid var(--border); border-radius: var(--radius);
   font-size: 13px; font-family: inherit; color: var(--text);
-  background: #fafcff; transition: border-color .2s;
+  background: #fff; transition: border-color .2s, box-shadow .2s;
 }
 input:focus, select:focus, textarea:focus {
-  outline: none; border-color: var(--primary); background: #fff;
+  outline: none; border-color: var(--accent); background: #fff;
+  box-shadow: 0 0 0 4px rgba(14,159,110,.12);
 }
 textarea { resize: vertical; min-height: 60px; }
 .hint { font-size: 11px; color: var(--muted); margin-top: 4px; }
-.computed { background: #f0f7ff !important; color: var(--primary); font-weight: 600; }
+.computed { background: #E9F9F1 !important; color: var(--primary); font-weight: 600; }
 
 /* Grids */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -500,22 +503,22 @@ textarea { resize: vertical; min-height: 60px; }
 .photo-thumb .photo-caption input { font-size:12px; padding:4px 6px; }
 .photo-thumb .del-photo { position:absolute; top:5px; right:5px; background:rgba(192,57,43,.9); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; }
 .photo-drop { border:2px dashed var(--border); border-radius:var(--radius); padding:24px; text-align:center; cursor:pointer; color:var(--muted); transition:border-color .2s; }
-.photo-drop:hover { border-color:var(--primary); color:var(--primary); }
-.dvf-box { background:#0f1e2e; color:#e0e8f0; border-radius:8px; padding:20px; margin-top:16px; }
-.dvf-box h3 { color:#f0c040; font-size:14px; text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+.photo-drop:hover { border-color:var(--accent); color:var(--accent); }
+.dvf-box { background:var(--primary); color:#E5E9EF; border-radius:8px; padding:20px; margin-top:16px; }
+.dvf-box h3 { color:#34D399; font-size:14px; text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
 .dvf-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
 .dvf-stat { background:rgba(255,255,255,.07); border-radius:6px; padding:12px; text-align:center; }
-.dvf-stat .val { font-size:22px; font-weight:900; color:#f0c040; }
+.dvf-stat .val { font-size:22px; font-weight:900; color:#34D399; }
 .dvf-stat .lbl { font-size:11px; opacity:.7; margin-top:4px; }
-.dvf-fourchette { background:rgba(201,168,76,.15); border:1px solid rgba(201,168,76,.4); border-radius:6px; padding:12px 16px; margin-bottom:16px; text-align:center; }
-.dvf-fourchette .range { font-size:24px; font-weight:900; color:#f0c040; }
+.dvf-fourchette { background:rgba(52,211,153,.15); border:1px solid rgba(52,211,153,.4); border-radius:6px; padding:12px 16px; margin-bottom:16px; text-align:center; }
+.dvf-fourchette .range { font-size:24px; font-weight:900; color:#34D399; }
 .dvf-tbl { width:100%; border-collapse:collapse; font-size:12px; }
-.dvf-tbl th { background:rgba(255,255,255,.08); color:#f0c040; padding:7px 10px; text-align:left; }
+.dvf-tbl th { background:rgba(255,255,255,.08); color:#34D399; padding:7px 10px; text-align:left; }
 .dvf-tbl td { padding:6px 10px; border-bottom:1px solid rgba(255,255,255,.06); color:#c8d8e8; }
 .viab-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; }
 .viab-item { display:flex; align-items:center; justify-content:space-between; padding:7px 12px; border:1.5px solid var(--border); border-radius:var(--radius); font-size:13px; cursor:pointer; }
 .viab-item.ok { border-color:var(--success); background:#e8f8f0; }
-.scenario-box { background:#fff8e6; border:1.5px solid var(--accent); border-radius:var(--radius); padding:12px 16px; margin-top:8px; }
+.scenario-box { background:#E9F9F1; border:1.5px solid var(--accent); border-radius:var(--radius); padding:12px 16px; margin-top:8px; }
 .scenario-box > label { color:var(--accent); font-size:12px; font-weight:700; }
 .col-span-2 { grid-column:span 2; }
 .col-span-3 { grid-column:span 3; }
@@ -525,9 +528,9 @@ textarea { resize: vertical; min-height: 60px; }
 .hidden { display:none !important; }
 /* DVF editable table (generateur style) */
 .dvf-edit-table { width:100%; border-collapse:collapse; }
-.dvf-edit-table th { background:var(--primary); color:#fff; padding:7px 8px; font-size:11px; text-align:left; font-weight:600; }
+.dvf-edit-table th { background:var(--light); color:var(--muted); padding:7px 8px; font-size:10px; text-transform:uppercase; letter-spacing:.4px; text-align:left; font-weight:700; border-bottom:1px solid var(--border); }
 .dvf-edit-table td { padding:4px 6px; border-bottom:1px solid var(--border); vertical-align:middle; }
-.dvf-edit-table td input { border:1px solid var(--border); padding:5px 7px; border-radius:4px; font-size:12px; width:100%; background:#fafcff; }
+.dvf-edit-table td input { border:1px solid var(--border); padding:5px 7px; border-radius:4px; font-size:12px; width:100%; background:#fff; }
 .dvf-edit-table tr:nth-child(even) td { background:#f8fafc; }
 /* Score inputs */
 .score-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:10px; }
@@ -539,7 +542,7 @@ textarea { resize: vertical; min-height: 60px; }
 .diag-form-head { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
 .diag-form-label { font-size:13px; font-weight:600; color:var(--text); }
 /* Credit preview */
-#credit-preview-step2 { margin-top:8px; font-size:12px; color:var(--muted); background:#f8f6f0; padding:10px 12px; border-radius:var(--radius); display:none; line-height:1.8; }
+#credit-preview-step2 { margin-top:8px; font-size:12px; color:var(--muted); background:var(--light); padding:10px 12px; border-radius:var(--radius); display:none; line-height:1.8; }
 .leaflet-div-icon-clean { background: none !important; border: none !important; }
 
 /* ═══════════════════════════════════════
@@ -556,7 +559,7 @@ summary::-webkit-details-marker { display: none; }
   align-items: center;
   gap: 10px;
   background: var(--light);
-  border: 1.5px solid var(--primary);
+  border: 1.5px solid var(--accent);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 14px 20px;
@@ -2686,8 +2689,8 @@ function resetProfile() {
    'agent-adresse-siege','agent-tva-intra','agent-code-naf'].forEach(function(id) {
     var e = document.getElementById(id); if (e) e.value = '';
   });
-  document.documentElement.style.setProperty('--primary', '#14171F');
-  document.documentElement.style.setProperty('--accent',  '#C9A227');
+  document.documentElement.style.setProperty('--primary', '#0F1A16');
+  document.documentElement.style.setProperty('--accent',  '#0E9F6E');
   document.getElementById('profile-saved-badge').style.display = 'none';
   updateAgentPreview();
   showToast('Profil réinitialisé');
@@ -3947,7 +3950,7 @@ function toBase64UTF8(str) {
 function fetchDVF() {
   var result=document.getElementById('dvf_result'), cp=getV('dvf_cp'), type=getV('dvf_type');
   if (!cp||cp.length!==5) { showToast('⚠️ Code postal invalide (5 chiffres)', true); return; }
-  result.innerHTML='<div class="dvf-box"><p style="color:#f0c040;text-align:center;padding:10px;">⏳ Chargement DVF…</p></div>';
+  result.innerHTML='<div class="dvf-box"><p style="color:#34D399;text-align:center;padding:10px;">⏳ Chargement DVF…</p></div>';
   var url='https://api.data.gouv.fr/api/dvf/1.0/geomutations/?code_postal='+cp+'&nature_mutation=Vente&type_local='+encodeURIComponent(type)+'&rows=50';
   fetch(url).then(function(r){return r.json();}).then(function(data) {
     var items=(data.features||[]);
@@ -3955,7 +3958,7 @@ function fetchDVF() {
       var p=f.properties||{}, surf=parseFloat(p.surface_reelle_bati)||0, prix=parseFloat(p.valeur_fonciere)||0;
       return {date:p.date_mutation,adresse:p.adresse_nom_voie||p.nom_commune,surf:Math.round(surf),prix:Math.round(prix),pm2:surf>0&&prix>0?Math.round(prix/surf):0};
     }).filter(function(v){return v.surf>0&&v.prix>0;});
-    if (!vals.length) { result.innerHTML='<div class="dvf-box"><p style="color:#f0c040;text-align:center;padding:20px;">Aucune transaction trouvée.</p></div>'; return; }
+    if (!vals.length) { result.innerHTML='<div class="dvf-box"><p style="color:#34D399;text-align:center;padding:20px;">Aucune transaction trouvée.</p></div>'; return; }
     var pm2s=vals.map(function(v){return v.pm2;}).sort(function(a,b){return a-b;});
     var median=pm2s[Math.floor(pm2s.length/2)], min=pm2s[0], max=pm2s[pm2s.length-1];
     _dvfCache={transactions:vals,median:median,fourchetteBasse:min,fourchetteHaute:max};
@@ -3975,7 +3978,7 @@ function fetchDVF() {
       vals.slice(0,10).map(function(v){return '<tr><td>'+escAttr(v.date||'')+'</td><td>'+escAttr(v.adresse||'')+'</td><td>'+v.surf+'</td><td>'+fmtNum(v.prix)+' €</td><td>'+fmtNum(v.pm2)+'</td></tr>';}).join('')+
       '</tbody></table></div>';
   }).catch(function() {
-    result.innerHTML='<div class="dvf-box"><p style="color:#f0c040;text-align:center;padding:10px;">📊 DVF indisponible.<br><a href="https://app.dvf.etalab.gouv.fr" target="_blank" style="color:#f0c040;">app.dvf.etalab.gouv.fr</a></p></div>';
+    result.innerHTML='<div class="dvf-box"><p style="color:#34D399;text-align:center;padding:10px;">📊 DVF indisponible.<br><a href="https://app.dvf.etalab.gouv.fr" target="_blank" style="color:#34D399;">app.dvf.etalab.gouv.fr</a></p></div>';
   });
 }
 
@@ -5294,8 +5297,8 @@ function renderAnalytics() {
       try { dateStr = new Date(g.last).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e) {}
     }
     var evHtml = Object.keys(g.events).map(function(ev) {
-      var bg  = ev === 'fiche_ouverte' ? '#e8f0fe' : ev.startsWith('onglet') ? '#fff8e6' : '#e8f8f0';
-      var col = ev === 'fiche_ouverte' ? '#1a56db' : ev.startsWith('onglet') ? '#b8923a' : '#27ae60';
+      var bg  = ev === 'fiche_ouverte' ? '#e8f0fe' : ev.startsWith('onglet') ? '#FFFAEB' : '#E9F9F1';
+      var col = ev === 'fiche_ouverte' ? '#1a56db' : ev.startsWith('onglet') ? '#B54708' : '#0A6F4D';
       return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
         + esc(ev) + ' ×' + g.events[ev] + '</span>';
     }).join(' ');
