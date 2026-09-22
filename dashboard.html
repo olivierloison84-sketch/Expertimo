@@ -7,169 +7,83 @@
 <title>Tableau de bord — Privency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/design-system.css">
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  body{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    background:var(--gray-50);
   }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #141414;
-    color: #f0ede6;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:16px 28px;
+    background:var(--white);
+    border-bottom:1px solid var(--gray-200);
   }
 
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 18px 28px;
-    border-bottom: 1px solid #2a2a2a;
+  .logo{
+    font-weight:800;
+    font-size:1.25rem;
+    letter-spacing:-.02em;
+    color:var(--ink);
   }
 
-  .logo {
-    font-size: 20px;
-    font-weight: 600;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: #f0ede6;
+  .logo b{
+    color:var(--brand-500);
+    font-weight:800;
   }
 
-  .logo span {
-    color: #b8923a;
+  .header-actions{
+    display:flex;
+    gap:8px;
   }
 
-  .btn-logout {
-    background: #141414;
-    color: #b8923a;
-    border: 1px solid #b8923a;
-    border-radius: 6px;
-    padding: 7px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
+  main{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:40px 24px;
   }
 
-  .header-actions {
-    display: flex;
-    gap: 8px;
+  .welcome{
+    text-align:center;
+    margin-bottom:var(--s-6);
   }
 
-  .btn-logout:hover {
-    background: #b8923a;
-    color: #141414;
+  .welcome h1{
+    margin:0;
   }
 
-  main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 24px;
+  .welcome h1 b{
+    color:var(--brand-500);
+    font-weight:800;
   }
 
-  .welcome {
-    text-align: center;
-    margin-bottom: 36px;
+  .welcome p{
+    margin-top:8px;
+    font-size:var(--text-sm);
+    color:var(--muted);
   }
 
-  .welcome h1 {
-    font-size: 26px;
-    font-weight: 500;
+  .dash-card{
+    width:100%;
+    max-width:460px;
+    display:flex;
+    flex-direction:column;
+    gap:var(--s-4);
   }
 
-  .welcome h1 span {
-    color: #b8923a;
-  }
-
-  .welcome p {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #8a857c;
-    font-weight: 300;
-  }
-
-  .card {
-    width: 100%;
-    max-width: 460px;
-    background: #1c1c1c;
-    border: 1px solid #2a2a2a;
-    border-radius: 12px;
-    padding: 36px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .btn-primary {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background: #b8923a;
-    color: #141414;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 0.2s ease, opacity 0.2s ease;
-  }
-
-  .btn-primary:hover {
-    background: #c9a14a;
-  }
-
-  .btn-secondary {
-    display: block;
-    width: 100%;
-    padding: 15px;
-    background: transparent;
-    color: #b8923a;
-    border: 1px solid #b8923a;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-align: center;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
-  }
-
-  .btn-secondary:hover {
-    background: rgba(184, 146, 58, 0.12);
-  }
-
-  .btn-secondary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .error-message {
-    display: none;
-    padding: 12px 14px;
-    background: rgba(192, 57, 43, 0.12);
-    border: 1px solid rgba(192, 57, 43, 0.4);
-    border-radius: 8px;
-    color: #e07b6e;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .error-message.visible {
-    display: block;
+  .dash-card .hint{
+    font-size:var(--text-sm);
+    color:var(--muted);
+    margin:0;
   }
 </style>
 <!-- Domaine fixe de l'espace agent : les appels vers /api/* utilisent toujours
@@ -253,24 +167,24 @@
 <body>
 
 <header>
-  <div class="logo">Priven<span>cy</span></div>
+  <div class="logo">Priven<b>cy</b></div>
   <div class="header-actions">
-    <button type="button" class="btn-logout" id="switch-account-btn">Changer de compte</button>
-    <button type="button" class="btn-logout" id="logout-btn">Déconnexion</button>
+    <button type="button" class="btn btn-ghost" id="switch-account-btn">Changer de compte</button>
+    <button type="button" class="btn btn-ghost" id="logout-btn">Déconnexion</button>
   </div>
 </header>
 
 <main>
   <div class="welcome">
-    <h1>Bienvenue, <span id="user-name">…</span></h1>
+    <h1 class="h2">Bienvenue, <b id="user-name">…</b></h1>
     <p>Votre espace immobilier professionnel</p>
   </div>
 
-  <div class="card">
-    <p style="margin-bottom:12px;font-size:14px;color:#8a857c;">Première utilisation ? Activez votre abonnement pour commencer.</p>
-    <a href="/app.html" class="btn-primary">Accéder au générateur</a>
-    <button type="button" class="btn-secondary" id="subscribe-btn">Activer mon abonnement</button>
-    <div class="error-message" id="error-message"></div>
+  <div class="card dash-card">
+    <p class="hint">Première utilisation ? Activez votre abonnement pour commencer.</p>
+    <a href="/app.html" class="btn btn-primary btn-block">Accéder au générateur</a>
+    <button type="button" class="btn btn-secondary btn-block" id="subscribe-btn">Activer mon abonnement</button>
+    <div class="alert alert-error" id="error-message"></div>
   </div>
 </main>
 
