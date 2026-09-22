@@ -5,164 +5,91 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style id="auth-guard-hide">body { display: none !important; }</style>
 <title>Privency Dashboard · Activité</title>
-<meta name="theme-color" content="#14171F">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0E9F6E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/design-system.css">
 <style>
-/* ═══════════════════════════════════════
-   VARIABLES — identiques à la refonte app.html
-═══════════════════════════════════════ */
-:root {
-  --primary: #14171F;
-  --accent:  #C9A227;
-  --light:   #FAF9F6;
-  --border:  #E7E3D8;
-  --text:    #14171F;
-  --muted:   #6E6A5C;
-  --danger:  #c0392b;
-  --success: #27ae60;
-  --radius:  14px;
-  --shadow:  0 2px 8px rgba(0,0,0,.12);
-}
+  body{background:var(--gray-50)}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Work Sans', sans-serif; font-size: 14px; background: var(--light); color: var(--text); }
+  header{
+    background:var(--white);
+    border-bottom:1px solid var(--gray-200);
+    padding:14px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    position:sticky;
+    top:0;
+    z-index:100;
+  }
 
-/* ═══════════════════════════════════════
-   HEADER
-═══════════════════════════════════════ */
-header {
-  background: var(--primary);
-  color: #fff;
-  padding: 14px 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 10px rgba(0,0,0,.2);
-}
-.header-brand { display: flex; align-items: center; gap: 14px; }
-.logo-circle {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--accent);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 16px; color: #fff;
-  flex-shrink: 0;
-}
-.header-brand h1 { font-family: 'Playfair Display', serif; font-weight: 500; font-size: 17px; }
-.header-brand p  { font-size: 11px; opacity: .75; margin-top: 1px; }
-#logout-btn, #switch-account-btn {
-  background: transparent; border: 1.5px solid rgba(255,255,255,.35); color: #fff;
-  border-radius: var(--radius); padding: 7px 14px; font-size: 12px; font-family: inherit;
-  cursor: pointer; transition: opacity .2s;
-}
-#logout-btn:hover, #switch-account-btn:hover { opacity: .8; }
+  .header-brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
 
-/* ═══════════════════════════════════════
-   LAYOUT
-═══════════════════════════════════════ */
-.container { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; }
+  .logo-circle{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:var(--brand-50);
+    color:var(--brand-700);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:800;
+    font-size:16px;
+    flex-shrink:0;
+  }
 
-#dash-status {
-  text-align: center; color: var(--muted); font-size: 13px;
-  padding: 60px 20px;
-}
-.forbidden-msg {
-  max-width: 480px; margin: 80px auto; text-align: center;
-  background: #fff; border: 1.5px solid var(--danger); border-radius: var(--radius);
-  padding: 32px 24px; color: var(--danger); font-weight: 600; box-shadow: var(--shadow);
-}
+  .header-brand h1{
+    font-size:var(--text-lg);
+    font-weight:700;
+    color:var(--ink);
+    margin:0;
+  }
 
-/* ═══════════════════════════════════════
-   KPI TILES
-═══════════════════════════════════════ */
-.kpi-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 14px;
-  margin-bottom: 28px;
-}
-.kpi-tile {
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px 18px;
-}
-.kpi-label {
-  font-size: 10px; font-weight: 700; color: var(--muted);
-  text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px;
-}
-.kpi-value {
-  font-family: 'Playfair Display', serif; font-weight: 500;
-  font-size: 26px; color: var(--primary); line-height: 1;
-}
+  .header-brand p{
+    font-size:var(--text-xs);
+    color:var(--muted);
+    margin-top:1px;
+  }
 
-/* ═══════════════════════════════════════
-   CARDS / SECTIONS
-═══════════════════════════════════════ */
-.card {
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  margin-bottom: 20px;
-  overflow: hidden;
-}
-.card-header {
-  background: var(--primary); color: #fff;
-  padding: 11px 18px;
-  font-family: 'Playfair Display', serif; font-weight: 500; font-size: 13px;
-  letter-spacing: .4px; text-transform: uppercase;
-  display: flex; align-items: center; gap: 8px;
-}
-.card-body { padding: 0; }
-.empty-msg { padding: 32px 20px; text-align: center; color: var(--muted); font-size: 13px; }
+  .container{
+    max-width:900px;
+    margin:0 auto;
+    padding:24px 20px 60px;
+  }
 
-/* ═══════════════════════════════════════
-   TABLE
-═══════════════════════════════════════ */
-.table-wrap { overflow-x: auto; }
-table.data-table { width: 100%; border-collapse: collapse; font-size: 12.5px; white-space: nowrap; }
-table.data-table th {
-  background: var(--light); color: var(--muted);
-  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .4px;
-  text-align: left; padding: 10px 14px; border-bottom: 2px solid var(--border);
-}
-table.data-table td {
-  padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text);
-}
-table.data-table tr:last-child td { border-bottom: none; }
-table.data-table tr:hover td { background: var(--light); }
-.cell-sub { display: block; font-size: 11px; color: var(--muted); margin-top: 2px; }
+  #dash-status{
+    text-align:center;
+    color:var(--muted);
+    font-size:var(--text-sm);
+    padding:60px 20px;
+  }
 
-.badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 11px; font-weight: 600;
-}
-.badge-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-.badge-dot.is-active   { background: var(--success); }
-.badge-dot.is-canceled { background: var(--danger); }
-.badge-dot.is-other    { background: var(--muted); }
+  .forbidden-msg{
+    max-width:480px;
+    margin:80px auto;
+    text-align:center;
+    background:var(--red-50);
+    border:1px solid rgba(240,68,56,.3);
+    border-radius:var(--r-lg);
+    padding:32px 24px;
+    color:#b42318;
+    font-weight:600;
+  }
 
-/* ═══════════════════════════════════════
-   COMPTES INTERNES (repliable)
-═══════════════════════════════════════ */
-details.card summary {
-  cursor: pointer; list-style: none;
-}
-details.card summary::-webkit-details-marker { display: none; }
-details.card summary .chevron {
-  display: inline-block; margin-left: auto; transition: transform .18s; font-size: 11px;
-}
-details.card[open] summary .chevron { transform: rotate(90deg); }
-details.card summary.card-header { justify-content: flex-start; }
+  #kpi-grid{
+    margin-bottom:var(--s-6);
+  }
 
-/* ═══════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════ */
-@media(max-width: 700px) {
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-}
+  @media(max-width: 700px){
+    #kpi-grid{grid-template-columns:repeat(2, 1fr)}
+  }
 </style>
 </head>
 <body>
@@ -177,8 +104,8 @@ details.card summary.card-header { justify-content: flex-start; }
     </div>
   </div>
   <div style="display:flex;gap:8px;">
-    <button id="switch-account-btn" onclick="PrivencyAuth.switchAccount();">Changer de compte</button>
-    <button id="logout-btn" onclick="PrivencyAuth.signOutActive().then(function(){ window.location.replace('/login.html'); });">Déconnexion</button>
+    <button id="switch-account-btn" class="btn btn-ghost" onclick="PrivencyAuth.switchAccount();">Changer de compte</button>
+    <button id="logout-btn" class="btn btn-ghost" onclick="PrivencyAuth.signOutActive().then(function(){ window.location.replace('/login.html'); });">Déconnexion</button>
   </div>
 </header>
 
@@ -189,19 +116,19 @@ details.card summary.card-header { justify-content: flex-start; }
 
     <div class="kpi-grid" id="kpi-grid"></div>
 
-    <div class="card">
-      <div class="card-header">👥 Clients</div>
-      <div class="card-body">
+    <div class="panel">
+      <div class="panel-header">👥 Clients</div>
+      <div class="panel-body">
         <div class="table-wrap" id="clients-table-wrap"></div>
       </div>
     </div>
 
-    <details class="card" id="internal-section">
-      <summary class="card-header">
+    <details class="panel" id="internal-section">
+      <summary class="panel-header">
         🔒 Comptes internes / test
         <span class="chevron">▶</span>
       </summary>
-      <div class="card-body">
+      <div class="panel-body">
         <div class="table-wrap" id="internal-table-wrap"></div>
       </div>
     </details>
@@ -317,7 +244,7 @@ function statutBadge(agent) {
   var cls = 'is-other';
   if (status === 'active') cls = 'is-active';
   else if (status === 'canceled' || status === 'incomplete_expired') cls = 'is-canceled';
-  return '<span class="badge"><span class="badge-dot ' + cls + '"></span>' + escapeHtml(status) + '</span>';
+  return '<span class="status-dot ' + cls + '">' + escapeHtml(status) + '</span>';
 }
 function nomReseauCell(agent) {
   var nomComplet = [agent.prenom, agent.nom].filter(Boolean).join(' ').trim();
@@ -341,7 +268,7 @@ function agentRowHtml(agent) {
 }
 function tableHtml(agents) {
   var rows = agents.map(agentRowHtml).join('');
-  return '<table class="data-table"><thead><tr>'
+  return '<table class="table"><thead><tr>'
     + '<th>Nom / Réseau</th><th>Email</th><th>Inscription</th><th>Statut</th>'
     + '<th>CA mensuel</th><th>Fiches</th><th>Vues</th><th>Offres</th>'
     + '<th>Dernière activité</th><th>Profil complété</th>'
@@ -369,7 +296,7 @@ function renderDashboard(data) {
   });
   var clientsWrap = document.getElementById('clients-table-wrap');
   if (clients.length === 0) {
-    clientsWrap.innerHTML = '<div class="empty-msg">Aucun client actif pour l\'instant.</div>';
+    clientsWrap.innerHTML = '<div class="panel-empty">Aucun client actif pour l\'instant.</div>';
   } else {
     clientsWrap.innerHTML = tableHtml(clients);
   }
@@ -379,7 +306,7 @@ function renderDashboard(data) {
   });
   var internalWrap = document.getElementById('internal-table-wrap');
   internalWrap.innerHTML = internes.length === 0
-    ? '<div class="empty-msg">Aucun compte interne / test.</div>'
+    ? '<div class="panel-empty">Aucun compte interne / test.</div>'
     : tableHtml(internes);
 }
 
