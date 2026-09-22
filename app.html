@@ -1077,9 +1077,9 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
       <thead><tr>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:18%">Année</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Montant (€)</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Nature des travaux</th>
+        <th style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);padding:8px 10px;width:18%">Année</th>
+        <th style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);padding:8px 10px;width:22%">Montant (€)</th>
+        <th style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);padding:8px 10px;">Nature des travaux</th>
       </tr></thead>
       <tbody id="renov_tbody">
         <tr>
@@ -1274,10 +1274,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
     <div class="section-title mt-16">Diagnostics réglementaires</div>
     <div style="border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:8px;">
-      <div class="diag-form-grid" style="background:var(--primary);padding:8px 6px;border-top:none;">
-        <div class="diag-form-head" style="color:#fff;">Diagnostic</div>
-        <div class="diag-form-head" style="color:#fff;">Statut</div>
-        <div class="diag-form-head" style="color:#fff;">Résultat affiché</div>
+      <div class="diag-form-grid" style="background:var(--light);padding:8px 6px;border-top:none;border-bottom:1px solid var(--border);">
+        <div class="diag-form-head" style="color:var(--muted);">Diagnostic</div>
+        <div class="diag-form-head" style="color:var(--muted);">Statut</div>
+        <div class="diag-form-head" style="color:var(--muted);">Résultat affiché</div>
       </div>
       <div style="padding:0 6px;">
         <div class="diag-form-grid"><div class="diag-form-label">🧱 Amiante</div>
@@ -1509,11 +1509,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <table style="width:100%;border-collapse:collapse;font-size:13px;" id="pieces_table">
       <thead><tr>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:28px;"></th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:22%">Pièce</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:12%">Surface m²</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;width:12%">Étage</th>
-        <th style="background:var(--primary);color:#fff;padding:8px 10px;">Particularités / Équipements</th>
+        <th style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);padding:8px 10px;width:28px;"></th>
+        <th style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);padding:8px 10px;width:22%">Pièce</th>
+        <th style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);padding:8px 10px;width:12%">Surface m²</th>
+        <th style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);padding:8px 10px;width:12%">Étage</th>
+        <th style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);padding:8px 10px;">Particularités / Équipements</th>
       </tr></thead>
       <tbody id="pieces_tbody"></tbody>
     </table>
@@ -1692,7 +1692,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 <div class="page" id="page-4">
 <div class="container">
   <div class="card">
-    <div class="card-header">📤 Publication GitHub</div>
+    <div class="card-header">📤 Publication de la fiche</div>
     <div class="card-body">
 
       <!-- Résumé publication -->
@@ -1734,7 +1734,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="card-body">
-      <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#fdf6f0;border:1px solid #f0ddc8;border-radius:var(--radius);">
+      <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#FFFAEB;border:1px solid #FEDF89;border-radius:var(--radius);">
         <span style="font-size:13px;color:var(--muted);">Purger les statistiques de plus de</span>
         <select id="analytics-purge-days" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
           <option value="30">30 jours</option>
@@ -1766,14 +1766,14 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div id="analytics-table-wrap" style="display:none;overflow:auto;max-height:65vh;border:1px solid var(--border);border-radius:var(--radius);">
         <table id="analytics-table" style="width:100%;border-collapse:collapse;font-size:13px;">
           <thead>
-            <tr style="background:var(--primary);color:#fff;">
-              <th style="padding:9px 12px;width:34px;position:sticky;top:0;background:var(--primary);z-index:1;"></th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Client</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Bien</th>
-              <th style="padding:9px 12px;text-align:center;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Nb vues</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Dernière activité</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--primary);z-index:1;">Événements</th>
-              <th style="padding:9px 12px;width:44px;position:sticky;top:0;background:var(--primary);z-index:1;"></th>
+            <tr style="background:var(--light);color:var(--muted);">
+              <th style="padding:9px 12px;width:34px;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;"></th>
+              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Client</th>
+              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Bien</th>
+              <th style="padding:9px 12px;text-align:center;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Nb vues</th>
+              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Dernière activité</th>
+              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Événements</th>
+              <th style="padding:9px 12px;width:44px;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;"></th>
             </tr>
           </thead>
           <tbody id="analytics-tbody"></tbody>
@@ -1807,7 +1807,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div id="fiches-table-wrap" style="display:none;overflow-x:auto;">
         <table id="fiches-table" style="width:100%;border-collapse:collapse;font-size:13px;">
           <thead>
-            <tr style="background:var(--primary);color:#fff;">
+            <tr style="background:var(--light);color:var(--muted);border-bottom:1px solid var(--border);">
               <th style="padding:9px 14px;text-align:left;font-weight:600;">Bien</th>
               <th style="padding:9px 14px;text-align:left;font-weight:600;">Dernière modif.</th>
               <th style="padding:9px 14px;text-align:center;font-weight:600;">Actions</th>
@@ -6227,8 +6227,8 @@ function initInternalNotesSection() {
 }
 document.addEventListener('DOMContentLoaded', initInternalNotesSection);
 </script>
-<footer style="text-align:center;padding:20px;background:#141414;border-top:1px solid rgba(184,146,58,.15);margin-top:40px;">
-  <div style="font-size:10px;font-family:'DM Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;">Mentions légales</a> · <a href="/cgv.html" style="color:#8a7550;text-decoration:none;">CGV</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;">Politique de confidentialité</a></div>
+<footer style="text-align:center;padding:20px;background:var(--light);border-top:1px solid var(--border);margin-top:40px;">
+  <div style="font-size:10px;font-family:'Plus Jakarta Sans',sans-serif;"><a href="/mentions-legales.html" style="color:var(--muted);text-decoration:none;">Mentions légales</a> · <a href="/cgv.html" style="color:var(--muted);text-decoration:none;">CGV</a> · <a href="/politique-confidentialite.html" style="color:var(--muted);text-decoration:none;">Politique de confidentialité</a></div>
 </footer>
 <script>
 if ('serviceWorker' in navigator) {
