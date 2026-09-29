@@ -692,6 +692,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
   // une fois la session restaurée (ou confirmée absente) depuis le storage.
   authClient.auth.onAuthStateChange((event, session) => {
     if (session) {
+      if (session.user && session.user.id) window._agentSuffix = String(session.user.id).replace(/-/g, '').substring(0, 6);
       checkSubscription(session);
     } else if (event === 'SIGNED_OUT' && resolved) {
       if (window.__privencyLoggingOut) return; // déconnexion lancée depuis cet onglet : le bouton redirige déjà
@@ -711,6 +712,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
   // aucun des deux signaux n'a confirmé de session d'ici là.
   authClient.auth.getSession().then(({ data: { session } }) => {
     if (session) {
+      if (session.user && session.user.id) window._agentSuffix = String(session.user.id).replace(/-/g, '').substring(0, 6);
       checkSubscription(session);
     } else {
       denied();
@@ -4877,7 +4879,7 @@ function generatePreview() {
 
     _lastGeneratedSlug = (_editingFiche && _editingFiche.filename)
       ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
-      : slugify(d.adresse);
+      : slugify(d.adresse) + (window._agentSuffix ? '-' + window._agentSuffix : '');
 
     // langs : {en, pt, es} → données traduites des langues réussies (vide = fiche française seule)
     var publishSingle = function(langs, failed) {
