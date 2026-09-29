@@ -1736,7 +1736,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="card-body">
-      <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#FFFAEB;border:1px solid #FEDF89;border-radius:var(--radius);">
+      <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);">
         <span style="font-size:13px;color:var(--muted);">Purger les statistiques de plus de</span>
         <select id="analytics-purge-days" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
           <option value="30">30 jours</option>
@@ -1744,7 +1744,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
           <option value="180">6 mois</option>
           <option value="365">1 an</option>
         </select>
-        <button id="analytics-purge-btn" class="btn btn-sm btn-danger" onclick="purgerStatsAnciennes()">🧹 Purger les statistiques de plus de...</button>
+        <button id="analytics-purge-btn" class="btn btn-sm btn-outline" onclick="purgerStatsAnciennes()">🧹 Purger les statistiques de plus de...</button>
       </div>
       <div id="analytics-status" style="font-size:13px;color:var(--muted);margin-bottom:12px;">Chargement…</div>
 
@@ -1761,7 +1761,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <div style="margin-left:auto;display:flex;gap:8px;">
           <button class="btn btn-sm btn-outline" onclick="analyticsSelectAll(true)">Tout cocher</button>
           <button class="btn btn-sm btn-outline" onclick="analyticsSelectAll(false)">Tout décocher</button>
-          <button class="btn btn-sm btn-danger" id="analytics-del-btn" onclick="deleteSelectedAnalytics()" disabled>🗑️ Supprimer la sélection</button>
+          <button class="btn btn-sm btn-outline" id="analytics-del-btn" onclick="deleteSelectedAnalytics()" disabled>🗑️ Supprimer la sélection</button>
         </div>
       </div>
 
@@ -5299,9 +5299,10 @@ function renderAnalytics() {
       try { dateStr = new Date(g.last).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e) {}
     }
     var evHtml = Object.keys(g.events).map(function(ev) {
-      var bg  = ev === 'fiche_ouverte' ? '#e8f0fe' : ev.startsWith('onglet') ? '#FFFAEB' : '#E9F9F1';
-      var col = ev === 'fiche_ouverte' ? '#1a56db' : ev.startsWith('onglet') ? '#B54708' : '#0A6F4D';
-      return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
+      var bg  = ev === 'fiche_ouverte' ? '#E9F9F1' : ev.startsWith('onglet') ? '#fff' : '#E9F9F1';
+      var col = '#0A6F4D';
+      var bd  = ev.startsWith('onglet') ? 'border:1px solid #A6E3C6;' : '';
+      return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';' + bd + 'border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
         + esc(ev) + ' ×' + g.events[ev] + '</span>';
     }).join(' ');
 
@@ -5312,7 +5313,7 @@ function renderAnalytics() {
       + '<td style="padding:9px 12px;text-align:center;"><span style="display:inline-block;background:var(--primary);color:#fff;border-radius:50%;min-width:28px;height:28px;line-height:28px;font-weight:700;font-size:13px;">' + g.count + '</span></td>'
       + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + esc(dateStr) + '</td>'
       + '<td style="padding:9px 12px;">' + evHtml + '</td>'
-      + '<td style="padding:9px 12px;text-align:center;"><button class="btn btn-sm btn-danger" title="Supprimer cette ligne" data-key="' + esc(g.key) + '" onclick="deleteAnalyticsGroups([this.dataset.key])">🗑️</button></td>';
+      + '<td style="padding:9px 12px;text-align:center;"><button class="btn btn-sm btn-outline" title="Supprimer cette ligne" data-key="' + esc(g.key) + '" onclick="deleteAnalyticsGroups([this.dataset.key])">🗑️</button></td>';
     tbody.appendChild(tr);
   });
   wrap.style.display = 'block';
