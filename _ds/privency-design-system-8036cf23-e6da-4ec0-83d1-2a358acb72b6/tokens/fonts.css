@@ -1,0 +1,16 @@
+/* Plus Jakarta Sans — Tokotype, SIL OFL 1.1. Two optical sizes of ONE typeface:
+   "Text" for UI/body, "Display" for large headings (>=32px). See assets/fonts/OFL.txt. */
+@font-face{font-family:'Plus Jakarta Sans';src:url('../assets/fonts/PlusJakartaText-Light.otf') format('opentype');font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('../assets/fonts/PlusJakartaText-LightItalic.otf') format('opentype');font-weight:300;font-style:italic;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('../assets/fonts/PlusJakartaText-Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('../assets/fonts/PlusJakartaText-Italic.otf') format('opentype');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('../assets/fonts/PlusJakartaText-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Plus Jakarta Sans';src:url('../assets/fonts/PlusJakartaText-BoldItalic.otf') format('opentype');font-weight:700;font-style:italic;font-display:swap}
+@font-face{font-family:'Plus Jakarta Display';src:url('../assets/fonts/PlusJakartaDisplay-Light.otf') format('opentype');font-weight:300;font-style:normal;font-display:swap}
+@font-face{font-family:'Plus Jakarta Display';src:url('../assets/fonts/PlusJakartaDisplay-LightItalic.otf') format('opentype');font-weight:300;font-style:italic;font-display:swap}
+@font-face{font-family:'Plus Jakarta Display';src:url('../assets/fonts/PlusJakartaDisplay-Regular.otf') format('opentype');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Plus Jakarta Display';src:url('../assets/fonts/PlusJakartaDisplay-Italic.otf') format('opentype');font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:'Plus Jakarta Display';src:url('../assets/fonts/PlusJakartaDisplay-Medium.otf') format('opentype');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Plus Jakarta Display';src:url('../assets/fonts/PlusJakartaDisplay-MediumItalic.otf') format('opentype');font-weight:500;font-style:italic;font-display:swap}
+@font-face{font-family:'Plus Jakarta Display';src:url('../assets/fonts/PlusJakartaDisplay-Bold.otf') format('opentype');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Plus Jakarta Display';src:url('../assets/fonts/PlusJakartaDisplay-BoldItalic.otf') format('opentype');font-weight:700;font-style:italic;font-display:swap}

@@ -6,398 +6,266 @@
 <title>Connexion — Privency</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/design-system.css">
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  body{
+    background:var(--gray-50);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
   }
 
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: #141414;
-    color: #f0ede6;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
+  .auth-wrap{
+    width:100%;
+    max-width:440px;
   }
 
-  .login-card {
-    width: 100%;
-    max-width: 420px;
+  .auth-brand{
+    text-align:center;
+    margin-bottom:var(--s-6);
   }
 
-  .brand {
-    text-align: center;
-    margin-bottom: 40px;
+  .auth-brand .logo{
+    font-weight:800;
+    font-size:1.5rem;
+    letter-spacing:-.02em;
+    color:var(--ink);
   }
 
-  .brand h1 {
-    font-size: 28px;
-    font-weight: 600;
-    letter-spacing: 4px;
-    text-transform: uppercase;
-    color: #f0ede6;
+  .auth-brand .logo b{
+    color:var(--brand-500);
+    font-weight:800;
   }
 
-  .brand h1 span {
-    color: #b8923a;
+  .auth-brand p{
+    margin:8px 0 0;
+    font-size:var(--text-sm);
+    color:var(--muted);
   }
 
-  .brand p {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #8a857c;
-    font-weight: 300;
+  .card-title{
+    text-align:center;
+    margin-bottom:var(--s-6);
   }
 
-  .form-box {
-    background: #1c1c1c;
-    border: 1px solid #2a2a2a;
-    border-radius: 12px;
-    padding: 36px 32px;
+  .field-group{
+    margin-bottom:var(--s-5);
   }
 
-  .form-box h2 {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 28px;
-    text-align: center;
+  .forgot-link{
+    text-align:right;
+    margin-top:-8px;
+    margin-bottom:var(--s-5);
   }
 
-  .field {
-    margin-bottom: 20px;
+  .forgot-link a{
+    font-size:var(--text-sm);
+    color:var(--muted);
   }
 
-  .field label {
-    display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: #b3aea4;
-    margin-bottom: 8px;
-    letter-spacing: 0.3px;
+  .forgot-link a:hover{
+    color:var(--brand-700);
+    text-decoration:underline;
   }
 
-  .field input {
-    width: 100%;
-    padding: 13px 14px;
-    background: #141414;
-    border: 1px solid #333;
-    border-radius: 8px;
-    color: #f0ede6;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    transition: border-color 0.2s ease;
+  .remember-label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:var(--text-sm);
+    color:var(--gray-700);
+    cursor:pointer;
   }
 
-  .field input:focus {
-    outline: none;
-    border-color: #b8923a;
+  .remember-box{
+    margin-bottom:var(--s-5);
   }
 
-  .field input::placeholder {
-    color: #5c574e;
+  .remember-help{
+    margin:6px 0 0 28px;
+    font-size:var(--text-xs);
+    color:var(--muted);
+    line-height:1.4;
   }
 
-  .btn-submit {
-    width: 100%;
-    padding: 14px;
-    margin-top: 8px;
-    background: #b8923a;
-    color: #141414;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: background 0.2s ease, opacity 0.2s ease;
+  .auth-switch{
+    margin-top:var(--s-6);
+    text-align:center;
+    font-size:var(--text-sm);
+    color:var(--muted);
   }
 
-  .btn-submit:hover {
-    background: #c9a14a;
+  .auth-switch a{
+    font-weight:600;
   }
 
-  .btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
-  .error-message {
-    display: none;
-    margin-top: 16px;
-    padding: 12px 14px;
-    background: rgba(192, 57, 43, 0.12);
-    border: 1px solid rgba(192, 57, 43, 0.4);
-    border-radius: 8px;
-    color: #e07b6e;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .error-message.visible {
-    display: block;
-  }
-
-  .register-link {
-    margin-top: 24px;
-    text-align: center;
-    font-size: 14px;
-    color: #8a857c;
-  }
-
-  .register-link a {
-    color: #b8923a;
-    text-decoration: none;
-    font-weight: 500;
-  }
-
-  .register-link a:hover {
-    text-decoration: underline;
-  }
-
-  .remember-box {
-    margin-bottom: 4px;
-  }
-
-  .remember-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 14px;
-    color: #b3aea4;
-    cursor: pointer;
-  }
-
-  .remember-label input {
-    width: 16px;
-    height: 16px;
-    accent-color: #b8923a;
-    cursor: pointer;
-  }
-
-  .remember-help {
-    margin: 6px 0 0 26px;
-    font-size: 12px;
-    color: #8a857c;
-    line-height: 1.4;
-  }
-
-  .forgot-link {
-    text-align: right;
-    margin-top: -12px;
-    margin-bottom: 20px;
-  }
-
-  .forgot-link a {
-    font-size: 13px;
-    color: #8a857c;
-    text-decoration: none;
-  }
-
-  .forgot-link a:hover {
-    color: #b8923a;
-    text-decoration: underline;
-  }
-
-  .success-message {
-    display: none;
-    margin-top: 16px;
-    padding: 12px 14px;
-    background: rgba(184, 146, 58, 0.12);
-    border: 1px solid rgba(184, 146, 58, 0.4);
-    border-radius: 8px;
-    color: #d4a956;
-    font-size: 14px;
-    line-height: 1.4;
-  }
-
-  .success-message.visible {
-    display: block;
+  .auth-switch a:hover{
+    text-decoration:underline;
   }
 
   /* ── « Qui êtes-vous ? » : comptes connus sur cet ordinateur ── */
-  .account-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 20px;
+  .account-list{
+    list-style:none;
+    padding:0;
+    margin:0 0 var(--s-5);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
   }
 
-  .account-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 12px;
-    background: #141414;
-    border: 1px solid #333;
-    border-radius: 10px;
-    transition: border-color 0.2s ease;
+  .account-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 12px;
+    border:1.5px solid var(--gray-200);
+    border-radius:var(--r-md);
+    transition:border-color var(--ease);
   }
 
-  .account-item:hover {
-    border-color: #b8923a;
+  .account-item:hover{
+    border-color:var(--brand-500);
   }
 
-  .account-pick {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
-    background: none;
-    border: none;
-    color: inherit;
-    font-family: 'DM Sans', sans-serif;
-    text-align: left;
-    cursor: pointer;
-    padding: 0;
+  .account-pick{
+    flex:1;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    min-width:0;
+    background:none;
+    border:none;
+    color:inherit;
+    font-family:inherit;
+    text-align:left;
+    cursor:pointer;
+    padding:6px;
   }
 
-  .account-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #2a2a2a;
-    color: #b8923a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    font-size: 16px;
-    overflow: hidden;
-    flex-shrink: 0;
+  .account-avatar{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:var(--brand-50);
+    color:var(--brand-700);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:16px;
+    overflow:hidden;
+    flex-shrink:0;
   }
 
-  .account-avatar img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .account-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
   }
 
-  .account-text {
-    min-width: 0;
+  .account-text{
+    min-width:0;
   }
 
-  .account-name {
-    font-size: 15px;
-    font-weight: 500;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .account-name{
+    font-size:15px;
+    font-weight:600;
+    color:var(--ink);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
-  .account-email {
-    font-size: 12px;
-    color: #8a857c;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .account-email{
+    font-size:12px;
+    color:var(--muted);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
   }
 
-  .account-remove {
-    background: none;
-    border: none;
-    color: #8a857c;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 12px;
-    cursor: pointer;
-    padding: 4px 6px;
-    flex-shrink: 0;
+  .account-remove{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-family:inherit;
+    font-size:12px;
+    cursor:pointer;
+    padding:10px 6px;
+    flex-shrink:0;
   }
 
-  .account-remove:hover {
-    color: #e07b6e;
-    text-decoration: underline;
-  }
-
-  .btn-secondary {
-    width: 100%;
-    padding: 13px;
-    background: transparent;
-    color: #b8923a;
-    border: 1px solid #b8923a;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
-  }
-
-  .btn-secondary:hover {
-    background: #b8923a;
-    color: #141414;
+  .account-remove:hover{
+    color:var(--red);
+    text-decoration:underline;
   }
 </style>
 <script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjfjzv3a2");</script></head>
 <body>
 
-<div class="login-card">
-  <div class="brand">
-    <h1>Priven<span>cy</span></h1>
+<div class="auth-wrap">
+  <div class="auth-brand">
+    <div class="logo">Priven<b>cy</b></div>
     <p>Votre espace immobilier professionnel</p>
   </div>
 
-  <div class="form-box" id="chooser-box" style="display:none;">
-    <h2>Qui êtes-vous ?</h2>
+  <div class="card" id="chooser-box" style="display:none;">
+    <h2 class="h3 card-title">Qui êtes-vous ?</h2>
     <ul class="account-list" id="account-list"></ul>
-    <button type="button" class="btn-secondary" id="add-account-btn">Ajouter un compte</button>
-    <div class="error-message" id="chooser-error"></div>
+    <button type="button" class="btn btn-secondary btn-block" id="add-account-btn">Ajouter un compte</button>
+    <div class="alert alert-error" id="chooser-error"></div>
   </div>
 
-  <div class="form-box" id="login-box">
-    <h2>Connexion</h2>
+  <div class="card" id="login-box">
+    <h2 class="h3 card-title">Connexion</h2>
     <form id="login-form" novalidate>
-      <div class="field">
-        <label for="email">Adresse email</label>
-        <input type="email" id="email" name="email" placeholder="vous@exemple.fr" autocomplete="email" required>
+      <div class="field-group">
+        <label class="label" for="email">Adresse email</label>
+        <input class="field" type="email" id="email" name="email" placeholder="vous@exemple.fr" autocomplete="email" required>
       </div>
-      <div class="field">
-        <label for="password">Mot de passe</label>
-        <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+      <div class="field-group">
+        <label class="label" for="password">Mot de passe</label>
+        <input class="field" type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
       </div>
       <p class="forgot-link"><a href="#" id="forgot-password-link">Mot de passe oublié ?</a></p>
       <div class="remember-box">
         <label class="remember-label" for="remember">
-          <input type="checkbox" id="remember" name="remember">
+          <input class="checkbox" type="checkbox" id="remember" name="remember">
           <span>Mémoriser ce compte sur cet ordinateur</span>
         </label>
         <p class="remember-help">À cocher uniquement sur votre ordinateur personnel ou professionnel.</p>
       </div>
-      <button type="submit" class="btn-submit" id="submit-btn">Se connecter</button>
-      <div class="error-message" id="error-message"></div>
-      <div class="success-message" id="success-message"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="submit-btn">Se connecter</button>
+      <div class="alert alert-error" id="error-message"></div>
+      <div class="alert alert-success" id="success-message"></div>
     </form>
-    <p class="register-link">Pas encore de compte ? <a href="#" id="show-signup-link">Créer un compte</a></p>
-    <p class="register-link" id="back-to-chooser" style="display:none;"><a href="#" id="back-to-chooser-link">← Choisir un compte existant</a></p>
+    <p class="auth-switch">Pas encore de compte ? <a href="#" id="show-signup-link">Créer un compte</a></p>
+    <p class="auth-switch" id="back-to-chooser" style="display:none;"><a href="#" id="back-to-chooser-link">← Choisir un compte existant</a></p>
   </div>
 
-  <div class="form-box" id="signup-box" style="display:none;">
-    <h2>Créer un compte</h2>
+  <div class="card" id="signup-box" style="display:none;">
+    <h2 class="h3 card-title">Créer un compte</h2>
     <form id="signup-form" novalidate>
-      <div class="field">
-        <label for="signup-email">Adresse email</label>
-        <input type="email" id="signup-email" name="email" placeholder="vous@exemple.fr" autocomplete="email" required>
+      <div class="field-group">
+        <label class="label" for="signup-email">Adresse email</label>
+        <input class="field" type="email" id="signup-email" name="email" placeholder="vous@exemple.fr" autocomplete="email" required>
       </div>
-      <div class="field">
-        <label for="signup-password">Mot de passe</label>
-        <input type="password" id="signup-password" name="password" placeholder="••••••••" autocomplete="new-password" required>
+      <div class="field-group">
+        <label class="label" for="signup-password">Mot de passe</label>
+        <input class="field" type="password" id="signup-password" name="password" placeholder="••••••••" autocomplete="new-password" required>
       </div>
-      <div class="field">
-        <label for="signup-password-confirm">Confirmer le mot de passe</label>
-        <input type="password" id="signup-password-confirm" name="password-confirm" placeholder="••••••••" autocomplete="new-password" required>
+      <div class="field-group">
+        <label class="label" for="signup-password-confirm">Confirmer le mot de passe</label>
+        <input class="field" type="password" id="signup-password-confirm" name="password-confirm" placeholder="••••••••" autocomplete="new-password" required>
       </div>
-      <button type="submit" class="btn-submit" id="signup-submit-btn">Créer mon compte</button>
-      <div class="error-message" id="signup-error-message"></div>
-      <div class="success-message" id="signup-success-message"></div>
+      <button type="submit" class="btn btn-primary btn-block" id="signup-submit-btn">Créer mon compte</button>
+      <div class="alert alert-error" id="signup-error-message"></div>
+      <div class="alert alert-success" id="signup-success-message"></div>
     </form>
-    <p class="register-link">Déjà un compte ? <a href="#" id="show-login-link">Se connecter</a></p>
+    <p class="auth-switch">Déjà un compte ? <a href="#" id="show-login-link">Se connecter</a></p>
   </div>
 </div>
 

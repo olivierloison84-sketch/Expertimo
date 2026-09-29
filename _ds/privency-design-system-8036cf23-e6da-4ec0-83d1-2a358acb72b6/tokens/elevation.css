@@ -1,0 +1,11 @@
+/* Soft, neutral, low-contrast shadows. Never coloured shadows. */
+:root{
+  --shadow-xs:0 1px 2px rgba(20,26,24,.04);
+  --shadow-sm:0 1px 3px rgba(20,26,24,.05),0 1px 2px rgba(20,26,24,.03);
+  --shadow-md:0 4px 16px rgba(20,26,24,.06),0 1px 3px rgba(20,26,24,.04);
+  --shadow-lg:0 12px 32px rgba(20,26,24,.08),0 2px 8px rgba(20,26,24,.04);
+  --shadow-xl:0 24px 64px rgba(20,26,24,.10),0 4px 12px rgba(20,26,24,.04);
+  --shadow-inset:inset 0 1px 0 rgba(255,255,255,.6);
+  --focus-ring:0 0 0 3px var(--focus-ring-color);
+  --focus-ring-offset:0 0 0 2px var(--white),0 0 0 5px var(--focus-ring-color);
+}

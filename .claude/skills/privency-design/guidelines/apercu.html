@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privency — Aperçu du design system</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../../design-system.css">
+<style>
+  .gu-nav{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--gray-200)}
+  .gu-nav .container{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .gu-logo{font-weight:800;font-size:1.25rem;letter-spacing:-.02em}.gu-logo b{color:var(--brand-500)}
+  .gu-hero{padding:var(--s-9) 0;background:radial-gradient(120% 120% at 80% -10%,var(--brand-50) 0%,var(--white) 55%)}
+  .gu-sec{padding-block:var(--s-8);border-top:1px solid var(--gray-200)}
+  .gu-lab{font-size:var(--text-sm);font-weight:600;color:var(--muted);margin-bottom:var(--s-5)}
+  .stack{display:flex;gap:var(--s-4);flex-wrap:wrap;align-items:center}
+  .grid{display:grid;gap:var(--s-4)}
+  .sw{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--gray-200);background:var(--white)}
+  .sw-c{height:88px}.sw-t{padding:10px 12px;font-size:12px;line-height:1.5}.sw-t b{display:block;font-weight:600}.sw-t span{color:var(--muted);font-family:var(--font-mono);font-size:11px}
+  .type-row{display:flex;align-items:baseline;gap:var(--s-5);padding:var(--s-4) 0;border-top:1px solid var(--gray-200);flex-wrap:wrap}
+  .type-row .tag{font-family:var(--font-mono);font-size:11px;color:var(--muted);min-width:96px}
+  .rad{width:76px;height:76px;background:var(--brand-50);border:1.5px solid var(--brand-500);display:flex;align-items:flex-end;justify-content:center;padding:6px;font-family:var(--font-mono);font-size:10px;color:var(--brand-700)}
+  .sp-row{display:flex;align-items:center;gap:var(--s-4);margin-bottom:6px;font-family:var(--font-mono);font-size:11px;color:var(--muted)}
+  .sp-demo{background:var(--brand-500);height:14px;border-radius:3px}
+</style>
+</head>
+<body>
+
+<nav class="gu-nav">
+  <div class="container">
+    <div class="gu-logo">Priv<b>ency</b></div>
+    <div class="stack" style="gap:var(--s-2)">
+      <a class="btn btn-ghost">Connexion</a>
+      <a class="btn btn-primary" style="padding:11px 20px">Essai gratuit</a>
+    </div>
+  </div>
+</nav>
+
+<header class="gu-hero">
+  <div class="container">
+    <span class="eyebrow">Design System · v2 — skill privency-design</span>
+    <h1 style="max-width:16ch">Le CRM immobilier<br>qui vous fait signer plus.</h1>
+    <p class="lead" style="max-width:52ch">Direction v2 : SaaS clair et rassurant façon Bunji, accent vert émeraude. Blanc, air, sans-serif moderne. Les tokens vivent dans <span class="data" style="color:var(--brand-700)">/design-system.css</span>, les règles dans <span class="data" style="color:var(--brand-700)">/design-principles.md</span>.</p>
+    <div class="stack" style="margin-top:var(--s-5)">
+      <a class="btn btn-primary">Tester gratuitement →</a>
+      <a class="btn btn-secondary">Planifier une démo</a>
+    </div>
+  </div>
+</header>
+
+<section class="gu-sec">
+  <div class="container">
+    <div class="gu-lab">01 · Couleurs</div>
+    <h2>Palette</h2>
+    <p>Un seul accent (vert émeraude), décliné en échelle. Neutres froids sur base blanche. Sémantique rouge / ambre pour les états, le vert servant aussi de "validé".</p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(140px,1fr));margin-top:var(--s-5)">
+      <div class="sw"><div class="sw-c" style="background:#e9f9f1"></div><div class="sw-t"><b>Brand 50</b><span>#e9f9f1</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#c9f0dd"></div><div class="sw-t"><b>Brand 100</b><span>#c9f0dd</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#0e9f6e"></div><div class="sw-t"><b>Brand 500 ★</b><span>#0e9f6e</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#0b8a5f"></div><div class="sw-t"><b>Brand 600</b><span>#0b8a5f</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#0a6f4d"></div><div class="sw-t"><b>Brand 700</b><span>#0a6f4d</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#0f1a16"></div><div class="sw-t"><b>Ink</b><span>#0f1a16</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#667085"></div><div class="sw-t"><b>Muted</b><span>#667085</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#e5e9ef"></div><div class="sw-t"><b>Border</b><span>#e5e9ef</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#f7f8fb"></div><div class="sw-t"><b>Gray 50</b><span>#f7f8fb</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#f04438"></div><div class="sw-t"><b>Red</b><span>#f04438</span></div></div>
+      <div class="sw"><div class="sw-c" style="background:#f79009"></div><div class="sw-t"><b>Amber</b><span>#f79009</span></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="gu-sec">
+  <div class="container">
+    <div class="gu-lab">02 · Typographie — Plus Jakarta Sans</div>
+    <div class="type-row"><span class="tag">display-lg / 800</span><span class="h1" style="margin:0">Signez plus de mandats</span></div>
+    <div class="type-row"><span class="tag">display-md / 700</span><span class="h2" style="margin:0">Toute votre prospection au même endroit</span></div>
+    <div class="type-row"><span class="tag">display-sm / 700</span><span class="h3" style="margin:0">Estimation en 2 minutes</span></div>
+    <div class="type-row"><span class="tag">lead / 500</span><span class="lead" style="margin:0">Le chapô d'intro, posé, en gris moyen.</span></div>
+    <div class="type-row"><span class="tag">base / 400</span><span style="color:var(--gray-700)">Le corps de texte par défaut, 16px, pensé pour la lecture longue.</span></div>
+    <div class="type-row"><span class="tag">data / mono</span><span class="data" style="color:var(--brand-700)">128 mandats · +34% · 91300</span></div>
+  </div>
+</section>
+
+<section class="gu-sec">
+  <div class="container">
+    <div class="gu-lab">03 · Boutons</div>
+    <div class="stack">
+      <a class="btn btn-primary">Estimer un bien →</a>
+      <a class="btn btn-secondary">Voir la démo</a>
+      <a class="btn btn-ghost">En savoir plus</a>
+      <button class="btn btn-primary" disabled>Désactivé</button>
+    </div>
+    <p style="margin-top:var(--s-4)">Pleine largeur (<span class="data">.btn-block</span>) — utilisé dans les formulaires (login, register) :</p>
+    <a class="btn btn-primary btn-block" style="max-width:320px">Se connecter</a>
+  </div>
+</section>
+
+<section class="gu-sec">
+  <div class="container">
+    <div class="gu-lab">04 · Cartes &amp; liste à coches</div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+      <div class="card">
+        <span class="badge">Estimation</span>
+        <h3 style="margin-top:var(--s-4)">Prix de marché fiable</h3>
+        <p style="margin:0">Carte blanche bordée : le style par défaut, sobre.</p>
+      </div>
+      <div class="card card-fill">
+        <span class="badge">Inclus</span>
+        <h3 style="margin-top:var(--s-4)">Fiches interactives</h3>
+        <ul class="check-list" style="margin-top:var(--s-4)">
+          <li>Générées en un clic</li>
+          <li>Partageables par lien</li>
+          <li>Suivi des vues en direct</li>
+        </ul>
+      </div>
+      <div class="card card-accent">
+        <span class="badge">Populaire</span>
+        <h3 style="margin-top:var(--s-4)">Carte accent</h3>
+        <p style="margin:0;color:var(--gray-700)">Fond vert pâle pour mettre en avant une offre ou un plan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gu-sec">
+  <div class="container">
+    <div class="gu-lab">05 · Champs, case à cocher &amp; alertes</div>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));max-width:760px">
+      <div><label class="label">Nom complet</label><input class="field" placeholder="Jean Dupont"></div>
+      <div><label class="label">Email</label><input class="field" placeholder="jean@agence.fr"></div>
+      <div><label class="label">Ville du bien</label><input class="field" placeholder="Massy 91300"></div>
+      <div><label class="label">Téléphone</label><input class="field" placeholder="06 12 34 56 78"></div>
+    </div>
+    <label style="display:flex;align-items:center;gap:10px;margin-top:var(--s-5);font-size:var(--text-sm);color:var(--gray-700)">
+      <input type="checkbox" class="checkbox" checked> Mémoriser ce compte sur cet ordinateur
+    </label>
+    <div class="alert alert-error visible" style="max-width:420px">Email ou mot de passe incorrect.</div>
+    <div class="alert alert-success visible" style="max-width:420px">Un email de confirmation vient de vous être envoyé.</div>
+  </div>
+</section>
+
+<section class="gu-sec">
+  <div class="container">
+    <div class="gu-lab">06 · Rayons &amp; espacements</div>
+    <div class="stack" style="gap:var(--s-4);margin-bottom:var(--s-7)">
+      <div class="rad" style="border-radius:8px">sm 8</div>
+      <div class="rad" style="border-radius:12px">md 12</div>
+      <div class="rad" style="border-radius:16px">lg 16</div>
+      <div class="rad" style="border-radius:24px">xl 24</div>
+      <div class="rad" style="border-radius:999px">pill</div>
+    </div>
+    <div>
+      <div class="sp-row"><span style="min-width:64px">s-2 · 8</span><div class="sp-demo" style="width:8px"></div></div>
+      <div class="sp-row"><span style="min-width:64px">s-4 · 16</span><div class="sp-demo" style="width:16px"></div></div>
+      <div class="sp-row"><span style="min-width:64px">s-5 · 24</span><div class="sp-demo" style="width:24px"></div></div>
+      <div class="sp-row"><span style="min-width:64px">s-6 · 32</span><div class="sp-demo" style="width:32px"></div></div>
+      <div class="sp-row"><span style="min-width:64px">s-7 · 48</span><div class="sp-demo" style="width:48px"></div></div>
+      <div class="sp-row"><span style="min-width:64px">s-8 · 64</span><div class="sp-demo" style="width:64px"></div></div>
+      <div class="sp-row"><span style="min-width:64px">s-9 · 96</span><div class="sp-demo" style="width:96px"></div></div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:var(--gray-50);border-top:1px solid var(--gray-200);padding:var(--s-7) 0;color:var(--muted);font-size:var(--text-sm)">
+  <div class="container">Privency Design System v2 · skill privency-design · Accent #0E9F6E</div>
+</footer>
+
+</body>
+</html>

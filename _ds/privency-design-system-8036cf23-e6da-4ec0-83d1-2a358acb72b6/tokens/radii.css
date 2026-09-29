@@ -1,0 +1,14 @@
+/* Generous rounding, 12-24px. Pills for filters and status chips only. */
+:root{
+  --radius-xs:8px;
+  --radius-sm:10px;
+  --radius-md:12px;
+  --radius-lg:16px;
+  --radius-xl:20px;
+  --radius-2xl:24px;
+  --radius-pill:999px;
+  --radius-control:12px;
+  --radius-card:16px;
+  --radius-panel:20px;
+  --radius-hero:24px;
+}
