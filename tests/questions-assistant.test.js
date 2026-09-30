@@ -14,7 +14,7 @@ const files = ['index.html', 'index_en.html'].concat(fs.readdirSync(path.join(ro
     const w = dom.window, d = w.document; await new Promise(r => setTimeout(r, 50));
     w.toggleAI(); await new Promise(r => setTimeout(r, 20));
     const notice = d.getElementById('ai-notice');
-    assert(notice && /transmises à votre conseiller/.test(notice.textContent), f + ' : mention absente : ' + (notice && notice.textContent));
+    assert(notice && (f === 'index_en.html' ? /shared with your advisor/ : /transmises à votre conseiller/).test(notice.textContent), f + ' : mention absente : ' + (notice && notice.textContent));
     d.getElementById('ai-input').value = '   ';
     w.sendAI(); assert.strictEqual(rpc.length, 0, f + ' : question vide enregistrée');
     d.getElementById('ai-input').value = 'Les charges incluent le chauffage ?';
