@@ -31,7 +31,19 @@ function row(label, value) {
     + '<td style="padding:4px 0;font-weight:600;">' + esc(value) + '</td></tr>';
 }
 
-function buildHtml(body, isOffre) {
+// Liste de documents demandés : tableau de libellés courts (40 max, 80 caractères chacun), jamais du HTML brut.
+function cleanDocs(docs) {
+  if (!Array.isArray(docs)) return [];
+  var out = [];
+  docs.forEach(function(d) {
+    var t = String(d == null ? '' : d).trim().slice(0, 80);
+    if (t && out.indexOf(t) === -1 && out.length < 40) out.push(t);
+  });
+  return out;
+}
+
+function buildHtml(body, isOffre, docsList) {
+  var isList = !isOffre && docsList && docsList.length > 0;
   var rows = isOffre
     ? [
         row('Montant proposé', body.montant ? body.montant + ' €' : ''),
@@ -45,16 +57,21 @@ function buildHtml(body, isOffre) {
       ]
     : [
         row('Nom', body.nom),
-        row('Email', body.email)
+        row('Email', body.email),
+        isList ? row('Précisions', String(body.message || '').slice(0, 500)) : ''
       ];
 
   return '<div style="font-family:Arial,sans-serif;font-size:14px;color:#222;">'
-    + '<h2 style="margin:0 0 12px;">' + (isOffre ? 'Nouvelle offre reçue' : 'Demande de documents') + '</h2>'
+    + '<h2 style="margin:0 0 12px;">' + (isOffre ? 'Nouvelle offre reçue' : (isList ? 'Documents souhaités' : 'Demande de documents')) + '</h2>'
     + '<table style="border-collapse:collapse;margin-bottom:16px;">'
     + row('Bien', body.bien)
     + row('Référence', body.reference)
     + rows.join('')
     + '</table>'
+    + (isList
+        ? '<p style="margin:0 0 6px;font-weight:600;">' + docsList.length + ' document' + (docsList.length > 1 ? 's' : '') + ' demandé' + (docsList.length > 1 ? 's' : '') + ' :</p>'
+          + '<ul style="margin:0 0 16px;padding-left:20px;">' + docsList.map(function(d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul>'
+        : '')
     + '</div>';
 }
 
@@ -106,10 +123,16 @@ module.exports = async function handler(req, res) {
   }
 
   const isOffre = body.type === 'offre';
+  const docsList = body.type === 'documents_liste' ? cleanDocs(body.documents) : [];
+  if (body.type === 'documents_liste' && !docsList.length) {
+    return res.status(400).json({ ok: false, error: 'aucun document sélectionné' });
+  }
   const bien = body.bien || '';
   const subject = isOffre
     ? 'Nouvelle offre — ' + bien + ' — ' + (body.montant || '') + ' €'
-    : 'Demande de documents — ' + bien;
+    : docsList.length
+      ? 'Documents souhaités (' + docsList.length + ') — ' + bien + ' — ' + String(body.nom || '').replace(/[\r\n]+/g, ' ').slice(0, 60)
+      : 'Demande de documents — ' + bien;
 
   try {
     const resendRes = await fetch('https://api.resend.com/emails', {
@@ -123,7 +146,7 @@ module.exports = async function handler(req, res) {
         to: [to],
         reply_to: email,
         subject: subject,
-        html: buildHtml(body, isOffre)
+        html: buildHtml(body, isOffre, docsList)
       })
     });
 

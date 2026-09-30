@@ -1,0 +1,36 @@
+// Vérifie supabase-fiche-documents.sql sur un vrai moteur Postgres (PGlite). Usage : npm i --no-save @electric-sql/pglite && node tests/sql-fiche-documents.check.mjs
+import { PGlite } from '@electric-sql/pglite';
+import fs from 'fs';
+const db = new PGlite();
+await db.exec(`
+create schema auth; create role anon; create role authenticated;
+create function auth.uid() returns uuid language sql as $$ select nullif(current_setting('app.uid', true),'')::uuid $$;
+create table public.agent_fiches(agent_user_id uuid, filename text);
+grant usage on schema public, auth to anon, authenticated; grant select on public.agent_fiches to authenticated;
+insert into public.agent_fiches values ('11111111-1111-1111-1111-111111111111','a-FINAL.html'),('22222222-2222-2222-2222-222222222222','b-FINAL.html');`);
+let sql = fs.readFileSync(new URL('../supabase-fiche-documents.sql', import.meta.url), 'utf8').split('-- Rétention : suppression automatique après 12 mois (à exécuter')[0];
+await db.exec(sql); await db.exec(`grant select, delete on public.fiche_demandes_documents to authenticated;`);
+let bad = 0; const ok = (c, m) => { if (!c) { console.log('ÉCHEC', m); bad++; process.exitCode = 1; } else console.log('ok', m); };
+const call = (p, c, docs, note = null) => db.query(`select public.fiche_demande_documents($1,$2,'adr',$3::text[],$4)`, [p, c, docs, note]);
+const count = async (w = '') => (await db.query(`select count(*)::int n from public.fiche_demandes_documents ${w}`)).rows[0].n;
+await call('/fiches/a-FINAL.html', 'Marie', ['PV AG', 'DPE', 'DPE', '  ', 'x'.repeat(200)], 'Merci');
+const r = (await db.query(`select * from public.fiche_demandes_documents`)).rows[0];
+ok(await count() === 1 && r.docs.length === 3 && r.docs.every(d => d.length <= 80), 'insertion, dédoublonnage, troncature : ' + JSON.stringify(r.docs.map(d => d.slice(0, 10))));
+ok(r.agent_id === '11111111-1111-1111-1111-111111111111', 'agent_id lu en base');
+await call('/fiches/inconnue.html', 'Marie', ['DPE']); await call('/x/a-FINAL.html', 'Marie', ['DPE']); await call('/fiches/a-FINAL.html', 'Marie', []); await call('/fiches/a-FINAL.html', 'Marie', [' ']);
+ok(await count() === 1, 'fiche inconnue / chemin invalide / liste vide refusés');
+await call('/fiches/a-FINAL.html', 'Marie', Array.from({ length: 80 }, (_, i) => 'Doc ' + i));
+ok((await db.query(`select max(cardinality(docs)) m from public.fiche_demandes_documents`)).rows[0].m === 40, 'plafond 40 documents');
+for (let i = 0; i < 20; i++) await call('/fiches/a-FINAL.html', 'Marie', ['DPE ' + i]);
+ok(await count(`where client_nom='Marie'`) === 5, '5 demandes max / 10 min par acquéreur : ' + await count());
+for (let i = 0; i < 100; i++) await call('/fiches/b-FINAL.html', 'Faux' + i, ['DPE']);
+ok(await count(`where fiche_path='/fiches/b-FINAL.html'`) === 30, 'plafond 30/h par fiche malgré noms variables');
+await db.exec(`set role anon`);
+let denied = false; try { await db.query('select * from public.fiche_demandes_documents'); } catch (e) { denied = true; } ok(denied, 'anon : lecture directe refusée');
+denied = false; try { await db.query(`insert into public.fiche_demandes_documents(fiche_path,docs) values ('/fiches/a-FINAL.html','{x}')`); } catch (e) { denied = true; } ok(denied, 'anon : insertion directe refusée');
+await db.exec(`reset role; set role authenticated; set app.uid='11111111-1111-1111-1111-111111111111'`);
+const mine = (await db.query(`select distinct fiche_path from public.fiche_demandes_documents`)).rows.map(x => x.fiche_path); ok(mine.length === 1 && mine[0] === '/fiches/a-FINAL.html', 'agent 1 ne voit que ses fiches');
+await db.exec(`delete from public.fiche_demandes_documents`); await db.exec(`reset role`);
+ok(await count(`where fiche_path='/fiches/b-FINAL.html'`) === 30, 'demandes de l\'agent 2 intactes');
+await db.exec(sql); ok(true, 'script rejouable');
+console.log(bad ? bad + ' échec(s)' : 'OK sql documents');
