@@ -22,7 +22,8 @@ function shape(p) {
 
 module.exports = async function handler(req, res) {
   const origin = req.headers.origin || '', referer = req.headers.referer || '';
-  if (!ALLOWED_ORIGIN_PREFIXES.some(function(p) { return origin.indexOf(p) === 0 || referer.indexOf(p) === 0; })) {
+  const okOrigin = function(v) { return ALLOWED_ORIGIN_PREFIXES.some(function(p) { return v === p || v.indexOf(p + '/') === 0 || (p === 'http://localhost' && v.indexOf('http://localhost:') === 0); }); };
+  if (!okOrigin(origin) && !okOrigin(referer)) {
     return res.status(403).json({ error: 'Origin not allowed' });
   }
   let allowed = origin;

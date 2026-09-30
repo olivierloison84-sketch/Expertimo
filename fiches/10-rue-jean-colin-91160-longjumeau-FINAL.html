@@ -1761,10 +1761,11 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: agentId })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: window.PRIVENCY_AGENT_ID || agentId })
     });
   }
-  track('fiche_ouverte');
+  // agent_id est injecté à la publication en toute fin de page : on attend la fin du chargement pour l'inclure.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { track('fiche_ouverte'); }); else track('fiche_ouverte');
   // ── Durée de visite : signal toutes les 15 s d'activité réelle (onglet visible + interaction < 60 s) ──
   (function() {
     var sid = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
@@ -1798,6 +1799,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
 <script>
 // Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
 (function() {
+  function afficherAvis() {
   var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
   if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
   var full = Math.round(note), stars = '';
@@ -1809,6 +1811,9 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     if (l) l.textContent = label;
     el.classList.add('avis-ok');
   });
+  }
+  // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
 })();
 </script>
 <script>markVisited('bien'); updateRailUI();</script>

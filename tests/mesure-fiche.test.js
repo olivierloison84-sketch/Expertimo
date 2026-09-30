@@ -4,19 +4,21 @@ const { JSDOM, VirtualConsole } = require('jsdom');
 const root = path.join(__dirname, '..');
 const files = ['index.html', 'index_en.html'].concat(fs.readdirSync(path.join(root, 'fiches')).filter(f => f.endsWith('.html')).map(f => 'fiches/' + f));
 async function load(f, google) {
-  const events = [], html = fs.readFileSync(path.join(root, f), 'utf8');
-  const dom = new JSDOM(html, { runScripts: 'dangerously', url: 'https://espace.privency.fr/' + f + '?client=Test', virtualConsole: new VirtualConsole(), beforeParse(w) {
+  const events = [], agents = [], html = fs.readFileSync(path.join(root, f), 'utf8');
+  const injected = (google ? '<script>window.PRIVENCY_AGENT_ID="agent-1";window.PRIVENCY_GOOGLE=' + JSON.stringify(google) + ';</script>' : '<script>window.PRIVENCY_AGENT_ID="agent-1";</script>');
+  const dom = new JSDOM(html.replace(/<\/body>(?![\s\S]*<\/body>)/, injected + '</body>'), { runScripts: 'dangerously', url: 'https://espace.privency.fr/' + f + '?client=Test', virtualConsole: new VirtualConsole(), beforeParse(w) {
     w.scrollTo = () => {}; w.alert = () => {}; w.matchMedia = w.matchMedia || (() => ({ matches: false, addListener() {}, addEventListener() {} }));
-    if (google) w.PRIVENCY_GOOGLE = google;
-    w.fetch = async (url, opt) => { if (String(url).includes('/rest/v1/fiche_views')) events.push(JSON.parse(opt.body).evenement); return { ok: true, status: 200, json: async () => ({}) }; };
+    w.fetch = async (url, opt) => { if (String(url).includes('/rest/v1/fiche_views')) { const b = JSON.parse(opt.body); events.push(b.evenement); agents.push(b.agent_id); } return { ok: true, status: 200, json: async () => ({}) }; };
   } });
   await new Promise(r => setTimeout(r, 50));
-  return { w: dom.window, events, html };
+  return { w: dom.window, events, agents, html };
 }
 (async () => {
   for (const f of files) {
-    const { w, events, html } = await load(f);
+    const { w, events, agents, html } = await load(f);
     const d = w.document;
+    assert.strictEqual((html.match(/<\/body>/gi) || []).length, 1, f + ' : un seul </body> (l\'injection agent le remplace)');
+    assert(agents.length && agents.every(a => a === 'agent-1'), f + ' : agent_id absent des événements');
     assert(!/clarity/i.test(html) && !/googletagmanager/.test(html), f + ' : outil tiers présent');
     assert.strictEqual(events.filter(e => e === 'fiche_ouverte').length, 1, f + ' : fiche_ouverte attendue 1 fois');
     ['marche', 'quartier', 'documents'].forEach(id => w.showTab(id, null));
