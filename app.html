@@ -864,6 +864,20 @@ details[open] summary .chevron { transform: rotate(90deg); }
         </div>
       </div>
 
+      <div class="section-title">Avis Google</div>
+      <p class="hint" style="margin-bottom:8px;">Affichez votre vraie note Google sur vos fiches. Sans fiche Google liée, aucune note n'est affichée.</p>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Nom de votre activité + ville (tel que sur Google)</label>
+          <input type="text" id="agent-google-q" placeholder="Ex : Expertimo Olivier Loison Brétigny-sur-Orge" maxlength="150">
+        </div>
+        <div class="form-group" style="display:flex;align-items:flex-end;">
+          <button type="button" class="btn btn-primary" style="width:100%;" id="google-search-btn" onclick="googleSearch()">🔍 Trouver ma fiche Google</button>
+        </div>
+      </div>
+      <div id="google-results" style="margin-bottom:8px;"></div>
+      <div id="google-status" style="font-size:12px;margin-bottom:10px;"></div>
+
       <div class="section-title">Liens professionnels</div>
       <div class="grid-2">
         <div class="form-group">
@@ -2480,7 +2494,8 @@ function saveProfile() {
     formeJuridique: getV('agent-forme-juridique'),
     adresseSiege:   getV('agent-adresse-siege'),
     tvaIntra:       getV('agent-tva-intra'),
-    codeNaf:        getV('agent-code-naf')
+    codeNaf:        getV('agent-code-naf'),
+    google:         window._agentGoogle || null
   };
   PrivencyAuth.lsSet('_agent_profile', JSON.stringify(profile));
   PrivencyAuth.refreshTitle();
@@ -2520,7 +2535,13 @@ async function syncProfileToSupabase(profile) {
       code_naf:        profile.codeNaf,
       updated_at:      new Date().toISOString()
     };
-    var { error } = await authClient.from('agent_profiles').upsert(row);
+    var g = profile.google;
+    var rowG = Object.assign({}, row, g && g.place_id
+      ? { google_place_id: g.place_id, google_name: g.nom, google_rating: g.note, google_reviews: g.nb, google_checked_at: g.checked_at }
+      : { google_place_id: null, google_name: null, google_rating: null, google_reviews: null, google_checked_at: null });
+    var { error } = await authClient.from('agent_profiles').upsert(rowG);
+    // Colonnes Google pas encore créées en base : on n'empêche jamais la sauvegarde du reste du profil.
+    if (error && /google_/.test(String(error.message || ''))) { ({ error } = await authClient.from('agent_profiles').upsert(row)); }
     if (error) console.error('syncProfileToSupabase: échec upsert (profil conservé en localStorage uniquement)', error);
   } catch (e) {
     console.error('syncProfileToSupabase: échec (profil conservé en localStorage uniquement)', e);
@@ -2580,6 +2601,12 @@ async function loadProfile() {
             tvaIntra:       data.tva_intra,
             codeNaf:        data.code_naf
           };
+          if (data.google_place_id && data.google_rating) {
+            profile.google = { place_id: data.google_place_id, nom: data.google_name, note: Number(data.google_rating), nb: data.google_reviews, checked_at: data.google_checked_at };
+          } else if (!('google_place_id' in data)) {
+            // colonnes absentes en base : on conserve la liaison Google du cache local
+            var prevLocal = loadProfileSync(); if (prevLocal && prevLocal.google) profile.google = prevLocal.google;
+          }
           PrivencyAuth.lsSet('_agent_profile', JSON.stringify(profile));
           PrivencyAuth.refreshTitle();
           return profile;
@@ -2613,6 +2640,8 @@ function applyProfile(p) {
   sv('agent-adresse-siege',    p.adresseSiege);
   sv('agent-tva-intra',        p.tvaIntra);
   sv('agent-code-naf',         p.codeNaf);
+  window._agentGoogle = (p.google && p.google.place_id) ? p.google : null;
+  renderGoogleStatus();
   if (p.color_primary) {
     sv('agent-color-primary',     p.color_primary);
     sv('agent-color-primary-hex', p.color_primary);
@@ -2627,6 +2656,67 @@ function applyProfile(p) {
   if (p.prenom || p.nom) {
     document.getElementById('profile-saved-badge').style.display = 'inline-flex';
   }
+}
+
+// ═══════════════════════════════════════════════════════
+// Avis Google réels (api/google-rating) — jamais de note saisie à la main
+// ═══════════════════════════════════════════════════════
+window._agentGoogle = window._agentGoogle || null;   // { place_id, nom, note, nb, checked_at }
+window._googleCandidats = [];
+function googleEsc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function(c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); }
+function googleFmt(note, nb) { return String(Number(note).toFixed(1)).replace('.', ',') + '/5 · ' + nb + ' avis'; }
+async function googleAuthHeader() {
+  var sr = await window.privencyAuth.auth.getSession();
+  var tok = sr && sr.data && sr.data.session && sr.data.session.access_token;
+  if (!tok) throw new Error('Session expirée, reconnectez-vous.');
+  return { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok };
+}
+function renderGoogleStatus() {
+  var el = document.getElementById('google-status'); if (!el) return;
+  var g = window._agentGoogle;
+  if (g && g.place_id && g.note) {
+    el.style.color = 'var(--success)';
+    el.innerHTML = '✅ ' + googleEsc(g.nom) + ' — <b>' + googleEsc(googleFmt(g.note, g.nb)) + '</b> '
+      + '<button type="button" class="btn" style="margin-left:8px;padding:2px 10px;font-size:11px;" onclick="googleClear()">Retirer</button>';
+  } else { el.style.color = 'var(--muted)'; el.textContent = 'Aucune fiche Google liée : aucune note ne sera affichée sur vos fiches.'; }
+}
+async function googleSearch() {
+  var q = getV('agent-google-q').trim(), st = document.getElementById('google-status'), box = document.getElementById('google-results'), btn = document.getElementById('google-search-btn');
+  if (q.length < 3) { st.style.color = 'var(--danger)'; st.textContent = '⚠️ Saisissez le nom de votre activité et la ville.'; return; }
+  btn.disabled = true; st.style.color = 'var(--muted)'; st.textContent = '⏳ Recherche en cours…'; box.innerHTML = '';
+  try {
+    var res = await fetch(PRIVENCY_API_BASE + '/api/google-rating', { method: 'POST', headers: await googleAuthHeader(), body: JSON.stringify({ q: q }), signal: AbortSignal.timeout(15000) });
+    var data = await res.json();
+    if (!res.ok) throw new Error(data.error || ('Erreur serveur (' + res.status + ')'));
+    window._googleCandidats = (data.candidats || []).filter(function(c) { return c.note && c.nb > 0; });
+    if (!window._googleCandidats.length) { st.style.color = 'var(--danger)'; st.textContent = 'Aucune fiche Google avec des avis trouvée. Précisez le nom et la ville.'; return; }
+    box.innerHTML = window._googleCandidats.map(function(c, i) {
+      return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;">'
+        + '<div><b>' + googleEsc(c.nom) + '</b><br><span style="font-size:12px;color:var(--muted)">' + googleEsc(c.adresse) + ' · ' + googleEsc(googleFmt(c.note, c.nb)) + '</span></div>'
+        + '<button type="button" class="btn btn-primary" style="white-space:nowrap;" onclick="googlePick(' + i + ')">C\'est moi</button></div>';
+    }).join('');
+    st.textContent = 'Choisissez votre fiche :';
+  } catch (e) { st.style.color = 'var(--danger)'; st.textContent = '❌ ' + (e.message || 'Échec de la recherche'); }
+  finally { btn.disabled = false; }
+}
+function googlePick(i) {
+  var c = window._googleCandidats[i]; if (!c) return;
+  window._agentGoogle = { place_id: c.place_id, nom: c.nom, note: c.note, nb: c.nb, checked_at: new Date().toISOString() };
+  document.getElementById('google-results').innerHTML = '';
+  renderGoogleStatus(); saveProfile();
+}
+function googleClear() { window._agentGoogle = null; renderGoogleStatus(); saveProfile(); }
+// Actualise la note si elle date de plus de 7 jours (best-effort : en cas d'échec on garde la dernière note connue).
+async function googleRefreshIfStale() {
+  var g = window._agentGoogle;
+  if (!g || !g.place_id) return g;
+  if (g.checked_at && Date.now() - new Date(g.checked_at).getTime() < 7 * 86400000) return g;
+  try {
+    var res = await fetch(PRIVENCY_API_BASE + '/api/google-rating', { method: 'POST', headers: await googleAuthHeader(), body: JSON.stringify({ place_id: g.place_id }), signal: AbortSignal.timeout(10000) });
+    var d = await res.json();
+    if (res.ok && d.note && d.nb > 0) { window._agentGoogle = { place_id: g.place_id, nom: d.nom || g.nom, note: d.note, nb: d.nb, checked_at: new Date().toISOString() }; saveProfile(); }
+  } catch (e) { console.error('googleRefreshIfStale', e); }
+  return window._agentGoogle;
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4987,8 +5077,10 @@ async function pushToGitHub() {
     status.textContent = _pubMsgs[_pubMsgIdx];
   }, 2000);
 
-  function injectAgentTag(html, user) {
-    var agentTag = '<script>window.PRIVENCY_AGENT_ID = "' + user.id + '";<' + '/script>\n</body>';
+  function injectAgentTag(html, user, google) {
+    var gTag = (google && google.note >= 1 && google.note <= 5 && google.nb > 0)
+      ? 'window.PRIVENCY_GOOGLE = ' + JSON.stringify({ note: Number(google.note), nb: parseInt(google.nb, 10) }) + ';' : '';
+    var agentTag = '<script>window.PRIVENCY_AGENT_ID = "' + user.id + '";' + gTag + '<' + '/script>\n</body>';
     return /<\/body>/i.test(html) ? html.replace(/<\/body>/i, agentTag) : html + agentTag;
   }
 
@@ -4999,7 +5091,9 @@ async function pushToGitHub() {
       var userRes = await authClient.auth.getUser();
       var user = userRes && userRes.data && userRes.data.user;
       if (user) {
-        htmlToPublish = injectAgentTag(htmlToPublish, user);
+        var gInfo = null;
+        try { gInfo = await googleRefreshIfStale(); } catch (e) {}
+        htmlToPublish = injectAgentTag(htmlToPublish, user, gInfo);
       }
     }
   } catch (e) {
