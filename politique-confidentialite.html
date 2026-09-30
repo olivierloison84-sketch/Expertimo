@@ -120,6 +120,7 @@ Email : olivier.loison@expertimo.com</p>
 <li><strong>Données du compte agent</strong> : conservées pendant toute la durée de l'abonnement. À ce jour, la résiliation d'un abonnement n'entraîne pas de suppression automatique des données ; celles-ci sont supprimées sur demande de l'agent adressée à olivier.loison@expertimo.com, dans un délai raisonnable. Une automatisation de cette suppression est à l'étude.</li>
 <li><strong>Fiches acheteur et données associées</strong> : conservées tant que le compte agent existe, ou jusqu'à suppression manuelle par l'agent ou sur sa demande</li>
 <li><strong>Statistiques de consultation</strong> : conservées dans les mêmes conditions que les fiches auxquelles elles se rattachent</li>
+<li><strong>Questions posées à l'assistant</strong> : supprimées automatiquement après 12 mois (ou plus tôt sur demande de l'agent ou de l'acquéreur)</li>
 </ul>
 <div class="note">Note pour Olivier : ce paragraphe reflète maintenant fidèlement le fonctionnement réel vérifié dans le code (le webhook de résiliation Stripe ne fait que changer un statut, il ne supprime rien). C'est moins séduisant qu'une suppression automatique, mais c'est honnête — et c'est ce qui compte légalement. Ajouter une vraie purge automatique reste une bonne amélioration à prévoir.</div>
 

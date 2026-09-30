@@ -852,7 +852,7 @@ var _AI_NOTICE = {
 function renderAINotice() {
   var el = document.getElementById('ai-notice');
   if (!el) return;
-  var l = (typeof _currentLang !== 'undefined' && _AI_NOTICE[_currentLang]) ? _currentLang : 'fr';
+  var l = (typeof _currentLang !== 'undefined' && _AI_NOTICE[_currentLang]) ? _currentLang : 'en';
   el.textContent = _AI_NOTICE[l];
 }
 function renderAISuggestions() {
@@ -1429,7 +1429,7 @@ function sendAI() {
   var input = document.getElementById('ai-input');
   var q = input.value.trim();
   if (!q) return;
-  try { if (window.privencyQuestion) window.privencyQuestion(q, (typeof _currentLang !== 'undefined') ? _currentLang : 'fr'); } catch (e) {}
+  try { if (window.privencyQuestion) window.privencyQuestion(q, (typeof _currentLang !== 'undefined') ? _currentLang : 'en'); } catch (e) {}
   input.value = '';
   addAIMsg(q, 'user');
   _aiMessages.push({role:'user',content:q});
