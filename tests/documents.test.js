@@ -50,6 +50,22 @@ const labels = d => Array.from(d.querySelectorAll('#dp-groups .dp-item span')).m
     assert(calls.some(c => c.url.includes('fiche_views') && c.body.evenement === 'documents_demandes'), f + ' : événement');
     g.w.close(); m.w.close(); mc.w.close(); t.w.close(); old.w.close(); none.w.close();
   }
+  // langue : le sélecteur suit applyLang même assistant fermé
+  { const g = await load('index.html', { type: 'appart', copro: 'oui' });
+    g.w.applyLang('en'); await new Promise(r => setTimeout(r, 30));
+    assert(/Which documents would you like to receive/.test(g.d.getElementById('dp-title').textContent), 'applyLang(en) sans ouvrir l\'assistant : ' + g.d.getElementById('dp-title').textContent);
+    assert(/Ongoing proceedings/.test(labels(g.d).join('|')) && /Asbestos survey of the common areas/.test(labels(g.d).join('|')), 'nouveaux documents copro');
+    g.w.close(); }
+  // échec d'envoi : rien n'est enregistré ; un nouvel essai réussi enregistre une seule fois
+  { const g = await load('index.html', { type: 'appart', copro: 'oui', agentEmail: 'a@x.fr' }); let fail = true;
+    g.w.fetch = async (url, opt) => { g.calls.push({ url: String(url), body: opt && opt.body ? JSON.parse(opt.body) : null }); if (String(url).includes('send-lead') && fail) throw new Error('réseau'); return { ok: true, status: 200, json: async () => ({ ok: true }) }; };
+    g.d.querySelector('#dp-groups input').checked = true;
+    g.w.docPickerSend(); await new Promise(r => setTimeout(r, 40));
+    assert(/Envoi impossible/.test(g.d.getElementById('dp-msg').textContent), 'message d\'échec');
+    assert(!g.calls.some(c => c.url.includes('fiche_demande_documents')) && !g.calls.some(c => c.body && c.body.evenement === 'documents_demandes'), 'rien d\'enregistré si l\'envoi échoue');
+    fail = false; g.w.docPickerSend(); await new Promise(r => setTimeout(r, 40));
+    assert.strictEqual(g.calls.filter(c => c.url.includes('fiche_demande_documents')).length, 1, 'une seule demande enregistrée'); g.w.close(); }
+  { const t = await load('index.html', { type: 'terrain', copro: 'non' }); assert(/Viabilisation/.test(labels(t.d).join('|')), 'viabilisation terrain'); const m = await load('index.html', { type: 'maison', copro: 'non' }); assert(!/Viabilisation/.test(labels(m.d).join('|')) && /Étude de sol/.test(labels(m.d).join('|')), 'maison'); t.w.close(); m.w.close(); }
   // langues : libellés envoyés à l'agent toujours en français
   { const g = await load('index.html', { type: 'appart', copro: 'oui', agentEmail: 'a@x.fr' });
     ['en', 'pt', 'es'].forEach(l => { g.w._currentLang = l; g.w.renderDocPicker(); });
@@ -82,6 +98,11 @@ const labels = d => Array.from(d.querySelectorAll('#dp-groups .dp-item span')).m
   d.querySelector('input[name=copro_statut][value=oui]').checked = true; d.dispatchEvent(Object.assign(new w.Event('change', { bubbles: true }), {})); d.querySelector('input[name=copro_statut][value=oui]').dispatchEvent(new w.Event('change', { bubbles: true }));
   w.switchType('appart'); w.switchType('maison'); assert.strictEqual(val(), 'oui', 'le choix manuel n\'est plus écrasé');
   assert.strictEqual(w.collectBienData().copro, 'oui'); w.switchType('terrain'); assert.strictEqual(w.collectBienData().copro, 'non', 'terrain');
+  // restauration d'un brouillon contenant le défaut : le choix reste automatique ; un choix différent du défaut est figé
+  w._coproAuto = true; w.restoreRawFormState({ type: 'appart', radio_copro_statut: 'oui' }); await new Promise(r => setTimeout(r, 200));
+  w.switchType('maison'); assert.strictEqual(val(), 'non', 'brouillon avec le défaut : suit le type');
+  w.restoreRawFormState({ type: 'maison', radio_copro_statut: 'oui' }); await new Promise(r => setTimeout(r, 200));
+  w.switchType('appart'); w.switchType('maison'); assert.strictEqual(val(), 'oui', 'brouillon avec choix différent du défaut : figé');
   assert(w.PUBLIC_EMBED_KEYS.includes('copro'), 'copro publié dans la fiche');
   assert(w.collectRawFormState().radio_copro_statut === 'oui', 'choix enregistré dans le brouillon');
   w.privencyAuth = { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } };

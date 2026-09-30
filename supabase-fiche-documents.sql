@@ -42,7 +42,7 @@ begin
   if v_agent is null then return; end if;
   -- libellés courts, non vides, dédoublonnés, 40 max
   select coalesce(array_agg(d), '{}') into v_docs from (
-    select distinct left(btrim(x), 80) as d from unnest(coalesce(p_docs, '{}')) as x
+    select distinct left(btrim(x), 80) as d from unnest(coalesce(p_docs[1:60], '{}')) as x
     where char_length(btrim(coalesce(x, ''))) > 0 limit 40) s;
   if cardinality(v_docs) = 0 then return; end if;
   if (select count(*) from public.fiche_demandes_documents where fiche_path = left(p_path,300) and created_at > now() - interval '1 hour') >= 30 then return; end if;

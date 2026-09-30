@@ -9,6 +9,7 @@
 #doc-picker #dp-count{color:var(--muted);}
 #doc-picker .dp-group{margin-bottom:16px;}
 #doc-picker .dp-gt{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+#doc-picker .dp-gn{font-size:11.5px;color:var(--muted);margin:-4px 0 8px;}
 #doc-picker .dp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
 #doc-picker .dp-item{display:flex;gap:10px;align-items:flex-start;background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:11px 12px;cursor:pointer;font-size:13px;line-height:1.4;}
 #doc-picker .dp-item:hover{border-color:var(--gold);}
@@ -1741,16 +1742,16 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
 // ═══ DOCUMENTS SOUHAITÉS — liste adaptée au bien (copropriété / hors copropriété / terrain), 4 langues ═══
 // L'acquéreur coche ce qu'il veut recevoir ; la demande part par email à l'agent (libellés en français) et dans ses stats.
 var _DOC_UI = {
-  fr: {title: 'Quels documents souhaitez-vous recevoir ?', sub: 'Cochez ceux qui vous intéressent : votre conseiller vous les envoie en priorité.', all: 'Tout cocher', none: 'Tout décocher', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : ''); }, note: 'Précisions (facultatif)', send: '📨 Envoyer ma demande', empty: 'Cochez au moins un document.', done: '✅ Merci ! Votre demande est transmise à votre conseiller.', fail: '⚠️ Envoi impossible pour le moment. Réessayez ou contactez directement votre conseiller.', kindCopro: 'Bien en copropriété', kindIndiv: 'Bien hors copropriété', kindTerrain: 'Terrain'},
-  en: {title: 'Which documents would you like to receive?', sub: 'Tick the ones you are interested in: your advisor will send them to you first.', all: 'Select all', none: 'Clear all', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' selected'; }, note: 'Additional details (optional)', send: '📨 Send my request', empty: 'Please tick at least one document.', done: '✅ Thank you! Your request has been sent to your advisor.', fail: '⚠️ Could not send right now. Please try again or contact your advisor directly.', kindCopro: 'Condominium property', kindIndiv: 'Non-condominium property', kindTerrain: 'Land'},
-  pt: {title: 'Que documentos deseja receber?', sub: 'Assinale os que lhe interessam: o seu consultor envia-os com prioridade.', all: 'Selecionar tudo', none: 'Desmarcar tudo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' selecionado' + (n > 1 ? 's' : ''); }, note: 'Pormenores (facultativo)', send: '📨 Enviar o meu pedido', empty: 'Assinale pelo menos um documento.', done: '✅ Obrigado! O seu pedido foi transmitido ao seu consultor.', fail: '⚠️ Não foi possível enviar agora. Tente novamente ou contacte diretamente o seu consultor.', kindCopro: 'Imóvel em condomínio', kindIndiv: 'Imóvel fora de condomínio', kindTerrain: 'Terreno'},
-  es: {title: '¿Qué documentos desea recibir?', sub: 'Marque los que le interesan: su asesor se los enviará en primer lugar.', all: 'Marcar todo', none: 'Desmarcar todo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' seleccionado' + (n > 1 ? 's' : ''); }, note: 'Detalles (opcional)', send: '📨 Enviar mi solicitud', empty: 'Marque al menos un documento.', done: '✅ ¡Gracias! Su solicitud ha sido transmitida a su asesor.', fail: '⚠️ No se pudo enviar ahora. Inténtelo de nuevo o contacte directamente con su asesor.', kindCopro: 'Inmueble en comunidad de propietarios', kindIndiv: 'Inmueble fuera de comunidad', kindTerrain: 'Terreno'}
+  fr: {title: 'Quels documents souhaitez-vous recevoir ?', sub: 'Cochez ceux qui vous intéressent : votre conseiller vous les envoie en priorité.', all: 'Tout cocher', none: 'Tout décocher', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : ''); }, note: 'Précisions (facultatif) — pas de données sensibles', send: '📨 Envoyer ma demande', empty: 'Cochez au moins un document.', done: '✅ Merci ! Votre demande est transmise à votre conseiller.', fail: '⚠️ Envoi impossible pour le moment. Réessayez ou contactez directement votre conseiller.', kindCopro: 'Bien en copropriété', kindIndiv: 'Bien hors copropriété', kindTerrain: 'Terrain'},
+  en: {title: 'Which documents would you like to receive?', sub: 'Tick the ones you are interested in: your advisor will send them to you first.', all: 'Select all', none: 'Clear all', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' selected'; }, note: 'Additional details (optional) — no sensitive data', send: '📨 Send my request', empty: 'Please tick at least one document.', done: '✅ Thank you! Your request has been sent to your advisor.', fail: '⚠️ Could not send right now. Please try again or contact your advisor directly.', kindCopro: 'Condominium property', kindIndiv: 'Non-condominium property', kindTerrain: 'Land'},
+  pt: {title: 'Que documentos deseja receber?', sub: 'Assinale os que lhe interessam: o seu consultor envia-os com prioridade.', all: 'Selecionar tudo', none: 'Desmarcar tudo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' selecionado' + (n > 1 ? 's' : ''); }, note: 'Pormenores (facultativo) — sem dados sensíveis', send: '📨 Enviar o meu pedido', empty: 'Assinale pelo menos um documento.', done: '✅ Obrigado! O seu pedido foi transmitido ao seu consultor.', fail: '⚠️ Não foi possível enviar agora. Tente novamente ou contacte diretamente o seu consultor.', kindCopro: 'Imóvel em condomínio', kindIndiv: 'Imóvel fora de condomínio', kindTerrain: 'Terreno'},
+  es: {title: '¿Qué documentos desea recibir?', sub: 'Marque los que le interesan: su asesor se los enviará en primer lugar.', all: 'Marcar todo', none: 'Desmarcar todo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' seleccionado' + (n > 1 ? 's' : ''); }, note: 'Detalles (opcional) — sin datos sensibles', send: '📨 Enviar mi solicitud', empty: 'Marque al menos un documento.', done: '✅ ¡Gracias! Su solicitud ha sido transmitida a su asesor.', fail: '⚠️ No se pudo enviar ahora. Inténtelo de nuevo o contacte directamente con su asesor.', kindCopro: 'Inmueble en comunidad de propietarios', kindIndiv: 'Inmueble fuera de comunidad', kindTerrain: 'Terreno'}
 };
 // where : 'all' = tous les biens ; 'bati' = maison + copropriété (pas terrain) ; 'copro' ; 'indiv' = hors copropriété bâti ; 'indivt' = hors copropriété bâti + terrain
 var _DOC_CAT = [
   {id: 'bien', t: {fr: 'Le bien', en: 'The property', pt: 'O imóvel', es: 'El inmueble'}, items: [
     {id: 'titre', where: 'all', fr: "Titre de propriété (acte d'achat)", en: 'Title deed (purchase deed)', pt: 'Título de propriedade (escritura de compra)', es: 'Título de propiedad (escritura de compra)'},
-    {id: 'taxe', where: 'all', fr: 'Dernier avis de taxe foncière', en: 'Latest property tax notice', pt: 'Último aviso de imposto predial (IMI)', es: 'Último recibo del impuesto de bienes inmuebles', hint: 'taxe'},
+    {id: 'taxe', where: 'all', fr: 'Dernier avis de taxe foncière', en: 'Latest property tax notice (taxe foncière)', pt: 'Último aviso do imposto predial francês (taxe foncière)', es: 'Último recibo del impuesto sobre bienes inmuebles francés (taxe foncière)', hint: 'taxe'},
     {id: 'plans_copro', where: 'copro', fr: 'Plans du lot et des annexes (cave, parking)', en: 'Plans of the unit and annexes (cellar, parking)', pt: 'Plantas da fração e anexos (cave, estacionamento)', es: 'Planos de la vivienda y anexos (trastero, garaje)'},
     {id: 'plans_indiv', where: 'indivt', fr: 'Plans du bien et de la parcelle', en: 'Plans of the property and the plot', pt: 'Plantas do imóvel e do lote', es: 'Planos del inmueble y de la parcela'},
     {id: 'travaux', where: 'bati', fr: 'Factures et devis de travaux', en: 'Renovation invoices and quotes', pt: 'Faturas e orçamentos de obras', es: 'Facturas y presupuestos de obras'},
@@ -1763,11 +1764,13 @@ var _DOC_CAT = [
     {id: 'permis', where: 'indiv', fr: 'Permis de construire, déclarations de travaux et attestation de conformité', en: 'Building permit, works declarations and compliance certificate', pt: 'Licença de construção, declarações de obras e certificado de conformidade', es: 'Licencia de obra, declaraciones de obras y certificado de conformidad'},
     {id: 'urbanisme', where: 'indivt', fr: "Certificat / note d'urbanisme (PLU, servitudes)", en: 'Planning certificate / zoning note (local plan, easements)', pt: 'Certidão / nota de urbanismo (PDM, servidões)', es: 'Certificado / nota urbanística (plan urbanístico, servidumbres)'},
     {id: 'lotissement', where: 'indivt', fr: 'Règlement de lotissement / cahier des charges (ASL)', en: 'Subdivision rules / specifications (homeowners association)', pt: 'Regulamento de loteamento / caderno de encargos', es: 'Reglamento de urbanización / pliego de condiciones'},
+    {id: 'viabilisation', where: 'terrain', fr: 'Viabilisation et raccordements (eau, électricité, assainissement)', en: 'Utilities and connections (water, electricity, sanitation)', pt: 'Infraestruturas e ligações (água, eletricidade, saneamento)', es: 'Urbanización y conexiones (agua, electricidad, saneamiento)'},
+    {id: 'geotech', where: 'indivt', fr: 'Étude de sol / géotechnique (zones à risque argile)', en: 'Soil / geotechnical study (clay-shrinkage risk areas)', pt: 'Estudo de solos / geotécnico (zonas de risco de argilas)', es: 'Estudio de suelos / geotécnico (zonas con riesgo de arcillas)'},
     {id: 'bornage', where: 'indivt', fr: 'Plan de bornage et limites de propriété', en: 'Boundary survey and property lines', pt: 'Planta de demarcação e limites da propriedade', es: 'Plano de deslinde y límites de la propiedad'}
   ]},
-  {id: 'diag', t: {fr: 'Diagnostics', en: 'Diagnostics', pt: 'Diagnósticos', es: 'Diagnósticos'}, items: [
+  {id: 'diag', t: {fr: 'Diagnostics', en: 'Diagnostics', pt: 'Diagnósticos', es: 'Diagnósticos'}, n: {fr: 'Certains diagnostics ne concernent que certains biens (âge du bâtiment, zone à risque…).', en: 'Some diagnostics only apply to certain properties (age of the building, risk area…).', pt: 'Alguns diagnósticos só se aplicam a certos imóveis (idade do edifício, zona de risco…).', es: 'Algunos diagnósticos solo se aplican a ciertos inmuebles (antigüedad del edificio, zona de riesgo…).'}, items: [
     {id: 'dpe', where: 'bati', fr: 'DPE (diagnostic de performance énergétique)', en: 'Energy performance certificate (EPC / DPE)', pt: 'Certificado energético (DPE)', es: 'Certificado de eficiencia energética (DPE)'},
-    {id: 'audit', where: 'indiv', fr: 'Audit énergétique (obligatoire pour une maison classée F ou G)', en: 'Energy audit (mandatory for a house rated F or G)', pt: 'Auditoria energética (obrigatória para moradias classe F ou G)', es: 'Auditoría energética (obligatoria para viviendas clase F o G)'},
+    {id: 'audit', where: 'indiv', fr: 'Audit énergétique (obligatoire pour une maison classée E, F ou G)', en: 'Energy audit (mandatory for a house rated E, F or G)', pt: 'Auditoria energética (obrigatória para moradias classe E, F ou G)', es: 'Auditoría energética (obligatoria para viviendas clase E, F o G)'},
     {id: 'amiante', where: 'bati', fr: 'Diagnostic amiante', en: 'Asbestos survey', pt: 'Diagnóstico de amianto', es: 'Diagnóstico de amianto'},
     {id: 'plomb', where: 'bati', fr: 'Diagnostic plomb (CREP)', en: 'Lead paint survey (CREP)', pt: 'Diagnóstico de chumbo (CREP)', es: 'Diagnóstico de plomo (CREP)'},
     {id: 'termites', where: 'bati', fr: 'Diagnostic termites', en: 'Termite survey', pt: 'Diagnóstico de térmitas', es: 'Diagnóstico de termitas'},
@@ -1775,6 +1778,7 @@ var _DOC_CAT = [
     {id: 'gaz', where: 'bati', fr: "Diagnostic de l'installation de gaz", en: 'Gas installation survey', pt: 'Diagnóstico da instalação de gás', es: 'Diagnóstico de la instalación de gas'},
     {id: 'assainissement', where: 'indivt', fr: 'Assainissement (SPANC ou raccordement au tout-à-l\'égout)', en: 'Sanitation (septic tank inspection or mains sewer connection)', pt: 'Saneamento (fossa séptica ou ligação à rede de esgotos)', es: 'Saneamiento (fosa séptica o conexión a la red de alcantarillado)'},
     {id: 'erp', where: 'all', fr: 'État des risques et pollutions (ERP)', en: 'Natural and technological risks statement (ERP)', pt: 'Estado de riscos e poluições (ERP)', es: 'Estado de riesgos y contaminación (ERP)'},
+    {id: 'dta', where: 'copro', fr: 'Diagnostic amiante des parties communes (DTA)', en: 'Asbestos survey of the common areas (DTA)', pt: 'Diagnóstico de amianto das partes comuns (DTA)', es: 'Diagnóstico de amianto de las zonas comunes (DTA)'},
     {id: 'carrez', where: 'copro', fr: 'Mesurage loi Carrez', en: 'Carrez law floor-area measurement', pt: 'Medição da área (lei Carrez)', es: 'Medición de superficie (ley Carrez)'}
   ]},
   {id: 'copro', where: 'copro', t: {fr: 'Copropriété', en: 'Condominium', pt: 'Condomínio', es: 'Comunidad de propietarios'}, items: [
@@ -1785,8 +1789,9 @@ var _DOC_CAT = [
     {id: 'travaux_copro', where: 'copro', fr: "Travaux votés ou à venir dans l'immeuble et fonds de travaux", en: 'Works voted or planned in the building and works fund', pt: 'Obras votadas ou previstas no edifício e fundo de obras', es: 'Obras aprobadas o previstas en el edificio y fondo de obras'},
     {id: 'ppt', where: 'copro', fr: 'Plan pluriannuel de travaux (PPT) / diagnostic technique global (DTG)', en: 'Multi-year works plan (PPT) / global technical diagnosis (DTG)', pt: 'Plano plurianual de obras (PPT) / diagnóstico técnico global (DTG)', es: 'Plan plurianual de obras (PPT) / diagnóstico técnico global (DTG)'},
     {id: 'carnet', where: 'copro', fr: "Carnet d'entretien de l'immeuble", en: 'Building maintenance logbook', pt: 'Livro de manutenção do edifício', es: 'Libro de mantenimiento del edificio'},
-    {id: 'fiche_synth', where: 'copro', fr: 'Fiche synthétique de la copropriété', en: 'Condominium summary sheet', pt: 'Ficha síntese do condomínio', es: 'Ficha resumen de la comunidad'},
-    {id: 'pre_etat', where: 'copro', fr: 'Pré-état daté (situation financière du lot)', en: 'Pre-dated statement (financial status of the unit)', pt: 'Pré-estado datado (situação financeira da fração)', es: 'Pre-estado fechado (situación financiera de la vivienda)'},
+    {id: 'fiche_synth', where: 'copro', fr: "Fiche synthétique de la copropriété (avec numéro d'immatriculation)", en: 'Condominium summary sheet (with registration number)', pt: 'Ficha síntese do condomínio (com número de registo)', es: 'Ficha resumen de la comunidad (con número de registro)'},
+    {id: 'procedures', where: 'copro', fr: 'Procédures en cours dans la copropriété (impayés, litiges)', en: 'Ongoing proceedings in the condominium (unpaid charges, disputes)', pt: 'Processos em curso no condomínio (dívidas, litígios)', es: 'Procedimientos en curso en la comunidad (impagos, litigios)'},
+    {id: 'pre_etat', where: 'copro', fr: 'Pré-état daté (situation financière du lot)', en: 'Pre-sale financial statement (pré-état daté) for the unit', pt: 'Pré-estado datado (situação financeira da fração)', es: 'Pre-estado datado (situación financiera de la vivienda)'},
     {id: 'assurance', where: 'copro', fr: "Attestation d'assurance de l'immeuble", en: "Building insurance certificate", pt: 'Certificado de seguro do edifício', es: 'Certificado del seguro del edificio'}
   ]}
 ];
@@ -1803,6 +1808,7 @@ function _docApplies(where, kind) {
   if (where === 'copro') return kind === 'copro';
   if (where === 'indiv') return kind === 'indiv';
   if (where === 'indivt') return kind === 'indiv' || kind === 'terrain';
+  if (where === 'terrain') return kind === 'terrain';
   return true;
 }
 function _docLang() { return (typeof _currentLang !== 'undefined' && _DOC_UI[_currentLang]) ? _currentLang : 'fr'; }
@@ -1833,6 +1839,7 @@ function renderDocPicker() {
     if (!items.length) return;
     var sec = document.createElement('div'); sec.className = 'dp-group';
     var h = document.createElement('div'); h.className = 'dp-gt'; h.textContent = g.t[L]; sec.appendChild(h);
+    if (g.n) { var hn = document.createElement('div'); hn.className = 'dp-gn'; hn.textContent = g.n[L]; sec.appendChild(hn); }
     var grid = document.createElement('div'); grid.className = 'dp-grid';
     items.forEach(function(it) {
       var lab = document.createElement('label'); lab.className = 'dp-item';
@@ -1861,12 +1868,10 @@ function docPickerSend() {
   var nomEl = document.getElementById('doc-nom'), emailEl = document.getElementById('doc-email');
   var agentEmail = k.data.agentEmail || '', agentNom = k.data.agentNom || '';
   if (btn) btn.disabled = true;
-  try { if (window.privencyDocs) window.privencyDocs(labels, note); } catch (e) {}
-  try { if (window.privencyTrack) window.privencyTrack('documents_demandes'); } catch (e) {}
   fetch('https://expertimo-phi.vercel.app/api/send-lead', {
     method: 'POST', headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({type: 'documents_liste', nom: nomEl ? nomEl.value : '', email: emailEl ? emailEl.value : '', bien: (typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title), documents: labels, message: note, agentEmail: agentEmail, agentNom: agentNom})
-  }).then(function(r) { return r.json().catch(function() { return {}; }).then(function(j) { if (!r.ok || j.ok === false) throw new Error('send'); show(U.done, true); if (btn) btn.style.display = 'none'; }); })
+  }).then(function(r) { return r.json().catch(function() { return {}; }).then(function(j) { if (!r.ok || j.ok === false) throw new Error('send'); try { if (window.privencyDocs) window.privencyDocs(labels, note); } catch (e) {} try { if (window.privencyTrack) window.privencyTrack('documents_demandes'); } catch (e) {} show(U.done, true); if (btn) btn.style.display = 'none'; }); })
     .catch(function() { show(U.fail, false); if (btn) btn.disabled = false; });
 }
 document.addEventListener('DOMContentLoaded', function() { try { renderDocPicker(); } catch (e) {} });

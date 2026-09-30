@@ -4374,7 +4374,7 @@ function restoreRawFormState(d) {
       var r=document.querySelector('#page-2 input[type=radio][name="'+k.replace('radio_','')+'"][value="'+d[k]+'"]');
       if(r){
         r.checked=true;
-        if (k === 'radio_copro_statut') _coproAuto = false;
+        if (k === 'radio_copro_statut' && d[k] !== ((d.type === 'appart' || !d.type) ? 'oui' : 'non')) _coproAuto = false;
         if (k === 'radio_travaux_ag') {
           var travauxAgDetailGroup = document.getElementById('travaux_ag_detail_group');
           if (travauxAgDetailGroup) travauxAgDetailGroup.style.display = (d[k] === 'oui') ? 'block' : 'none';
