@@ -2437,7 +2437,40 @@ function initMapQuartier() {
       attribution: '© OpenStreetMap contributors'
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#14171F;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #C9A227;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
-    L.marker([lat,lng], {icon:iconMain}).addTo(map).bindPopup("<strong>Le bien</strong><br>2 Allée du Vivier Sud - 91410 Saint Escobille").openPopup();
+    L.marker([lat,lng], {icon:iconMain, zIndexOffset:2000}).addTo(map).bindPopup("<strong>Le bien</strong><br>2 Allée du Vivier Sud - 91410 Saint Escobille").openPopup();
+    // Types de transports : icône, couleur et libellé propres à chaque mode (métro, RER, gare/train, tram, bus)
+    var TRANSPORT_MODES = {
+      metro: {color:'#7b1fa2', emoji:'🚇', label:'Métro', z:1000},
+      rer:   {color:'#ad1457', emoji:'🚆', label:'RER',   z:1000},
+      train: {color:'#455a64', emoji:'🚉', label:'Gare / Train', z:1000},
+      tram:  {color:'#00838f', emoji:'🚊', label:'Tram',  z:900},
+      bus:   {color:'#1565c0', emoji:'🚌', label:'Bus',   z:0}
+    };
+    var TRANSPORT_ORDER = ['metro', 'rer', 'train', 'tram', 'bus'];
+    function escTr(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function transportMeta(props, base) {
+      var cats = (props && props.categories) || [];
+      var raw = (props && props.datasource && props.datasource.raw) || {};
+      var has = function(c) { return cats.indexOf('public_transport.' + c) !== -1; };
+      var net = ((raw.network || '') + ' ' + (raw.operator || '')).toLowerCase();
+      var k = null;
+      if ((has('train') || has('subway') || has('light_rail')) && /\brer\b/.test(net)) k = 'rer';
+      else if (has('subway')) k = 'metro';
+      else if (has('tram') || (has('light_rail') && /tram/.test(net))) k = 'tram';
+      else if (has('train') || has('light_rail')) k = 'train';
+      else if (has('bus')) k = 'bus';
+      if (!k) return base;
+      var m = TRANSPORT_MODES[k], detail = '';
+      if (k === 'bus') {
+        var refs = [];
+        String(raw.route_ref || '').split(';').forEach(function(r) { r = r.trim().slice(0, 12); if (r && refs.indexOf(r) === -1) refs.push(r); });
+        if (refs.length) detail = (refs.length > 1 ? 'Lignes' : 'Ligne') + ' : ' + escTr(refs.slice(0, 8).join(', ')) + (refs.length > 8 ? '…' : '');
+      } else if (raw.network && String(raw.network).toLowerCase() !== m.label.toLowerCase()) {
+        detail = escTr(raw.network);
+      }
+      return {color: m.color, emoji: m.emoji, label: m.label, key: k, z: m.z, detail: detail};
+    }
+    var modeCounts = {};
     var catMeta = {
       transport: {color:'#1565c0', emoji:'🚇', label:'Transport'},
       vert:      {color:'#2e7d32', emoji:'🌳', label:'Espace vert'},
@@ -2457,20 +2490,36 @@ function initMapQuartier() {
           if (!cat) return;
           counts[cat]++;
           var meta = catMeta[cat];
+          if (cat === 'transport') { meta = transportMeta(props, meta); if (meta.key) modeCounts[meta.key] = (modeCounts[meta.key] || 0) + 1; }
           var poiLat = props.lat != null ? props.lat : feature.geometry.coordinates[1];
           var poiLon = props.lon != null ? props.lon : feature.geometry.coordinates[0];
           var icon = L.divIcon({className:'', html:'<div style="background:'+meta.color+';border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 2px 6px rgba(0,0,0,0.3);border:2px solid white;">'+meta.emoji+'</div>', iconSize:[28,28], iconAnchor:[14,14]});
           var dist = Math.round(map.distance([lat,lng],[poiLat,poiLon]));
           var mins = Math.ceil(dist / 80);
-          var name = props.name || meta.label;
-          var popup = '<strong>'+name+'</strong><br>'+meta.emoji+' '+meta.label+'<br>'+dist+' m · ~'+mins+' min à pied';
-          var marker = L.marker([poiLat,poiLon],{icon:icon}).addTo(map).bindPopup(popup);
+          var name = escTr(props.name || meta.label);
+          var popup = '<strong>'+name+'</strong><br>'+meta.emoji+' '+meta.label+(meta.detail ? '<br>'+meta.detail : '')+'<br>'+dist+' m · ~'+mins+' min à pied';
+          var marker = L.marker([poiLat,poiLon],{icon:icon, zIndexOffset: meta.z || 0}).addTo(map).bindPopup(popup);
           window._mapMarkers[cat].push(marker);
         });
         document.getElementById('cnt-transport').textContent = counts.transport;
         document.getElementById('cnt-vert').textContent = counts.vert;
         document.getElementById('cnt-commerce').textContent = counts.commerce;
         document.getElementById('cnt-ecole').textContent = counts.ecole;
+        // Légende : uniquement les types de transports réellement présents autour du bien
+        var cptEl = document.getElementById('map-compteurs');
+        if (cptEl && TRANSPORT_ORDER.some(function(k) { return modeCounts[k]; })) {
+          var lgEl = document.getElementById('map-legende-transport');
+          if (!lgEl) {
+            lgEl = document.createElement('div');
+            lgEl.id = 'map-legende-transport';
+            lgEl.style.cssText = "display:flex;gap:12px;flex-wrap:wrap;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--muted);margin-top:6px;";
+            cptEl.parentNode.insertBefore(lgEl, cptEl.nextSibling);
+          }
+          lgEl.innerHTML = TRANSPORT_ORDER.filter(function(k) { return modeCounts[k]; }).map(function(k) {
+            var m = TRANSPORT_MODES[k];
+            return '<span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:11px;height:11px;border-radius:50%;background:' + m.color + ';display:inline-block;"></span>' + m.emoji + ' ' + m.label + ' ×' + modeCounts[k] + '</span>';
+          }).join('');
+        }
       }).catch(function(err){ console.log('[Geoapify] Erreur requête POI :', err); }); }, 1000);
   }
 
