@@ -5874,8 +5874,16 @@ async function vendeurDialog(fname) {
         });
         L.push('Le détail complet, mis à jour en continu : ' + url);
         var msg = L.join('\n');
-        if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(msg);
-        showToast('✅ Message copié : collez-le dans un SMS, WhatsApp ou mail.');
+        var copied = false;
+        try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(msg); copied = true; } } catch (er2) {}
+        if (copied) showToast('✅ Message copié : collez-le dans un SMS, WhatsApp ou mail.');
+        else {
+          // Certains navigateurs (iPhone) refusent la copie automatique : le message reste sélectionnable ici.
+          var box = body.querySelector('#vendeur-msg') || document.createElement('textarea');
+          box.id = 'vendeur-msg'; box.readOnly = true; box.rows = 7; box.style.cssText = 'width:100%;font-size:12px;margin-top:10px;'; box.value = msg;
+          if (!box.parentNode) e.target.parentNode.insertBefore(box, e.target.nextSibling);
+          box.focus(); box.select(); showToast('Copiez le message ci-dessous (appui long → Copier).');
+        }
       } catch (er) { showToast('❌ Impossible de préparer le message.', true); }
       e.target.disabled = false;
     });

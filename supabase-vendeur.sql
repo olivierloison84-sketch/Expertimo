@@ -67,6 +67,7 @@ create or replace function public.vendeur_doc_cat(d text) returns text language 
       when d ~* 'carrez' then 'Mesurage loi Carrez'
       when d ~* 'règlement de copropriété' then 'Règlement de copropriété'
       when d ~* 'assemblées générales' then 'Procès-verbaux d''assemblées générales'
+      when d ~* '(plan pluriannuel|diagnostic technique global)' then 'Plan de travaux de la copropriété'
       when d ~* '(charges|budget prévisionnel|fonds de travaux|pré-état|copropriété|immeuble)' then 'Charges et vie de la copropriété'
       when d ~* 'taxe foncière' then 'Taxe foncière'
       when d ~* '(plan)' then 'Plans'
@@ -192,10 +193,13 @@ begin
     select lower(btrim(client_nom)), created_at, 'question', public.vendeur_theme(question), 0
       from public.fiche_questions where fiche_path = any(v_paths) and created_at >= now() - interval '30 days'
     union all
-    select lower(btrim(fs.client_nom)), fs.started_at, 'rubrique', e.key, round((e.value)::text::numeric)::int
-      from public.fiche_sessions fs, jsonb_each(fs.onglets) e
-     where fs.fiche_path = any(v_paths) and fs.started_at >= now() - interval '30 days' and jsonb_typeof(e.value) = 'number'
-       and e.key in ('marche', 'rentabilite', 'historique', 'diagnostics', 'budget', 'quartier', 'documents') and (e.value)::text::numeric >= 60
+    select k, at, 'rubrique', key, sec from (
+      select lower(btrim(fs.client_nom)) as k, fs.started_at as at, e.key, round((e.value)::text::numeric)::int as sec,
+             row_number() over (partition by fs.session_id order by (e.value)::text::numeric desc) as rn
+        from public.fiche_sessions fs, jsonb_each(fs.onglets) e
+       where fs.fiche_path = any(v_paths) and fs.started_at >= now() - interval '30 days' and jsonb_typeof(e.value) = 'number'
+         and e.key in ('marche', 'rentabilite', 'historique', 'diagnostics', 'budget', 'quartier', 'documents') and (e.value)::text::numeric >= 60) t
+     where rn <= 2
   )
   select coalesce(jsonb_agg(jsonb_build_object(
            'lettre', chr(65 + ((l.rn - 1) % 26)::int) || (case when l.rn > 26 then ((l.rn - 1) / 26 + 1)::text else '' end),
