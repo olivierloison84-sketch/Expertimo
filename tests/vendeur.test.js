@@ -21,6 +21,7 @@ const rapport = {
   courbe: [1, 0, 2, 3, 1, 2, 3, 2].map((n, i) => ({ semaine: '2026-0' + (i + 1) + '-01', visites: n })),
   onglets: [{ onglet: 'financement', minutes: 20 }, { onglet: 'zzz_inconnu', minutes: 5 }],
   themes: [{ theme: 'Prix et négociation', n: 2 }], docs_top: [{ doc: 'Diagnostic DPE', n: 3 }],
+  activite: [{ lettre: 'A', type: 'documents', at: '2026-09-29T16:12:00Z', detail: 'Diagnostic amiante', sec: 0 }, { lettre: 'B', type: 'rubrique', at: '2026-09-29T15:00:00Z', detail: 'quartier', sec: 130 }, { lettre: 'B', type: 'rubrique', at: '2026-09-29T14:00:00Z', detail: 'constructor', sec: 130 }, { lettre: 'A', type: 'question', at: '2026-09-28T10:00:00Z', detail: 'Prix et négociation', sec: 0 }],
   acquereurs: [{ lettre: 'A', niveau: 'tres', visites: 4, minutes: 22, derniere: '2026-09-29T10:00:00Z', onglets: ['financement'], docs: 2, questions: 1, simulation: true }]
 };
 (async () => {
@@ -33,6 +34,9 @@ const rapport = {
   assert(r.d.querySelector('svg'), 'courbe');
   assert(!/Marie|@.*\.fr.*acheteur/.test(t.replace('o@x.fr', '')), 'anonymat');
   assert(!/^\s*$/.test(r.d.getElementById('report').className.includes('hidden') ? '' : 'x'), 'rapport visible');
+  assert(/Acquéreur A a demandé des documents : Diagnostic amiante/.test(t) && /mardi 29\/09 à 18 h 12/.test(t), 'fil : documents + heure de Paris : ' + t.slice(t.indexOf('Activité'), t.indexOf('Activité') + 400));
+  assert(/Acquéreur B a consulté « Quartier et carte » pendant 2 min/.test(t) && /Acquéreur A a posé une question sur le thème « Prix et négociation »/.test(t), 'fil : rubrique et question');
+  assert(!/native code|constructor/.test(t), 'onglet forgé (constructor) non affiché');
   // jetons invalides : aucun appel réseau
   for (const h of ['', '#abc', '#' + 'g'.repeat(96), '#' + 'a'.repeat(200)]) {
     r = await run(h, rapport); assert(r.calls.length === 0, 'appel avec jeton invalide ' + h.slice(0, 8));

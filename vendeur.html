@@ -38,6 +38,12 @@ h2{font-family:'Playfair Display',serif;font-weight:500;font-size:21px;line-heig
 .note p{white-space:pre-wrap;font-size:15px;}
 .note .who{font-size:12px;color:var(--muted);margin-top:10px;}
 svg.chart{width:100%;height:auto;display:block;}
+ul.feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;}
+ul.feed li{display:flex;gap:14px;padding:10px 0;border-top:1px solid var(--line,#E7E3D8);font-size:14px;line-height:1.45;}
+ul.feed li:first-child{border-top:0;}
+ul.feed .when{flex:0 0 9.5em;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);padding-top:2px;}
+ul.feed .what{min-width:0;overflow-wrap:anywhere;}
+@media(max-width:600px){ul.feed li{flex-direction:column;gap:2px;}ul.feed .when{flex-basis:auto;}}
 svg.chart text{font-family:'IBM Plex Mono',monospace;font-size:9.5px;fill:var(--muted);}
 @media(max-width:600px){svg.chart text{font-size:15px;}}
 svg.chart .val{fill:var(--ink);font-weight:500;}
@@ -82,8 +88,9 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     <div class="kpis" id="kpis"></div>
     <div class="card" style="margin-top:16px;"><div class="lbl">L'essentiel</div><div class="story" id="story"></div></div>
     <div class="card note hidden" id="note-card"><div class="lbl">Le mot de votre conseiller</div><p id="note"></p><div class="who" id="note-who"></div></div>
+    <div class="card"><div class="lbl">Activité récente</div><h2>Ce qui s'est passé sur votre bien</h2><div class="hint" style="margin-bottom:12px;">Les démarches des acquéreurs sur la fiche, y compris en dehors des visites (30 derniers jours).</div><ul class="feed" id="feed"></ul></div>
     <div class="card"><div class="lbl">Intérêt semaine après semaine</div><h2>Combien d'acquéreurs ouvrent la fiche de votre bien ?</h2><div class="hint" style="margin-bottom:10px;">Chaque barre est le nombre d'ouvertures de la fiche sur une semaine.</div><div id="chart"></div></div>
-    <div class="card"><div class="lbl">Les acquéreurs</div><h2>Qui s'intéresse à votre bien ?</h2><div class="hint" style="margin-bottom:14px;">Les acquéreurs sont anonymisés : vous voyez leur niveau d'intérêt, jamais leur identité.</div><div class="buyers" id="buyers"></div></div>
+    <div class="card"><div class="lbl">Les acquéreurs</div><h2>Qui s'intéresse à votre bien ?</h2><div class="hint" style="margin-bottom:14px;">Chaque acquéreur est désigné par une lettre : vous ne voyez jamais son nom ni ses coordonnées.</div><div class="buyers" id="buyers"></div></div>
     <div class="two">
       <div class="card"><div class="lbl">Ce qui retient l'attention</div><h2>Les rubriques les plus lues</h2><div class="bars" id="tabs"></div></div>
       <div class="card"><div class="lbl">Ce qu'ils veulent savoir</div><h2>Les sujets qui reviennent</h2><div id="themes"></div><div class="lbl" style="margin-top:18px;">Documents les plus demandés</div><div id="docs"></div></div>
@@ -97,12 +104,19 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
   var SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
   var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
   var TAB_LABELS = {bien: 'Le bien', marche: 'Ventes comparables', rentabilite: 'Simulateur investisseur', historique: 'Historique du bien', diagnostics: 'Diagnostics', budget: 'Financement et budget', quartier: 'Quartier et carte', documents: 'Documents', assistant: 'Assistant', offre: 'Faire une offre'};
+  function tabLabel(id) { return Object.prototype.hasOwnProperty.call(TAB_LABELS, id) ? TAB_LABELS[id] : ''; }
   var LEVELS = {tres: 'Très intéressé', interesse: 'Intéressé', ecoute: "À l'écoute"};
   function $(id) { return document.getElementById(id); }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function plur(n, s, p) { return n + ' ' + (n > 1 ? p : s); }
   function fmtDate(iso) { try { var p = String(iso).slice(0, 10).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; } catch (e) { return ''; } }
   function fmtMin(m) { m = Math.round(m || 0); if (m < 60) return m + ' min'; return Math.floor(m / 60) + ' h ' + (m % 60 ? (m % 60) + ' min' : '').trim(); }
+  function fmtWhen(iso) {
+    try {
+      var p = {}; new Intl.DateTimeFormat('fr-FR', {timeZone: 'Europe/Paris', weekday: 'long', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}).formatToParts(new Date(iso)).forEach(function(x) { p[x.type] = x.value; });
+      return p.weekday + ' ' + p.day + '/' + p.month + ' à ' + p.hour + ' h ' + p.minute;
+    } catch (e) { return fmtDate(iso); }
+  }
   function fail(msg) { var s = $('state'); s.textContent = msg; s.classList.remove('hidden'); $('report').classList.add('hidden'); }
 
   function kpi(v, l, delta) {
@@ -173,6 +187,20 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
 
     chart(r.courbe || []);
 
+    var fd = $('feed'); fd.textContent = '';
+    var acts = r.activite || [];
+    if (!acts.length) fd.appendChild(el('li', null, "Aucune activité sur la fiche ces 30 derniers jours."));
+    acts.forEach(function(a) {
+      var when = fmtWhen(a.at), what;
+      if (a.type === 'ouverture') what = 'a ouvert la fiche de votre bien';
+      else if (a.type === 'simulation') what = 'a simulé son financement pour ce bien';
+      else if (a.type === 'documents') what = 'a demandé des documents' + (a.detail ? ' : ' + a.detail : '');
+      else if (a.type === 'question') what = 'a posé une question' + (a.detail ? ' sur le thème « ' + a.detail + ' »' : '');
+      else if (a.type === 'rubrique' && tabLabel(a.detail)) what = 'a consulté « ' + tabLabel(a.detail) + ' » pendant ' + Math.max(1, Math.round((a.sec || 60) / 60)) + ' min';
+      else return;
+      var li = el('li'); li.appendChild(el('div', 'when', when));
+      var w = el('div', 'what'); w.appendChild(el('b', null, 'Acquéreur ' + a.lettre)); w.appendChild(document.createTextNode(' ' + what)); li.appendChild(w); fd.appendChild(li);
+    });
     var b = $('buyers'); b.textContent = '';
     if (!(r.acquereurs || []).length) { b.appendChild(el('div', 'empty', "Aucun acquéreur identifié pour l'instant. Les visites anonymes sont comptées ci-dessus.")); b.style.display = 'block'; }
     (r.acquereurs || []).forEach(function(a) {
@@ -181,7 +209,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       c.appendChild(top);
       var ul = el('ul');
       ul.appendChild(el('li', null, plur(a.visites, 'visite', 'visites') + (a.minutes ? ' · ' + fmtMin(a.minutes) + ' de lecture' : '') + (a.derniere ? ' · dernière le ' + fmtDate(a.derniere) : '')));
-      var seen = (a.onglets || []).map(function(i) { return TAB_LABELS[i]; }).filter(Boolean);
+      var seen = (a.onglets || []).map(function(i) { return tabLabel(i); }).filter(Boolean);
       if (seen.length) ul.appendChild(el('li', null, 'A consulté : ' + seen.join(', ')));
       if (a.simulation) ul.appendChild(el('li', null, 'A simulé son financement'));
       if (a.docs) ul.appendChild(el('li', null, 'A demandé ' + plur(a.docs, 'document', 'documents')));
@@ -190,10 +218,10 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     });
 
     var tb = $('tabs'); tb.textContent = '';
-    var tabs = (r.onglets || []).filter(function(o) { return TAB_LABELS[o.id]; });
+    var tabs = (r.onglets || []).filter(function(o) { return tabLabel(o.id); });
     if (!tabs.length) tb.appendChild(el('div', 'empty', 'Pas encore assez de lectures pour établir un classement.'));
     tabs.forEach(function(o) {
-      var row = el('div', 'row'); row.appendChild(el('div', null, TAB_LABELS[o.id]));
+      var row = el('div', 'row'); row.appendChild(el('div', null, tabLabel(o.id)));
       var tr = el('div', 'track'), fl = el('div', 'fill'); fl.style.width = '0%'; tr.appendChild(fl); row.appendChild(tr); row.appendChild(el('div', 'pct', o.pct + ' %')); tb.appendChild(row);
       setTimeout(function() { fl.style.width = Math.max(3, Math.min(100, o.pct)) + '%'; }, 60);
     });

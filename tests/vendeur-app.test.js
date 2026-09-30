@@ -13,13 +13,13 @@ const { JSDOM, VirtualConsole } = require('jsdom');
   function qb(op, payload) { const f = {}; const o = { op, payload, f };
     const b = { eq: (k, v) => { f[k] = v; return b; }, is: (k, v) => { f['is_' + k] = v; return b; }, limit: () => b, select: () => b,
       then: (res) => { log.push(o); let out = { data: null, error: null };
-        if (op === 'select') out.data = rows.filter(r => !r.revoked_at && r.filename === f.filename).map(r => Object.assign({}, r));
-        if (op === 'insert') rows.push({ id: 1, token: TOK, note: null, revoked_at: null, filename: payload.filename });
-        if (op === 'update') { const r = rows.find(x => x.id === f.id); Object.assign(r, payload); }
+        if (op === 'select') { if (/\bid\b/.test(payload || '')) out.error = { message: 'column id does not exist' }; } if (op === 'select' && !out.error) out.data = rows.filter(r => !r.revoked_at && r.filename === f.filename).map(r => Object.assign({}, r));
+        if (op === 'insert') rows.push({ token: TOK, note: null, revoked_at: null, filename: payload.filename });
+        if (op === 'update') { const r = rows.find(x => x.token === f.token); Object.assign(r, payload); }
         return Promise.resolve(out).then(res); } };
     return b; }
   w.privencyAuth = { auth: { getSession: async () => ({ data: { session: { user: { id: 'u1' }, access_token: 't' } } }) },
-    from: t => { assert.strictEqual(t, 'vendeur_liens'); return { select: () => qb('select'), insert: p => qb('insert', p), update: p => qb('update', p) }; } };
+    from: t => { assert.strictEqual(t, 'vendeur_liens'); return { select: c => qb('select', c), insert: p => qb('insert', p), update: p => qb('update', p) }; } };
   const tick = () => new Promise(r => setTimeout(r, 30));
   await w.vendeurDialog('Maison <b>x</b>.html'); await tick();
   assert(/Créez un lien privé/.test(d.getElementById('vendeur-overlay').textContent), 'invite de création');
