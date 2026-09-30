@@ -1,0 +1,5 @@
+-- Durée de visite des fiches (heartbeat) — DÉJÀ APPLIQUÉ sur le projet Privency-saas le 2026-09-30
+-- (migration "fiche_sessions_duree"). Conservé ici pour l'historique / reconstruction.
+-- Table fiche_sessions : 1 ligne par visite. Les visiteurs (anon) n'ont AUCUN accès direct à la table :
+-- ils passent uniquement par la fonction fiche_heartbeat(), qui ne peut qu'augmenter la durée d'une session
+-- et ne peut pas modifier une session appartenant à une autre fiche. L'agent ne lit / supprime que ses fiches.
