@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -361,8 +341,9 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"1er étage","adresse":"Bouray-sur-Juine (91850)","quartier":"","acheteur_prenom":"Sabrina","acheteur_nom":"BELABBES","annee":"1940","description":"Appartement 3 pièces de 90,42 m² · 1er étage · DPE E","surface":90.42,"surfCarrez":63.76,"pieces":"3","dpe":"E","prix":179900,"prixm2":1990,"mediane":0,"tension":"","delai":"","loyer":1200,"chargesCopro":840,"chargesDetail":"","taxeFonciere":0,"score":"9.5","scorePrest":"10","scoreSecteur":"9","scoreQP":"9","scoreEtat":"10","fort1":"Surface au sol 90,42m² pour 63,76m² Carrez","fort2":"Faibles charges 70€/mois","fort3":"Entrée indépendante privative","vig1":"Écart surface au sol / Carrez (90,42 vs 63,76 m²)","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/frwgfclor123b6xazmqc.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/mgqadermndcc9g112sqy.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/d4pisjlrrnvnrnfpu27y.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/yfzwxrxslnscgecw4mxu.webp","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/setcs8lx374dpl0wrcys.webp","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Description\n\nBel appartement en duplex de 3 pièces avec 2 chambres, situé dans un environnement verdoyant, au sein d'une petite copropriété calme de 6 lots. Faibles charges et emplacement à proximité de toutes les commodités (commerces, écoles).\n\nSurface au sol : 90,42 m² — Surface Carrez : 63,76 m²\n\nComposition\n\nAu rez-de-chaussée : entrée indépendante privative, séjour lumineux ouvert sur cuisine (35 m² pour l'ensemble), salle de bains, WC séparé.\n\nÀ l'étage : grand palier pouvant servir de dressing, desservant deux chambres de 13,56 m² et 18,89 m² au sol.\n\nLes points forts\n\nSurface au sol 90,42 m² / Surface Carrez 63,76 m²\nCharme de l'ancien\nPetite copropriété de 6 appartements\nFaibles charges : 70 €/mois\nConsommation électrique estimée : 1 225 €/an\nEntrée indépendante privative\n\nCopropriété\n\nCopropriété de 6 lots, dont 6 lots à usage d'habitation. Aucune procédure en cours.\nCharges annuelles : 1 039 €.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Florian Lanton","agentTel":"0180859735","agentEmail":"","agentRdvUrl":"","agentSiteUrl":"https://www.eraimmobilier.com/agence-immobiliere-ballancourt-sur-essonne-172","agentReseau":"ERA","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789795767/avmeplvhiokondzfxbqu.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/mgqadermndcc9g112sqy.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/frwgfclor123b6xazmqc.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/setcs8lx374dpl0wrcys.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/d4pisjlrrnvnrnfpu27y.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/yfzwxrxslnscgecw4mxu.webp","caption":"","uploading":false}]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"1er étage","adresse":"Bouray-sur-Juine (91850)","quartier":"","acheteur_prenom":"Sabrina","acheteur_nom":"BELABBES","annee":"1940","description":"Appartement 3 pièces de 90,42 m² · 1er étage · DPE E","surface":90.42,"surfCarrez":63.76,"pieces":"3","dpe":"E","prix":179900,"prixm2":1990,"mediane":0,"tension":"","delai":"","loyer":1200,"chargesCopro":840,"chargesDetail":"","taxeFonciere":0,"score":"9.5","scorePrest":"10","scoreSecteur":"9","scoreQP":"9","scoreEtat":"10","fort1":"Surface au sol 90,42m² pour 63,76m² Carrez","fort2":"Faibles charges 70€/mois","fort3":"Entrée indépendante privative","vig1":"Écart surface au sol / Carrez (90,42 vs 63,76 m²)","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/frwgfclor123b6xazmqc.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/mgqadermndcc9g112sqy.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/d4pisjlrrnvnrnfpu27y.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/yfzwxrxslnscgecw4mxu.webp","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/setcs8lx374dpl0wrcys.webp","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Description\n\nBel appartement en duplex de 3 pièces avec 2 chambres, situé dans un environnement verdoyant, au sein d'une petite copropriété calme de 6 lots. Faibles charges et emplacement à proximité de toutes les commodités (commerces, écoles).\n\nSurface au sol : 90,42 m² — Surface Carrez : 63,76 m²\n\nComposition\n\nAu rez-de-chaussée : entrée indépendante privative, séjour lumineux ouvert sur cuisine (35 m² pour l'ensemble), salle de bains, WC séparé.\n\nÀ l'étage : grand palier pouvant servir de dressing, desservant deux chambres de 13,56 m² et 18,89 m² au sol.\n\nLes points forts\n\nSurface au sol 90,42 m² / Surface Carrez 63,76 m²\nCharme de l'ancien\nPetite copropriété de 6 appartements\nFaibles charges : 70 €/mois\nConsommation électrique estimée : 1 225 €/an\nEntrée indépendante privative\n\nCopropriété\n\nCopropriété de 6 lots, dont 6 lots à usage d'habitation. Aucune procédure en cours.\nCharges annuelles : 1 039 €.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Florian Lanton","agentTel":"0180859735","agentEmail":"","agentRdvUrl":"","agentSiteUrl":"https://www.eraimmobilier.com/agence-immobiliere-ballancourt-sur-essonne-172","agentReseau":"ERA","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789795767/avmeplvhiokondzfxbqu.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/mgqadermndcc9g112sqy.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/frwgfclor123b6xazmqc.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/setcs8lx374dpl0wrcys.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/d4pisjlrrnvnrnfpu27y.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/yfzwxrxslnscgecw4mxu.webp","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"appart","etage":"1er étage","adresse":"Bouray-sur-Juine (91850)","quartier":"","acheteur_prenom":"Sabrina","acheteur_nom":"BELABBES","annee":"1940","description":"3-room apartment of 90.42 m² · 1st floor · DPE E","surface":90.42,"surfCarrez":63.76,"pieces":"3","dpe":"E","prix":179900,"prixm2":1990,"mediane":0,"tension":"","delai":"","loyer":1200,"chargesCopro":840,"chargesDetail":"","taxeFonciere":0,"score":"9.5","scorePrest":"10","scoreSecteur":"9","scoreQP":"9","scoreEtat":"10","fort1":"Floor area 90.42m² for 63.76m² Carrez","fort2":"Low service charges 70€/month","fort3":"Private independent entrance","vig1":"Difference between floor area / Carrez (90.42 vs 63.76 m²)","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/frwgfclor123b6xazmqc.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/mgqadermndcc9g112sqy.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/d4pisjlrrnvnrnfpu27y.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/yfzwxrxslnscgecw4mxu.webp","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/setcs8lx374dpl0wrcys.webp","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Description\n\nBeautiful 3-room duplex apartment with 2 bedrooms, set in a green environment within a small, quiet co-ownership of 6 units. Low service charges and location close to all amenities (shops, schools).\n\nFloor area: 90.42 m² — Carrez area: 63.76 m²\n\nLayout\n\nOn the ground floor: private independent entrance, bright living room open to kitchen (35 m² combined), bathroom, separate WC.\n\nUpstairs: large landing that can serve as a dressing room, leading to two bedrooms of 13.56 m² and 18.89 m² floor area.\n\nKey features\n\nFloor area 90.42 m² / Carrez area 63.76 m²\nPeriod charm\nSmall co-ownership of 6 apartments\nLow service charges: 70 €/month\nEstimated electricity consumption: 1,225 €/year\nPrivate independent entrance\n\nCo-ownership\n\nCo-ownership of 6 units, including 6 residential units. No ongoing proceedings.\nAnnual service charges: 1,039 €.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Within the scope of the inspection, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Interior installation without anomaly."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to collective network compliant."}],"renovations":[],"agentNom":"Florian Lanton","agentTel":"0180859735","agentEmail":"","agentRdvUrl":"","agentSiteUrl":"https://www.eraimmobilier.com/agence-immobiliere-ballancourt-sur-essonne-172","agentReseau":"ERA","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789795767/avmeplvhiokondzfxbqu.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/mgqadermndcc9g112sqy.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/frwgfclor123b6xazmqc.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/setcs8lx374dpl0wrcys.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/d4pisjlrrnvnrnfpu27y.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789796027/yfzwxrxslnscgecw4mxu.webp","caption":"","uploading":false}]}}</script>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 </head>
 <body>
 
@@ -936,6 +917,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -1112,6 +1094,7 @@ function submitOffer() {
     alert(isEn ? 'Please fill in at least the amount, your name and your email.' : 'Merci de remplir au moins le montant, votre nom et votre email.');
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -1202,6 +1185,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -1819,18 +1803,24 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue FR/EN pour les fiches bilingues ═══

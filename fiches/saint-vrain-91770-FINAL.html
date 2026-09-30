@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -366,10 +346,11 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"Saint-Vrain (91770)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1900","description":"Maison 7 pièces de 200 m² · DPE D","surface":200,"surfCarrez":0,"pieces":"7","dpe":"D","prix":417000,"prixm2":2085,"mediane":0,"tension":"","delai":"","loyer":1500,"chargesCopro":0,"chargesDetail":"eau chaude, froide et chauffage collectif au gaz","taxeFonciere":2000,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Maison en pierre avec charme authentique","fort2":"Centre ville, secteur calme","fort3":"Jardin clos de murs en pierre avec terrasse","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825415/myfoxfzw2nznzriqtbfx.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/jgzsiaeznny7iuar5wva.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/o8skcxeiohhcqerk0sur.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/zjoe7whdtr93kwqs1iap.webp","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/cpnwcmhlhgfybkhjezpr.webp","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"superbe maison en très bonne état","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"non-soumis","result":"Non soumis — bâtiment après 1997."},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"Anomalie type A1 ou A2."},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Florian Lanton","agentTel":"0180859735","agentEmail":"","agentRdvUrl":"","agentSiteUrl":"https://www.eraimmobilier.com/agence-immobiliere-ballancourt-sur-essonne-172","agentReseau":"ERA","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789795767/avmeplvhiokondzfxbqu.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/cpnwcmhlhgfybkhjezpr.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/zjoe7whdtr93kwqs1iap.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825415/myfoxfzw2nznzriqtbfx.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/jgzsiaeznny7iuar5wva.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/lc5u8qu4wgezsyq4hxeb.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/o8skcxeiohhcqerk0sur.webp","caption":"","uploading":false}]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"Saint-Vrain (91770)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1900","description":"Maison 7 pièces de 200 m² · DPE D","surface":200,"surfCarrez":0,"pieces":"7","dpe":"D","prix":417000,"prixm2":2085,"mediane":0,"tension":"","delai":"","loyer":1500,"chargesCopro":0,"chargesDetail":"eau chaude, froide et chauffage collectif au gaz","taxeFonciere":2000,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Maison en pierre avec charme authentique","fort2":"Centre ville, secteur calme","fort3":"Jardin clos de murs en pierre avec terrasse","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825415/myfoxfzw2nznzriqtbfx.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/jgzsiaeznny7iuar5wva.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/o8skcxeiohhcqerk0sur.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/zjoe7whdtr93kwqs1iap.webp","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/cpnwcmhlhgfybkhjezpr.webp","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"superbe maison en très bonne état","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"non-soumis","result":"Non soumis — bâtiment après 1997."},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"Anomalie type A1 ou A2."},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Florian Lanton","agentTel":"0180859735","agentEmail":"","agentRdvUrl":"","agentSiteUrl":"https://www.eraimmobilier.com/agence-immobiliere-ballancourt-sur-essonne-172","agentReseau":"ERA","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789795767/avmeplvhiokondzfxbqu.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/cpnwcmhlhgfybkhjezpr.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/zjoe7whdtr93kwqs1iap.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825415/myfoxfzw2nznzriqtbfx.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/jgzsiaeznny7iuar5wva.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/lc5u8qu4wgezsyq4hxeb.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/o8skcxeiohhcqerk0sur.webp","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"maison","etage":"","adresse":"Saint-Vrain (91770)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1900","description":"7-room house of 200 m² · DPE D","surface":200,"surfCarrez":0,"pieces":"7","dpe":"D","prix":417000,"prixm2":2085,"mediane":0,"tension":"","delai":"","loyer":1500,"chargesCopro":0,"chargesDetail":"hot and cold water and collective gas heating","taxeFonciere":2000,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Stone house with authentic charm","fort2":"City center, quiet area","fort3":"Garden enclosed by stone walls with terrace","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825415/myfoxfzw2nznzriqtbfx.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/jgzsiaeznny7iuar5wva.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/o8skcxeiohhcqerk0sur.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/zjoe7whdtr93kwqs1iap.webp","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/cpnwcmhlhgfybkhjezpr.webp","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"superb house in very good condition","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"non-soumis","result":"Not subject — building after 1997."},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Interior installation without anomaly."},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"A1 or A2 type anomaly."},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Florian Lanton","agentTel":"0180859735","agentEmail":"","agentRdvUrl":"","agentSiteUrl":"https://www.eraimmobilier.com/agence-immobiliere-ballancourt-sur-essonne-172","agentReseau":"ERA","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789795767/avmeplvhiokondzfxbqu.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/cpnwcmhlhgfybkhjezpr.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/zjoe7whdtr93kwqs1iap.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825415/myfoxfzw2nznzriqtbfx.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/jgzsiaeznny7iuar5wva.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/lc5u8qu4wgezsyq4hxeb.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1789825416/o8skcxeiohhcqerk0sur.webp","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Casa em pedra com charme autêntico","fort2":"Centro da cidade, zona tranquila","fort3":"Jardim fechado por muros em pedra com terraço","vig1":"","vig2":"","vig3":"","historiqueLibre":"soberba casa em muito bom estado","diags":[{"icon":"🧱","name":"Amiante","status":"non-soumis","result":"Não sujeito — edifício posterior a 1997."},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Instalação interior sem anomalia."},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"Anomalia tipo A1 ou A2."},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Casa de piedra con encanto auténtico","fort2":"Centro ciudad, zona tranquila","fort3":"Jardín cerrado con muros de piedra y terraza","vig1":"","vig2":"","vig3":"","historiqueLibre":"magnífica casa en muy buen estado","diags":[{"icon":"🧱","name":"Amiante","status":"non-soumis","result":"No sujeto — edificio posterior a 1997."},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Instalación interior sin anomalía."},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"Anomalía tipo A1 o A2."},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 </head>
 <body>
 
@@ -2105,6 +2086,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2281,6 +2263,7 @@ function submitOffer() {
     alert(tr('offer-missing'));
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -2369,6 +2352,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -2874,18 +2858,24 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══

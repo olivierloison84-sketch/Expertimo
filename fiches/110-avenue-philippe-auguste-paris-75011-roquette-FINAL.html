@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -366,10 +346,11 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"8","adresse":"110 Avenue Philippe-Auguste Paris 75011 ","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1930","description":"Appartement de 8,59 m² · 8 · DPE G","surface":8.59,"surfCarrez":8.59,"pieces":"","dpe":"G","prix":85000,"prixm2":9895,"mediane":0,"tension":"","delai":"","loyer":450,"chargesCopro":43,"chargesDetail":"","taxeFonciere":155,"score":"8.5","scorePrest":"8","scoreSecteur":"10","scoreQP":"9","scoreEtat":"7","fort1":"Dernier étage d'un immeuble haussmannien","fort2":"Appartement meublé et en bon état","fort3":"Taxe foncière (155€/an) et charges de copropriété(43€/mois) très faibles : idéal investisseur","vig1":"8ème et dernier étage sans ascenseur","vig2":"Pas de balcon, cave et parking","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/bchc3nwrn5powh8ymrui.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/veyjrbgef06u6t01zpz9.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/ypsazjn5mnc9rsted8mf.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/j9j30buxjhxjotikn7fi.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915195/bgfvzjthjbegeik3g51q.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Boulevard de Charonne (à ~73 m)","surface":"90","prix":728000,"prixm2":8089},{"date":"09/2025","adresse":"Avenue Philippe-Auguste (à ~109 m)","surface":"19","prix":196500,"prixm2":10342},{"date":"07/2025","adresse":"Avenue Philippe-Auguste (à ~66 m)","surface":"115","prix":1113800,"prixm2":9685},{"date":"03/2025","adresse":"Impasse Lamier (à ~118 m)","surface":"103","prix":1174000,"prixm2":11398},{"date":"02/2025","adresse":"Boulevard de Charonne (à ~97 m)","surface":"73","prix":674760,"prixm2":9243},{"date":"02/2025","adresse":"Avenue Philippe-Auguste (à ~86 m)","surface":"23","prix":211500,"prixm2":9196}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915195/bgfvzjthjbegeik3g51q.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/bchc3nwrn5powh8ymrui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/veyjrbgef06u6t01zpz9.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/j9j30buxjhxjotikn7fi.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/ypsazjn5mnc9rsted8mf.jpg","caption":"","uploading":false}]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"8","adresse":"110 Avenue Philippe-Auguste Paris 75011 ","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1930","description":"Appartement de 8,59 m² · 8 · DPE G","surface":8.59,"surfCarrez":8.59,"pieces":"","dpe":"G","prix":85000,"prixm2":9895,"mediane":0,"tension":"","delai":"","loyer":450,"chargesCopro":43,"chargesDetail":"","taxeFonciere":155,"score":"8.5","scorePrest":"8","scoreSecteur":"10","scoreQP":"9","scoreEtat":"7","fort1":"Dernier étage d'un immeuble haussmannien","fort2":"Appartement meublé et en bon état","fort3":"Taxe foncière (155€/an) et charges de copropriété(43€/mois) très faibles : idéal investisseur","vig1":"8ème et dernier étage sans ascenseur","vig2":"Pas de balcon, cave et parking","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/bchc3nwrn5powh8ymrui.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/veyjrbgef06u6t01zpz9.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/ypsazjn5mnc9rsted8mf.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/j9j30buxjhxjotikn7fi.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915195/bgfvzjthjbegeik3g51q.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Boulevard de Charonne (à ~73 m)","surface":"90","prix":728000,"prixm2":8089},{"date":"09/2025","adresse":"Avenue Philippe-Auguste (à ~109 m)","surface":"19","prix":196500,"prixm2":10342},{"date":"07/2025","adresse":"Avenue Philippe-Auguste (à ~66 m)","surface":"115","prix":1113800,"prixm2":9685},{"date":"03/2025","adresse":"Impasse Lamier (à ~118 m)","surface":"103","prix":1174000,"prixm2":11398},{"date":"02/2025","adresse":"Boulevard de Charonne (à ~97 m)","surface":"73","prix":674760,"prixm2":9243},{"date":"02/2025","adresse":"Avenue Philippe-Auguste (à ~86 m)","surface":"23","prix":211500,"prixm2":9196}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915195/bgfvzjthjbegeik3g51q.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/bchc3nwrn5powh8ymrui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/veyjrbgef06u6t01zpz9.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/j9j30buxjhxjotikn7fi.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/ypsazjn5mnc9rsted8mf.jpg","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"appart","etage":"8","adresse":"110 Avenue Philippe-Auguste Paris 75011 ","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1930","description":"8.59 m² apartment · 8 · DPE G","surface":8.59,"surfCarrez":8.59,"pieces":"","dpe":"G","prix":85000,"prixm2":9895,"mediane":0,"tension":"","delai":"","loyer":450,"chargesCopro":43,"chargesDetail":"","taxeFonciere":155,"score":"8.5","scorePrest":"8","scoreSecteur":"10","scoreQP":"9","scoreEtat":"7","fort1":"Top floor of a Haussmannian building","fort2":"Furnished apartment in good condition","fort3":"Very low property tax (€155/year) and service charges (€43/month): ideal for investors","vig1":"8th and top floor without elevator","vig2":"No balcony, cellar or parking","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/bchc3nwrn5powh8ymrui.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/veyjrbgef06u6t01zpz9.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/ypsazjn5mnc9rsted8mf.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/j9j30buxjhxjotikn7fi.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915195/bgfvzjthjbegeik3g51q.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Boulevard de Charonne (à ~73 m)","surface":"90","prix":728000,"prixm2":8089},{"date":"09/2025","adresse":"Avenue Philippe-Auguste (à ~109 m)","surface":"19","prix":196500,"prixm2":10342},{"date":"07/2025","adresse":"Avenue Philippe-Auguste (à ~66 m)","surface":"115","prix":1113800,"prixm2":9685},{"date":"03/2025","adresse":"Impasse Lamier (à ~118 m)","surface":"103","prix":1174000,"prixm2":11398},{"date":"02/2025","adresse":"Boulevard de Charonne (à ~97 m)","surface":"73","prix":674760,"prixm2":9243},{"date":"02/2025","adresse":"Avenue Philippe-Auguste (à ~86 m)","surface":"23","prix":211500,"prixm2":9196}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915195/bgfvzjthjbegeik3g51q.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/bchc3nwrn5powh8ymrui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/veyjrbgef06u6t01zpz9.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/j9j30buxjhxjotikn7fi.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1785915192/ypsazjn5mnc9rsted8mf.jpg","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Último andar de um edifício haussmanniano","fort2":"Apartamento mobilado e em bom estado","fort3":"Imposto predial (155€/ano) e encargos de condomínio (43€/mês) muito baixos: ideal para investidor","vig1":"8º e último andar sem elevador","vig2":"Sem varanda, cave e estacionamento","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Último piso de un edificio haussmanniano","fort2":"Piso amueblado y en buen estado","fort3":"Impuesto sobre bienes inmuebles (155€/año) y gastos de comunidad (43€/mes) muy bajos: ideal inversor","vig1":"8º y último piso sin ascensor","vig2":"Sin balcón, bodega ni parking","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 </head>
 <body>
 
@@ -2105,6 +2086,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2281,6 +2263,7 @@ function submitOffer() {
     alert(tr('offer-missing'));
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -2369,6 +2352,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -2874,18 +2858,24 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══

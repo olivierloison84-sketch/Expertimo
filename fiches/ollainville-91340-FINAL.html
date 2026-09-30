@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -353,7 +333,8 @@ html,body{overflow-x:hidden;}
 </style>
 <style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"Ollainville (91340)","quartier":"","acheteur_prenom":"Carole ","acheteur_nom":"PASTOR","annee":"2013","description":"Maison 6 pièces de 140 m² · DPE C","surface":140,"surfCarrez":0,"pieces":"6","dpe":"C","prix":399000,"prixm2":2850,"mediane":0,"tension":"","delai":"","loyer":1700,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1476,"score":"9.25","scorePrest":"9","scoreSecteur":"9","scoreQP":"9","scoreEtat":"10","fort1":"Véranda 45m²","fort2":"Jardin arboré 2000m²","fort3":"Pompe à chaleur air/air programmable","vig1":"Vis-à-vis et absence de garage fermé (uniquement 2 places de stationnement extérieures)","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/fgi0ulvgv0a2z73iczx6.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/jrbjk1q3omhrxupkyri6.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/zbc7ucjzzpqazlbcu73m.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/vy8bombtppw7m0eevs4v.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/aw7z0dlfi9yywionieyk.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Sept 2025","adresse":"1 Rue Des Cognettes","surface":"143","prix":415000,"prixm2":2902},{"date":"Sept 2025","adresse":"57 b Rue Pierre Mendés France","surface":"161","prix":435000,"prixm2":2702},{"date":"Juin 2024","adresse":"53 Rue Pierre Mendés France","surface":"103","prix":415000,"prixm2":4029},{"date":"Sept 2025","adresse":"1 Rue Des Cognettes","surface":"143","prix":415000,"prixm2":2902},{"date":"Août 2023","adresse":"4 Rue Du Pont Des Maures","surface":"120","prix":382050,"prixm2":3184},{"date":"Nov 2021","adresse":"Rue Emile Raspail (à ~67 m)","surface":"91","prix":405000,"prixm2":4451}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Type : Maison de plain-pied\nAnnée de construction : 2013 (norme BBC)\n\nSurfaces\n\nSurface habitable totale : 110,62 m²\nSurface terrain : 790 m²\nNombre de pièces : 5\nNombre de chambres : 3\n\nDétail des surfaces par pièce (rez-de-chaussée)\n\nSéjour : 36,54 m²\nChambre 1 : 14,62 m²\nDressing : 12,26 m²\nChambre 2 : 11,32 m²\nCuisine : 9,73 m²\nDégagement : 9,45 m²\nSalle de bains (douche à l'italienne) : 8,39 m²\nCellier : 6,54 m²\nWC : 1,77 m²\nPorche (surface ouverte) : 5,02 m²\n\nCaractéristiques techniques\n\nDPE : Classe C\nVide sanitaire : ~110 m², hauteur 1,70 m, VMC intégrée\nCharpente : fermette (modifiable pour aménagement des combles)\nÉquipements : volets électriques, store banne électrique\n\nExtérieurs\n\nExposition : Sud-Ouest\nStationnement : 2 places\nGarage : absent (pas de garage fermé)\nVis-à-vis : présent\n\nProximités clés\n\nTransports : arrêt Élisée Reclus (130 m), Grand Jardin (260 m), Tram 12 Chilly-Mazarin (420 m)\nCommerces : G20 (330 m), Picard (470 m), Carrefour Market (740 m)\nÉcoles : École Élémentaire La Fontaine (400 m), École Maternelle le Centre (680 m), Collège les Dines Chiens (760 m)","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"defavorable","result":"Dans le cadre de la mission, il a été repéré des matériaux contenant de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"Anomalie type A1 ou A2."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/aw7z0dlfi9yywionieyk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/vy8bombtppw7m0eevs4v.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/fgi0ulvgv0a2z73iczx6.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275966/tqudjqboijxaeb6qp4tz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/zbc7ucjzzpqazlbcu73m.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275962/bczsjcj6s9hzphjynsxq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275962/xfw6blbqnfdhaone7kce.jpg","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"maison","etage":"","adresse":"Ollainville (91340)","quartier":"","acheteur_prenom":"Carole ","acheteur_nom":"PASTOR","annee":"2013","description":"6-room house of 140 m² · DPE C","surface":140,"surfCarrez":0,"pieces":"6","dpe":"C","prix":399000,"prixm2":2850,"mediane":0,"tension":"","delai":"","loyer":1700,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1476,"score":"9.25","scorePrest":"9","scoreSecteur":"9","scoreQP":"9","scoreEtat":"10","fort1":"45m² veranda","fort2":"2,000m² landscaped garden","fort3":"Programmable air-to-air heat pump","vig1":"Overlooked and no enclosed garage (only 2 outdoor parking spaces)","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/fgi0ulvgv0a2z73iczx6.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/jrbjk1q3omhrxupkyri6.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/zbc7ucjzzpqazlbcu73m.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/vy8bombtppw7m0eevs4v.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/aw7z0dlfi9yywionieyk.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Sept 2025","adresse":"1 Rue Des Cognettes","surface":"143","prix":415000,"prixm2":2902},{"date":"Sept 2025","adresse":"57 b Rue Pierre Mendés France","surface":"161","prix":435000,"prixm2":2702},{"date":"Juin 2024","adresse":"53 Rue Pierre Mendés France","surface":"103","prix":415000,"prixm2":4029},{"date":"Sept 2025","adresse":"1 Rue Des Cognettes","surface":"143","prix":415000,"prixm2":2902},{"date":"Août 2023","adresse":"4 Rue Du Pont Des Maures","surface":"120","prix":382050,"prixm2":3184},{"date":"Nov 2021","adresse":"Rue Emile Raspail (à ~67 m)","surface":"91","prix":405000,"prixm2":4451}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Type: Single-storey house\nYear of construction: 2013 (BBC standard)\n\nAreas\n\nTotal living area: 110.62 m²\nLand area: 790 m²\nNumber of rooms: 5\nNumber of bedrooms: 3\n\nDetailed areas by room (ground floor)\n\nLiving room: 36.54 m²\nBedroom 1: 14.62 m²\nDressing room: 12.26 m²\nBedroom 2: 11.32 m²\nKitchen: 9.73 m²\nHallway: 9.45 m²\nBathroom (walk-in shower): 8.39 m²\nUtility room: 6.54 m²\nWC: 1.77 m²\nPorch (open area): 5.02 m²\n\nTechnical characteristics\n\nDPE: Class C\nCrawl space: ~110 m², height 1.70 m, integrated VMC\nFramework: truss (modifiable for loft conversion)\nEquipment: electric shutters, electric awning\n\nExteriors\n\nExposure: South-West\nParking: 2 spaces\nGarage: absent (no enclosed garage)\nOverlooking: present\n\nKey proximities\n\nTransport: Élisée Reclus stop (130 m), Grand Jardin (260 m), Tram 12 Chilly-Mazarin (420 m)\nShops: G20 (330 m), Picard (470 m), Carrefour Market (740 m)\nSchools: École Élémentaire La Fontaine (400 m), École Maternelle le Centre (680 m), Collège les Dines Chiens (760 m)","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"defavorable","result":"As part of the inspection, materials containing asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Interior installation without anomaly."},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"Type A1 or A2 anomaly."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to collective network compliant."}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/aw7z0dlfi9yywionieyk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/vy8bombtppw7m0eevs4v.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/fgi0ulvgv0a2z73iczx6.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275966/tqudjqboijxaeb6qp4tz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275961/zbc7ucjzzpqazlbcu73m.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275962/bczsjcj6s9hzphjynsxq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1788275962/xfw6blbqnfdhaone7kce.jpg","caption":"","uploading":false}]}}</script>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script></head>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
+</head>
 <body>
 
 
@@ -920,6 +901,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -1096,6 +1078,7 @@ function submitOffer() {
     alert(isEn ? 'Please fill in at least the amount, your name and your email.' : 'Merci de remplir au moins le montant, votre nom et votre email.');
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -1180,6 +1163,7 @@ calcBank();
 
 // ═══ MON BUDGET ═══
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -1789,18 +1773,24 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue FR/EN pour les fiches bilingues ═══

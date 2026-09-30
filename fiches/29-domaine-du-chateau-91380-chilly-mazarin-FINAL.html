@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -366,10 +346,11 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"2","adresse":"29 Domaine du Château 91380 Chilly Mazarin","quartier":"","acheteur_prenom":"test","acheteur_nom":"","annee":"1970","description":"Appartement 4 pièces de 80 m² · 2 · DPE D","surface":80,"surfCarrez":80.4,"pieces":"4","dpe":"D","prix":178000,"prixm2":2225,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1300,"chargesCopro":300,"chargesDetail":"Eau chaude et froide, chauffage, entretien des parties communes, ascenseur, espaces verts","taxeFonciere":1250,"score":"8.5","scorePrest":"8","scoreSecteur":"9","scoreQP":"9","scoreEtat":"8","fort1":"Appartement lumineux. Calme.","fort2":"Immeuble ravalé avec ITE en 2020.","fort3":"Balcon, cave et parking.","vig1":"Petits travaux de rafraichissement à prévoir.","vig2":"Charges de copropriété : 300€ / mois.","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/ov7m3wqlpxas9m9nxtdb.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/szkxmivtgqk6nut80zkx.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/ukqhicbqxsczxmfoleku.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/odavsmxsdsozlrrcuzyu.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/l1d6z8rirc336xhdltgp.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Sept 2025","adresse":"20 Domaine du Chateau","surface":"82","prix":205000,"prixm2":2500},{"date":"Avril 2025","adresse":"2 Rue Dahlias","surface":"79","prix":171000,"prixm2":2165},{"date":"Mars 2025","adresse":"31 Domaine du Chateau ","surface":"80","prix":179000,"prixm2":2238},{"date":"Février 2025","adresse":"29 Domaine du Chateau","surface":"79","prix":163000,"prixm2":2063},{"date":"Août 2024","adresse":"3 Domaine du Chateau ","surface":"79","prix":163000,"prixm2":2063},{"date":"Août 2024","adresse":"29 Domaine du Chateau ","surface":"80","prix":155000,"prixm2":1938}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt)."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Installation sans anomalie"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/ov7m3wqlpxas9m9nxtdb.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/ukqhicbqxsczxmfoleku.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/l1d6z8rirc336xhdltgp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/odavsmxsdsozlrrcuzyu.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/szkxmivtgqk6nut80zkx.jpg","caption":"","uploading":false}]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"2","adresse":"29 Domaine du Château 91380 Chilly Mazarin","quartier":"","acheteur_prenom":"test","acheteur_nom":"","annee":"1970","description":"Appartement 4 pièces de 80 m² · 2 · DPE D","surface":80,"surfCarrez":80.4,"pieces":"4","dpe":"D","prix":178000,"prixm2":2225,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1300,"chargesCopro":300,"chargesDetail":"Eau chaude et froide, chauffage, entretien des parties communes, ascenseur, espaces verts","taxeFonciere":1250,"score":"8.5","scorePrest":"8","scoreSecteur":"9","scoreQP":"9","scoreEtat":"8","fort1":"Appartement lumineux. Calme.","fort2":"Immeuble ravalé avec ITE en 2020.","fort3":"Balcon, cave et parking.","vig1":"Petits travaux de rafraichissement à prévoir.","vig2":"Charges de copropriété : 300€ / mois.","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/ov7m3wqlpxas9m9nxtdb.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/szkxmivtgqk6nut80zkx.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/ukqhicbqxsczxmfoleku.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/odavsmxsdsozlrrcuzyu.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/l1d6z8rirc336xhdltgp.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Sept 2025","adresse":"20 Domaine du Chateau","surface":"82","prix":205000,"prixm2":2500},{"date":"Avril 2025","adresse":"2 Rue Dahlias","surface":"79","prix":171000,"prixm2":2165},{"date":"Mars 2025","adresse":"31 Domaine du Chateau ","surface":"80","prix":179000,"prixm2":2238},{"date":"Février 2025","adresse":"29 Domaine du Chateau","surface":"79","prix":163000,"prixm2":2063},{"date":"Août 2024","adresse":"3 Domaine du Chateau ","surface":"79","prix":163000,"prixm2":2063},{"date":"Août 2024","adresse":"29 Domaine du Chateau ","surface":"80","prix":155000,"prixm2":1938}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt)."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Installation sans anomalie"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/ov7m3wqlpxas9m9nxtdb.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/ukqhicbqxsczxmfoleku.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/l1d6z8rirc336xhdltgp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/odavsmxsdsozlrrcuzyu.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/szkxmivtgqk6nut80zkx.jpg","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"appart","etage":"2","adresse":"29 Domaine du Château 91380 Chilly Mazarin","quartier":"","acheteur_prenom":"test","acheteur_nom":"","annee":"1970","description":"4-room apartment of 80 m² · 2 · DPE D","surface":80,"surfCarrez":80.4,"pieces":"4","dpe":"D","prix":178000,"prixm2":2225,"mediane":0,"tension":"Very high","delai":"21 days","loyer":1300,"chargesCopro":300,"chargesDetail":"Hot and cold water, heating, maintenance of common areas, elevator, green spaces","taxeFonciere":1250,"score":"8.5","scorePrest":"8","scoreSecteur":"9","scoreQP":"9","scoreEtat":"8","fort1":"Bright apartment. Quiet.","fort2":"Building refurbished with external thermal insulation in 2020.","fort3":"Balcony, cellar and parking.","vig1":"Minor refreshment works to be planned.","vig2":"Condominium charges: 300€ / month.","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/ov7m3wqlpxas9m9nxtdb.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/szkxmivtgqk6nut80zkx.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/ukqhicbqxsczxmfoleku.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/odavsmxsdsozlrrcuzyu.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/l1d6z8rirc336xhdltgp.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Sept 2025","adresse":"20 Domaine du Chateau","surface":"82","prix":205000,"prixm2":2500},{"date":"Avril 2025","adresse":"2 Rue Dahlias","surface":"79","prix":171000,"prixm2":2165},{"date":"Mars 2025","adresse":"31 Domaine du Chateau ","surface":"80","prix":179000,"prixm2":2238},{"date":"Février 2025","adresse":"29 Domaine du Chateau","surface":"79","prix":163000,"prixm2":2063},{"date":"Août 2024","adresse":"3 Domaine du Chateau ","surface":"79","prix":163000,"prixm2":2063},{"date":"Août 2024","adresse":"29 Domaine du Chateau ","surface":"80","prix":155000,"prixm2":1938}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the assignment, no materials and products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural decree."},{"icon":"⚡","name":"Électricité","status":"attention","result":"The internal electrical installation contains anomalies for which action is recommended in order to eliminate the dangers they present."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Installation without anomaly"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to the collective network compliant"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/ov7m3wqlpxas9m9nxtdb.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/ukqhicbqxsczxmfoleku.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/l1d6z8rirc336xhdltgp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123491/odavsmxsdsozlrrcuzyu.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786123487/szkxmivtgqk6nut80zkx.jpg","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Apartamento luminoso. Calmo.","fort2":"Edifício com fachada renovada e isolamento térmico exterior em 2020.","fort3":"Varanda, arrecadação e estacionamento.","vig1":"Pequenos trabalhos de renovação a prever.","vig2":"Encargos de condomínio: 300€ / mês.","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram identificados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito - edifício construído após 1 de janeiro de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a portaria prefeitoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"A instalação interior de eletricidade apresenta anomalias para as quais se recomenda agir a fim de eliminar os perigos que apresenta(m)."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Instalação sem anomalia"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede coletiva conforme"}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Piso luminoso. Tranquilo.","fort2":"Edificio rehabilitado con aislamiento térmico exterior en 2020.","fort3":"Balcón, trastero y parking.","vig1":"Pequeñas obras de actualización a prever.","vig2":"Gastos de comunidad: 300€ / mes.","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la misión, no se han detectado materiales y productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sujeto - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sujeto a decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"La instalación interior de electricidad presenta anomalías para las cuales se recomienda actuar a fin de eliminar los peligros que presenta(n)."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Instalación sin anomalías"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme"}]}</script>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 </head>
 <body>
 
@@ -2110,6 +2091,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2286,6 +2268,7 @@ function submitOffer() {
     alert(tr('offer-missing'));
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -2374,6 +2357,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -2881,18 +2865,24 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══
