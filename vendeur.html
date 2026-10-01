@@ -117,7 +117,8 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       <div class="cost-out" id="c-out" aria-live="polite"></div>
     </div>
     <div class="card"><div class="lbl">Votre conseiller</div><h2 id="contact-title"></h2><div class="cta" id="cta"></div></div>
-    <div class="foot">Document confidentiel destiné au propriétaire du bien. Les données proviennent de la fiche interactive Privency de votre bien.</div>
+    <div id="digest-box" class="foot hidden" style="padding-bottom:6px;"></div>
+<div class="foot">Document confidentiel destiné au propriétaire du bien. Les données proviennent de la fiche interactive Privency de votre bien.</div>
   </main>
 </div>
 <script>
@@ -285,6 +286,26 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     ['c-credit', 'c-charges', 'c-taxe', 'c-autres', 'c-prix', 'c-baisse'].forEach(function(id) { $(id).addEventListener('input', run); });
     run();
   }
+
+  function initDigest(token) {
+    var box = $('digest-box');
+    fetch(SUPABASE_URL + '/rest/v1/rpc/vendeur_digest_statut', { method: 'POST', headers: {'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}, body: JSON.stringify({p_token: token}) })
+      .then(function(r) { return r.ok ? r.json() : false; })
+      .then(function(on) {
+        if (on !== true) return;
+        box.textContent = ''; box.classList.remove('hidden');
+        box.appendChild(document.createTextNode('Vous recevez ce point chaque lundi par e-mail. '));
+        var b = el('button', 'btn line', 'Ne plus recevoir ce point par e-mail'); b.type = 'button'; b.id = 'digest-stop'; b.style.marginLeft = '6px';
+        b.onclick = function() {
+          b.disabled = true;
+          fetch(SUPABASE_URL + '/rest/v1/rpc/vendeur_digest_stop', { method: 'POST', headers: {'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}, body: JSON.stringify({p_token: token}) })
+            .then(function(r) { return r.ok ? r.json() : false; })
+            .then(function(ok) { box.textContent = ok === true ? "C'est noté : vous ne recevrez plus ce point par e-mail. Ce compte rendu reste accessible avec votre lien." : "Impossible d'enregistrer pour le moment. Réessayez dans quelques instants."; })
+            .catch(function() { box.textContent = "Impossible d'enregistrer pour le moment. Réessayez dans quelques instants."; });
+        };
+        box.appendChild(b);
+      }).catch(function() {});
+  }
   initCalc();
   var token = (location.hash || '').replace(/^#/, '');
   if (!/^[0-9a-f]{64,96}$/.test(token)) { fail("Ce lien n'est pas valide. Demandez à votre conseiller de vous renvoyer le lien de votre compte rendu."); return; }
@@ -292,7 +313,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     method: 'POST', headers: {'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY},
     body: JSON.stringify({p_token: token})
   }).then(function(r) { return r.ok ? r.json() : Promise.reject(new Error('http')); })
-    .then(function(r) { if (!r || r.ok !== true) return fail("Ce lien n'est plus actif. Demandez à votre conseiller de vous en envoyer un nouveau."); render(r); })
+    .then(function(r) { if (!r || r.ok !== true) return fail("Ce lien n'est plus actif. Demandez à votre conseiller de vous en envoyer un nouveau."); render(r); initDigest(token); })
     .catch(function() { fail('Le compte rendu est momentanément indisponible. Réessayez dans quelques instants.'); });
 })();
 </script>

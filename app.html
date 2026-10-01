@@ -1758,6 +1758,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="card-body">
+      <label id="alerte-prefs" style="display:none;align-items:flex-start;gap:10px;margin-bottom:14px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;line-height:1.45;cursor:pointer;">
+        <input type="checkbox" id="alerte-cb" onchange="setAlertePref(this.checked)" style="width:auto;margin-top:3px;">
+        <span><b>🔔 Alertes par e-mail</b> : être prévenu dès qu'un acquéreur transmet une offre, demande des documents, simule son financement, donne son retour de visite ou rouvre la fiche pour la 3<sup>e</sup> fois. Envoi à l'adresse de votre profil, 10 alertes par jour maximum.</span>
+      </label>
       <div id="callist-block" style="display:none;margin-bottom:18px;"></div>
       <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);">
         <span style="font-size:13px;color:var(--muted);">Purger les statistiques de plus de</span>
@@ -5313,6 +5317,27 @@ function refreshStep4Summary() {
 var _analyticsGroups = [];   // groupes (client + bien) avec la liste des ids de lignes
 var _analyticsAuth   = null; // { url, key, token }
 
+async function loadAlertePref() {
+  var box = document.getElementById('alerte-prefs'); if (!box) return;
+  try {
+    var s = await window.privencyAuth.auth.getSession(), uid = s && s.data && s.data.session && s.data.session.user && s.data.session.user.id;
+    if (!uid) return;
+    var r = await window.privencyAuth.from('agent_notif_prefs').select('alertes_actives').eq('user_id', uid).maybeSingle();
+    if (r.error) return;   // table pas encore créée : la case reste masquée
+    document.getElementById('alerte-cb').checked = !!(r.data && r.data.alertes_actives);
+    box.style.display = 'flex';
+  } catch (e) {}
+}
+async function setAlertePref(on) {
+  var cb = document.getElementById('alerte-cb');
+  try {
+    var s = await window.privencyAuth.auth.getSession(), uid = s && s.data && s.data.session && s.data.session.user && s.data.session.user.id;
+    if (!uid) throw new Error('Session expirée');
+    var r = await window.privencyAuth.from('agent_notif_prefs').upsert({ user_id: uid, alertes_actives: !!on, updated_at: new Date().toISOString() });
+    if (r.error) throw new Error(r.error.message || 'Échec');
+    showToast(on ? '✅ Alertes activées.' : 'Alertes désactivées.');
+  } catch (e) { if (cb) cb.checked = !on; showToast('❌ ' + (e && e.message ? e.message : 'Échec'), true); }
+}
 async function loadAnalytics() {
   var status = document.getElementById('analytics-status');
   var wrap   = document.getElementById('analytics-table-wrap');
@@ -5466,6 +5491,7 @@ async function loadAnalytics() {
 
     status.style.display = 'none';
     try { renderCallList(); } catch (ecl) {}
+    loadAlertePref();
     renderAnalytics();
   } catch(err) {
     status.textContent = '❌ Erreur chargement : ' + err.message;
@@ -5998,8 +6024,10 @@ async function vendeurDialog(fname) {
   async function draw() {
     body.textContent = '';
     body.appendChild(txt('Chargement…'));
-    var r = await db.from('vendeur_liens').select('token,note,note_at,revoked_at')
+    var hasDigest = true;
+    var r = await db.from('vendeur_liens').select('token,note,note_at,revoked_at,digest_email')
       .eq('filename', fname).is('revoked_at', null).limit(1);
+    if (r.error) { hasDigest = false; r = await db.from('vendeur_liens').select('token,note,note_at,revoked_at').eq('filename', fname).is('revoked_at', null).limit(1); }   // colonnes du lot 6 pas encore créées
     body.textContent = '';
     if (r.error) { body.appendChild(txt('❌ Fonction non activée ou indisponible (' + (r.error.message || 'erreur') + ').', 'font-size:12px;color:var(--danger);margin-bottom:10px;')); body.appendChild(btn('Fermer', 'btn-outline', close)); return; }
     var lien = r.data && r.data[0];
@@ -6061,6 +6089,15 @@ async function vendeurDialog(fname) {
     var ta = document.createElement('textarea'); ta.id = 'vendeur-note'; ta.maxLength = 600; ta.rows = 4; ta.style.cssText = 'width:100%;font-size:13px;'; ta.value = lien.note || '';
     ta.placeholder = 'Ex : Belle semaine, deux visites prévues jeudi. On en reparle vendredi.';
     body.appendChild(ta);
+    var emIn = null, emOk = null;
+    if (hasDigest) {
+      var lab2 = document.createElement('div'); lab2.style.cssText = 'font-size:12px;font-weight:600;margin:14px 0 6px;'; lab2.textContent = 'Point automatique chaque lundi par e-mail (facultatif)'; body.appendChild(lab2);
+      emIn = document.createElement('input'); emIn.type = 'email'; emIn.id = 'vendeur-email'; emIn.maxLength = 254; emIn.placeholder = 'E-mail du vendeur'; emIn.value = lien.digest_email || ''; emIn.style.cssText = 'width:100%;font-size:13px;margin-bottom:6px;'; body.appendChild(emIn);
+      var lbl3 = document.createElement('label'); lbl3.style.cssText = 'display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.45;color:var(--muted);';
+      emOk = document.createElement('input'); emOk.type = 'checkbox'; emOk.id = 'vendeur-accord'; emOk.checked = !!lien.digest_email; emOk.style.cssText = 'width:auto;margin-top:2px;';
+      var sp3 = document.createElement('span'); sp3.textContent = "Le vendeur est d'accord pour recevoir ce point par e-mail (ouvertures de la semaine, démarches des acquéreurs sous une lettre, jamais de nom). Il peut s'arrêter d'un clic depuis son compte rendu.";
+      lbl3.appendChild(emOk); lbl3.appendChild(sp3); body.appendChild(lbl3);
+    }
     actions.appendChild(btn('Fermer', 'btn-outline', close));
     actions.appendChild(btn('Arrêter le lien', 'btn-outline', async function(e) {
       e.target.disabled = true;
@@ -6068,13 +6105,21 @@ async function vendeurDialog(fname) {
       if (up.error) { showToast('❌ ' + (up.error.message || 'Échec'), true); e.target.disabled = false; return; }
       showToast('✅ Lien désactivé.'); draw();
     }));
-    var save = btn('Enregistrer le mot', 'btn-primary', async function(e) {
+    var save = btn('Enregistrer', 'btn-primary', async function(e) {
       e.target.disabled = true;
       var n = ta.value.trim().slice(0, 600);
-      var up = await db.from('vendeur_liens').update({ note: n || null, note_at: n ? new Date().toISOString() : null }).eq('token', lien.token);
+      var patch = { note: n || null, note_at: n ? new Date().toISOString() : null };
+      if (emIn) {
+        var em = emIn.value.trim();
+        if (em && !/^[^\s@<>"',;]+@[^\s@<>"',;]+\.[^\s@<>"',;]+$/.test(em)) { showToast("❌ Adresse e-mail du vendeur invalide.", true); e.target.disabled = false; return; }
+        if (em && !emOk.checked) { showToast("❌ Cochez l'accord du vendeur pour activer l'envoi.", true); e.target.disabled = false; return; }
+        if (em !== (lien.digest_email || '')) { patch.digest_email = em || null; patch.digest_consent_at = em ? new Date().toISOString() : null; }
+      }
+      var up = await db.from('vendeur_liens').update(patch).eq('token', lien.token);
       e.target.disabled = false;
-      if (up.error) { showToast('❌ ' + (up.error.message || 'Échec'), true); return; }
-      showToast('✅ Mot enregistré.');
+      if (up.error) { showToast(/optout/.test(up.error.message || '') ? '❌ Le vendeur s\'est désinscrit du point par e-mail : il doit en refaire la demande (nouveau lien).' : '❌ ' + (up.error.message || 'Échec'), true); return; }
+      if ('digest_email' in patch) lien.digest_email = patch.digest_email;
+      showToast(emIn && emIn.value.trim() ? '✅ Enregistré : le vendeur recevra le point chaque lundi.' : '✅ Enregistré.');
     });
     save.id = 'vendeur-save';
     actions.appendChild(save);
