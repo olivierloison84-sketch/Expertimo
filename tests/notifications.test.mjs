@@ -13,6 +13,10 @@ function deps({ alertes = [], digests = [], rapport = null, resendOk = true } = 
 // ── accès
 let d = deps(); assert.strictEqual((await handle(req('alertes', jwt('anon')), d)).status, 403, 'clé anon refusée');
 assert.strictEqual((await handle(req('alertes', ''), d)).status, 403, 'sans jeton refusé');
+{ const dv = deps(); dv.verify = async t => t === 'x.' + Buffer.from(JSON.stringify({ role: 'service_role' })).toString('base64url') + '.OTHER';
+  assert.strictEqual((await handle(req('alertes', 'Bearer x.' + Buffer.from(JSON.stringify({ role: 'service_role' })).toString('base64url') + '.OTHER'), dv)).status, 200, 'jeton validé par la base (autre format de clé) accepté');
+  assert.strictEqual((await handle(req('alertes', jwt('anon')), dv)).status, 403, 'jeton refusé par la base : 403');
+  dv.verify = async () => { throw new Error('x'); }; assert.strictEqual((await handle(req('alertes', jwt('anon')), dv)).status, 403, 'erreur de vérification : 403'); }
 assert.strictEqual((await handle(req('alertes', jwt('service_role').replace('.y', '.z')), d)).status, 403, 'jeton forgé (signature différente) refusé');
 assert.strictEqual((await handle(req('alertes', jwt('authenticated')), d)).status, 403, 'utilisateur connecté refusé');
 assert.strictEqual((await handle(req('x'), d)).status, 400, 'mode invalide');

@@ -112,6 +112,13 @@ create or replace function public.notif_alerte_marque(p_agent uuid, p_cle text) 
 language sql security definer set search_path = public as $$
   insert into public.notif_alertes_envoyees(agent_user_id, cle) values (p_agent, left(p_cle, 400)) on conflict do nothing $$;
 
+-- Sert à l'Edge Function pour vérifier qu'un jeton est bien celui du rôle service_role (seul autorisé à l'appeler).
+create or replace function public.notif_ping() returns boolean language sql security definer set search_path = public stable as $$ select true $$;
+revoke all on function public.notif_ping() from public, anon, authenticated;
+do $$ begin
+  if exists (select 1 from pg_roles where rolname = 'service_role') then grant execute on function public.notif_ping() to service_role; end if;
+end $$;
+
 revoke all on function public.notif_digests_dues(), public.notif_digest_marque(text), public.notif_alertes_dues(), public.notif_alerte_marque(uuid, text) from public, anon, authenticated;
 do $$ begin
   if exists (select 1 from pg_roles where rolname = 'service_role') then

@@ -23,7 +23,12 @@ async function resend(deps, payload) {
 export async function handle(req, deps) {
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
   // Appel réservé à la clé service_role (la clé anon est publique) : comparée au secret de l'environnement.
-  if (!sameKey(req.headers.get('authorization'), deps.env.SERVICE_ROLE_KEY)) return json({ error: 'forbidden' }, 403);
+  const bearer = String(req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  let allowed = sameKey(req.headers.get('authorization'), deps.env.SERVICE_ROLE_KEY);
+  // Clé reçue différente du secret d'environnement (ex. ancienne / nouvelle clé) : on la fait vérifier par la base,
+  // qui n'autorise notif_ping() qu'au rôle service_role (signature contrôlée par Supabase, rien n'est décodé ici).
+  if (!allowed && bearer && deps.verify) { try { allowed = (await deps.verify(bearer)) === true; } catch (e) { allowed = false; } }
+  if (!allowed) return json({ error: 'forbidden' }, 403);
   if (!deps.env.RESEND_API_KEY) return json({ error: 'RESEND_API_KEY manquante' }, 500);
   let body = {}; try { body = await req.json(); } catch (e) {}
   const mode = body && body.mode;
