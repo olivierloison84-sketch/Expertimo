@@ -108,6 +108,10 @@ module.exports = async function handler(req, res) {
     return res.status(400).json({ ok: false, error: 'nom et email requis' });
   }
 
+  // L'ouverture de l'onglet Documents (nom + e-mail) ne génère plus de mail : l'agent ne reçoit que la « liste de documents
+  // souhaités » (type documents_liste), qui contient déjà le nom, l'e-mail et les documents choisis.
+  if (body.type === 'documents') return res.status(200).json({ ok: true, ignore: true });
+
   const candidateEmail = String(body.agentEmail || '').trim();
   const to = EMAIL_RE.test(candidateEmail) ? candidateEmail : process.env.FALLBACK_LEAD_EMAIL;
 
