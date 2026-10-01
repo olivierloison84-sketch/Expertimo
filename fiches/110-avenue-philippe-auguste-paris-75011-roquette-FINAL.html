@@ -351,6 +351,28 @@ html,body{overflow-x:hidden;}
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Último andar de um edifício haussmanniano","fort2":"Apartamento mobilado e em bom estado","fort3":"Imposto predial (155€/ano) e encargos de condomínio (43€/mês) muito baixos: ideal para investidor","vig1":"8º e último andar sem elevador","vig2":"Sem varanda, cave e estacionamento","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Último piso de un edificio haussmanniano","fort2":"Piso amueblado y en buen estado","fort3":"Impuesto sobre bienes inmuebles (155€/año) y gastos de comunidad (43€/mes) muy bajos: ideal inversor","vig1":"8º y último piso sin ascensor","vig2":"Sin balcón, bodega ni parking","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
 <style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
+<style>
+#doc-picker .dp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+#doc-picker .dp-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);}
+#doc-picker .dp-sub{font-size:12.5px;color:var(--muted);margin-top:3px;}
+#doc-picker .dp-kind{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--gold2,var(--gold));border:1px solid var(--gold);border-radius:99px;padding:4px 10px;white-space:nowrap;}
+#doc-picker .dp-tools{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:12px;font-size:12px;}
+#doc-picker .dp-tools button{background:none;border:none;padding:0;color:var(--gold2,var(--gold));text-decoration:underline;cursor:pointer;font:inherit;}
+#doc-picker #dp-count{color:var(--muted);}
+#doc-picker .dp-group{margin-bottom:16px;}
+#doc-picker .dp-gt{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+#doc-picker .dp-gn{font-size:11.5px;color:var(--muted);margin:-4px 0 8px;}
+#doc-picker .dp-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+#doc-picker .dp-item{display:flex;gap:10px;align-items:flex-start;background:var(--cream);border:1px solid var(--border);border-radius:12px;padding:11px 12px;cursor:pointer;font-size:13px;line-height:1.4;}
+#doc-picker .dp-item:hover{border-color:var(--gold);}
+#doc-picker .dp-item input{margin-top:2px;flex:none;width:16px;height:16px;accent-color:var(--gold);}
+#doc-picker .dp-item small{color:var(--muted);}
+#doc-picker #dp-note{margin:6px 0 12px;width:100%;box-sizing:border-box;resize:vertical;}
+#doc-picker .dp-msg{margin-top:11px;padding:10px 12px;border-radius:10px;font-size:13px;}
+#doc-picker .dp-msg.ok{background:#e9f9f1;color:#0a6f4d;}
+#doc-picker .dp-msg.err{background:#fdecea;color:#a12622;}
+@media (max-width:640px){#doc-picker .dp-grid{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
 
@@ -688,13 +710,13 @@ html,body{overflow-x:hidden;}
     </div>
     <div id="doc-content" style="display:none;">
       <div id="doc-success" class="alert vert" style="margin-top:13px;margin-bottom:14px;"><h4 data-i18n="doc-success-title">✅ Accès déverrouillé</h4><p data-i18n="doc-success-txt">Votre demande a été transmise. Le conseiller vous contactera dans les 24h avec les documents complets.</p></div>
-      <div class="dg">
-        <div class="dc"><div class="dci">📄</div><div class="dcn" data-i18n="doc-pv-ag">PV Assemblée Générale</div><div class="dcm" data-i18n="doc-pv-ag-desc">Dernière AG copropriété</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">📊</div><div class="dcn" data-i18n="doc-charges">Appels de charges</div><div class="dcm" id="doc-charges-desc" data-fr-val="Relevé annuel · 43 €/mois" data-en-val="Annual statement · 43 €/month" data-pt-val="Extrato anual · 43 €/mês" data-es-val="Extracto anual · 43 €/mes">Relevé annuel · 43 €/mois</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">🏠</div><div class="dcn" data-i18n="doc-diag-tech">Diagnostics techniques</div><div class="dcm" data-i18n="doc-diag-tech-desc">DPE, amiante, plomb...</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">🏛️</div><div class="dcn" data-i18n="doc-taxe">Avis taxe foncière</div><div class="dcm" id="doc-taxe-desc" data-fr-val="155 € / an" data-en-val="155 € / year" data-pt-val="155 € / ano" data-es-val="155 € / año">155 € / an</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">🔨</div><div class="dcn" data-i18n="doc-factures">Factures &amp; devis travaux</div><div class="dcm" data-i18n="doc-factures-desc">Rénovations réalisées</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
-        <div class="dc"><div class="dci">📋</div><div class="dcn" data-i18n="doc-reglement">Règlement copropriété</div><div class="dcm" data-i18n="doc-reglement-desc">Documents de la copro</div><div class="dlck" data-i18n="doc-dispo">🔓 Disponible</div></div>
+      <div id="doc-picker">
+        <div class="dp-head"><div><div class="dp-title" id="dp-title"></div><div class="dp-sub" id="dp-sub"></div></div><span class="dp-kind" id="dp-kind"></span></div>
+        <div class="dp-tools"><button type="button" id="dp-all" onclick="docPickerAll(true)"></button><button type="button" id="dp-none" onclick="docPickerAll(false)"></button><span id="dp-count"></span></div>
+        <div id="dp-groups"></div>
+        <textarea id="dp-note" class="field" rows="2" maxlength="500"></textarea>
+        <button type="button" id="dp-send" class="btndark" onclick="docPickerSend()"></button>
+        <div id="dp-msg" class="dp-msg" style="display:none"></div>
       </div>
     </div>
   </div>
@@ -2874,6 +2896,16 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     window.addEventListener('pagehide', send);
   })();
   window.privencyTrack = track;
+  // Documents souhaités (liste cochée par l'acquéreur) : enregistrés pour l'agent (libellés courts, pas de contact).
+  window.privencyDocs = function(docs, note) {
+    try {
+      fetch(SUPABASE_URL + '/rest/v1/rpc/fiche_demande_documents', {
+        method: 'POST', keepalive: true,
+        headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY },
+        body: JSON.stringify({ p_path: window.location.pathname, p_client: client, p_adresse: adresse, p_docs: (docs || []).slice(0, 40), p_note: String(note || '').slice(0, 500) })
+      }).catch(function() {});
+    } catch (e) {}
+  };
   // Questions posées à l'assistant : transmises à l'agent (mention affichée sous la zone de saisie).
   window.privencyQuestion = function(q, lang) {
     try {
@@ -2904,6 +2936,144 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
 })();
+</script>
+<script>
+// ═══ DOCUMENTS SOUHAITÉS — liste adaptée au bien (copropriété / hors copropriété / terrain), 4 langues ═══
+// L'acquéreur coche ce qu'il veut recevoir ; la demande part par email à l'agent (libellés en français) et dans ses stats.
+var _DOC_UI = {
+  fr: {title: 'Quels documents souhaitez-vous recevoir ?', sub: 'Cochez ceux qui vous intéressent : votre conseiller vous les envoie en priorité.', all: 'Tout cocher', none: 'Tout décocher', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : ''); }, note: 'Précisions (facultatif) — pas de données sensibles', send: '📨 Envoyer ma demande', empty: 'Cochez au moins un document.', done: '✅ Merci ! Votre demande est transmise à votre conseiller.', fail: '⚠️ Envoi impossible pour le moment. Réessayez ou contactez directement votre conseiller.', kindCopro: 'Bien en copropriété', kindIndiv: 'Bien hors copropriété', kindTerrain: 'Terrain'},
+  en: {title: 'Which documents would you like to receive?', sub: 'Tick the ones you are interested in: your advisor will send them to you first.', all: 'Select all', none: 'Clear all', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' selected'; }, note: 'Additional details (optional) — no sensitive data', send: '📨 Send my request', empty: 'Please tick at least one document.', done: '✅ Thank you! Your request has been sent to your advisor.', fail: '⚠️ Could not send right now. Please try again or contact your advisor directly.', kindCopro: 'Condominium property', kindIndiv: 'Non-condominium property', kindTerrain: 'Land'},
+  pt: {title: 'Que documentos deseja receber?', sub: 'Assinale os que lhe interessam: o seu consultor envia-os com prioridade.', all: 'Selecionar tudo', none: 'Desmarcar tudo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' selecionado' + (n > 1 ? 's' : ''); }, note: 'Pormenores (facultativo) — sem dados sensíveis', send: '📨 Enviar o meu pedido', empty: 'Assinale pelo menos um documento.', done: '✅ Obrigado! O seu pedido foi transmitido ao seu consultor.', fail: '⚠️ Não foi possível enviar agora. Tente novamente ou contacte diretamente o seu consultor.', kindCopro: 'Imóvel em condomínio', kindIndiv: 'Imóvel fora de condomínio', kindTerrain: 'Terreno'},
+  es: {title: '¿Qué documentos desea recibir?', sub: 'Marque los que le interesan: su asesor se los enviará en primer lugar.', all: 'Marcar todo', none: 'Desmarcar todo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' seleccionado' + (n > 1 ? 's' : ''); }, note: 'Detalles (opcional) — sin datos sensibles', send: '📨 Enviar mi solicitud', empty: 'Marque al menos un documento.', done: '✅ ¡Gracias! Su solicitud ha sido transmitida a su asesor.', fail: '⚠️ No se pudo enviar ahora. Inténtelo de nuevo o contacte directamente con su asesor.', kindCopro: 'Inmueble en comunidad de propietarios', kindIndiv: 'Inmueble fuera de comunidad', kindTerrain: 'Terreno'}
+};
+// where : 'all' = tous les biens ; 'bati' = maison + copropriété (pas terrain) ; 'copro' ; 'indiv' = hors copropriété bâti ; 'indivt' = hors copropriété bâti + terrain
+var _DOC_CAT = [
+  {id: 'bien', t: {fr: 'Le bien', en: 'The property', pt: 'O imóvel', es: 'El inmueble'}, items: [
+    {id: 'titre', where: 'all', fr: "Titre de propriété (acte d'achat)", en: 'Title deed (purchase deed)', pt: 'Título de propriedade (escritura de compra)', es: 'Título de propiedad (escritura de compra)'},
+    {id: 'taxe', where: 'all', fr: 'Dernier avis de taxe foncière', en: 'Latest property tax notice (taxe foncière)', pt: 'Último aviso do imposto predial francês (taxe foncière)', es: 'Último recibo del impuesto sobre bienes inmuebles francés (taxe foncière)', hint: 'taxe'},
+    {id: 'plans_copro', where: 'copro', fr: 'Plans du lot et des annexes (cave, parking)', en: 'Plans of the unit and annexes (cellar, parking)', pt: 'Plantas da fração e anexos (cave, estacionamento)', es: 'Planos de la vivienda y anexos (trastero, garaje)'},
+    {id: 'plans_indiv', where: 'indivt', fr: 'Plans du bien et de la parcelle', en: 'Plans of the property and the plot', pt: 'Plantas do imóvel e do lote', es: 'Planos del inmueble y de la parcela'},
+    {id: 'travaux', where: 'bati', fr: 'Factures et devis de travaux', en: 'Renovation invoices and quotes', pt: 'Faturas e orçamentos de obras', es: 'Facturas y presupuestos de obras'},
+    {id: 'garanties', where: 'indiv', fr: 'Garanties décennale / dommage-ouvrage (travaux récents)', en: 'Ten-year / structural damage warranties (recent works)', pt: 'Garantias decenal / seguro de dano-obra (obras recentes)', es: 'Garantías decenal / seguro de daños de obra (obras recientes)'},
+    {id: 'energie', where: 'bati', fr: "Factures d'énergie (électricité, gaz, chauffage) des 12 derniers mois", en: 'Energy bills (electricity, gas, heating) for the last 12 months', pt: 'Faturas de energia (eletricidade, gás, aquecimento) dos últimos 12 meses', es: 'Facturas de energía (electricidad, gas, calefacción) de los últimos 12 meses'},
+    {id: 'entretien', where: 'bati', fr: "Contrats et attestations d'entretien (chaudière, ramonage, ventilation)", en: 'Maintenance contracts and certificates (boiler, chimney sweep, ventilation)', pt: 'Contratos e certificados de manutenção (caldeira, limpeza de chaminé, ventilação)', es: 'Contratos y certificados de mantenimiento (caldera, deshollinado, ventilación)'},
+    {id: 'bail', where: 'bati', fr: 'Bail en cours et dernières quittances (si le bien est loué)', en: 'Current lease and latest rent receipts (if the property is let)', pt: 'Contrato de arrendamento e últimos recibos (se o imóvel estiver arrendado)', es: 'Contrato de alquiler vigente y últimos recibos (si el inmueble está alquilado)'}
+  ]},
+  {id: 'urba', where: 'indivt', t: {fr: 'Terrain, urbanisme et travaux', en: 'Land, planning and works', pt: 'Terreno, urbanismo e obras', es: 'Terreno, urbanismo y obras'}, items: [
+    {id: 'permis', where: 'indiv', fr: 'Permis de construire, déclarations de travaux et attestation de conformité', en: 'Building permit, works declarations and compliance certificate', pt: 'Licença de construção, declarações de obras e certificado de conformidade', es: 'Licencia de obra, declaraciones de obras y certificado de conformidad'},
+    {id: 'urbanisme', where: 'indivt', fr: "Certificat / note d'urbanisme (PLU, servitudes)", en: 'Planning certificate / zoning note (local plan, easements)', pt: 'Certidão / nota de urbanismo (PDM, servidões)', es: 'Certificado / nota urbanística (plan urbanístico, servidumbres)'},
+    {id: 'lotissement', where: 'indivt', fr: 'Règlement de lotissement / cahier des charges (ASL)', en: 'Subdivision rules / specifications (homeowners association)', pt: 'Regulamento de loteamento / caderno de encargos', es: 'Reglamento de urbanización / pliego de condiciones'},
+    {id: 'viabilisation', where: 'terrain', fr: 'Viabilisation et raccordements (eau, électricité, assainissement)', en: 'Utilities and connections (water, electricity, sanitation)', pt: 'Infraestruturas e ligações (água, eletricidade, saneamento)', es: 'Urbanización y conexiones (agua, electricidad, saneamiento)'},
+    {id: 'geotech', where: 'indivt', fr: 'Étude de sol / géotechnique (zones à risque argile)', en: 'Soil / geotechnical study (clay-shrinkage risk areas)', pt: 'Estudo de solos / geotécnico (zonas de risco de argilas)', es: 'Estudio de suelos / geotécnico (zonas con riesgo de arcillas)'},
+    {id: 'bornage', where: 'indivt', fr: 'Plan de bornage et limites de propriété', en: 'Boundary survey and property lines', pt: 'Planta de demarcação e limites da propriedade', es: 'Plano de deslinde y límites de la propiedad'}
+  ]},
+  {id: 'diag', t: {fr: 'Diagnostics', en: 'Diagnostics', pt: 'Diagnósticos', es: 'Diagnósticos'}, n: {fr: 'Certains diagnostics ne concernent que certains biens (âge du bâtiment, zone à risque…).', en: 'Some diagnostics only apply to certain properties (age of the building, risk area…).', pt: 'Alguns diagnósticos só se aplicam a certos imóveis (idade do edifício, zona de risco…).', es: 'Algunos diagnósticos solo se aplican a ciertos inmuebles (antigüedad del edificio, zona de riesgo…).'}, items: [
+    {id: 'dpe', where: 'bati', fr: 'DPE (diagnostic de performance énergétique)', en: 'Energy performance certificate (EPC / DPE)', pt: 'Certificado energético (DPE)', es: 'Certificado de eficiencia energética (DPE)'},
+    {id: 'audit', where: 'indiv', fr: 'Audit énergétique (obligatoire pour une maison classée E, F ou G)', en: 'Energy audit (mandatory for a house rated E, F or G)', pt: 'Auditoria energética (obrigatória para moradias classe E, F ou G)', es: 'Auditoría energética (obligatoria para viviendas clase E, F o G)'},
+    {id: 'amiante', where: 'bati', fr: 'Diagnostic amiante', en: 'Asbestos survey', pt: 'Diagnóstico de amianto', es: 'Diagnóstico de amianto'},
+    {id: 'plomb', where: 'bati', fr: 'Diagnostic plomb (CREP)', en: 'Lead paint survey (CREP)', pt: 'Diagnóstico de chumbo (CREP)', es: 'Diagnóstico de plomo (CREP)'},
+    {id: 'termites', where: 'bati', fr: 'Diagnostic termites', en: 'Termite survey', pt: 'Diagnóstico de térmitas', es: 'Diagnóstico de termitas'},
+    {id: 'elec', where: 'bati', fr: "Diagnostic de l'installation électrique", en: 'Electrical installation survey', pt: 'Diagnóstico da instalação elétrica', es: 'Diagnóstico de la instalación eléctrica'},
+    {id: 'gaz', where: 'bati', fr: "Diagnostic de l'installation de gaz", en: 'Gas installation survey', pt: 'Diagnóstico da instalação de gás', es: 'Diagnóstico de la instalación de gas'},
+    {id: 'assainissement', where: 'indivt', fr: 'Assainissement (SPANC ou raccordement au tout-à-l\'égout)', en: 'Sanitation (septic tank inspection or mains sewer connection)', pt: 'Saneamento (fossa séptica ou ligação à rede de esgotos)', es: 'Saneamiento (fosa séptica o conexión a la red de alcantarillado)'},
+    {id: 'erp', where: 'all', fr: 'État des risques et pollutions (ERP)', en: 'Natural and technological risks statement (ERP)', pt: 'Estado de riscos e poluições (ERP)', es: 'Estado de riesgos y contaminación (ERP)'},
+    {id: 'dta', where: 'copro', fr: 'Diagnostic amiante des parties communes (DTA)', en: 'Asbestos survey of the common areas (DTA)', pt: 'Diagnóstico de amianto das partes comuns (DTA)', es: 'Diagnóstico de amianto de las zonas comunes (DTA)'},
+    {id: 'carrez', where: 'copro', fr: 'Mesurage loi Carrez', en: 'Carrez law floor-area measurement', pt: 'Medição da área (lei Carrez)', es: 'Medición de superficie (ley Carrez)'}
+  ]},
+  {id: 'copro', where: 'copro', t: {fr: 'Copropriété', en: 'Condominium', pt: 'Condomínio', es: 'Comunidad de propietarios'}, items: [
+    {id: 'rcp', where: 'copro', fr: 'Règlement de copropriété et état descriptif de division', en: 'Condominium rules and division description', pt: 'Regulamento do condomínio e descrição das frações', es: 'Reglamento de la comunidad y descripción de la división'},
+    {id: 'pv_ag', where: 'copro', fr: "Procès-verbaux des 3 dernières assemblées générales", en: 'Minutes of the last 3 general meetings', pt: 'Atas das últimas 3 assembleias gerais', es: 'Actas de las últimas 3 juntas generales'},
+    {id: 'appels', where: 'copro', fr: 'Appels de charges et relevé des charges', en: 'Service charge calls and statement', pt: 'Avisos de quotas e extrato de despesas', es: 'Cuotas de comunidad y extracto de gastos', hint: 'charges'},
+    {id: 'budget', where: 'copro', fr: 'Budget prévisionnel et comptes de la copropriété', en: 'Forecast budget and condominium accounts', pt: 'Orçamento previsional e contas do condomínio', es: 'Presupuesto previsto y cuentas de la comunidad'},
+    {id: 'travaux_copro', where: 'copro', fr: "Travaux votés ou à venir dans l'immeuble et fonds de travaux", en: 'Works voted or planned in the building and works fund', pt: 'Obras votadas ou previstas no edifício e fundo de obras', es: 'Obras aprobadas o previstas en el edificio y fondo de obras'},
+    {id: 'ppt', where: 'copro', fr: 'Plan pluriannuel de travaux (PPT) / diagnostic technique global (DTG)', en: 'Multi-year works plan (PPT) / global technical diagnosis (DTG)', pt: 'Plano plurianual de obras (PPT) / diagnóstico técnico global (DTG)', es: 'Plan plurianual de obras (PPT) / diagnóstico técnico global (DTG)'},
+    {id: 'carnet', where: 'copro', fr: "Carnet d'entretien de l'immeuble", en: 'Building maintenance logbook', pt: 'Livro de manutenção do edifício', es: 'Libro de mantenimiento del edificio'},
+    {id: 'fiche_synth', where: 'copro', fr: "Fiche synthétique de la copropriété (avec numéro d'immatriculation)", en: 'Condominium summary sheet (with registration number)', pt: 'Ficha síntese do condomínio (com número de registo)', es: 'Ficha resumen de la comunidad (con número de registro)'},
+    {id: 'procedures', where: 'copro', fr: 'Procédures en cours dans la copropriété (impayés, litiges)', en: 'Ongoing proceedings in the condominium (unpaid charges, disputes)', pt: 'Processos em curso no condomínio (dívidas, litígios)', es: 'Procedimientos en curso en la comunidad (impagos, litigios)'},
+    {id: 'pre_etat', where: 'copro', fr: 'Pré-état daté (situation financière du lot)', en: 'Pre-sale financial statement (pré-état daté) for the unit', pt: 'Pré-estado datado (situação financeira da fração)', es: 'Pre-estado datado (situación financiera de la vivienda)'},
+    {id: 'assurance', where: 'copro', fr: "Attestation d'assurance de l'immeuble", en: "Building insurance certificate", pt: 'Certificado de seguro do edifício', es: 'Certificado del seguro del edificio'}
+  ]}
+];
+function _docKind() {
+  var d = {}; try { d = JSON.parse(document.getElementById('expertimo-data').textContent) || {}; } catch (e) {}
+  var type = d.type || '';
+  var copro = d.copro || (type === 'maison' || type === 'terrain' ? 'non' : 'oui');
+  var kind = type === 'terrain' ? 'terrain' : (copro === 'oui' ? 'copro' : 'indiv');
+  return {kind: kind, data: d};
+}
+function _docApplies(where, kind) {
+  if (where === 'all') return true;
+  if (where === 'bati') return kind !== 'terrain';
+  if (where === 'copro') return kind === 'copro';
+  if (where === 'indiv') return kind === 'indiv';
+  if (where === 'indivt') return kind === 'indiv' || kind === 'terrain';
+  if (where === 'terrain') return kind === 'terrain';
+  return true;
+}
+function _docLang() { return (typeof _currentLang !== 'undefined' && _DOC_UI[_currentLang]) ? _currentLang : 'fr'; }
+function _docChecked() {
+  var ids = [];
+  document.querySelectorAll('#dp-groups input[type=checkbox]:checked').forEach(function(cb) { ids.push(cb.value); });
+  return ids;
+}
+function _docUpdateCount() {
+  var n = _docChecked().length, el = document.getElementById('dp-count');
+  if (el) el.textContent = n ? _DOC_UI[_docLang()].count(n) : '';
+}
+function renderDocPicker() {
+  var box = document.getElementById('dp-groups');
+  if (!box) return;
+  var L = _docLang(), U = _DOC_UI[L], k = _docKind(), keep = {};
+  _docChecked().forEach(function(id) { keep[id] = true; });
+  box.textContent = '';
+  var setText = function(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; };
+  setText('dp-title', U.title); setText('dp-sub', U.sub); setText('dp-all', U.all); setText('dp-none', U.none);
+  setText('dp-send', U.send);
+  var kindEl = document.getElementById('dp-kind');
+  if (kindEl) kindEl.textContent = k.kind === 'copro' ? U.kindCopro : (k.kind === 'terrain' ? U.kindTerrain : U.kindIndiv);
+  var noteEl = document.getElementById('dp-note'); if (noteEl) noteEl.placeholder = U.note;
+  _DOC_CAT.forEach(function(g) {
+    if (g.where && !_docApplies(g.where, k.kind)) return;
+    var items = g.items.filter(function(it) { return _docApplies(it.where, k.kind); });
+    if (!items.length) return;
+    var sec = document.createElement('div'); sec.className = 'dp-group';
+    var h = document.createElement('div'); h.className = 'dp-gt'; h.textContent = g.t[L]; sec.appendChild(h);
+    if (g.n) { var hn = document.createElement('div'); hn.className = 'dp-gn'; hn.textContent = g.n[L]; sec.appendChild(hn); }
+    var grid = document.createElement('div'); grid.className = 'dp-grid';
+    items.forEach(function(it) {
+      var lab = document.createElement('label'); lab.className = 'dp-item';
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = it.id; cb.checked = !!keep[it.id];
+      cb.addEventListener('change', _docUpdateCount);
+      var sp = document.createElement('span'); sp.textContent = it[L];
+      if (it.hint === 'taxe' && k.data.taxeFonciere > 0) { var s2 = document.createElement('small'); s2.textContent = ' · ' + Math.round(k.data.taxeFonciere) + ' € / ' + ({fr: 'an', en: 'year', pt: 'ano', es: 'año'})[L]; sp.appendChild(s2); }
+      if (it.hint === 'charges' && k.data.chargesCopro > 0) { var s3 = document.createElement('small'); s3.textContent = ' · ' + Math.round(k.data.chargesCopro) + ' € / ' + ({fr: 'mois', en: 'month', pt: 'mês', es: 'mes'})[L]; sp.appendChild(s3); }
+      lab.appendChild(cb); lab.appendChild(sp); grid.appendChild(lab);
+    });
+    sec.appendChild(grid); box.appendChild(sec);
+  });
+  _docUpdateCount();
+}
+function docPickerAll(on) {
+  document.querySelectorAll('#dp-groups input[type=checkbox]').forEach(function(cb) { cb.checked = on; });
+  _docUpdateCount();
+}
+function docPickerSend() {
+  var U = _DOC_UI[_docLang()], ids = _docChecked(), msg = document.getElementById('dp-msg'), btn = document.getElementById('dp-send');
+  var show = function(t, ok) { if (msg) { msg.textContent = t; msg.className = 'dp-msg ' + (ok ? 'ok' : 'err'); msg.style.display = 'block'; } };
+  if (!ids.length) { show(U.empty, false); return; }
+  var k = _docKind(), labels = [];
+  _DOC_CAT.forEach(function(g) { g.items.forEach(function(it) { if (ids.indexOf(it.id) !== -1) labels.push(it.fr); }); });
+  var note = (document.getElementById('dp-note') || {}).value || '';
+  var nomEl = document.getElementById('doc-nom'), emailEl = document.getElementById('doc-email');
+  var agentEmail = k.data.agentEmail || '', agentNom = k.data.agentNom || '';
+  if (btn) btn.disabled = true;
+  fetch('https://expertimo-phi.vercel.app/api/send-lead', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({type: 'documents_liste', nom: nomEl ? nomEl.value : '', email: emailEl ? emailEl.value : '', bien: (typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title), documents: labels, message: note, agentEmail: agentEmail, agentNom: agentNom})
+  }).then(function(r) { return r.json().catch(function() { return {}; }).then(function(j) { if (!r.ok || j.ok === false) throw new Error('send'); try { if (window.privencyDocs) window.privencyDocs(labels, note); } catch (e) {} try { if (window.privencyTrack) window.privencyTrack('documents_demandes'); } catch (e) {} show(U.done, true); if (btn) btn.style.display = 'none'; }); })
+    .catch(function() { show(U.fail, false); if (btn) btn.disabled = false; });
+}
+document.addEventListener('DOMContentLoaded', function() { try { renderDocPicker(); } catch (e) {} });
 </script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
@@ -2988,6 +3158,7 @@ function applyLang(lang) {
   lang = (LANGS.indexOf(lang) !== -1) ? lang : LANG_DEFAULT;
   var _prevLang = _currentLang;
   _currentLang = lang;
+  try { if (typeof renderDocPicker === 'function') renderDocPicker(); } catch (e) {}
   saveLang(lang);
   document.documentElement.lang = lang;
 

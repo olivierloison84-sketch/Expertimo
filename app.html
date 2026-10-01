@@ -1036,6 +1036,14 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro"></div>
       <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" data-internal="1"></div>
     </div>
+    <div class="form-group appart-maison-only" style="margin-top:8px;">
+      <label>Le bien est-il en copropriété ?</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="copro_statut" value="oui"> Oui</label>
+        <label class="radio-item"><input type="radio" name="copro_statut" value="non"> Non</label>
+      </div>
+      <p class="hint">Détermine la liste de documents proposée à l'acquéreur (PV d'AG, règlement de copropriété… ou documents d'une maison individuelle). Pré-rempli selon le type de bien : modifiez-le si besoin.</p>
+    </div>
     <div class="grid-2 terrain-only hidden">
       <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente_t"></div>
     </div>
@@ -2975,11 +2983,20 @@ function addPieceRow() { var t=document.getElementById('pieces_tbody'); if(t) t.
 // ═══════════════════════════════════════════════════════
 // STEP 2 — SWITCH TYPE
 // ═══════════════════════════════════════════════════════
+var _coproAuto = true;   // tant que l'agent n'a pas choisi lui-même, « copropriété » suit le type de bien
+function setCoproRadio(val) {
+  var r = document.querySelector('#page-2 input[type=radio][name="copro_statut"][value="' + val + '"]');
+  if (r) r.checked = true;
+}
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.name === 'copro_statut') _coproAuto = false;
+});
 function switchType(type) {
   // Valeur inconnue (ex. "appartement" renvoyé par un import) : repli sur Appartement
   // plutôt qu'un état où aucune section propre au type n'est cohérente.
   if (type !== 'appart' && type !== 'maison' && type !== 'terrain') type = 'appart';
   currentType = type;
+  if (_coproAuto) setCoproRadio(type === 'appart' ? 'oui' : 'non');
   // Onglets actifs via data-type
   document.querySelectorAll('.type-tab').forEach(function(t) {
     t.classList.toggle('active', t.dataset.type === type);
@@ -3307,7 +3324,7 @@ function pricePosL(lang, pm2, med) {
 // Champs de collectBienData() autorisés dans le bloc <script id="expertimo-data"> du HTML publié.
 // Tout champ absent de cette liste est PRIVÉ (dont ref, fourchetBasse/Haute et _rawState).
 var PUBLIC_EMBED_KEYS = [
-  'type','etage','adresse','quartier','acheteur_prenom','acheteur_nom','annee','description',
+  'type','copro','etage','adresse','quartier','acheteur_prenom','acheteur_nom','annee','description',
   'surface','surfCarrez','pieces','dpe','prix','prixm2','mediane','tension','delai','loyer',
   'chargesCopro','chargesDetail','taxeFonciere','score','scorePrest','scoreSecteur','scoreQP','scoreEtat',
   'fort1','fort2','fort3','vig1','vig2','vig3','photo1','photo2','photo3','photo4','photo5',
@@ -4357,6 +4374,7 @@ function restoreRawFormState(d) {
       var r=document.querySelector('#page-2 input[type=radio][name="'+k.replace('radio_','')+'"][value="'+d[k]+'"]');
       if(r){
         r.checked=true;
+        if (k === 'radio_copro_statut' && d[k] !== ((d.type === 'appart' || !d.type) ? 'oui' : 'non')) _coproAuto = false;
         if (k === 'radio_travaux_ag') {
           var travauxAgDetailGroup = document.getElementById('travaux_ag_detail_group');
           if (travauxAgDetailGroup) travauxAgDetailGroup.style.display = (d[k] === 'oui') ? 'block' : 'none';
@@ -4468,6 +4486,11 @@ function collectBienData() {
   return {
     ref:           getV('ref_mandat')||'ref-mandat',
     type:          currentType,
+    copro:         (function() {
+      if (currentType === 'terrain') return 'non';
+      var r = document.querySelector('#page-2 input[type=radio][name="copro_statut"]:checked');
+      return r ? r.value : (currentType === 'appart' ? 'oui' : 'non');
+    })(),
     etage:         etage,
     adresse:       getV('adresse'),
     quartier:      getV('quartier'),
@@ -4565,6 +4588,7 @@ var CHAT_SPEC = [
     ['v', 'nb_wc_sep', 'WC séparés'],
     ['v', 'etage', 'Étage du bien'],
     ['r', 'ascenseur', 'Ascenseur'],
+    ['r', 'copro_statut', 'Bien en copropriété'],
     ['v', 'nb_etages', "Nombre d'étages de l'immeuble"],
     ['v', 'nb_etages_m', "Nombre d'étages"],
     ['v', 'annee_construction', 'Année de construction'],
@@ -5392,6 +5416,27 @@ async function loadAnalytics() {
       });
     } catch (e) {}
 
+    // Documents demandés par les acquéreurs (table fiche_demandes_documents) — facultatif, comme les questions
+    try {
+      var drows = [], doff = 0;
+      while (true) {
+        var dr = await fetch(SUPABASE_URL + '/rest/v1/fiche_demandes_documents?select=id,client_nom,bien_adresse,docs,note,created_at'
+          + '&order=created_at.desc&limit=' + PAGE + '&offset=' + doff, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
+        });
+        if (!dr.ok) break;
+        var dchunk = await dr.json();
+        drows = drows.concat(dchunk);
+        if (dchunk.length < PAGE) break;
+        doff += PAGE;
+      }
+      drows.forEach(function(dx) {
+        var g4 = groups[(dx.client_nom || 'inconnu') + '|||' + (dx.bien_adresse || '—')];
+        if (!g4) return;
+        g4.demandes = g4.demandes || []; g4.demandes.push({ id: dx.id, docs: dx.docs || [], note: dx.note || '', at: dx.created_at });
+      });
+    } catch (e) {}
+
     _analyticsGroups = Object.values(groups).sort(function(a, b) {
       return (b.last || '').localeCompare(a.last || '');
     });
@@ -5465,6 +5510,15 @@ function renderAnalytics() {
             return '<li style="white-space:normal;"><span style="color:var(--muted);">' + esc(d) + '</span> — ' + esc(x.q) + '</li>';
           }).join('')
         + '</ul></details>';
+    }
+
+    if (g.demandes && g.demandes.length) {
+      qHtml += g.demandes.slice().sort(function(a, b) { return (a.at || '').localeCompare(b.at || ''); }).map(function(dm) {
+        var d = ''; try { d = new Date(dm.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch (e) {}
+        return '<details style="margin-top:6px;"><summary style="cursor:pointer;font-size:12px;font-weight:600;color:var(--primary);">📎 ' + dm.docs.length + ' document' + (dm.docs.length > 1 ? 's' : '') + ' demandé' + (dm.docs.length > 1 ? 's' : '') + ' <span style="font-weight:400;color:var(--muted);">(' + esc(d) + ')</span></summary>'
+          + '<ul style="margin:6px 0 0;padding-left:18px;font-size:12px;line-height:1.5;">' + dm.docs.map(function(x) { return '<li style="white-space:normal;">' + esc(x) + '</li>'; }).join('') + '</ul>'
+          + (dm.note ? '<div style="font-size:12px;margin-top:4px;white-space:normal;"><i>' + esc(dm.note) + '</i></div>' : '') + '</details>';
+      }).join('');
     }
 
     tr.innerHTML =
@@ -5544,6 +5598,15 @@ async function deleteAnalyticsGroups(keys) {
     for (var k = 0; k < qids.length; k += 50) {
       try {
         await fetch(_analyticsAuth.url + '/rest/v1/fiche_questions?id=in.(' + qids.slice(k, k + 50).map(encodeURIComponent).join(',') + ')', {
+          method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
+        });
+      } catch (e) {}
+    }
+    var did = [];
+    groups.forEach(function(g) { (g.demandes || []).forEach(function(x) { did.push(x.id); }); });
+    for (var m = 0; m < did.length; m += 50) {
+      try {
+        await fetch(_analyticsAuth.url + '/rest/v1/fiche_demandes_documents?id=in.(' + did.slice(m, m + 50).map(encodeURIComponent).join(',') + ')', {
           method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
         });
       } catch (e) {}
@@ -5648,6 +5711,7 @@ async function purgerStatsAnciennes() {
     }
     try { await fetch(SUPABASE_URL + '/rest/v1/fiche_sessions?started_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
     try { await fetch(SUPABASE_URL + '/rest/v1/fiche_questions?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
+    try { await fetch(SUPABASE_URL + '/rest/v1/fiche_demandes_documents?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
     showToast('✅ ' + total + ' ligne(s) de statistiques supprimée(s).');
     loadAnalytics();
   } catch (err) {
