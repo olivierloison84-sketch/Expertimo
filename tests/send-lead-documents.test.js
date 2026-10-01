@@ -2,6 +2,7 @@
 const assert = require('assert'), path = require('path');
 const handler = require(path.join(__dirname, '..', 'api', 'send-lead.js'));
 process.env.RESEND_API_KEY = 'k'; process.env.FALLBACK_LEAD_EMAIL = 'fallback@x.fr';
+require(path.join(__dirname, '..', 'api', 'send-lead.js')).__test.setLookup(async e => e === 'agent@x.fr');
 let sent = null; global.fetch = async (u, o) => { sent = JSON.parse(o.body); return { ok: true, status: 200, json: async () => ({}) }; };
 const run = body => new Promise(resolve => { sent = null; const res = { code: 200, setHeader() {}, status(c) { this.code = c; return this; }, json(b) { resolve({ code: this.code, body: b, sent }); }, end() { resolve({ code: this.code, sent }); } };
   handler({ method: 'POST', headers: { origin: 'https://espace.privency.fr' }, body }, res); });
