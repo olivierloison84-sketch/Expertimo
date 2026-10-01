@@ -3,12 +3,12 @@ const fs = require('fs'), path = require('path'), assert = require('assert');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const root = path.join(__dirname, '..');
 const files = ['index.html', 'index_en.html'].concat(fs.readdirSync(path.join(root, 'fiches')).filter(f => f.endsWith('.html')).map(f => 'fiches/' + f));
-async function load(f) {
+async function load(f, sendOk = true) {
   const events = [], agents = [], html = fs.readFileSync(path.join(root, f), 'utf8');
   const injected = '<script>window.PRIVENCY_AGENT_ID="agent-1";</script>';
   const dom = new JSDOM(html.replace(/<\/body>(?![\s\S]*<\/body>)/, injected + '</body>'), { runScripts: 'dangerously', url: 'https://espace.privency.fr/' + f + '?client=Test', virtualConsole: new VirtualConsole(), beforeParse(w) {
     w.scrollTo = () => {}; w.alert = () => {}; w.matchMedia = w.matchMedia || (() => ({ matches: false, addListener() {}, addEventListener() {} }));
-    w.fetch = async (url, opt) => { if (String(url).includes('/rest/v1/fiche_views')) { const b = JSON.parse(opt.body); events.push(b.evenement); agents.push(b.agent_id); } return { ok: true, status: 200, json: async () => ({}) }; };
+    w.fetch = async (url, opt) => { if (String(url).includes('/rest/v1/fiche_views')) { const b = JSON.parse(opt.body); events.push(b.evenement); agents.push(b.agent_id); } const isDb = String(url).includes('/rest/v1/'); return { ok: isDb ? true : sendOk, status: 200, json: async () => ({}) }; };
   } });
   await new Promise(r => setTimeout(r, 50));
   return { w: dom.window, events, agents, html };
@@ -36,8 +36,16 @@ async function load(f) {
     assert(!events.includes('offre_soumise'), f + ' : offre incomplète comptée');
     d.getElementById('offer-nom').value = 'Jean Dupont'; d.getElementById('offer-email').value = 'j@d.fr';
     try { w.submitOffer(); } catch (e) {}
-    assert.strictEqual(events.filter(e => e === 'offre_soumise').length, 1, f + ' : offre_soumise');
+    await new Promise(r => setTimeout(r, 30));
+    assert.strictEqual(events.filter(e => e === 'offre_soumise').length, 1, f + ' : offre_soumise (envoi réussi)');
     assert(!/cons-stars|PRIVENCY_GOOGLE|Google Reviews/.test(html), f + ' : reste de code avis Google');
+  }
+  for (const f of ['index.html', 'index_en.html', 'fiches/7-rue-du-repos-91380-chilly-mazarin-FINAL.html']) {
+    const x = await load(f, false), d = x.w.document;
+    d.getElementById('offer-nom').value = 'Jean Dupont'; d.getElementById('offer-email').value = 'j@d.fr';
+    try { x.w.submitOffer(); } catch (e) {}
+    await new Promise(r => setTimeout(r, 30));
+    assert(!x.events.includes('offre_soumise'), f + ' : offre comptée alors que l\'envoi a échoué');
   }
   console.log('OK mesure-fiche : ' + files.length + ' fiches');
   process.exit(0);
