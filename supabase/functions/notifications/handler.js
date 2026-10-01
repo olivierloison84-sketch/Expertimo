@@ -17,6 +17,7 @@ async function resend(deps, payload) {
   const r = await deps.fetch('https://api.resend.com/emails', {
     method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + deps.env.RESEND_API_KEY }, body: JSON.stringify(payload)
   });
+  if (!r.ok) { let b = ''; try { b = (await r.text()).slice(0, 300); } catch (e) {} console.error('[notifications] resend', r.status, b); }
   return r.ok;
 }
 
