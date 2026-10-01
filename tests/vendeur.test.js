@@ -26,7 +26,7 @@ const rapport = {
   acquereurs: [{ lettre: 'A', niveau: 'tres', visites: 4, minutes: 22, derniere: '2026-09-29T10:00:00Z', onglets: ['financement'], docs: 2, questions: 1, simulation: true }]
 };
 (async () => {
-  { const rp = await run('#' + TOK, u => (/vendeur_proprio/.test(u) ? 'Graziella <i>H</i>' : /digest_statut/.test(u) ? false : rapport)); assert(/^Préparé pour Graziella <i>H<\/i> · Mis à jour/.test(rp.d.getElementById('maj').textContent) && !rp.d.querySelector('#maj i'), 'nom du propriétaire affiché en texte'); const rq = await run('#' + TOK, u => (/vendeur_proprio/.test(u) ? null : /digest_statut/.test(u) ? false : rapport)); assert(!/Préparé pour/.test(rq.d.getElementById('maj').textContent), 'sans nom : rien ne change'); }
+  { const rp = await run('#' + TOK, u => (/vendeur_proprio/.test(u) ? 'Graziella <i>H</i>' : /digest_statut/.test(u) ? false : rapport)); assert(/^Bonjour Graziella <i>H<\/i>,/.test(rp.d.getElementById('hello-nom').textContent) && !rp.d.querySelector('#hello i'), 'nom du propriétaire affiché en texte'); const rq = await run('#' + TOK, u => (/vendeur_proprio/.test(u) ? null : /digest_statut/.test(u) ? false : rapport)); assert(rq.d.getElementById('hello-nom').textContent === 'Bonjour,', 'sans nom : rien ne change'); }
   let r = await run('#' + TOK, rapport);
   assert(/rpc\/vendeur_rapport/.test(r.calls[0].u) && JSON.parse(r.calls[0].b).p_token === TOK && r.calls.every(c => /rpc\/vendeur_(rapport|digest_statut|proprio)/.test(c.u)), 'appels RPC');
   assert(r.d.getElementById('digest-box').className.includes('hidden'), 'pas de bouton de désinscription sans abonnement');
