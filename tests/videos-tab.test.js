@@ -3,10 +3,10 @@ const path = require('path'), fs = require('fs'), assert = require('assert');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const root = path.join(__dirname, '..');
 const ATTENDU = [
-  ['Créer son profil agent', '1 min 11', '/videos/tuto-01-creer-son-profil.mp4'],
-  ['Créer une fiche depuis une annonce', '1 min 44', '/videos/tuto-02-fiche-depuis-annonce.mp4'],
-  ['Créer une fiche manuellement', '1 min 13', '/videos/tuto-03-fiche-manuelle.mp4'],
-  ['Le Coaching Express', '1 min 33', '/videos/tuto-04-coaching-express.mp4']
+  ['Créer son profil agent', '44 s', '/videos/tuto-01-creer-son-profil.mp4'],
+  ['Créer une fiche depuis une annonce', '57 s', '/videos/tuto-02-fiche-depuis-annonce.mp4'],
+  ['Créer une fiche manuellement', '44 s', '/videos/tuto-03-fiche-manuelle.mp4'],
+  ['Le Coaching Express', '58 s', '/videos/tuto-04-coaching-express.mp4']
 ];
 (async () => {
   const dom = await JSDOM.fromFile(path.join(root, 'app.html'), { runScripts: 'dangerously', virtualConsole: new VirtualConsole(), url: 'http://localhost/app.html', pretendToBeVisual: true, beforeParse(w) {
