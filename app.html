@@ -5371,6 +5371,27 @@ async function loadAnalytics() {
       });
     } catch (e) {}
 
+    // Questions posées à l'assistant (table fiche_questions) — facultatif : si la table n'existe pas encore, rien ne change
+    try {
+      var qrows = [], qoff = 0;
+      while (true) {
+        var qr = await fetch(SUPABASE_URL + '/rest/v1/fiche_questions?select=id,client_nom,bien_adresse,question,created_at'
+          + '&order=created_at.desc&limit=' + PAGE + '&offset=' + qoff, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
+        });
+        if (!qr.ok) break;
+        var qchunk = await qr.json();
+        qrows = qrows.concat(qchunk);
+        if (qchunk.length < PAGE) break;
+        qoff += PAGE;
+      }
+      qrows.forEach(function(qx) {
+        var g3 = groups[(qx.client_nom || 'inconnu') + '|||' + (qx.bien_adresse || '—')];
+        if (!g3) return;
+        g3.questions = g3.questions || []; g3.questions.push({ id: qx.id, q: qx.question, at: qx.created_at });
+      });
+    } catch (e) {}
+
     _analyticsGroups = Object.values(groups).sort(function(a, b) {
       return (b.last || '').localeCompare(a.last || '');
     });
@@ -5435,6 +5456,17 @@ function renderAnalytics() {
         + ' · max ' + fmtDuree(g.dureeMax) + (topTab ? ' · surtout « ' + esc(topTab) + ' »' : '') + '</div>';
     }
 
+    var qHtml = '';
+    if (g.questions && g.questions.length) {
+      qHtml = '<details style="margin-top:6px;"><summary style="cursor:pointer;font-size:12px;font-weight:600;color:var(--primary);">💬 ' + g.questions.length + ' question' + (g.questions.length > 1 ? 's' : '') + ' posée' + (g.questions.length > 1 ? 's' : '') + ' à l\'assistant</summary>'
+        + '<ul style="margin:6px 0 0;padding-left:18px;font-size:12px;line-height:1.5;">'
+        + g.questions.slice().sort(function(a, b) { return (a.at || '').localeCompare(b.at || ''); }).map(function(x) {
+            var d = ''; try { d = new Date(x.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch (e) {}
+            return '<li style="white-space:normal;"><span style="color:var(--muted);">' + esc(d) + '</span> — ' + esc(x.q) + '</li>';
+          }).join('')
+        + '</ul></details>';
+    }
+
     tr.innerHTML =
       '<td style="padding:9px 12px;"><input type="checkbox" class="analytics-cb" data-key="' + esc(g.key) + '" onchange="updateAnalyticsDelBtn()" style="width:auto;cursor:pointer;"></td>'
       + '<td style="padding:9px 12px;font-weight:600;">' + esc(g.client) + '</td>'
@@ -5442,7 +5474,7 @@ function renderAnalytics() {
       + '<td style="padding:9px 12px;text-align:center;"><span style="display:inline-block;background:var(--primary);color:#fff;border-radius:50%;min-width:28px;height:28px;line-height:28px;font-weight:700;font-size:13px;">' + g.count + '</span></td>'
       + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + dureeHtml + '</td>'
       + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + esc(dateStr) + '</td>'
-      + '<td style="padding:9px 12px;">' + evHtml + '</td>'
+      + '<td style="padding:9px 12px;">' + evHtml + qHtml + '</td>'
       + '<td style="padding:9px 12px;text-align:center;"><button class="btn btn-sm btn-outline" title="Supprimer cette ligne" data-key="' + esc(g.key) + '" onclick="deleteAnalyticsGroups([this.dataset.key])">🗑️</button></td>';
     tbody.appendChild(tr);
   });
@@ -5502,6 +5534,16 @@ async function deleteAnalyticsGroups(keys) {
     for (var j = 0; j < sids.length; j += 50) {
       try {
         await fetch(_analyticsAuth.url + '/rest/v1/fiche_sessions?session_id=in.(' + sids.slice(j, j + 50).map(encodeURIComponent).join(',') + ')', {
+          method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
+        });
+      } catch (e) {}
+    }
+    // Supprime aussi les questions posées à l'assistant (meilleur effort)
+    var qids = [];
+    groups.forEach(function(g) { (g.questions || []).forEach(function(x) { qids.push(x.id); }); });
+    for (var k = 0; k < qids.length; k += 50) {
+      try {
+        await fetch(_analyticsAuth.url + '/rest/v1/fiche_questions?id=in.(' + qids.slice(k, k + 50).map(encodeURIComponent).join(',') + ')', {
           method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
         });
       } catch (e) {}
@@ -5605,6 +5647,7 @@ async function purgerStatsAnciennes() {
       throw new Error('HTTP ' + delRes.status + (errBody ? ' : ' + errBody : ''));
     }
     try { await fetch(SUPABASE_URL + '/rest/v1/fiche_sessions?started_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
+    try { await fetch(SUPABASE_URL + '/rest/v1/fiche_questions?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
     showToast('✅ ' + total + ' ligne(s) de statistiques supprimée(s).');
     loadAnalytics();
   } catch (err) {
