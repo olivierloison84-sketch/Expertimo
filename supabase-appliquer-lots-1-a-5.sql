@@ -1,3 +1,211 @@
+-- ═══════════════════════════════════════════════════════════════════════════════════════
+-- PRIVENCY — lots 1 à 5 en UNE seule exécution (Supabase → SQL Editor → coller → Run).
+-- Ordre : notes Google · questions assistant · documents · retours de visite · espace vendeur.
+-- Sans danger : uniquement de nouvelles colonnes / tables / fonctions, rien d'existant supprimé ;
+-- tout est rejouable. Prérequis déjà en place : agent_profiles, agent_fiches, fiche_views, fiche_sessions.
+-- PARTIE 2 (à la fin) : purge automatique à 12 mois via pg_cron. Si pg_cron n'est pas activé sur votre projet,
+-- exécutez d'abord la partie 1 seule, puis activez pg_cron (Database → Extensions) et exécutez la partie 2.
+-- ═══════════════════════════════════════════════════════════════════════════════════════
+-- PARTIE 1 — tables, droits, fonctions
+
+
+-- ───────────── supabase-agent-google.sql ─────────────
+-- Avis Google réels de l'agent (lot 1b). À exécuter APRÈS validation, dans le SQL Editor Supabase.
+-- Sans danger : uniquement des colonnes ajoutées (nullable). L'app fonctionne sans (repli localStorage).
+alter table public.agent_profiles
+  add column if not exists google_place_id text,
+  add column if not exists google_name text,
+  add column if not exists google_rating numeric(2,1),
+  add column if not exists google_reviews integer,
+  add column if not exists google_checked_at timestamptz;
+
+
+-- ───────────── supabase-fiche-questions.sql ─────────────
+-- Questions posées à l'assistant des fiches (lot 2) — À EXÉCUTER après validation, dans le SQL Editor Supabase.
+-- Sans danger : nouvelle table + nouvelle fonction, rien d'existant modifié.
+-- Les visiteurs (anon) n'ont AUCUN accès direct à la table : uniquement fiche_question(), qui n'accepte que des
+-- fiches publiées par un agent (agent_id lu en base, jamais fourni par le visiteur), limite la taille (500 car.) et le débit
+-- (20 / 10 min par acquéreur, 100 / heure et 500 / jour par fiche, quel que soit le nom d'acquéreur envoyé).
+-- Rétention : suppression automatique après 12 mois (pg_cron, voir bas de fichier).
+-- L'agent ne lit / supprime que les questions de ses propres fiches.
+
+create table if not exists public.fiche_questions (
+  id           uuid primary key default gen_random_uuid(),
+  fiche_path   text not null check (char_length(fiche_path) <= 300),
+  client_nom   text check (client_nom is null or char_length(client_nom) <= 200),
+  bien_adresse text check (bien_adresse is null or char_length(bien_adresse) <= 300),
+  agent_id     uuid,
+  question     text not null check (char_length(question) between 2 and 500),
+  lang         text check (lang is null or char_length(lang) <= 5),
+  created_at   timestamptz not null default now()
+);
+create index if not exists fiche_questions_path_idx on public.fiche_questions (fiche_path, created_at desc);
+alter table public.fiche_questions enable row level security;
+
+drop policy if exists "Agent voit uniquement les questions de ses fiches" on public.fiche_questions;
+create policy "Agent voit uniquement les questions de ses fiches"
+  on public.fiche_questions for select to authenticated
+  using (fiche_path = any (array(select '/fiches/' || af.filename from public.agent_fiches af where af.agent_user_id = auth.uid())));
+
+drop policy if exists "Agent supprime uniquement les questions de ses fiches" on public.fiche_questions;
+create policy "Agent supprime uniquement les questions de ses fiches"
+  on public.fiche_questions for delete to authenticated
+  using (fiche_path = any (array(select '/fiches/' || af.filename from public.agent_fiches af where af.agent_user_id = auth.uid())));
+
+create or replace function public.fiche_question(
+  p_path text, p_client text, p_adresse text, p_agent uuid, p_question text, p_lang text
+) returns void
+language plpgsql security definer set search_path = public as $$
+declare
+  q text := btrim(coalesce(p_question, ''));
+  v_agent uuid;
+begin
+  if p_path is null or p_path not like '/fiches/%' then return; end if;
+  if char_length(q) < 2 then return; end if;
+  q := left(q, 500);
+  -- la fiche doit exister ; l'agent est celui qui l'a publiée (le paramètre p_agent du visiteur est ignoré)
+  select af.agent_user_id into v_agent from public.agent_fiches af
+    where '/fiches/' || af.filename = left(p_path, 300) limit 1;
+  if v_agent is null then return; end if;
+  -- plafonds par fiche, indépendants du nom d'acquéreur fourni par le visiteur
+  if (select count(*) from public.fiche_questions where fiche_path = left(p_path,300) and created_at > now() - interval '1 hour') >= 100 then return; end if;
+  if (select count(*) from public.fiche_questions where fiche_path = left(p_path,300) and created_at > now() - interval '1 day') >= 500 then return; end if;
+  if (select count(*) from public.fiche_questions
+        where fiche_path = left(p_path,300) and client_nom is not distinct from left(p_client,200)
+          and created_at > now() - interval '10 minutes') >= 20 then return; end if;
+  insert into public.fiche_questions (fiche_path, client_nom, bien_adresse, agent_id, question, lang)
+  values (left(p_path,300), left(p_client,200), left(p_adresse,300), v_agent, q, left(p_lang,5));
+end $$;
+revoke all on function public.fiche_question(text,text,text,uuid,text,text) from public;
+grant execute on function public.fiche_question(text,text,text,uuid,text,text) to anon, authenticated;
+
+
+
+-- ───────────── supabase-fiche-documents.sql ─────────────
+-- Documents demandés par les acquéreurs (lot 3) — À EXÉCUTER après validation, dans le SQL Editor Supabase.
+-- Sans danger : nouvelle table + nouvelle fonction, rien d'existant modifié. Même modèle de sécurité que fiche_questions :
+-- les visiteurs (anon) n'ont AUCUN accès direct à la table ; la fonction n'accepte que des fiches publiées par un agent
+-- (agent_id lu en base), limite tailles et débit ; l'agent ne lit / supprime que les demandes de ses propres fiches.
+-- Aucune donnée de contact n'est stockée ici (l'email de l'acquéreur ne part que dans le mail envoyé à l'agent).
+-- Rétention : suppression automatique après 12 mois (pg_cron).
+
+create table if not exists public.fiche_demandes_documents (
+  id           uuid primary key default gen_random_uuid(),
+  fiche_path   text not null check (char_length(fiche_path) <= 300),
+  client_nom   text check (client_nom is null or char_length(client_nom) <= 200),
+  bien_adresse text check (bien_adresse is null or char_length(bien_adresse) <= 300),
+  agent_id     uuid,
+  docs         text[] not null check (cardinality(docs) between 1 and 40),
+  note         text check (note is null or char_length(note) <= 500),
+  created_at   timestamptz not null default now()
+);
+create index if not exists fiche_demandes_documents_path_idx on public.fiche_demandes_documents (fiche_path, created_at desc);
+alter table public.fiche_demandes_documents enable row level security;
+
+drop policy if exists "Agent voit uniquement les demandes de ses fiches" on public.fiche_demandes_documents;
+create policy "Agent voit uniquement les demandes de ses fiches"
+  on public.fiche_demandes_documents for select to authenticated
+  using (fiche_path = any (array(select '/fiches/' || af.filename from public.agent_fiches af where af.agent_user_id = auth.uid())));
+
+drop policy if exists "Agent supprime uniquement les demandes de ses fiches" on public.fiche_demandes_documents;
+create policy "Agent supprime uniquement les demandes de ses fiches"
+  on public.fiche_demandes_documents for delete to authenticated
+  using (fiche_path = any (array(select '/fiches/' || af.filename from public.agent_fiches af where af.agent_user_id = auth.uid())));
+
+create or replace function public.fiche_demande_documents(
+  p_path text, p_client text, p_adresse text, p_docs text[], p_note text
+) returns void
+language plpgsql security definer set search_path = public as $$
+declare
+  v_agent uuid;
+  v_docs text[];
+begin
+  if p_path is null or p_path not like '/fiches/%' then return; end if;
+  select af.agent_user_id into v_agent from public.agent_fiches af
+    where '/fiches/' || af.filename = left(p_path, 300) limit 1;
+  if v_agent is null then return; end if;
+  -- libellés courts, non vides, dédoublonnés, 40 max
+  select coalesce(array_agg(d), '{}') into v_docs from (
+    select distinct left(btrim(x), 80) as d from unnest(coalesce(p_docs[1:60], '{}')) as x
+    where char_length(btrim(coalesce(x, ''))) > 0 limit 40) s;
+  if cardinality(v_docs) = 0 then return; end if;
+  if (select count(*) from public.fiche_demandes_documents where fiche_path = left(p_path,300) and created_at > now() - interval '1 hour') >= 30 then return; end if;
+  if (select count(*) from public.fiche_demandes_documents
+        where fiche_path = left(p_path,300) and client_nom is not distinct from left(p_client,200)
+          and created_at > now() - interval '10 minutes') >= 5 then return; end if;
+  insert into public.fiche_demandes_documents (fiche_path, client_nom, bien_adresse, agent_id, docs, note)
+  values (left(p_path,300), left(p_client,200), left(p_adresse,300), v_agent, v_docs, nullif(left(btrim(coalesce(p_note,'')), 500), ''));
+end $$;
+revoke all on function public.fiche_demande_documents(text,text,text,text[],text) from public;
+grant execute on function public.fiche_demande_documents(text,text,text,text[],text) to anon, authenticated;
+
+
+
+-- ───────────── supabase-fiche-retours.sql ─────────────
+-- Retour de visite en un clic (lot 5) — À EXÉCUTER après validation, dans le SQL Editor Supabase.
+-- Sans danger : nouvelle table + nouvelle fonction, rien d'existant modifié. Même modèle de sécurité que fiche_questions :
+-- les visiteurs (anon) n'ont AUCUN accès direct à la table ; la fonction n'accepte que des fiches publiées par un agent
+-- (agent_id lu en base), uniquement des réponses d'une LISTE FERMÉE (jamais de texte libre), avec limite de débit ;
+-- l'agent ne lit / supprime que les retours de ses propres fiches. Rétention : 12 mois (pg_cron).
+
+create table if not exists public.fiche_retours (
+  id           uuid primary key default gen_random_uuid(),
+  fiche_path   text not null check (char_length(fiche_path) <= 300),
+  client_nom   text check (client_nom is null or char_length(client_nom) <= 200),
+  bien_adresse text check (bien_adresse is null or char_length(bien_adresse) <= 300),
+  agent_id     uuid,
+  reponses     text[] not null check (cardinality(reponses) between 1 and 4
+                 and reponses <@ array['coup_coeur','prix','travaux','quartier','charges','agencement','financement','reflechir']::text[]),
+  lang         text check (lang is null or lang in ('fr','en','pt','es')),
+  created_at   timestamptz not null default now()
+);
+create index if not exists fiche_retours_path_idx on public.fiche_retours (fiche_path, created_at desc);
+alter table public.fiche_retours enable row level security;
+
+drop policy if exists "Agent voit uniquement les retours de ses fiches" on public.fiche_retours;
+create policy "Agent voit uniquement les retours de ses fiches"
+  on public.fiche_retours for select to authenticated
+  using (fiche_path = any (array(select '/fiches/' || af.filename from public.agent_fiches af where af.agent_user_id = auth.uid())));
+
+drop policy if exists "Agent supprime uniquement les retours de ses fiches" on public.fiche_retours;
+create policy "Agent supprime uniquement les retours de ses fiches"
+  on public.fiche_retours for delete to authenticated
+  using (fiche_path = any (array(select '/fiches/' || af.filename from public.agent_fiches af where af.agent_user_id = auth.uid())));
+
+-- Renvoie true seulement si le retour a bien été enregistré (la fiche voit ainsi un vrai accusé de réception).
+drop function if exists public.fiche_retour(text,text,text,uuid,text[],text);
+create or replace function public.fiche_retour(
+  p_path text, p_client text, p_adresse text, p_agent uuid, p_reponses text[], p_lang text
+) returns boolean
+language plpgsql security definer set search_path = public as $$
+declare
+  v_agent uuid;
+  v_rep text[];
+begin
+  if p_path is null or p_path not like '/fiches/%' then return false; end if;
+  select af.agent_user_id into v_agent from public.agent_fiches af
+    where '/fiches/' || af.filename = left(p_path, 300) limit 1;
+  if v_agent is null then return false; end if;
+  -- liste fermée : tout code inconnu est ignoré ; 4 réponses maximum, sans doublon
+  select coalesce(array_agg(c), '{}') into v_rep from (
+    select distinct x as c from unnest(coalesce(p_reponses[1:20], '{}')) as x
+     where x = any (array['coup_coeur','prix','travaux','quartier','charges','agencement','financement','reflechir']) limit 4) s;
+  if cardinality(v_rep) = 0 then return false; end if;
+  if (select count(*) from public.fiche_retours where fiche_path = left(p_path,300) and created_at > now() - interval '1 hour') >= 40 then return false; end if;
+  if (select count(*) from public.fiche_retours
+        where fiche_path = left(p_path,300) and client_nom is not distinct from left(p_client,200)
+          and created_at > now() - interval '10 minutes') >= 3 then return false; end if;
+  insert into public.fiche_retours (fiche_path, client_nom, bien_adresse, agent_id, reponses, lang)
+  values (left(p_path,300), left(p_client,200), left(p_adresse,300), v_agent, v_rep,
+          case when p_lang in ('fr','en','pt','es') then p_lang else null end);
+  return true;
+end $$;
+revoke all on function public.fiche_retour(text,text,text,uuid,text[],text) from public;
+grant execute on function public.fiche_retour(text,text,text,uuid,text[],text) to anon, authenticated;
+
+
+
+-- ───────────── supabase-vendeur.sql ─────────────
 -- Espace vendeur (lots 4 et 5) — À EXÉCUTER après validation, dans le SQL Editor Supabase. Prérequis : lots 2, 3 et 5 (tables
 -- fiche_questions, fiche_demandes_documents et fiche_retours) et fiche_sessions déjà en place. Rejouable.
 -- Principe : l'agent crée un lien privé par bien (jeton aléatoire de 96 caractères). La page vendeur.html appelle
@@ -234,3 +442,24 @@ begin
 end $$;
 revoke all on function public.vendeur_rapport(text) from public;
 grant execute on function public.vendeur_rapport(text) to anon, authenticated;
+
+
+-- ═══════════════ PARTIE 2 — purge automatique à 12 mois (pg_cron) ═══════════════
+
+-- supabase-fiche-questions.sql
+-- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
+create extension if not exists pg_cron with schema extensions;
+select cron.unschedule('purge-fiche-questions') where exists (select 1 from cron.job where jobname = 'purge-fiche-questions');
+select cron.schedule('purge-fiche-questions', '30 3 * * *', $$delete from public.fiche_questions where created_at < now() - interval '12 months'$$);
+
+-- supabase-fiche-documents.sql
+-- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
+create extension if not exists pg_cron with schema extensions;
+select cron.unschedule('purge-fiche-demandes-documents') where exists (select 1 from cron.job where jobname = 'purge-fiche-demandes-documents');
+select cron.schedule('purge-fiche-demandes-documents', '40 3 * * *', $$delete from public.fiche_demandes_documents where created_at < now() - interval '12 months'$$);
+
+-- supabase-fiche-retours.sql
+-- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
+create extension if not exists pg_cron with schema extensions;
+select cron.unschedule('purge-fiche-retours') where exists (select 1 from cron.job where jobname = 'purge-fiche-retours');
+select cron.schedule('purge-fiche-retours', '50 3 * * *', $$delete from public.fiche_retours where created_at < now() - interval '12 months'$$);

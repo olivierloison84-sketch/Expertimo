@@ -72,6 +72,15 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
 #state{padding:80px 20px;text-align:center;color:var(--muted);}
 .hidden{display:none!important;}
 @media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr);}.buyers,.two{grid-template-columns:1fr;}.bars .row{grid-template-columns:1fr 42px;}.bars .row .track{grid-column:1/-1;order:3;}}
+.calc{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 16px;}
+.calc label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted);min-width:0;}
+.calc input{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;width:100%;}
+.calc input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.cost-out{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--cream);font-size:14.5px;line-height:1.55;}
+.cost-out b{font-family:'Playfair Display',serif;font-size:21px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;}
+.cost-out .l2{margin-top:6px;}
+@media(max-width:720px){.calc{grid-template-columns:1fr;}}
+@media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #000;}header.top::before{display:none;}h1,.sub,.agent-name,.agent-role{color:#000;}.eyebrow{color:#8F7015;margin-top:14px;}main{margin-top:0;}.card,.kpi{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
 @media(prefers-reduced-motion:no-preference){.fill{transition:width .8s cubic-bezier(.22,.61,.36,1);}}
 </style>
 </head>
@@ -93,7 +102,19 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     <div class="card"><div class="lbl">Les acquéreurs</div><h2>Qui s'intéresse à votre bien ?</h2><div class="hint" style="margin-bottom:14px;">Chaque acquéreur est désigné par une lettre : vous ne voyez jamais son nom ni ses coordonnées.</div><div class="buyers" id="buyers"></div></div>
     <div class="two">
       <div class="card"><div class="lbl">Ce qui retient l'attention</div><h2>Les rubriques les plus lues</h2><div class="bars" id="tabs"></div></div>
-      <div class="card"><div class="lbl">Ce qu'ils veulent savoir</div><h2>Les sujets qui reviennent</h2><div id="themes"></div><div class="lbl" style="margin-top:18px;">Documents les plus demandés</div><div id="docs"></div></div>
+      <div class="card"><div class="lbl">Ce qu'ils veulent savoir</div><h2>Les sujets qui reviennent</h2><div id="themes"></div><div class="lbl" style="margin-top:18px;">Documents les plus demandés</div><div id="docs"></div><div class="lbl" style="margin-top:18px;">Retours de visite</div><div id="retours"></div></div>
+    </div>
+    <div class="card" id="cost-card"><div class="lbl">Le coût de l'attente</div><h2>Ce que coûte chaque mois sans vente</h2>
+      <div class="hint" style="margin-bottom:14px;">Calcul indicatif, effectué sur cet écran : vos chiffres ne sont ni enregistrés ni transmis. Le capital remboursé de votre crédit n'est pas une perte : il n'est pas compté.</div>
+      <div class="calc">
+        <label><span>Crédit : intérêts et assurance (€ / mois, hors capital remboursé)</span><input id="c-credit" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
+        <label><span>Charges de copropriété (€ / mois)</span><input id="c-charges" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
+        <label><span>Taxe foncière (€ / an)</span><input id="c-taxe" type="number" inputmode="decimal" min="0" step="50" placeholder="0"></label>
+        <label><span>Autres frais : énergie, assurance (€ / mois)</span><input id="c-autres" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
+        <label><span>Prix de vente actuel (€)</span><input id="c-prix" type="number" inputmode="decimal" min="0" step="1000" placeholder="0"></label>
+        <label><span>Baisse de prix envisagée (%)</span><input id="c-baisse" type="number" inputmode="decimal" min="0" max="30" step="0.5" value="3"></label>
+      </div>
+      <div class="cost-out" id="c-out" aria-live="polite"></div>
     </div>
     <div class="card"><div class="lbl">Votre conseiller</div><h2 id="contact-title"></h2><div class="cta" id="cta"></div></div>
     <div class="foot">Document confidentiel destiné au propriétaire du bien. Les données proviennent de la fiche interactive Privency de votre bien.</div>
@@ -196,6 +217,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       if (a.type === 'ouverture') what = 'a ouvert la fiche de votre bien';
       else if (a.type === 'simulation') what = 'a simulé son financement pour ce bien';
       else if (a.type === 'documents') what = 'a demandé des documents' + (a.detail ? ' : ' + a.detail : '');
+      else if (a.type === 'retour') what = 'a donné son retour de visite' + (a.detail ? ' : ce qui compte, ' + a.detail : '');
       else if (a.type === 'question') what = 'a posé une question' + (a.detail ? ' sur le thème « ' + a.detail + ' »' : '');
       else if (a.type === 'rubrique' && tabLabel(a.detail)) what = 'a consulté « ' + tabLabel(a.detail) + ' » pendant ' + Math.max(1, Math.round((a.sec || 60) / 60)) + ' min';
       else return;
@@ -230,6 +252,9 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     var th = $('themes'); th.textContent = '';
     if (!(r.themes || []).length) th.appendChild(el('div', 'empty', "Aucune question posée pour l'instant."));
     else { var pw = el('div', 'pills'); r.themes.forEach(function(x) { var p = el('span', 'pill', x.theme); p.appendChild(el('b', null, String(x.n))); pw.appendChild(p); }); th.appendChild(pw); }
+    var rt = $('retours'); rt.textContent = '';
+    if (!(r.retours || []).length) rt.appendChild(el('div', 'empty', "Aucun retour de visite pour l'instant."));
+    else { var pr = el('div', 'pills'); r.retours.forEach(function(x) { if (!x.label) return; var p = el('span', 'pill', x.label.charAt(0).toUpperCase() + x.label.slice(1)); p.appendChild(el('b', null, '×' + x.n)); pr.appendChild(p); }); rt.appendChild(pr); }
     var dc = $('docs'); dc.textContent = '';
     if (!(r.docs_top || []).length) dc.appendChild(el('div', 'empty', 'Aucun document demandé pour le moment.'));
     else { var pd = el('div', 'pills'); r.docs_top.forEach(function(x) { var p = el('span', 'pill', x.doc); p.appendChild(el('b', null, '×' + x.n)); pd.appendChild(p); }); dc.appendChild(pd); }
@@ -239,11 +264,28 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     var tel = String(ag.tel || '').replace(/[^\d+]/g, '');
     if (tel.length >= 8) { var a1 = el('a', 'btn dark', '📞 ' + (ag.tel || tel)); a1.href = 'tel:' + tel; cta.appendChild(a1); }
     if (/^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(ag.email || '')) { var a2 = el('a', 'btn line', '✉️ Écrire'); a2.href = 'mailto:' + ag.email; cta.appendChild(a2); }
+    var pb = el('button', 'btn line', '🖨️ Imprimer le bilan'); pb.type = 'button'; pb.id = 'print-btn'; pb.onclick = function() { try { window.print(); } catch (e) {} }; cta.appendChild(pb);
     if (/^https:\/\//.test(ag.rdv || '')) { var a3 = el('a', 'btn line', '📅 Prendre rendez-vous'); a3.href = ag.rdv; a3.target = '_blank'; a3.rel = 'noopener noreferrer'; cta.appendChild(a3); }
 
     $('state').classList.add('hidden'); $('report').classList.remove('hidden');
   }
 
+
+  function initCalc() {
+    function v(id) { var n = parseFloat($(id).value); return isFinite(n) && n > 0 ? n : 0; }
+    function eur(n) { return new Intl.NumberFormat('fr-FR', {maximumFractionDigits: 0}).format(Math.round(n)) + ' €'; }
+    function run() {
+      var out = $('c-out'); out.textContent = '';
+      var mois = v('c-credit') + v('c-charges') + v('c-taxe') / 12 + v('c-autres');
+      if (!mois) { out.appendChild(el('div', null, 'Renseignez vos montants ci-dessus pour voir ce que coûte chaque mois d\u2019attente.')); return; }
+      var l1 = el('div'); l1.appendChild(document.createTextNode('Chaque mois sans vente vous coûte ')); l1.appendChild(el('b', null, eur(mois))); l1.appendChild(document.createTextNode('. Sur 3 mois : ' + eur(mois * 3) + ' ; sur 6 mois : ' + eur(mois * 6) + '.')); out.appendChild(l1);
+      var prix = v('c-prix'), baisse = Math.min(v('c-baisse'), 30);
+      if (prix && baisse) { var m = prix * baisse / 100, l2 = el('div', 'l2'); l2.appendChild(document.createTextNode('Une baisse de ' + String(baisse).replace('.', ',') + ' % représente ' + eur(m) + ', soit l\u2019équivalent de ')); l2.appendChild(el('b', null, (Math.round(m / mois * 10) / 10).toString().replace('.', ',') + ' mois')); l2.appendChild(document.createTextNode(' de frais d\u2019attente.')); out.appendChild(l2); }
+    }
+    ['c-credit', 'c-charges', 'c-taxe', 'c-autres', 'c-prix', 'c-baisse'].forEach(function(id) { $(id).addEventListener('input', run); });
+    run();
+  }
+  initCalc();
   var token = (location.hash || '').replace(/^#/, '');
   if (!/^[0-9a-f]{64,96}$/.test(token)) { fail("Ce lien n'est pas valide. Demandez à votre conseiller de vous renvoyer le lien de votre compte rendu."); return; }
   fetch(SUPABASE_URL + '/rest/v1/rpc/vendeur_rapport', {

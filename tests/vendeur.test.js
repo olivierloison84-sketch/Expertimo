@@ -21,7 +21,8 @@ const rapport = {
   courbe: [1, 0, 2, 3, 1, 2, 3, 2].map((n, i) => ({ semaine: '2026-0' + (i + 1) + '-01', visites: n })),
   onglets: [{ onglet: 'financement', minutes: 20 }, { onglet: 'zzz_inconnu', minutes: 5 }],
   themes: [{ theme: 'Prix et négociation', n: 2 }], docs_top: [{ doc: 'Diagnostic DPE', n: 3 }],
-  activite: [{ lettre: 'A', type: 'documents', jour: '2026-09-29', moment: 'apres-midi', detail: 'Diagnostic amiante', sec: 0 }, { lettre: 'B', type: 'rubrique', jour: '2026-09-29', moment: 'matin', detail: 'quartier', sec: 130 }, { lettre: 'B', type: 'rubrique', jour: '2026-09-29', moment: 'matin', detail: 'constructor', sec: 130 }, { lettre: 'A', type: 'question', jour: '2026-09-28', moment: 'matin', detail: 'Prix et négociation', sec: 0 }],
+  activite: [{ lettre: 'B', type: 'retour', jour: '2026-09-29', moment: 'matin', detail: 'le prix, les travaux à prévoir', sec: 0 }, { lettre: 'A', type: 'documents', jour: '2026-09-29', moment: 'apres-midi', detail: 'Diagnostic amiante', sec: 0 }, { lettre: 'B', type: 'rubrique', jour: '2026-09-29', moment: 'matin', detail: 'quartier', sec: 130 }, { lettre: 'B', type: 'rubrique', jour: '2026-09-29', moment: 'matin', detail: 'constructor', sec: 130 }, { lettre: 'A', type: 'question', jour: '2026-09-28', moment: 'matin', detail: 'Prix et négociation', sec: 0 }],
+  retours: [{ code: 'prix', label: 'le prix', n: 2 }, { code: 'x', label: null, n: 1 }],
   acquereurs: [{ lettre: 'A', niveau: 'tres', visites: 4, minutes: 22, derniere: '2026-09-29T10:00:00Z', onglets: ['financement'], docs: 2, questions: 1, simulation: true }]
 };
 (async () => {
@@ -37,6 +38,15 @@ const rapport = {
   assert(/Acquéreur A a demandé des documents : Diagnostic amiante/.test(t) && /mardi 29\/09, après-midi/.test(t), 'fil : documents + heure de Paris : ' + t.slice(t.indexOf('Activité'), t.indexOf('Activité') + 400));
   assert(/Acquéreur B a consulté « Quartier et carte » pendant 2 min/.test(t) && /Acquéreur A a posé une question sur le thème « Prix et négociation »/.test(t), 'fil : rubrique et question');
   assert(!/\d h \d\d/.test(t.slice(t.indexOf('Activité'), t.indexOf('Intérêt semaine'))), 'aucune heure exacte dans le fil');
+  assert(/Retours de visite/.test(t) && /Le prix×2/.test(t), 'retours de visite affichés (libellé null ignoré)');
+  assert(/Acquéreur B a donné son retour de visite : ce qui compte, le prix, les travaux à prévoir/.test(t), 'fil : retour de visite');
+  { const d = r.d, w = d.defaultView, set = (id, v) => { d.getElementById(id).value = v; d.getElementById(id).dispatchEvent(new w.Event('input')); };
+    assert(/Renseignez vos montants/.test(d.getElementById('c-out').textContent), 'calcul : invite initiale');
+    set('c-credit', '900'); set('c-charges', '150'); set('c-taxe', '1200'); set('c-autres', '50'); set('c-prix', '300000'); set('c-baisse', '3');
+    const o = d.getElementById('c-out').textContent.replace(/\u202f|\u00a0/g, ' ');
+    assert(/1 200 €/.test(o) && /3 mois : 3 600 €/.test(o) && /6 mois : 7 200 €/.test(o), 'calcul mensuel (900+150+100+50=1200) : ' + o);
+    assert(/baisse de 3 % représente 9 000 €/.test(o) && /7,5 mois/.test(o), 'équivalent en mois : ' + o);
+    set('c-credit', '-50'); set('c-charges', 'abc'); assert(!/NaN|Infinity/.test(d.getElementById('c-out').textContent), 'entrées invalides ignorées'); }
   assert(!/native code|constructor/.test(t), 'onglet forgé (constructor) non affiché');
   // jetons invalides : aucun appel réseau
   for (const h of ['', '#abc', '#' + 'g'.repeat(96), '#' + 'a'.repeat(200)]) {
