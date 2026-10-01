@@ -6024,6 +6024,15 @@ async function vendeurDialog(fname) {
       emOk = document.createElement('input'); emOk.type = 'checkbox'; emOk.id = 'vendeur-accord'; emOk.checked = !!lien.digest_email; emOk.style.cssText = 'width:auto;margin-top:2px;';
       var sp3 = document.createElement('span'); sp3.textContent = "Le vendeur est d'accord pour recevoir ce point par e-mail (ouvertures de la semaine, démarches des acquéreurs sous une lettre, jamais de nom). Il peut s'arrêter d'un clic depuis son compte rendu.";
       lbl3.appendChild(emOk); lbl3.appendChild(sp3); body.appendChild(lbl3);
+      // Pas encore d'e-mail enregistré : on propose celui du propriétaire saisi dans la fiche (l'agent doit quand même cocher l'accord).
+      if (!lien.digest_email) {
+        try {
+          Promise.resolve(db.from('fiche_private').select('data').eq('agent_user_id', uid).eq('filename', fname).maybeSingle()).then(function(pr) {
+            var m = pr && pr.data && pr.data.data && pr.data.data._rawState && String(pr.data.data._rawState.email_proprio || '').trim();
+            if (m && emIn && !emIn.value && m.length <= 254) { emIn.value = m; emIn.setAttribute('data-prefill', '1'); }
+          }, function() {});
+        } catch (ep) {}
+      }
     }
     actions.appendChild(btn('Fermer', 'btn-outline', close));
     actions.appendChild(btn('Arrêter le lien', 'btn-outline', async function(e) {
