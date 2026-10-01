@@ -8,7 +8,7 @@ const TOK = 'a'.repeat(96);
 function run(hash, resp, status) {
   const calls = [];
   const dom = new JSDOM(html, { runScripts: 'dangerously', url: 'https://app.privency.fr/vendeur.html' + hash, virtualConsole: new VirtualConsole(), beforeParse(w) {
-    w.fetch = async (u, o) => { calls.push({ u: String(u), b: o && o.body }); if (resp instanceof Error) throw resp; return { ok: (status || 200) < 400, status: status || 200, json: async () => resp }; };
+    w.fetch = async (u, o) => { calls.push({ u: String(u), b: o && o.body }); if (resp instanceof Error) throw resp; const v = typeof resp === 'function' ? resp(String(u)) : resp; return { ok: (status || 200) < 400, status: status || 200, json: async () => v }; };
   } });
   return new Promise(r => setTimeout(() => r({ d: dom.window.document, calls }), 60));
 }
@@ -27,7 +27,8 @@ const rapport = {
 };
 (async () => {
   let r = await run('#' + TOK, rapport);
-  assert(r.calls.length === 1 && /rpc\/vendeur_rapport/.test(r.calls[0].u) && JSON.parse(r.calls[0].b).p_token === TOK, 'appel RPC');
+  assert(/rpc\/vendeur_rapport/.test(r.calls[0].u) && JSON.parse(r.calls[0].b).p_token === TOK && r.calls.every(c => /rpc\/vendeur_(rapport|digest_statut)/.test(c.u)), 'appels RPC');
+  assert(r.d.getElementById('digest-box').className.includes('hidden'), 'pas de bouton de désinscription sans abonnement');
   const t = r.d.body.textContent; if(process.env.DBG) console.log(t.replace(/\s+/g,' ').slice(0,1500));
   assert(/Maison Rue des Lilas/i.test(t) && /Olivier/.test(t) && /Bonne semaine/.test(t), 'contenu affiché');
   assert(!r.d.defaultView.__xss && !r.d.querySelector('img[src="x"]') && !Array.from(r.d.querySelectorAll('b')).some(b => /Olivier/.test(b.textContent)), 'injection HTML');
@@ -48,6 +49,14 @@ const rapport = {
     assert(/baisse de 3 % représente 9 000 €/.test(o) && /7,5 mois/.test(o), 'équivalent en mois : ' + o);
     set('c-credit', '-50'); set('c-charges', 'abc'); assert(!/NaN|Infinity/.test(d.getElementById('c-out').textContent), 'entrées invalides ignorées'); }
   assert(!/native code|constructor/.test(t), 'onglet forgé (constructor) non affiché');
+  { // abonné au point hebdomadaire : bouton de désinscription
+    const r2 = await run('#' + TOK, u => /digest_statut/.test(u) ? true : (/digest_stop/.test(u) ? true : rapport));
+    const box = r2.d.getElementById('digest-box'); assert(!box.className.includes('hidden') && r2.d.getElementById('digest-stop'), 'bouton de désinscription affiché');
+    r2.d.getElementById('digest-stop').click(); await new Promise(r => setTimeout(r, 40));
+    const st = r2.calls.find(c => /digest_stop/.test(c.u)); assert(st && JSON.parse(st.b).p_token === TOK, 'appel de désinscription avec le jeton');
+    assert(/vous ne recevrez plus/.test(box.textContent), 'confirmation : ' + box.textContent);
+    const r3 = await run('#' + TOK, u => /digest_stop/.test(u) ? false : (/digest_statut/.test(u) ? true : rapport)); r3.d.getElementById('digest-stop').click(); await new Promise(r => setTimeout(r, 40));
+    assert(/Impossible d'enregistrer/.test(r3.d.getElementById('digest-box').textContent), 'échec de désinscription signalé'); }
   // jetons invalides : aucun appel réseau
   for (const h of ['', '#abc', '#' + 'g'.repeat(96), '#' + 'a'.repeat(200)]) {
     r = await run(h, rapport); assert(r.calls.length === 0, 'appel avec jeton invalide ' + h.slice(0, 8));
