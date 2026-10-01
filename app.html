@@ -1758,6 +1758,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="card-body">
+      <div id="callist-block" style="display:none;margin-bottom:18px;"></div>
       <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);">
         <span style="font-size:13px;color:var(--muted);">Purger les statistiques de plus de</span>
         <select id="analytics-purge-days" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
@@ -5373,7 +5374,7 @@ async function loadAnalytics() {
     try {
       var srows = [], soff = 0;
       while (true) {
-        var sr = await fetch(SUPABASE_URL + '/rest/v1/fiche_sessions?select=session_id,client_nom,bien_adresse,duree_sec,onglets'
+        var sr = await fetch(SUPABASE_URL + '/rest/v1/fiche_sessions?select=session_id,client_nom,bien_adresse,duree_sec,onglets,started_at'
           + '&order=started_at.desc&limit=' + PAGE + '&offset=' + soff, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
         });
@@ -5391,6 +5392,7 @@ async function loadAnalytics() {
         g2.nbSessions = (g2.nbSessions || 0) + 1;
         g2.dureeMax = Math.max(g2.dureeMax || 0, sx.duree_sec || 0);
         g2.onglets = g2.onglets || {};
+        try { var hh = parseInt(new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', hourCycle: 'h23' }).format(new Date(sx.started_at)), 10); var slot = hh >= 6 && hh < 12 ? 'le matin' : (hh >= 12 && hh < 18 ? 'l\u2019après-midi' : (hh >= 18 && hh < 23 ? 'le soir' : 'tard le soir')); g2.hours = g2.hours || {}; g2.hours[slot] = (g2.hours[slot] || 0) + 1; } catch (eh) {}
         Object.keys(sx.onglets || {}).forEach(function(k) { g2.onglets[k] = (g2.onglets[k] || 0) + sx.onglets[k]; });
       });
     } catch (e) {}
@@ -5437,15 +5439,144 @@ async function loadAnalytics() {
       });
     } catch (e) {}
 
+    // Retours de visite en un clic (table fiche_retours) — facultatif, comme les questions
+    try {
+      var rrows = [], roff = 0;
+      while (true) {
+        var rr = await fetch(SUPABASE_URL + '/rest/v1/fiche_retours?select=id,client_nom,bien_adresse,reponses,created_at'
+          + '&order=created_at.desc&limit=' + PAGE + '&offset=' + roff, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
+        });
+        if (!rr.ok) break;
+        var rchunk = await rr.json();
+        rrows = rrows.concat(rchunk);
+        if (rchunk.length < PAGE) break;
+        roff += PAGE;
+      }
+      rrows.forEach(function(rx) {
+        var g5 = groups[(rx.client_nom || 'inconnu') + '|||' + (rx.bien_adresse || '—')];
+        if (!g5) return;
+        g5.retours = g5.retours || []; g5.retours.push({ id: rx.id, reponses: rx.reponses || [], at: rx.created_at });
+      });
+    } catch (e) {}
+
     _analyticsGroups = Object.values(groups).sort(function(a, b) {
       return (b.last || '').localeCompare(a.last || '');
     });
 
     status.style.display = 'none';
+    try { renderCallList(); } catch (ecl) {}
     renderAnalytics();
   } catch(err) {
     status.textContent = '❌ Erreur chargement : ' + err.message;
   }
+}
+
+// ── À rappeler aujourd'hui · silence · message adapté (calculé dans l'app, à partir des stats de l'agent) ──
+var _RETOUR_LBL = { coup_coeur: 'Un coup de cœur', prix: 'Le prix', travaux: 'Les travaux à prévoir', quartier: 'Le quartier', charges: 'Les charges', agencement: "L'agencement", financement: 'Son financement', reflechir: "Besoin d'y réfléchir" };
+function _clStats(g, now) {
+  var DAY = 86400000, ev = g.events || {};
+  var visits = ev.fiche_ouverte || 0, minutes = (g.dureeTotal || 0) / 60;
+  var sim = (ev.credit_simule || 0) > 0, offre = (ev.offre_soumise || 0) > 0;
+  var docs = (g.demandes || []).length, qn = (g.questions || []).length, rt = (g.retours || []).length;
+  var score = Math.min(visits, 4) * 2 + Math.min(minutes, 15) / 1.5 + (sim ? 3 : 0) + (docs ? 4 : 0) + (qn ? 2 : 0) + (offre ? 6 : 0) + (rt ? 3 : 0);
+  var days = g.last ? Math.floor((now - new Date(g.last).getTime()) / DAY) : 999;
+  var reasons = [];
+  if (offre) reasons.push('a transmis une offre');
+  if (visits > 1) reasons.push('est revenu ' + visits + ' fois sur la fiche');
+  if (minutes >= 1) reasons.push(Math.round(minutes) + ' min de lecture');
+  if (sim) reasons.push('a simulé son financement');
+  if (docs) reasons.push('a demandé ' + g.demandes.reduce(function(s, d) { return s + d.docs.length; }, 0) + ' document(s)');
+  if (qn) reasons.push('a posé ' + qn + ' question(s) à l’assistant');
+  if (rt) reasons.push('retour de visite : ' + g.retours[g.retours.length - 1].reponses.map(function(c) { return (_RETOUR_LBL[c] || c).toLowerCase(); }).join(', '));
+  var slot = '', best = 0; Object.keys(g.hours || {}).forEach(function(k) { if (g.hours[k] > best) { best = g.hours[k]; slot = k; } });
+  if (best >= 2) reasons.push('consulte plutôt ' + slot);
+  return { score: score, days: days, reasons: reasons };
+}
+function renderCallList() {
+  var box = document.getElementById('callist-block'); if (!box) return;
+  var now = Date.now(), hot = [], quiet = [];
+  _analyticsGroups.forEach(function(g) {
+    var c = (g.client || '').trim().toLowerCase();
+    if (!c || c === 'inconnu' || c === 'anonyme') return;
+    var st = _clStats(g, now); st.g = g;
+    if (st.score < 7) return;
+    if (st.days <= 5) hot.push(st); else if (st.days <= 45) quiet.push(st);
+  });
+  hot.sort(function(x, y) { return y.score - x.score || (y.g.last || '').localeCompare(x.g.last || ''); });
+  quiet.sort(function(x, y) { return y.score - x.score; });
+  box.textContent = '';
+  if (!hot.length && !quiet.length) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  function section(title, sub, items, silent) {
+    if (!items.length) return;
+    var h = document.createElement('div'); h.style.cssText = 'font-weight:700;font-size:14px;margin:0 0 2px;'; h.textContent = title; box.appendChild(h);
+    var s = document.createElement('div'); s.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;'; s.textContent = sub; box.appendChild(s);
+    items.slice(0, 8).forEach(function(st) {
+      var row = document.createElement('div'); row.className = 'callist-row';
+      row.style.cssText = 'display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;margin-bottom:8px;background:#fff;border:1px solid var(--border);border-left:4px solid ' + (silent ? '#9CA3AF' : (st.score >= 14 ? '#0A6F4D' : '#C9A227')) + ';border-radius:var(--radius);';
+      var left = document.createElement('div'); left.style.cssText = 'min-width:0;flex:1 1 260px;';
+      var nm = document.createElement('div'); nm.style.cssText = 'font-weight:700;font-size:13.5px;'; nm.textContent = st.g.client + ' · ' + (st.score >= 14 ? 'très chaud' : 'intéressé'); left.appendChild(nm);
+      var ad = document.createElement('div'); ad.style.cssText = 'font-size:12px;color:var(--muted);'; ad.textContent = st.g.adresse; left.appendChild(ad);
+      var rs = document.createElement('div'); rs.style.cssText = 'font-size:12.5px;margin-top:4px;line-height:1.45;white-space:normal;';
+      rs.textContent = (silent ? 'Sans ouverture depuis ' + st.days + ' jours. Dernière relance, ou passez à un autre acquéreur. ' : (st.days === 0 ? 'Actif aujourd’hui : ' : 'Dernière activité il y a ' + st.days + ' j : ')) + st.reasons.join(' · ');
+      left.appendChild(rs); row.appendChild(left);
+      var b = document.createElement('button'); b.className = 'btn btn-sm btn-outline'; b.textContent = '💬 Message adapté';
+      b.setAttribute('data-key', st.g.key); b.onclick = function() { clMessageDialog(this.getAttribute('data-key'), silent); };
+      row.appendChild(b); box.appendChild(row);
+    });
+  }
+  section('📞 À rappeler aujourd’hui', 'Acquéreurs identifiés les plus engagés, actifs ces 5 derniers jours.', hot, false);
+  if (hot.length && quiet.length) { var sp = document.createElement('div'); sp.style.height = '8px'; box.appendChild(sp); }
+  section('😶 Silence : à relancer ou à laisser', 'Étaient intéressés, plus aucune ouverture depuis plus de 5 jours.', quiet, true);
+}
+function clBuildMessage(g, silent) {
+  var prenom = (g.client || '').trim().split(/\s+/)[0] || '';
+  var me = ''; try { var pr = JSON.parse(PrivencyAuth.lsGet('_agent_profile') || '{}'); me = (pr.prenom || '').trim(); } catch (e) {}
+  var bien = String(g.adresse || '').replace(/\s*\b\d{5}\b.*$/, '').trim() || 'le bien';
+  var hello = 'Bonjour' + (prenom ? ' ' + prenom : '') + ', ' + (me ? 'c’est ' + me + '. ' : '');
+  if (silent) return hello + 'Je me permets une dernière relance concernant le bien ' + bien + ' : est-il toujours d’actualité pour vous ? Si ce n’est plus le cas, dites-le-moi simplement, cela m’aide à vous proposer d’autres biens.';
+  var tab = '', best = 0, ong = g.onglets || {};
+  ['budget', 'diagnostics', 'quartier', 'documents', 'marche', 'rentabilite'].forEach(function(k) { if ((ong[k] || 0) > best) { best = ong[k]; tab = k; } });
+  var last = (g.retours && g.retours.length) ? g.retours[g.retours.length - 1].reponses : [];
+  var key = last.indexOf('prix') !== -1 ? 'prix' : last.indexOf('travaux') !== -1 ? 'travaux' : last.indexOf('coup_coeur') !== -1 ? 'coup_coeur' : last.indexOf('financement') !== -1 ? 'budget' : (tab || '');
+  var T = {
+    budget: ' Si cela peut vous aider, je peux vous mettre en relation avec un courtier pour chiffrer votre projet.',
+    diagnostics: ' Je peux organiser une seconde visite, avec un point précis sur les aspects techniques si vous le souhaitez.',
+    quartier: ' Je peux aussi vous envoyer les informations sur les écoles, les transports et les commerces du secteur.',
+    documents: ' Je tiens à votre disposition les documents complémentaires dont vous auriez besoin.',
+    marche: ' Si le prix fait partie de votre réflexion, n’hésitez pas : on peut en parler franchement.',
+    rentabilite: ' Si vous envisagez un investissement, je peux vous préparer une simulation détaillée.',
+    prix: ' Si le prix fait partie de votre réflexion, n’hésitez pas : on peut en parler franchement.',
+    travaux: ' Je peux vous mettre en contact avec un artisan pour chiffrer les travaux éventuels.',
+    coup_coeur: ' Je serais ravi de vous revoir sur place pour avancer ensemble.'
+  };
+  return hello + 'Avez-vous pu avancer dans votre réflexion sur le bien ' + bien + ' ?' + (T[key] || ' Je reste disponible pour répondre à toutes vos questions.');
+}
+function clMessageDialog(key, silent) {
+  var g = _analyticsGroups.filter(function(x) { return x.key === key; })[0]; if (!g) return;
+  var overlay = document.createElement('div');
+  overlay.id = 'cl-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:10000;';
+  var card = document.createElement('div'); card.className = 'card'; card.style.cssText = 'max-width:480px;width:92%;margin:0;max-height:90vh;overflow:auto;';
+  var head = document.createElement('div'); head.className = 'card-header'; head.textContent = '💬 Message pour ' + g.client;
+  var body = document.createElement('div'); body.className = 'card-body';
+  var hint = document.createElement('div'); hint.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;'; hint.textContent = 'Message proposé, à relire et adapter. Il ne dit pas ce que l’acquéreur a consulté. Vous l’envoyez vous-même.'; body.appendChild(hint);
+  var ta = document.createElement('textarea'); ta.id = 'cl-text'; ta.rows = 7; ta.style.cssText = 'width:100%;font-size:13.5px;'; ta.value = clBuildMessage(g, !!silent); body.appendChild(ta);
+  var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;';
+  function close() { overlay.remove(); }
+  var bc = document.createElement('button'); bc.className = 'btn btn-outline'; bc.textContent = 'Fermer'; bc.onclick = close; row.appendChild(bc);
+  var sms = document.createElement('a'); sms.className = 'btn btn-outline'; sms.textContent = '📱 Ouvrir dans Messages'; sms.id = 'cl-sms'; sms.href = '#';
+  sms.onclick = function() { sms.href = 'sms:?&body=' + encodeURIComponent(ta.value); return true; }; row.appendChild(sms);
+  var cp = document.createElement('button'); cp.className = 'btn btn-primary'; cp.textContent = '📋 Copier'; cp.id = 'cl-copy';
+  cp.onclick = function() {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(function() { showToast('✅ Message copié.'); }, function() { ta.focus(); ta.select(); showToast('Copiez le texte sélectionné.'); });
+    else { ta.focus(); ta.select(); showToast('Copiez le texte sélectionné.'); }
+  };
+  row.appendChild(cp); body.appendChild(row);
+  card.appendChild(head); card.appendChild(body); overlay.appendChild(card);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+  document.body.appendChild(overlay);
 }
 
 function renderAnalytics() {
@@ -5510,6 +5641,14 @@ function renderAnalytics() {
             return '<li style="white-space:normal;"><span style="color:var(--muted);">' + esc(d) + '</span> — ' + esc(x.q) + '</li>';
           }).join('')
         + '</ul></details>';
+    }
+
+    if (g.retours && g.retours.length) {
+      qHtml += g.retours.slice().sort(function(x, y) { return (x.at || '').localeCompare(y.at || ''); }).map(function(rt) {
+        var d = ''; try { d = new Date(rt.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch (e) {}
+        return '<div style="margin-top:6px;font-size:12px;white-space:normal;">🗣️ <b>Retour de visite</b> <span style="color:var(--muted);">' + esc(d) + '</span> : '
+          + rt.reponses.map(function(c) { return esc(_RETOUR_LBL[c] || c); }).join(', ') + '</div>';
+      }).join('');
     }
 
     if (g.demandes && g.demandes.length) {
@@ -5598,6 +5737,15 @@ async function deleteAnalyticsGroups(keys) {
     for (var k = 0; k < qids.length; k += 50) {
       try {
         await fetch(_analyticsAuth.url + '/rest/v1/fiche_questions?id=in.(' + qids.slice(k, k + 50).map(encodeURIComponent).join(',') + ')', {
+          method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
+        });
+      } catch (e) {}
+    }
+    var rid = [];
+    groups.forEach(function(g) { (g.retours || []).forEach(function(x) { rid.push(x.id); }); });
+    for (var n2 = 0; n2 < rid.length; n2 += 50) {
+      try {
+        await fetch(_analyticsAuth.url + '/rest/v1/fiche_retours?id=in.(' + rid.slice(n2, n2 + 50).map(encodeURIComponent).join(',') + ')', {
           method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
         });
       } catch (e) {}
@@ -5712,6 +5860,7 @@ async function purgerStatsAnciennes() {
     try { await fetch(SUPABASE_URL + '/rest/v1/fiche_sessions?started_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
     try { await fetch(SUPABASE_URL + '/rest/v1/fiche_questions?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
     try { await fetch(SUPABASE_URL + '/rest/v1/fiche_demandes_documents?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
+    try { await fetch(SUPABASE_URL + '/rest/v1/fiche_retours?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
     showToast('✅ ' + total + ' ligne(s) de statistiques supprimée(s).');
     loadAnalytics();
   } catch (err) {
