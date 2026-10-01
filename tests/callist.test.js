@@ -41,7 +41,7 @@ const { JSDOM, VirtualConsole } = require('jsdom');
   assert(/consulte plutôt le soir/.test(tx('Marie Dupont')), 'créneau de consultation');
   const pt = tx('Paul Martin');
   assert(/Silence/.test(pt) && /sans ouverture depuis (9|10) jours/.test(pt) && !/Espace Acheteur/.test(pt) && /retour de visite : le prix, les travaux à prévoir/.test(pt), 'Paul en silence avec son retour : ' + pt);
-  assert(!rowOf('Léa Petit').querySelector('.cl-badge, span[style*="border-radius:12px;font-size:11px"]') || !/à rappeler|Silence/.test(tx('Léa Petit')), 'faible engagement : pas de badge');
+  assert(!/à rappeler|Silence/.test(tx('Léa Petit')) && !/Très chaud|Intéressé/.test(tx('Léa Petit')), 'faible engagement : pas de badge');
   assert(!rowOf('inconnu').querySelector('.cl-msg'), 'visiteur anonyme : pas de message adapté');
   // dépliant : fermé au départ, s'ouvre au clic sur le nom, stats complètes à l'intérieur
   const mr = rowOf('Marie Dupont'), det = mr.querySelector('.cl-detail'), tg = mr.querySelector('.cl-toggle');
