@@ -3,13 +3,14 @@ const fs = require('fs'), path = require('path'), assert = require('assert');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const root = path.join(__dirname, '..');
 const files = ['index.html', 'index_en.html'].concat(fs.readdirSync(path.join(root, 'fiches')).filter(f => f.endsWith('.html')).map(f => 'fiches/' + f));
-function load(f, failRpc) {
+function load(f, failRpc, refuse) {
   const calls = [];
   let html = fs.readFileSync(path.join(root, f), 'utf8').replace(/<\/body>(?![\s\S]*<\/body>)/, '<script>window.PRIVENCY_AGENT_ID="agent-1";</script></body>');
   const dom = new JSDOM(html, { runScripts: 'dangerously', url: 'https://espace.privency.fr/' + f + '?client=Marie', virtualConsole: new VirtualConsole(), beforeParse(w) {
     w.scrollTo = () => {}; w.alert = () => {};
     w.fetch = async (url, opt) => { calls.push({ url: String(url), body: opt && opt.body ? JSON.parse(opt.body) : null });
       if (failRpc && String(url).includes('fiche_retour')) return { ok: false, status: 500, json: async () => ({}) };
+      if (String(url).includes('fiche_retour')) return { ok: true, status: 200, json: async () => (refuse ? false : true) };
       return { ok: true, status: 200, json: async () => ({ ok: true }) }; };
   } });
   return new Promise(r => setTimeout(() => r({ w: dom.window, d: dom.window.document, calls }), 60));
@@ -39,5 +40,8 @@ const chips = d => Array.from(d.querySelectorAll('#vr-chips .vr-chip'));
     g.w.applyLang('es'); await new Promise(r => setTimeout(r, 30)); assert(/Ha visitado/.test(g.d.getElementById('vr-title').textContent), 'espagnol'); g.w.close(); }
   { const g = await load('index.html', true); g.d.querySelector('#vr-chips .vr-chip[data-code="prix"]').click(); g.w.vrSend(); await new Promise(r => setTimeout(r, 30));
     assert(/échoué/.test(g.d.getElementById('vr-msg').textContent) && g.d.getElementById('vr-send').style.display !== 'none' && !g.calls.some(x => x.body && x.body.evenement === 'retour_visite'), 'échec : pas de confirmation ni d\'événement'); g.w.close(); }
+  { const g = await load('index.html', false, true); g.d.querySelector('#vr-chips .vr-chip[data-code="prix"]').click(); g.w.vrSend(); await new Promise(r => setTimeout(r, 30));
+    assert(/échoué/.test(g.d.getElementById('vr-msg').textContent) && !/Merci/.test(g.d.getElementById('vr-msg').textContent), 'refus serveur (false) : pas de faux accusé de réception'); g.w.close(); }
+  assert(/au propriétaire du bien/.test(fs.readFileSync(path.join(root, 'index.html'), 'utf8')), 'mention vendeur');
   console.log('OK retour de visite : ' + files.length + ' fiches');
 })().catch(e => { console.error(e); process.exit(1); });

@@ -2,9 +2,11 @@
 -- PRIVENCY — lots 1 à 5 en UNE seule exécution (Supabase → SQL Editor → coller → Run).
 -- Ordre : notes Google · questions assistant · documents · retours de visite · espace vendeur.
 -- Sans danger : uniquement de nouvelles colonnes / tables / fonctions, rien d'existant supprimé ;
--- chaque morceau est rejouable. Prérequis déjà en place : agent_profiles, agent_fiches, fiche_views, fiche_sessions.
--- Le dernier morceau de chaque fichier programme la purge automatique à 12 mois (pg_cron).
+-- tout est rejouable. Prérequis déjà en place : agent_profiles, agent_fiches, fiche_views, fiche_sessions.
+-- PARTIE 2 (à la fin) : purge automatique à 12 mois via pg_cron. Si pg_cron n'est pas activé sur votre projet,
+-- exécutez d'abord la partie 1 seule, puis activez pg_cron (Database → Extensions) et exécutez la partie 2.
 -- ═══════════════════════════════════════════════════════════════════════════════════════
+-- PARTIE 1 — tables, droits, fonctions
 
 
 -- ───────────── supabase-agent-google.sql ─────────────
@@ -77,10 +79,6 @@ end $$;
 revoke all on function public.fiche_question(text,text,text,uuid,text,text) from public;
 grant execute on function public.fiche_question(text,text,text,uuid,text,text) to anon, authenticated;
 
--- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
-create extension if not exists pg_cron with schema extensions;
-select cron.unschedule('purge-fiche-questions') where exists (select 1 from cron.job where jobname = 'purge-fiche-questions');
-select cron.schedule('purge-fiche-questions', '30 3 * * *', $$delete from public.fiche_questions where created_at < now() - interval '12 months'$$);
 
 
 -- ───────────── supabase-fiche-documents.sql ─────────────
@@ -141,10 +139,6 @@ end $$;
 revoke all on function public.fiche_demande_documents(text,text,text,text[],text) from public;
 grant execute on function public.fiche_demande_documents(text,text,text,text[],text) to anon, authenticated;
 
--- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
-create extension if not exists pg_cron with schema extensions;
-select cron.unschedule('purge-fiche-demandes-documents') where exists (select 1 from cron.job where jobname = 'purge-fiche-demandes-documents');
-select cron.schedule('purge-fiche-demandes-documents', '40 3 * * *', $$delete from public.fiche_demandes_documents where created_at < now() - interval '12 months'$$);
 
 
 -- ───────────── supabase-fiche-retours.sql ─────────────
@@ -178,38 +172,37 @@ create policy "Agent supprime uniquement les retours de ses fiches"
   on public.fiche_retours for delete to authenticated
   using (fiche_path = any (array(select '/fiches/' || af.filename from public.agent_fiches af where af.agent_user_id = auth.uid())));
 
+-- Renvoie true seulement si le retour a bien été enregistré (la fiche voit ainsi un vrai accusé de réception).
+drop function if exists public.fiche_retour(text,text,text,uuid,text[],text);
 create or replace function public.fiche_retour(
   p_path text, p_client text, p_adresse text, p_agent uuid, p_reponses text[], p_lang text
-) returns void
+) returns boolean
 language plpgsql security definer set search_path = public as $$
 declare
   v_agent uuid;
   v_rep text[];
 begin
-  if p_path is null or p_path not like '/fiches/%' then return; end if;
+  if p_path is null or p_path not like '/fiches/%' then return false; end if;
   select af.agent_user_id into v_agent from public.agent_fiches af
     where '/fiches/' || af.filename = left(p_path, 300) limit 1;
-  if v_agent is null then return; end if;
+  if v_agent is null then return false; end if;
   -- liste fermée : tout code inconnu est ignoré ; 4 réponses maximum, sans doublon
   select coalesce(array_agg(c), '{}') into v_rep from (
     select distinct x as c from unnest(coalesce(p_reponses[1:20], '{}')) as x
      where x = any (array['coup_coeur','prix','travaux','quartier','charges','agencement','financement','reflechir']) limit 4) s;
-  if cardinality(v_rep) = 0 then return; end if;
-  if (select count(*) from public.fiche_retours where fiche_path = left(p_path,300) and created_at > now() - interval '1 hour') >= 40 then return; end if;
+  if cardinality(v_rep) = 0 then return false; end if;
+  if (select count(*) from public.fiche_retours where fiche_path = left(p_path,300) and created_at > now() - interval '1 hour') >= 40 then return false; end if;
   if (select count(*) from public.fiche_retours
         where fiche_path = left(p_path,300) and client_nom is not distinct from left(p_client,200)
-          and created_at > now() - interval '10 minutes') >= 3 then return; end if;
+          and created_at > now() - interval '10 minutes') >= 3 then return false; end if;
   insert into public.fiche_retours (fiche_path, client_nom, bien_adresse, agent_id, reponses, lang)
   values (left(p_path,300), left(p_client,200), left(p_adresse,300), v_agent, v_rep,
           case when p_lang in ('fr','en','pt','es') then p_lang else null end);
+  return true;
 end $$;
 revoke all on function public.fiche_retour(text,text,text,uuid,text[],text) from public;
 grant execute on function public.fiche_retour(text,text,text,uuid,text[],text) to anon, authenticated;
 
--- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
-create extension if not exists pg_cron with schema extensions;
-select cron.unschedule('purge-fiche-retours') where exists (select 1 from cron.job where jobname = 'purge-fiche-retours');
-select cron.schedule('purge-fiche-retours', '50 3 * * *', $$delete from public.fiche_retours where created_at < now() - interval '12 months'$$);
 
 
 -- ───────────── supabase-vendeur.sql ─────────────
@@ -449,3 +442,24 @@ begin
 end $$;
 revoke all on function public.vendeur_rapport(text) from public;
 grant execute on function public.vendeur_rapport(text) to anon, authenticated;
+
+
+-- ═══════════════ PARTIE 2 — purge automatique à 12 mois (pg_cron) ═══════════════
+
+-- supabase-fiche-questions.sql
+-- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
+create extension if not exists pg_cron with schema extensions;
+select cron.unschedule('purge-fiche-questions') where exists (select 1 from cron.job where jobname = 'purge-fiche-questions');
+select cron.schedule('purge-fiche-questions', '30 3 * * *', $$delete from public.fiche_questions where created_at < now() - interval '12 months'$$);
+
+-- supabase-fiche-documents.sql
+-- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
+create extension if not exists pg_cron with schema extensions;
+select cron.unschedule('purge-fiche-demandes-documents') where exists (select 1 from cron.job where jobname = 'purge-fiche-demandes-documents');
+select cron.schedule('purge-fiche-demandes-documents', '40 3 * * *', $$delete from public.fiche_demandes_documents where created_at < now() - interval '12 months'$$);
+
+-- supabase-fiche-retours.sql
+-- Rétention : suppression automatique après 12 mois (à exécuter une fois ; pg_cron déjà utilisé par le projet).
+create extension if not exists pg_cron with schema extensions;
+select cron.unschedule('purge-fiche-retours') where exists (select 1 from cron.job where jobname = 'purge-fiche-retours');
+select cron.schedule('purge-fiche-retours', '50 3 * * *', $$delete from public.fiche_retours where created_at < now() - interval '12 months'$$);
