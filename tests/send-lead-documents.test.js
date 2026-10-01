@@ -17,7 +17,7 @@ const run = body => new Promise(resolve => { sent = null; const res = { code: 20
   r = await run(Object.assign({ type: 'documents_liste', documents: 'DPE' }, base)); assert.strictEqual(r.code, 400, 'non-tableau refusé');
   r = await run(Object.assign({ type: 'documents_liste', documents: Array.from({ length: 100 }, (_, i) => 'D' + i) }, base)); assert((r.sent.html.match(/<li>/g) || []).length === 40, '40 max');
   r = await run(Object.assign({ type: 'documents_liste', documents: ['DPE'] }, base, { nom: 'Jean\r\nBcc: evil@x.fr' })); assert(!/[\r\n]/.test(r.sent.subject), 'pas de saut de ligne dans le sujet');
-  r = await run(Object.assign({ type: 'documents' }, base)); assert(/^Demande de documents/.test(r.sent.subject) && !/<ul/.test(r.sent.html), 'demande simple inchangée');
+  r = await run(Object.assign({ type: 'documents' }, base)); assert(r.code === 200 && r.sent === null, 'ouverture simple de l\'onglet : aucun e-mail (seule la liste est envoyée)');
   r = await run(Object.assign({ type: 'offre', montant: '250000' }, base)); assert(/Nouvelle offre/.test(r.sent.subject), 'offre inchangée');
   console.log('OK send-lead documents'); process.exit(0);
 })().catch(e => { console.error('ÉCHEC', e); process.exit(1); });
