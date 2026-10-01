@@ -75,7 +75,7 @@ export function buildDigest(rapport, token, now = new Date(), proprio = null) {
   const bien = clean(rapport.bien, 120) || 'votre bien';
   const noteRecente = rapport.note && rapport.note_at && (now.getTime() - new Date(rapport.note_at).getTime()) < 8 * 86400000;
   const delta = (s.visites || 0) - (s.visites_prec || 0);
-  const salut = clean(proprio, 100);   // nom du propriétaire saisi par l'agent ; sans lui, la version habituelle
+  const salut = clean(proprio, 100).replace(/[^\p{L}\p{N} .'’-]/gu, '').trim();   // nom du propriétaire saisi par l'agent ; sans lui, la version habituelle
   let h = (salut ? '<p style="margin:0 0 10px;">Bonjour ' + esc(salut) + ',</p>' : '') + '<p style="font-size:16px;font-weight:700;margin:0 0 4px;">Le point de la semaine sur votre bien</p><p style="margin:0 0 14px;color:#666;">' + esc(bien) + '</p>';
   h += '<p style="margin:0 0 10px;"><b style="font-size:20px;">' + Number(s.visites || 0) + '</b> ouverture' + ((s.visites || 0) > 1 ? 's' : '') + ' de la fiche cette semaine'
     + (s.visites_prec != null ? ' (' + (delta > 0 ? '+' : '') + delta + ' par rapport à la semaine précédente)' : '') + ', par <b>' + Number(s.acquereurs || 0) + '</b> acquéreur' + ((s.acquereurs || 0) > 1 ? 's' : '') + ' identifié' + ((s.acquereurs || 0) > 1 ? 's' : '') + '.</p>';
