@@ -1,7 +1,8 @@
 // Logique de l'Edge Function « notifications » (injection de dépendances pour être testée sous Node).
 //   mode « alertes » : emails instantanés aux agents (opt-in), appelé toutes les 10 min par pg_cron.
 //   mode « digest »  : point hebdomadaire aux vendeurs (accord attesté par l'agent), appelé chaque lundi.
-import { buildAlerte, buildDigest, validEmail } from './format.js';
+//   mode « resume »  : résumé du lundi à l'agent (qui rappeler, qui relancer), opt-in.
+import { buildAlerte, buildDigest, buildResume, validEmail } from './format.js';
 
 // Comparaison à temps constant du jeton reçu avec la clé service_role de l'environnement (aucune confiance dans un JWT non signé).
 function sameKey(authHeader, key) {
@@ -33,7 +34,7 @@ export async function handle(req, deps) {
   if (!deps.env.RESEND_API_KEY) return json({ error: 'RESEND_API_KEY manquante' }, 500);
   let body = {}; try { body = await req.json(); } catch (e) {}
   const mode = body && body.mode;
-  if (mode !== 'alertes' && mode !== 'digest') return json({ error: 'mode invalide' }, 400);
+  if (mode !== 'alertes' && mode !== 'digest' && mode !== 'resume') return json({ error: 'mode invalide' }, 400);
   let sent = 0, failed = 0;
 
   if (mode === 'alertes') {
@@ -45,6 +46,16 @@ export async function handle(req, deps) {
       let ok = false;
       try { ok = await resend(deps, { from: 'Privency <noreply@privency.fr>', to: [a.agent_email], subject: mail.subject, html: mail.html }); } catch (e) {}
       if (ok) { await deps.db.rpc('notif_alerte_marque', { p_agent: a.agent_user_id, p_cle: a.cle }); sent++; } else failed++;
+    }
+  } else if (mode === 'resume') {
+    const { data, error } = await deps.db.rpc('notif_resume_dus');
+    if (error) return json({ ok: false, error: 'rpc' }, 500);
+    for (const r of data || []) {
+      if (!validEmail(r.agent_email)) { failed++; continue; }
+      const mail = buildResume(r);
+      let ok = false;
+      try { ok = await resend(deps, { from: 'Privency <noreply@privency.fr>', to: [r.agent_email], subject: mail.subject, html: mail.html }); } catch (e) {}
+      if (ok) { await deps.db.rpc('notif_resume_marque', { p_agent: r.agent_user_id }); sent++; } else failed++;
     }
   } else {
     const { data, error } = await deps.db.rpc('notif_digests_dues');

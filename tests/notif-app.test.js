@@ -10,10 +10,10 @@ const { JSDOM, VirtualConsole } = require('jsdom');
   } });
   const w = dom.window, d = w.document; await new Promise(r => setTimeout(r, 300));
   const tick = () => new Promise(r => setTimeout(r, 30));
-  const TOK = 'b'.repeat(96); const updates = []; let digestCols = true; let prefs = null; const upserts = [];
+  const TOK = 'b'.repeat(96); const updates = []; let digestCols = true; let prefs = null; let resumeCol = true; const upserts = [];
   const sess = { data: { session: { user: { id: 'u1' }, access_token: 't' } } };
   function chain(table, cols) {
-    const b = { eq: () => b, is: () => b, limit: () => b, maybeSingle: async () => ({ data: prefs, error: table === 'agent_notif_prefs' && prefs === 'absent' ? { message: 'relation does not exist' } : null }),
+    const b = { eq: () => b, is: () => b, limit: () => b, maybeSingle: async () => ({ data: prefs, error: table === 'agent_notif_prefs' && (prefs === 'absent' || (!resumeCol && /resume_lundi/.test(cols))) ? { message: 'does not exist' } : null }),
       then: res => Promise.resolve(table === 'vendeur_liens' ? (/digest_email/.test(cols) && !digestCols ? { error: { message: 'column digest_email does not exist' } } : { data: [Object.assign({ token: TOK, note: null, note_at: null, revoked_at: null }, /digest_email/.test(cols) ? { digest_email: null } : {})], error: null }) : { data: [], error: null }).then(res) };
     return b;
   }
@@ -35,8 +35,12 @@ const { JSDOM, VirtualConsole } = require('jsdom');
   // ── alertes
   assert.strictEqual(d.getElementById('alerte-prefs').style.display, 'none', 'case masquée par défaut');
   prefs = 'absent'; await w.loadAlertePref(); assert.strictEqual(d.getElementById('alerte-prefs').style.display, 'none', 'table absente : case masquée');
-  prefs = { alertes_actives: true }; await w.loadAlertePref(); assert(d.getElementById('alerte-prefs').style.display === 'flex' && d.getElementById('alerte-cb').checked, 'alertes actives affichées cochées');
+  prefs = { alertes_actives: true }; await w.loadAlertePref(); assert(d.getElementById('alerte-prefs').style.display === 'block' && d.getElementById('alerte-cb').checked, 'alertes actives affichées cochées');
   prefs = null; await w.loadAlertePref(); assert(!d.getElementById('alerte-cb').checked, 'pas de préférence = désactivé');
   await w.setAlertePref(true); const up = upserts.find(x => x[0] === 'agent_notif_prefs'); assert(up && up[1].user_id === 'u1' && up[1].alertes_actives === true, 'préférence enregistrée pour l\'agent connecté');
+  prefs = { alertes_actives: false, resume_lundi: true }; await w.loadAlertePref(); assert(d.getElementById('resume-cb').checked && d.getElementById('resume-label').style.display === 'flex' && !d.getElementById('alerte-cb').checked, 'résumé du lundi affiché coché');
+  upserts.length = 0; await w.setResumePref(true); const ur = upserts.find(x => x[0] === 'agent_notif_prefs'); assert(ur && ur[1].resume_lundi === true && !('alertes_actives' in ur[1]), 'le résumé s\'enregistre sans toucher aux alertes : ' + JSON.stringify(ur));
+  resumeCol = false; await w.loadAlertePref(); assert(d.getElementById('resume-label').style.display === 'none' && d.getElementById('alerte-prefs').style.display === 'block', 'colonne résumé absente : case résumé masquée, alertes toujours disponibles');
+  assert(/3 par jour/.test(d.getElementById('alerte-prefs').textContent) && /Tout décoché = aucun e-mail/.test(d.getElementById('alerte-prefs').textContent), 'texte de réglage clair');
   console.log('OK notifications (app)'); process.exit(0);
 })().catch(e => { console.error('ÉCHEC :', e.stack || e.message); process.exit(1); });

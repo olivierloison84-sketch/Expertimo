@@ -1744,10 +1744,18 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="card-body">
-      <label id="alerte-prefs" style="display:none;align-items:flex-start;gap:10px;margin-bottom:14px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;line-height:1.45;cursor:pointer;">
-        <input type="checkbox" id="alerte-cb" onchange="setAlertePref(this.checked)" style="width:auto;margin-top:3px;">
-        <span><b>🔔 Alertes par e-mail</b> : être prévenu dès qu'un acquéreur transmet une offre, demande des documents, simule son financement, donne son retour de visite ou rouvre la fiche pour la 3<sup>e</sup> fois. Envoi à l'adresse de votre profil, 10 alertes par jour maximum.</span>
-      </label>
+      <div id="alerte-prefs" style="display:none;margin-bottom:14px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;line-height:1.45;">
+        <div style="font-weight:700;margin-bottom:6px;">🔔 Notifications par e-mail <span style="font-weight:400;color:var(--muted);">(envoyées à l'adresse de votre profil)</span></div>
+        <label style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;cursor:pointer;">
+          <input type="checkbox" id="alerte-cb" onchange="setAlertePref(this.checked)" style="width:auto;margin-top:3px;">
+          <span><b>Alertes importantes</b> : seulement quand c'est utile d'agir tout de suite : une offre transmise, un acquéreur qui devient « très chaud », une demande de documents, un retour de visite. 3 par jour au maximum (une offre passe toujours).</span>
+        </label>
+        <label id="resume-label" style="display:none;align-items:flex-start;gap:10px;cursor:pointer;">
+          <input type="checkbox" id="resume-cb" onchange="setResumePref(this.checked)" style="width:auto;margin-top:3px;">
+          <span><b>Résumé du lundi</b> : un seul e-mail par semaine avec les acquéreurs à rappeler et ceux à relancer. Rien n'est envoyé s'il n'y a rien à signaler.</span>
+        </label>
+        <div style="font-size:12px;color:var(--muted);margin-top:8px;">Tout décoché = aucun e-mail. Vous pouvez changer d'avis à tout moment.</div>
+      </div>
       <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);">
         <span style="font-size:13px;color:var(--muted);">Purger les statistiques de plus de</span>
         <select id="analytics-purge-days" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
@@ -5215,22 +5223,28 @@ async function loadAlertePref() {
   try {
     var s = await window.privencyAuth.auth.getSession(), uid = s && s.data && s.data.session && s.data.session.user && s.data.session.user.id;
     if (!uid) return;
-    var r = await window.privencyAuth.from('agent_notif_prefs').select('alertes_actives').eq('user_id', uid).maybeSingle();
-    if (r.error) return;   // table pas encore créée : la case reste masquée
+    var hasResume = true;
+    var r = await window.privencyAuth.from('agent_notif_prefs').select('alertes_actives,resume_lundi').eq('user_id', uid).maybeSingle();
+    if (r.error) { hasResume = false; r = await window.privencyAuth.from('agent_notif_prefs').select('alertes_actives').eq('user_id', uid).maybeSingle(); }   // colonne du lot « notifications v2 » pas encore créée
+    if (r.error) return;   // table pas encore créée : le bloc reste masqué
     document.getElementById('alerte-cb').checked = !!(r.data && r.data.alertes_actives);
-    box.style.display = 'flex';
+    var rl = document.getElementById('resume-label'), rc = document.getElementById('resume-cb');
+    if (rc) rc.checked = !!(r.data && r.data.resume_lundi);
+    if (rl) rl.style.display = hasResume ? 'flex' : 'none';
+    box.style.display = 'block';
   } catch (e) {}
 }
-async function setAlertePref(on) {
-  var cb = document.getElementById('alerte-cb');
+async function _savePref(patch, cb, on, okMsg, offMsg) {
   try {
     var s = await window.privencyAuth.auth.getSession(), uid = s && s.data && s.data.session && s.data.session.user && s.data.session.user.id;
     if (!uid) throw new Error('Session expirée');
-    var r = await window.privencyAuth.from('agent_notif_prefs').upsert({ user_id: uid, alertes_actives: !!on, updated_at: new Date().toISOString() });
+    var r = await window.privencyAuth.from('agent_notif_prefs').upsert(Object.assign({ user_id: uid, updated_at: new Date().toISOString() }, patch));
     if (r.error) throw new Error(r.error.message || 'Échec');
-    showToast(on ? '✅ Alertes activées.' : 'Alertes désactivées.');
+    showToast(on ? okMsg : offMsg);
   } catch (e) { if (cb) cb.checked = !on; showToast('❌ ' + (e && e.message ? e.message : 'Échec'), true); }
 }
+function setAlertePref(on) { return _savePref({ alertes_actives: !!on }, document.getElementById('alerte-cb'), on, '✅ Alertes activées.', 'Alertes désactivées.'); }
+function setResumePref(on) { return _savePref({ resume_lundi: !!on }, document.getElementById('resume-cb'), on, '✅ Résumé du lundi activé.', 'Résumé du lundi désactivé.'); }
 async function loadAnalytics() {
   var status = document.getElementById('analytics-status');
   var wrap   = document.getElementById('analytics-table-wrap');

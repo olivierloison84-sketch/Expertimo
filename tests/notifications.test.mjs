@@ -1,7 +1,7 @@
 // Lot 6 : Edge Function « notifications » (alertes agent + point hebdomadaire vendeur) — format et handler, sans réseau.
 import assert from 'assert';
 import { handle } from '../supabase/functions/notifications/handler.js';
-import { buildAlerte, buildDigest, esc, clean } from '../supabase/functions/notifications/format.js';
+import { buildAlerte, buildDigest, buildResume, esc, clean } from '../supabase/functions/notifications/format.js';
 const jwt = role => 'Bearer x.' + Buffer.from(JSON.stringify({ role })).toString('base64url') + '.y';
 const req = (mode, auth = jwt('service_role'), method = 'POST') => new Request('https://x/functions/v1/notifications', { method, headers: { authorization: auth, 'content-type': 'application/json' }, body: method === 'POST' ? JSON.stringify({ mode }) : undefined });
 function deps({ alertes = [], digests = [], rapport = null, resendOk = true } = {}) {
@@ -32,7 +32,15 @@ assert(d.sent[0].to[0] === 'o@x.fr' && !/[\r\n]/.test(d.sent[0].subject) && !/<b
 assert(d.rpcs.filter(x => x[0] === 'notif_alerte_marque').length === 1 && d.rpcs.find(x => x[0] === 'notif_alerte_marque')[1].p_cle === 'v:1', 'seule l\'alerte envoyée est marquée');
 d = deps({ alertes: [al[0]], resendOk: false }); r = await (await handle(req('alertes'), d)).json();
 assert(r.sent === 0 && r.failed === 1 && !d.rpcs.some(x => x[0] === 'notif_alerte_marque'), 'échec Resend : non marquée (nouvel essai au prochain passage)');
-for (const type of ['offre', 'documents', 'simulation', 'retour_visite', 'reouverture']) assert(buildAlerte({ type, client_nom: 'Léa', bien: 'B' }).subject.includes('Léa') || type === 'offre', 'alerte ' + type);
+for (const type of ['offre', 'tres_chaud', 'documents', 'retour_visite']) assert(buildAlerte({ type, client_nom: 'Léa', bien: 'B' }).subject.includes('Léa') || type === 'offre', 'alerte ' + type);
+assert.strictEqual(buildAlerte({ type: 'simulation', client_nom: 'Léa' }), null, 'plus d\'alerte pour une simple simulation');
+assert.strictEqual(buildAlerte({ type: 'reouverture', client_nom: 'Léa' }), null, 'plus d\'alerte pour une réouverture');
+{ const m = buildAlerte({ type: 'tres_chaud', client_nom: 'Léa<b>', bien: 'B', detail: 'est revenu 4 fois sur la fiche, 15 min de lecture' }); assert(/très chaud/.test(m.subject) && /4 fois/.test(m.html) && !/<b>/.test(m.html) && /Notifications/.test(m.html), 'très chaud : détail, HTML échappé, comment désactiver'); }
+// ── résumé du lundi
+const rr = { agent_user_id: 'u1', agent_email: 'o@x.fr', agent_prenom: 'Olivier', chauds: [{ client: 'Marie <i>D</i>', niveau: 'très chaud', bien: '12 rue des Lilas' }], silences: [{ client: 'Paul', jours: 9, bien: 'B' }], visites: 12, visites_prec: 8, nb_fiches: 2 };
+{ const m = buildResume(rr); assert(/Marie/.test(m.html) && !/<i>/.test(m.html) && /9 jours/.test(m.html) && /\+4/.test(m.html) && /1 acquéreur à rappeler/.test(m.subject) && /Notifications/.test(m.html), 'résumé : contenu, échappement, désinscription : ' + m.subject);
+  d = deps({ alertes: [] }); d.db.rpc = async (fn, a) => { d.rpcs.push([fn, a]); return fn === 'notif_resume_dus' ? { data: [rr, { ...rr, agent_user_id: 'u2', agent_email: 'mauvais' }] } : { data: null }; };
+  r = await (await handle(req('resume'), d)).json(); assert(r.ok && r.sent === 1 && r.failed === 1, 'résumé : 1 envoyé, 1 e-mail invalide écarté'); assert(d.sent[0].to[0] === 'o@x.fr' && d.rpcs.some(x => x[0] === 'notif_resume_marque' && x[1].p_agent === 'u1'), 'résumé marqué après envoi'); }
 assert.strictEqual(buildAlerte({ type: 'pirate' }), null, 'type inconnu ignoré');
 // ── point hebdomadaire
 const rap = { ok: true, bien: 'Maison <script>x</script> Massy', agent: { nom: 'Olivier "Le" Loison\r\n', email: 'o@x.fr' }, note: 'Belle semaine <i>x</i>', note_at: '2026-10-03T10:00:00Z',
