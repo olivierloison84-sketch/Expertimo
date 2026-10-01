@@ -62,7 +62,8 @@ ok(act('documents').some(a => a.lettre === 'A' && /Diagnostic amiante/.test(a.de
 ok(act('rubrique').some(a => a.lettre === 'A' && a.detail === 'budget' && a.sec >= 60) && !act('rubrique').some(a => a.detail === 'bien' || a.detail === 'quartier'), 'activité : rubriques pertinentes ≥ 1 min uniquement (pas « bien », pas 20 s de quartier)');
 ok(act('question').some(a => a.detail === 'Prix et négociation') && !/chauffage|prix minimum|école proche/.test(JSON.stringify(rap.activite)), 'activité : questions par thème, jamais le texte');
 ok(act('simulation').length === 1 && act('ouverture').length >= 3, 'activité : simulation et ouvertures');
-ok(rap.activite.every((a, i, t) => !i || t[i - 1].at >= a.at), 'activité triée du plus récent au plus ancien');
+ok(rap.activite.every(a => /^\d{4}-\d\d-\d\d$/.test(a.jour) && ['matin', 'apres-midi'].includes(a.moment) && !('at' in a)), 'activité : jour + demi-journée, aucune heure exacte');
+ok(rap.activite.every((a, i, t) => !i || t[i - 1].jour >= a.jour), 'activité triée du plus récent au plus ancien (par jour)');
 ok(rap.note.startsWith('Deux visites') && rap.agent.nom === 'Olivier Loison' && rap.agent.tel === '0600000000', 'note et agent');
 ok(!/Marie|Dupont|Paul|Martin|chauffage|prix minimum|école proche|@/.test(raw.replace('o@x.fr', '')), 'AUCUN nom ni texte de question dans le rapport');
 for (const t of [null, '', 'abc', 'a'.repeat(64), tok.slice(0, 95) + 'g', tok + 'ff']) { const r = (await db.query(`select public.vendeur_rapport($1) as r`, [t])).rows[0].r; if (r.ok !== false || Object.keys(r).length !== 1) { ok(false, 'jeton invalide ' + t); } }

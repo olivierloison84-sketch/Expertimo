@@ -203,7 +203,11 @@ begin
   )
   select coalesce(jsonb_agg(jsonb_build_object(
            'lettre', chr(65 + ((l.rn - 1) % 26)::int) || (case when l.rn > 26 then ((l.rn - 1) / 26 + 1)::text else '' end),
-           'type', z.type, 'at', to_char(z.at at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'), 'detail', z.detail, 'sec', z.sec) order by z.at desc), '[]'::jsonb)
+           'type', z.type,
+           -- Heure volontairement arrondie à la demi-journée (heure de Paris) : le vendeur ne peut pas recouper une minute précise avec une visite.
+           'jour', to_char(z.at at time zone 'Europe/Paris', 'YYYY-MM-DD'),
+           'moment', case when extract(hour from z.at at time zone 'Europe/Paris') < 12 then 'matin' else 'apres-midi' end,
+           'detail', z.detail, 'sec', z.sec) order by z.at desc), '[]'::jsonb)
     into v_activite
     from (select ev.* from ev join lettres l2 on l2.k = ev.k order by ev.at desc limit 15) z join lettres l on l.k = z.k;
 

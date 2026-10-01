@@ -41,7 +41,7 @@ svg.chart{width:100%;height:auto;display:block;}
 ul.feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;}
 ul.feed li{display:flex;gap:14px;padding:10px 0;border-top:1px solid var(--line,#E7E3D8);font-size:14px;line-height:1.45;}
 ul.feed li:first-child{border-top:0;}
-ul.feed .when{flex:0 0 13em;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);padding-top:2px;}
+ul.feed .when{flex:0 0 12em;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);padding-top:2px;}
 ul.feed .what{min-width:0;overflow-wrap:anywhere;}
 @media(max-width:600px){ul.feed li{flex-direction:column;gap:2px;}ul.feed .when{flex-basis:auto;white-space:normal;}}
 svg.chart text{font-family:'IBM Plex Mono',monospace;font-size:9.5px;fill:var(--muted);}
@@ -111,11 +111,12 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
   function plur(n, s, p) { return n + ' ' + (n > 1 ? p : s); }
   function fmtDate(iso) { try { var p = String(iso).slice(0, 10).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; } catch (e) { return ''; } }
   function fmtMin(m) { m = Math.round(m || 0); if (m < 60) return m + ' min'; return Math.floor(m / 60) + ' h ' + (m % 60 ? (m % 60) + ' min' : '').trim(); }
-  function fmtWhen(iso) {
+  function fmtWhen(jour, moment) {
     try {
-      var p = {}; new Intl.DateTimeFormat('fr-FR', {timeZone: 'Europe/Paris', weekday: 'long', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}).formatToParts(new Date(iso)).forEach(function(x) { p[x.type] = x.value; });
-      return p.weekday + ' ' + p.day + '/' + p.month + ' à ' + p.hour + ' h ' + p.minute;
-    } catch (e) { return fmtDate(iso); }
+      var p = String(jour).split('-'), d = new Date(Date.UTC(+p[0], +p[1] - 1, +p[2], 12));
+      var w = new Intl.DateTimeFormat('fr-FR', {timeZone: 'UTC', weekday: 'long'}).format(d);
+      return w + ' ' + p[2] + '/' + p[1] + (moment === 'matin' ? ', matin' : ', après-midi');
+    } catch (e) { return fmtDate(jour); }
   }
   function fail(msg) { var s = $('state'); s.textContent = msg; s.classList.remove('hidden'); $('report').classList.add('hidden'); }
 
@@ -191,7 +192,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     var acts = r.activite || [];
     if (!acts.length) fd.appendChild(el('li', null, "Aucune activité sur la fiche ces 30 derniers jours."));
     acts.forEach(function(a) {
-      var when = fmtWhen(a.at), what;
+      var when = fmtWhen(a.jour, a.moment), what;
       if (a.type === 'ouverture') what = 'a ouvert la fiche de votre bien';
       else if (a.type === 'simulation') what = 'a simulé son financement pour ce bien';
       else if (a.type === 'documents') what = 'a demandé des documents' + (a.detail ? ' : ' + a.detail : '');

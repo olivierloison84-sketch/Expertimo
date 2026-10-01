@@ -5869,7 +5869,7 @@ async function vendeurDialog(fname) {
         var L = ['Bonjour, voici le point sur votre bien cette semaine :', '• ' + rj.semaine.visites + ' ouverture' + (rj.semaine.visites > 1 ? 's' : '') + ' de la fiche (' + rj.semaine.visites_prec + ' la semaine précédente), ' + rj.totaux.acquereurs + ' acquéreur' + (rj.totaux.acquereurs > 1 ? 's' : '') + ' identifié' + (rj.totaux.acquereurs > 1 ? 's' : '') + ' au total'];
         var T = { simulation: 'a simulé son financement', documents: 'a demandé des documents', question: 'a posé une question', rubrique: 'a consulté une rubrique du dossier', ouverture: 'a ouvert la fiche' };
         (rj.activite || []).filter(function(x) { return x.type !== 'ouverture'; }).slice(0, 4).forEach(function(x) {
-          var d = ''; try { var p = {}; new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', weekday: 'long', day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).formatToParts(new Date(x.at)).forEach(function(q) { p[q.type] = q.value; }); d = ' (' + p.weekday + ' ' + p.day + '/' + p.month + ' à ' + p.hour + ' h ' + p.minute + ')'; } catch (er) {}
+          var d = ''; try { var q = String(x.jour).split('-'); d = ' (' + new Intl.DateTimeFormat('fr-FR', { timeZone: 'UTC', weekday: 'long' }).format(new Date(Date.UTC(+q[0], +q[1] - 1, +q[2], 12))) + ' ' + q[2] + '/' + q[1] + ', ' + (x.moment === 'matin' ? 'matin' : 'après-midi') + ')'; } catch (er) {}
           L.push('• Acquéreur ' + x.lettre + ' ' + (T[x.type] || 'est revenu sur la fiche') + (x.type === 'documents' && x.detail ? ' : ' + x.detail : '') + d);
         });
         L.push('Le détail complet, mis à jour en continu : ' + url);
