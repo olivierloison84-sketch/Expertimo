@@ -226,8 +226,9 @@ create table if not exists public.vendeur_liens (
 create unique index if not exists vendeur_liens_actif_idx on public.vendeur_liens (filename) where revoked_at is null;
 alter table public.vendeur_liens enable row level security;
 -- Le rapport lit surtout par fiche : sans index, chaque ouverture balaierait toute la table.
-create index if not exists fiche_views_path_created_idx on public.fiche_views (fiche_path, created_at);
-create index if not exists fiche_sessions_path_started_idx on public.fiche_sessions (fiche_path, started_at);
+-- index « hash » : certaines anciennes lignes ont un fiche_path énorme (> 8 Ko) qu'un index classique refuse
+create index if not exists fiche_views_path_hash_idx on public.fiche_views using hash (fiche_path);
+create index if not exists fiche_sessions_path_hash_idx on public.fiche_sessions using hash (fiche_path);
 
 
 drop policy if exists "Agent voit ses liens vendeur" on public.vendeur_liens;
