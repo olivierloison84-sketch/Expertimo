@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -366,10 +346,11 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"Athis-Mons (91200)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1984","description":"Maison 6 pièces de 125 m² · DPE C","surface":125,"surfCarrez":0,"pieces":"6","dpe":"C","prix":374000,"prixm2":2992,"mediane":0,"tension":"","delai":"","loyer":1400,"chargesCopro":0,"chargesDetail":"","taxeFonciere":2300,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Proche RER C (10 min à pied)","fort2":"Panneaux photovoltaïques (revenus 900€/an)","fort3":"Jardin 408m² avec accès direct","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/e3rsbwlnfvtwksxtxuze.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/ccbx75tt34ihylxhqcan.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/odt6yucqw096f5bosyhs.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/rqidjuj5crb9r9arf5da.webp","photo5":"","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"test","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"defavorable","result":"Présence de revêtements contenant du plomb à des concentrations supérieures aux seuils réglementaires."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral. drtfyfgyugfyufuguigh"},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Xavier  Zimmermann ","agentTel":"07 82 36 01 93 ","agentEmail":"xz@expertimo.com","agentRdvUrl":"","agentSiteUrl":"https://www.reseau-expertimo.fr/1972-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790683761/vluu88et8dbxndlwlna9.png","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/e3rsbwlnfvtwksxtxuze.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/rqidjuj5crb9r9arf5da.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/odt6yucqw096f5bosyhs.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/ccbx75tt34ihylxhqcan.webp","caption":"","uploading":false}]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"Athis-Mons (91200)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1984","description":"Maison 6 pièces de 125 m² · DPE C","surface":125,"surfCarrez":0,"pieces":"6","dpe":"C","prix":374000,"prixm2":2992,"mediane":0,"tension":"","delai":"","loyer":1400,"chargesCopro":0,"chargesDetail":"","taxeFonciere":2300,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Proche RER C (10 min à pied)","fort2":"Panneaux photovoltaïques (revenus 900€/an)","fort3":"Jardin 408m² avec accès direct","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/e3rsbwlnfvtwksxtxuze.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/ccbx75tt34ihylxhqcan.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/odt6yucqw096f5bosyhs.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/rqidjuj5crb9r9arf5da.webp","photo5":"","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"test","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"defavorable","result":"Présence de revêtements contenant du plomb à des concentrations supérieures aux seuils réglementaires."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral. drtfyfgyugfyufuguigh"},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Xavier  Zimmermann ","agentTel":"07 82 36 01 93 ","agentEmail":"xz@expertimo.com","agentRdvUrl":"","agentSiteUrl":"https://www.reseau-expertimo.fr/1972-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790683761/vluu88et8dbxndlwlna9.png","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/e3rsbwlnfvtwksxtxuze.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/rqidjuj5crb9r9arf5da.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/odt6yucqw096f5bosyhs.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/ccbx75tt34ihylxhqcan.webp","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"maison","etage":"","adresse":"Athis-Mons (91200)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1984","description":"6-room house of 125 m² · DPE C","surface":125,"surfCarrez":0,"pieces":"6","dpe":"C","prix":374000,"prixm2":2992,"mediane":0,"tension":"","delai":"","loyer":1400,"chargesCopro":0,"chargesDetail":"","taxeFonciere":2300,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Close to RER C (10 min walk)","fort2":"Photovoltaic panels (income 900€/year)","fort3":"408m² garden with direct access","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/e3rsbwlnfvtwksxtxuze.webp","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/ccbx75tt34ihylxhqcan.webp","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/odt6yucqw096f5bosyhs.webp","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/rqidjuj5crb9r9arf5da.webp","photo5":"","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"test","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the assessment, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"defavorable","result":"Presence of coatings containing lead at concentrations exceeding regulatory thresholds."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order. drtfyfgyugfyufuguigh"},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Xavier  Zimmermann ","agentTel":"07 82 36 01 93 ","agentEmail":"xz@expertimo.com","agentRdvUrl":"","agentSiteUrl":"https://www.reseau-expertimo.fr/1972-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790683761/vluu88et8dbxndlwlna9.png","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/e3rsbwlnfvtwksxtxuze.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/rqidjuj5crb9r9arf5da.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/odt6yucqw096f5bosyhs.webp","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790689428/ccbx75tt34ihylxhqcan.webp","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Próximo do RER C (10 min a pé)","fort2":"Painéis fotovoltaicos (receitas 900€/ano)","fort3":"Jardim de 408m² com acesso direto","vig1":"","vig2":"","vig3":"","historiqueLibre":"teste","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram detetados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"defavorable","result":"Presença de revestimentos contendo chumbo em concentrações superiores aos limites regulamentares."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a decreto prefeitoral. drtfyfgyugfyufuguigh"},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Cerca del RER C (10 min a pie)","fort2":"Paneles fotovoltaicos (ingresos 900€/año)","fort3":"Jardín de 408m² con acceso directo","vig1":"","vig2":"","vig3":"","historiqueLibre":"test","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la misión, no se han identificado materiales ni productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"defavorable","result":"Presencia de revestimientos que contienen plomo en concentraciones superiores a los umbrales reglamentarios."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sujeto a decreto prefectoral. drtfyfgyugfyufuguigh"},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 </head>
 <body>
 
@@ -2110,6 +2091,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2286,6 +2268,7 @@ function submitOffer() {
     alert(tr('offer-missing'));
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -2374,6 +2357,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -2849,10 +2833,11 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: agentId })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: window.PRIVENCY_AGENT_ID || agentId })
     });
   }
-  track('fiche_ouverte');
+  // agent_id est injecté à la publication en toute fin de page : on attend la fin du chargement pour l'inclure.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { track('fiche_ouverte'); }); else track('fiche_ouverte');
   // ── Durée de visite : signal toutes les 15 s d'activité réelle (onglet visible + interaction < 60 s) ──
   (function() {
     var sid = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
@@ -2881,18 +2866,28 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  function afficherAvis() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+  }
+  // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══

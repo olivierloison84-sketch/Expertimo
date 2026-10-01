@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -366,10 +346,11 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"RDC","adresse":"10 rue jean colin, Longjumeau (91160)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"2012","description":"Appartement 1 pièce de 33,5 m² · RDC · DPE C","surface":33.5,"surfCarrez":0,"pieces":"1","dpe":"C","prix":135000,"prixm2":4030,"mediane":0,"tension":"","delai":"","loyer":1200,"chargesCopro":1200,"chargesDetail":"","taxeFonciere":956,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Place de parking en sous-sol","fort2":"Proche 2 gares (Chilly 5 min, Longjumeau 7 min)","fort3":"Résidence sécurisée avec ascenseur","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064229/whfdppszzeqamkaabeln.png","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064228/x7szb0hvwx3rhmdr9xb7.png","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064231/krjbndz2n6574wuz3bb1.png","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[{"date":"09/2025","adresse":"Rue Pdt Francois Mitterrand (à ~66 m)","surface":"42","prix":118000,"prixm2":2810},{"date":"08/2025","adresse":"Rue Jean Colin (à ~76 m)","surface":"43","prix":165000,"prixm2":3837},{"date":"06/2025","adresse":"Rue Pdt Francois Mitterrand (à ~66 m)","surface":"30","prix":50000,"prixm2":1667},{"date":"03/2025","adresse":"Rue Jean Colin (à ~76 m)","surface":"28","prix":175000,"prixm2":6250},{"date":"10/2024","adresse":"Rue Jean Colin (à ~45 m)","surface":"40","prix":206500,"prixm2":5163},{"date":"05/2024","adresse":"Rue Jean Colin (à ~62 m)","surface":"51","prix":132500,"prixm2":2598}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"test","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":"en attente "},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064231/krjbndz2n6574wuz3bb1.png","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064229/whfdppszzeqamkaabeln.png","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064228/x7szb0hvwx3rhmdr9xb7.png","caption":"","uploading":false}]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"RDC","adresse":"10 rue jean colin, Longjumeau (91160)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"2012","description":"Appartement 1 pièce de 33,5 m² · RDC · DPE C","surface":33.5,"surfCarrez":0,"pieces":"1","dpe":"C","prix":135000,"prixm2":4030,"mediane":0,"tension":"","delai":"","loyer":1200,"chargesCopro":1200,"chargesDetail":"","taxeFonciere":956,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Place de parking en sous-sol","fort2":"Proche 2 gares (Chilly 5 min, Longjumeau 7 min)","fort3":"Résidence sécurisée avec ascenseur","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064229/whfdppszzeqamkaabeln.png","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064228/x7szb0hvwx3rhmdr9xb7.png","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064231/krjbndz2n6574wuz3bb1.png","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[{"date":"09/2025","adresse":"Rue Pdt Francois Mitterrand (à ~66 m)","surface":"42","prix":118000,"prixm2":2810},{"date":"08/2025","adresse":"Rue Jean Colin (à ~76 m)","surface":"43","prix":165000,"prixm2":3837},{"date":"06/2025","adresse":"Rue Pdt Francois Mitterrand (à ~66 m)","surface":"30","prix":50000,"prixm2":1667},{"date":"03/2025","adresse":"Rue Jean Colin (à ~76 m)","surface":"28","prix":175000,"prixm2":6250},{"date":"10/2024","adresse":"Rue Jean Colin (à ~45 m)","surface":"40","prix":206500,"prixm2":5163},{"date":"05/2024","adresse":"Rue Jean Colin (à ~62 m)","surface":"51","prix":132500,"prixm2":2598}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"test","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":"en attente "},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064231/krjbndz2n6574wuz3bb1.png","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064229/whfdppszzeqamkaabeln.png","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064228/x7szb0hvwx3rhmdr9xb7.png","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"appart","etage":"RDC","adresse":"10 rue jean colin, Longjumeau (91160)","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"2012","description":"1-room apartment of 33.5 m² · Ground floor · DPE C","surface":33.5,"surfCarrez":0,"pieces":"1","dpe":"C","prix":135000,"prixm2":4030,"mediane":0,"tension":"","delai":"","loyer":1200,"chargesCopro":1200,"chargesDetail":"","taxeFonciere":956,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Underground parking space","fort2":"Close to 2 train stations (Chilly 5 min, Longjumeau 7 min)","fort3":"Secure residence with elevator","vig1":"","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064229/whfdppszzeqamkaabeln.png","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064228/x7szb0hvwx3rhmdr9xb7.png","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064231/krjbndz2n6574wuz3bb1.png","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[{"date":"09/2025","adresse":"Rue Pdt Francois Mitterrand (à ~66 m)","surface":"42","prix":118000,"prixm2":2810},{"date":"08/2025","adresse":"Rue Jean Colin (à ~76 m)","surface":"43","prix":165000,"prixm2":3837},{"date":"06/2025","adresse":"Rue Pdt Francois Mitterrand (à ~66 m)","surface":"30","prix":50000,"prixm2":1667},{"date":"03/2025","adresse":"Rue Jean Colin (à ~76 m)","surface":"28","prix":175000,"prixm2":6250},{"date":"10/2024","adresse":"Rue Jean Colin (à ~45 m)","surface":"40","prix":206500,"prixm2":5163},{"date":"05/2024","adresse":"Rue Jean Colin (à ~62 m)","surface":"51","prix":132500,"prixm2":2598}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"test","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":"pending"},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064231/krjbndz2n6574wuz3bb1.png","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064229/whfdppszzeqamkaabeln.png","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790064228/x7szb0hvwx3rhmdr9xb7.png","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Lugar de estacionamento em cave","fort2":"Próximo de 2 estações (Chilly 5 min, Longjumeau 7 min)","fort3":"Residência segura com elevador","vig1":"","vig2":"","vig3":"","historiqueLibre":"teste","diags":[{"icon":"🧱","name":"Amiante","status":"","result":"em espera"},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Plaza de aparcamiento en sótano","fort2":"Cerca de 2 estaciones (Chilly 5 min, Longjumeau 7 min)","fort3":"Residencia con seguridad y ascensor","vig1":"","vig2":"","vig3":"","historiqueLibre":"test","diags":[{"icon":"🧱","name":"Amiante","status":"","result":"pendiente"},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}]}</script>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 </head>
 <body>
 
@@ -2110,6 +2091,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2286,6 +2268,7 @@ function submitOffer() {
     alert(tr('offer-missing'));
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -2374,6 +2357,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -2849,10 +2833,11 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: agentId })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: window.PRIVENCY_AGENT_ID || agentId })
     });
   }
-  track('fiche_ouverte');
+  // agent_id est injecté à la publication en toute fin de page : on attend la fin du chargement pour l'inclure.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { track('fiche_ouverte'); }); else track('fiche_ouverte');
   // ── Durée de visite : signal toutes les 15 s d'activité réelle (onglet visible + interaction < 60 s) ──
   (function() {
     var sid = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
@@ -2881,18 +2866,28 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  function afficherAvis() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+  }
+  // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══

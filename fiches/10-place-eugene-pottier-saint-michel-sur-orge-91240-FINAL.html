@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -366,10 +346,11 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"10 place eugene pottier Saint-Michel-sur-Orge (91240)","quartier":"Villagexpo-Fontaine de l'Orme","acheteur_prenom":"","acheteur_nom":"","annee":"1985","description":"Maison 5 pièces de 130 m² · DPE C","surface":130,"surfCarrez":125,"pieces":"5","dpe":"C","prix":339500,"prixm2":2612,"mediane":0,"tension":"","delai":"","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":0,"score":"8.5","scorePrest":"8","scoreSecteur":"8","scoreQP":"9","scoreEtat":"9","fort1":"Studio indépendant avec douche et WC","fort2":"Pièce de vie de 52m² avec cheminée insert","fort3":"Entièrement rénovée avec matériaux de qualité","vig1":"","vig2":"","vig3":"","photo1":"","photo2":"","photo3":"","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[{"date":"01/2025","adresse":"Allée Boris Vian (à ~117 m)","surface":"68","prix":200000,"prixm2":2941},{"date":"05/2024","adresse":"Rue Edith Piaf (à ~20 m)","surface":"100","prix":290000,"prixm2":2900},{"date":"07/2023","adresse":"Place Jean Cocteau (à ~104 m)","surface":"90","prix":281800,"prixm2":3131},{"date":"06/2023","adresse":"Place Rouget de Lisle (à ~57 m)","surface":"120","prix":399000,"prixm2":3325},{"date":"09/2022","adresse":"Impasse de la Bouloie (à ~93 m)","surface":"100","prix":415000,"prixm2":4150},{"date":"09/2022","adresse":"Rue Edith Piaf (à ~41 m)","surface":"80","prix":273000,"prixm2":3413}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Installation sans anomalie."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Franck Vandenbogaerde","agentTel":"06.87.24.78.64","agentEmail":"franck@essonne-patrimoine.com","agentRdvUrl":"","agentSiteUrl":"https://www.reseau-expertimo.fr/1512-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790507929/kuf7mdsivssvqurhv8l3.jpg","_rawState":{"photos":[]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"10 place eugene pottier Saint-Michel-sur-Orge (91240)","quartier":"Villagexpo-Fontaine de l'Orme","acheteur_prenom":"","acheteur_nom":"","annee":"1985","description":"Maison 5 pièces de 130 m² · DPE C","surface":130,"surfCarrez":125,"pieces":"5","dpe":"C","prix":339500,"prixm2":2612,"mediane":0,"tension":"","delai":"","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":0,"score":"8.5","scorePrest":"8","scoreSecteur":"8","scoreQP":"9","scoreEtat":"9","fort1":"Studio indépendant avec douche et WC","fort2":"Pièce de vie de 52m² avec cheminée insert","fort3":"Entièrement rénovée avec matériaux de qualité","vig1":"","vig2":"","vig3":"","photo1":"","photo2":"","photo3":"","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[{"date":"01/2025","adresse":"Allée Boris Vian (à ~117 m)","surface":"68","prix":200000,"prixm2":2941},{"date":"05/2024","adresse":"Rue Edith Piaf (à ~20 m)","surface":"100","prix":290000,"prixm2":2900},{"date":"07/2023","adresse":"Place Jean Cocteau (à ~104 m)","surface":"90","prix":281800,"prixm2":3131},{"date":"06/2023","adresse":"Place Rouget de Lisle (à ~57 m)","surface":"120","prix":399000,"prixm2":3325},{"date":"09/2022","adresse":"Impasse de la Bouloie (à ~93 m)","surface":"100","prix":415000,"prixm2":4150},{"date":"09/2022","adresse":"Rue Edith Piaf (à ~41 m)","surface":"80","prix":273000,"prixm2":3413}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Installation sans anomalie."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Franck Vandenbogaerde","agentTel":"06.87.24.78.64","agentEmail":"franck@essonne-patrimoine.com","agentRdvUrl":"","agentSiteUrl":"https://www.reseau-expertimo.fr/1512-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790507929/kuf7mdsivssvqurhv8l3.jpg","_rawState":{"photos":[]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"maison","etage":"","adresse":"10 place eugene pottier Saint-Michel-sur-Orge (91240)","quartier":"Villagexpo-Fontaine de l'Orme","acheteur_prenom":"","acheteur_nom":"","annee":"1985","description":"5-room house of 130 m² · DPE C","surface":130,"surfCarrez":125,"pieces":"5","dpe":"C","prix":339500,"prixm2":2612,"mediane":0,"tension":"","delai":"","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":0,"score":"8.5","scorePrest":"8","scoreSecteur":"8","scoreQP":"9","scoreEtat":"9","fort1":"Independent studio with shower and WC","fort2":"52m² living area with insert fireplace","fort3":"Fully renovated with quality materials","vig1":"","vig2":"","vig3":"","photo1":"","photo2":"","photo3":"","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[{"date":"01/2025","adresse":"Allée Boris Vian (à ~117 m)","surface":"68","prix":200000,"prixm2":2941},{"date":"05/2024","adresse":"Rue Edith Piaf (à ~20 m)","surface":"100","prix":290000,"prixm2":2900},{"date":"07/2023","adresse":"Place Jean Cocteau (à ~104 m)","surface":"90","prix":281800,"prixm2":3131},{"date":"06/2023","adresse":"Place Rouget de Lisle (à ~57 m)","surface":"120","prix":399000,"prixm2":3325},{"date":"09/2022","adresse":"Impasse de la Bouloie (à ~93 m)","surface":"100","prix":415000,"prixm2":4150},{"date":"09/2022","adresse":"Rue Edith Piaf (à ~41 m)","surface":"80","prix":273000,"prixm2":3413}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the mission, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural decree."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Interior installation without anomaly."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Installation without anomaly."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to the collective network compliant."}],"renovations":[],"agentNom":"Franck Vandenbogaerde","agentTel":"06.87.24.78.64","agentEmail":"franck@essonne-patrimoine.com","agentRdvUrl":"","agentSiteUrl":"https://www.reseau-expertimo.fr/1512-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1790507929/kuf7mdsivssvqurhv8l3.jpg","_rawState":{"photos":[]}}</script>
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Estúdio independente com duche e WC","fort2":"Sala de estar de 52m² com lareira de recuperador de calor","fort3":"Totalmente renovada com materiais de qualidade","vig1":"","vig2":"","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram identificados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito - edifício construído após 1 de janeiro de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a despacho prefeitoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Instalação interior sem anomalia."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Instalação sem anomalia."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede coletiva conforme."}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Estudio independiente con ducha y WC","fort2":"Sala de estar de 52m² con chimenea de insert","fort3":"Totalmente renovada con materiales de calidad","vig1":"","vig2":"","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la misión, no se han identificado materiales ni productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sometido - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sometido a un decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Instalación interior sin anomalías."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Instalación sin anomalías."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme."}]}</script>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 </head>
 <body>
 
@@ -2110,6 +2091,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2286,6 +2268,7 @@ function submitOffer() {
     alert(tr('offer-missing'));
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -2374,6 +2357,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -2849,10 +2833,11 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: agentId })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: window.PRIVENCY_AGENT_ID || agentId })
     });
   }
-  track('fiche_ouverte');
+  // agent_id est injecté à la publication en toute fin de page : on attend la fin du chargement pour l'inclure.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { track('fiche_ouverte'); }); else track('fiche_ouverte');
   // ── Durée de visite : signal toutes les 15 s d'activité réelle (onglet visible + interaction < 60 s) ──
   (function() {
     var sid = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
@@ -2881,18 +2866,28 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  function afficherAvis() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+  }
+  // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══

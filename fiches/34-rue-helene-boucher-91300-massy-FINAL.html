@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -366,10 +346,11 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1957","description":"Maison 5 pièces de 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":306000,"prixm2":3825,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Maison familiale avec 4 chambres dont 3 de plain pied","fort2":"Maison familiale avec 4 chambres","fort3":"Proche toutes commodités","vig1":"Travaux à prévoir","vig2":"Petit terrain de 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1957 : Construction de la maison. 63m² avec 2 chambres\n1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.\nDébut des années 2000 : remplacement des 2 tableaux électrique\n2010 : Remplacement de toutes le fenêtres en double vitrage PVC\n2012 : Remplacement de la chaudière à gaz (De Dietrich)\n2020 : Travaux de mise en conformité du réseau d'assainissement","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"L'installation intérieure d'électricité comporte une ou des anomalies"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau conforme"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488154/lityjobsameyjiucvqjz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488174/zt5pllbhgvqybm560rkd.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488208/p99xqq347c4tw5kccaiv.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488212/ztxky50i7g3ik65mg1wa.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488211/bnzjbsctmb20i8rzgdjr.jpg","caption":"","uploading":false}]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1957","description":"Maison 5 pièces de 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":306000,"prixm2":3825,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Maison familiale avec 4 chambres dont 3 de plain pied","fort2":"Maison familiale avec 4 chambres","fort3":"Proche toutes commodités","vig1":"Travaux à prévoir","vig2":"Petit terrain de 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1957 : Construction de la maison. 63m² avec 2 chambres\n1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.\nDébut des années 2000 : remplacement des 2 tableaux électrique\n2010 : Remplacement de toutes le fenêtres en double vitrage PVC\n2012 : Remplacement de la chaudière à gaz (De Dietrich)\n2020 : Travaux de mise en conformité du réseau d'assainissement","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"L'installation intérieure d'électricité comporte une ou des anomalies"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau conforme"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488154/lityjobsameyjiucvqjz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488174/zt5pllbhgvqybm560rkd.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488208/p99xqq347c4tw5kccaiv.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488212/ztxky50i7g3ik65mg1wa.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488211/bnzjbsctmb20i8rzgdjr.jpg","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-en" type="application/json">{"type":"maison","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1957","description":"5-room house of 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":306000,"prixm2":3825,"mediane":0,"tension":"Very high","delai":"21 days","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Family home with 4 bedrooms, 3 of which are on the ground floor","fort2":"Family home with 4 bedrooms","fort3":"Close to all amenities","vig1":"Renovation work required","vig2":"Small plot of 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1957: Construction of the house. 63m² with 2 bedrooms\n1974: Extension of the house allowing the creation of 2 additional bedrooms, thus bringing the total surface area of the house to 80m² of living space. Conversion of the attic into 2 living rooms with 2 velux skylights + roof insulation.\nEarly 2000s: Replacement of the 2 electrical panels\n2010: Replacement of all windows with PVC double glazing\n2012: Replacement of the gas boiler (De Dietrich)\n2020: Compliance work on the sewage system","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"As part of the survey, materials and products containing asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"The internal electrical installation has one or more defects"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"The installation has A2 type anomalies which must be repaired as soon as possible."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to the network compliant"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488154/lityjobsameyjiucvqjz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488174/zt5pllbhgvqybm560rkd.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488208/p99xqq347c4tw5kccaiv.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488212/ztxky50i7g3ik65mg1wa.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488211/bnzjbsctmb20i8rzgdjr.jpg","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Moradia familiar com 4 quartos dos quais 3 no rés-do-chão","fort2":"Moradia familiar com 4 quartos","fort3":"Próximo de todas as comodidades","vig1":"Obras a prever","vig2":"Pequeno terreno de 211m²","vig3":"","historiqueLibre":"1957: Construção da moradia. 63m² com 2 quartos\n1974: Ampliação da moradia permitindo a criação de 2 quartos suplementares e elevando assim a superfície total da moradia para 80m² habitáveis. Arranjo do sótão em 2 divisões de estar com 2 claraboias + isolamento da cobertura.\nInício dos anos 2000: substituição dos 2 quadros elétricos\n2010: Substituição de todas as janelas por vidros duplos em PVC\n2012: Substituição da caldeira a gás (De Dietrich)\n2020: Trabalhos de adequação da rede de saneamento","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"No âmbito da missão, foram identificados materiais e produtos contendo amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"A instalação interior de eletricidade apresenta uma ou várias anomalias"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"A instalação apresenta anomalias de tipo A2 que deverão ser reparadas com a maior brevidade."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede conforme"}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Casa familiar con 4 dormitorios, de los cuales 3 en planta baja","fort2":"Casa familiar con 4 dormitorios","fort3":"Cerca de todos los servicios","vig1":"Obras a prever","vig2":"Terreno pequeño de 211m²","vig3":"","historiqueLibre":"1957: Construcción de la casa. 63m² con 2 dormitorios\n1974: Ampliación de la casa permitiendo la creación de 2 dormitorios adicionales y elevando así la superficie total de la casa a 80m² habitables. Acondicionamiento de la buhardilla en 2 estancias con 2 velux + aislamiento del tejado.\nPrincipios de los años 2000: sustitución de los 2 cuadros eléctricos\n2010: Sustitución de todas las ventanas por doble acristalamiento PVC\n2012: Sustitución de la caldera de gas (De Dietrich)\n2020: Trabajos de adecuación a la normativa de la red de saneamiento","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"En el marco de la misión, se han detectado materiales y productos que contienen amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sometido"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sometido"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"La instalación interior de electricidad presenta una o varias anomalías"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"La instalación presenta anomalías de tipo A2 que deberán repararse lo antes posible."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red conforme"}]}</script>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 </head>
 <body>
 
@@ -2105,6 +2086,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -2281,6 +2263,7 @@ function submitOffer() {
     alert(tr('offer-missing'));
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -2369,6 +2352,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -2842,10 +2826,11 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: agentId })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: window.location.pathname, agent_id: window.PRIVENCY_AGENT_ID || agentId })
     });
   }
-  track('fiche_ouverte');
+  // agent_id est injecté à la publication en toute fin de page : on attend la fin du chargement pour l'inclure.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { track('fiche_ouverte'); }); else track('fiche_ouverte');
   // ── Durée de visite : signal toutes les 15 s d'activité réelle (onglet visible + interaction < 60 s) ──
   (function() {
     var sid = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
@@ -2874,18 +2859,28 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  function afficherAvis() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+  }
+  // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 <script>
 // ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══

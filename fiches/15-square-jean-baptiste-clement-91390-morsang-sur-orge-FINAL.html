@@ -1,30 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr"><head>
-<!-- Google Analytics 4 -->
-<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-FR3DQQ8VSH"></script>
+<!-- Mesure : interne uniquement (Supabase). Aucun outil de mesure tiers sur les fiches. -->
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-FR3DQQ8VSH');
-
   var clientId = (new URLSearchParams(window.location.search)).get('client') || 'anonyme';
-  gtag('set', 'user_properties', { client_nom: clientId });
-
-  window.addEventListener('load', function() {
-    gtag('event', 'fiche_ouverte', {
-      client: clientId,
-      bien: typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title
-    });
-    setInterval(function() {
-      gtag('event', 'temps_page', {
-        secondes: Math.round(performance.now() / 1000),
-        client: clientId
-      });
-    }, 30000);
-  });
 </script>
-<!-- /GA4 -->
+<!-- /mesure -->
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -349,7 +329,8 @@ html,body{overflow-x:hidden;}
 .pg > div{min-width:0;}
 </style>
 <style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"4","adresse":"15, Square Jean Baptiste Clément 91390 MORSANG SUR ORGE","quartier":"","acheteur_prenom":"Mélissa ","acheteur_nom":"MARTI","annee":"1965","description":"Appartement 3 pièces de 66 m² · 4 · DPE D","surface":66,"surfCarrez":0,"pieces":"3","dpe":"D","prix":155000,"prixm2":2348,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1200,"chargesCopro":236,"chargesDetail":"Eau froide, chaude, chauffage, espaces verts, gardien","taxeFonciere":0,"score":"8.25","scorePrest":"7","scoreSecteur":"8","scoreQP":"9","scoreEtat":"9","fort1":"Appartement lumineux, calme avec vue dégagée. Parking + Cave.","fort2":"Bon état général. Beaux volumes et rangements (cellier + dressing)","fort3":"Résidence sécurisée, proche transports, commerces et écoles","vig1":"Etage élevé sans ascenseur","vig2":"Pas de balcon","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/tisjmysrsxmsnpxqvvbn.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/hbbhhphtnpqohcjitg0s.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/zlqaezybdvfwhnj7iwar.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/bfrqkg7vix4k9rlkiex9.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/uk8qtt76cugyqxobm1ij.jpg","dvf":[{"date":"09/2024","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"65","prix":140000,"prixm2":2154},{"date":"08/2025","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"66","prix":153000,"prixm2":2318},{"date":"03/2023","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"66","prix":149000,"prixm2":2258},{"date":"04/2025","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"76","prix":177500,"prixm2":2336},{"date":"06/2024","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"64","prix":153540,"prixm2":2399},{"date":"08/2024","adresse":"Square Jean Baptiste Clement (à ~54 m)","surface":"75","prix":149000,"prixm2":1987}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"2019 : Pose de treillis anti-pigeons sur façades (5 309 €)\n2019-2022 : Travaux séparatif eaux usées/eaux pluviales votés (55 000 €) — non encore réalisés\n2022 : Diagnostic assainissement en cours (7 155 €)\n2023/2024 : DPE collectif prévu (obligation légale avant 2025)\n2024-2025 : Remise en état complète du logement de gardien (électricité, menuiserie, peinture ~13 000 €)\n2025 : Remplacement des équipements électriques vétustes en parties communes, entretien espaces verts\n2026 : Lancement PPPT/DPE collectif (10 000 €, fonds ALUR) — nouveau gardien en poste depuis mars 2026","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"non-soumis","result":"Non soumis — bâtiment après 1997"},{"icon":"🔬","name":"Plomb (CREP)","status":"favorable","result":"Absence de plomb détectée"},{"icon":"🪲","name":"Termites","status":"favorable","result":"Absence de termites constatée"},{"icon":"⚡","name":"Électricité","status":"favorable","result":"Installation intérieure sans anomalie"},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Installation sans anomalie"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/bfrqkg7vix4k9rlkiex9.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/zlqaezybdvfwhnj7iwar.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/hbbhhphtnpqohcjitg0s.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685405/uk8qtt76cugyqxobm1ij.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783685401/tisjmysrsxmsnpxqvvbn.jpg","caption":"","uploading":false}]}}</script>
-<script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "yfjed6rs8r");</script></head>
+<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
+</head>
 <body>
 
 
@@ -903,6 +884,7 @@ function undockAI() {
 }
 
 function showTab(id, btn) {
+  try { if (window.privencyTrack) window.privencyTrack('onglet_' + id); } catch (e) {}
   if(typeof gtag!=='undefined') gtag('event','onglet_vu',{onglet:id,client:clientId});
   if (id === 'assistant') { dockAI(); } else { undockAI(); }
   document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('active'); });
@@ -1077,6 +1059,7 @@ function submitOffer() {
     alert('Merci de remplir au moins le montant, votre nom et votre email.');
     return;
   }
+  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var formspreeId = "xpqbnkjj";
   var _ob = '[' + '[';
@@ -1162,6 +1145,7 @@ calcBank();
 
 // ═══ MON BUDGET ═══
 function calcBudget() {
+  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
   var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
   var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
   var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
@@ -1643,10 +1627,11 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
         'apikey': SUPABASE_KEY,
         'Authorization': 'Bearer ' + SUPABASE_KEY
       },
-      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: "/fiches/15-square-jean-baptiste-clement-91390-morsang-sur-orge-FINAL.html", agent_id: agentId })
+      body: JSON.stringify({ client_nom: client, bien_adresse: adresse, evenement: evenement, fiche_path: "/fiches/15-square-jean-baptiste-clement-91390-morsang-sur-orge-FINAL.html", agent_id: window.PRIVENCY_AGENT_ID || agentId })
     });
   }
-  track('fiche_ouverte');
+  // agent_id est injecté à la publication en toute fin de page : on attend la fin du chargement pour l'inclure.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', function() { track('fiche_ouverte'); }); else track('fiche_ouverte');
   // ── Durée de visite : signal toutes les 15 s d'activité réelle (onglet visible + interaction < 60 s) ──
   (function() {
     var sid = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10);
@@ -1675,18 +1660,28 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     document.addEventListener('visibilitychange', function() { if (document.hidden) send(); });
     window.addEventListener('pagehide', send);
   })();
-  document.querySelectorAll('[data-tab], .tab, .nav-tab, [onclick*="tab"]').forEach(function(el) {
-    el.addEventListener('click', function() {
-      track('onglet_' + (el.dataset.tab || el.textContent.trim().slice(0,20)));
-    });
-  });
-  document.querySelectorAll('[onclick*="simul"], [onclick*="credit"], #btn-credit, .btn-credit').forEach(function(el) {
-    el.addEventListener('click', function() { track('credit_simule'); });
-  });
-  document.querySelectorAll('[onclick*="offre"], #btn-offre, .btn-offre, form').forEach(function(el) {
-    el.addEventListener('click', function() { track('offre_soumise'); });
-  });
+  window.privencyTrack = track;
 })();</script>
+<script>
+// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
+(function() {
+  function afficherAvis() {
+  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
+  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
+  var full = Math.round(note), stars = '';
+  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
+  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
+  document.querySelectorAll('.cons-stars').forEach(function(el) {
+    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
+    if (s) s.textContent = stars;
+    if (l) l.textContent = label;
+    el.classList.add('avis-ok');
+  });
+  }
+  // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
+})();
+</script>
 <script>markVisited('bien'); updateRailUI();</script>
 
 
