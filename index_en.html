@@ -1132,7 +1132,6 @@ function submitOffer() {
     alert('Please fill in at least the amount, your name and your email.');
     return;
   }
-  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var formspreeId = "xpqbnkjj";
   var _ob = '[' + '[';
@@ -1160,6 +1159,7 @@ function submitOffer() {
   }).then(function(r) {
     var el = document.getElementById('offer-success');
     if (r.ok) {
+      try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {} // compté seulement si l'envoi a réussi
       el.style.display = 'block';
       el.innerHTML = '<p>✅ Your offer of <strong>' +
         parseInt(montant).toLocaleString('fr-FR') +

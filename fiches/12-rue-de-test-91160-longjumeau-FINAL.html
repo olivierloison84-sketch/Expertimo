@@ -1129,7 +1129,6 @@ function submitOffer() {
     alert(isEn ? 'Please fill in at least the amount, your name and your email.' : 'Merci de remplir au moins le montant, votre nom et votre email.');
     return;
   }
-  try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {}
 
   var expData = {};
   try { expData = JSON.parse(document.getElementById('expertimo-data').textContent); } catch(e) {}
@@ -1155,6 +1154,7 @@ function submitOffer() {
   }).then(function(r) {
     var el = document.getElementById('offer-success');
     if (r.ok) {
+      try { if (window.privencyTrack) window.privencyTrack('offre_soumise'); } catch (e) {} // compté seulement si l'envoi a réussi
       el.style.display = 'block';
       el.innerHTML = isEn
         ? ('<p>✅ Your offer of <strong>' + parseInt(montant).toLocaleString('fr-FR') + ' €</strong> has been submitted. Olivier LOISON will contact you within 24h.</p>')
