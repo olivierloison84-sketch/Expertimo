@@ -397,7 +397,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
   // Page ouverte en arrière-plan puis réaffichée plus de 5 minutes après : on la recharge pour afficher les données du moment.
   (function() { var hiddenAt = 0; document.addEventListener('visibilitychange', function() {
     if (document.hidden) { hiddenAt = Date.now(); return; }
-    if (hiddenAt && Date.now() - hiddenAt > 5 * 60 * 1000) location.reload();
+    if (hiddenAt && Date.now() - hiddenAt > 5 * 60 * 1000 && !/^(INPUT|TEXTAREA)$/.test((document.activeElement || {}).tagName || '')) location.reload();
   }); })();
 </script>
 </body>

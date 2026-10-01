@@ -99,7 +99,7 @@ language sql security definer set search_path = public stable as $$
       from fich fi join public.fiche_views v on v.fiche_path = fi.fiche_path and v.evenement = 'fiche_ouverte' and v.created_at > now() - interval '14 days' group by fi.user_id)
   select a.user_id, a.email, a.prenom, coalesce(ch.j, '[]'::jsonb), coalesce(si.j, '[]'::jsonb), coalesce(vi.cur, 0), coalesce(vi.prec, 0), coalesce(vi.nb, 0)
     from a left join ch on ch.user_id = a.user_id left join si on si.user_id = a.user_id left join vi on vi.user_id = a.user_id
-   where coalesce(jsonb_array_length(ch.j), 0) + coalesce(jsonb_array_length(si.j), 0) + coalesce(vi.cur, 0) > 0
+   where coalesce(jsonb_array_length(ch.j), 0) + coalesce(jsonb_array_length(si.j), 0) > 0
    limit 500 $$;
 create or replace function public.notif_resume_marque(p_agent uuid) returns void
 language sql security definer set search_path = public as $$

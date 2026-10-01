@@ -70,6 +70,9 @@ let r = await rs(); ok(r.length === 1 && r[0].agent_user_id === A1 && r[0].visit
 ok(!r.some(x => x.agent_user_id === A2), 'résumé jamais envoyé à un agent qui ne l\'a pas activé');
 await asSvc(() => db.query(`select public.notif_resume_marque($1)`, [A1])); ok((await rs()).length === 0, 'plus dû juste après l\'envoi');
 await db.exec(`update public.agent_notif_prefs set resume_last_at = now() - interval '6 days' where user_id='${A1}'`); ok((await rs()).length === 1, 'de nouveau dû au bout de 6 jours');
+// seulement des ouvertures, personne à rappeler ni à relancer : pas de résumé
+await db.exec(`delete from public.fiche_views; delete from public.fiche_sessions; delete from public.fiche_retours; delete from public.fiche_demandes_documents`);
+await ev('Solo', 'fiche_ouverte', 60); ok((await rs()).length === 0, 'rien à signaler (une ouverture seulement) : pas de résumé');
 // rien à dire : pas de résumé
 await db.exec(`delete from public.fiche_views; delete from public.fiche_sessions; delete from public.fiche_retours; delete from public.fiche_demandes_documents`);
 ok((await rs()).length === 0, 'aucune activité : aucun résumé envoyé');
