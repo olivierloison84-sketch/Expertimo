@@ -6113,11 +6113,12 @@ async function vendeurDialog(fname) {
         var em = emIn.value.trim();
         if (em && !/^[^\s@<>"',;]+@[^\s@<>"',;]+\.[^\s@<>"',;]+$/.test(em)) { showToast("❌ Adresse e-mail du vendeur invalide.", true); e.target.disabled = false; return; }
         if (em && !emOk.checked) { showToast("❌ Cochez l'accord du vendeur pour activer l'envoi.", true); e.target.disabled = false; return; }
-        patch.digest_email = em || null; patch.digest_consent_at = em ? new Date().toISOString() : null;
+        if (em !== (lien.digest_email || '')) { patch.digest_email = em || null; patch.digest_consent_at = em ? new Date().toISOString() : null; }
       }
       var up = await db.from('vendeur_liens').update(patch).eq('token', lien.token);
       e.target.disabled = false;
-      if (up.error) { showToast('❌ ' + (up.error.message || 'Échec'), true); return; }
+      if (up.error) { showToast(/optout/.test(up.error.message || '') ? '❌ Le vendeur s\'est désinscrit du point par e-mail : il doit en refaire la demande (nouveau lien).' : '❌ ' + (up.error.message || 'Échec'), true); return; }
+      if ('digest_email' in patch) lien.digest_email = patch.digest_email;
       showToast(emIn && emIn.value.trim() ? '✅ Enregistré : le vendeur recevra le point chaque lundi.' : '✅ Enregistré.');
     });
     save.id = 'vendeur-save';

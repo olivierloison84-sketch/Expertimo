@@ -463,6 +463,10 @@ alter table public.vendeur_liens add constraint vendeur_liens_digest_chk check (
   digest_email is null
   or (char_length(digest_email) <= 254 and digest_email ~ '^[^[:space:]@<>"'',;]+@[^[:space:]@<>"'',;]+\.[^[:space:]@<>"'',;]+$' and digest_consent_at is not null));
 -- l'agent renseigne l'email et son attestation ; digest_last_at n'est écrit que par le serveur
+alter table public.vendeur_liens add column if not exists digest_optout_at timestamptz;
+-- Un vendeur désinscrit ne peut pas être réinscrit par l'agent (digest_optout_at n'est écrit que par vendeur_digest_stop).
+alter table public.vendeur_liens drop constraint if exists vendeur_liens_digest_optout_chk;
+alter table public.vendeur_liens add constraint vendeur_liens_digest_optout_chk check (digest_optout_at is null or digest_email is null);
 grant insert (digest_email, digest_consent_at) on public.vendeur_liens to authenticated;
 grant update (digest_email, digest_consent_at) on public.vendeur_liens to authenticated;
 
@@ -474,7 +478,7 @@ create or replace function public.vendeur_digest_stop(p_token text) returns bool
 language plpgsql security definer set search_path = public as $$
 begin
   if p_token is null or p_token !~ '^[0-9a-f]{64,96}$' then return false; end if;
-  update public.vendeur_liens set digest_email = null, digest_consent_at = null where token = p_token and revoked_at is null and digest_email is not null;
+  update public.vendeur_liens set digest_email = null, digest_consent_at = null, digest_optout_at = now() where token = p_token and revoked_at is null and digest_email is not null;
   return found;
 end $$;
 revoke all on function public.vendeur_digest_statut(text), public.vendeur_digest_stop(text) from public;
@@ -542,15 +546,16 @@ language sql security definer set search_path = public stable as $$
      group by o.fiche_path, o.client_nom
     having count(*) >= 3 and max(o.created_at) > now() - interval '30 minutes'
   )
-  select * from (select distinct on (af.agent_user_id, ev.cle) af.agent_user_id, ap.email, ap.prenom, ev.cle, ev.type, ev.client, af.label, ev.at
+  select z.agent_user_id, z.email, z.prenom, z.cle, z.type, z.client, z.label, z.at from (select *, row_number() over (partition by agent_user_id order by at, cle) as rang from (select distinct on (af.agent_user_id, ev.cle) af.agent_user_id, ap.email, ap.prenom, ev.cle, ev.type, ev.client, af.label, ev.at
     from ev
-    join public.agent_fiches af on '/fiches/' || af.filename = ev.fiche_path
+    join public.agent_fiches af on ev.fiche_path in ('/fiches/' || af.filename, '/fiches/' || case when af.filename ~ '-FINAL\.html$' then regexp_replace(af.filename, '-FINAL\.html$', '-EN-FINAL.html') else regexp_replace(af.filename, '\.html$', '-EN.html') end)
     join public.agent_notif_prefs p on p.user_id = af.agent_user_id and p.alertes_actives
     join public.agent_profiles ap on ap.user_id = af.agent_user_id
    where ev.type is not null and ap.email is not null
      and not exists (select 1 from public.notif_alertes_envoyees e where e.agent_user_id = af.agent_user_id and e.cle = ev.cle)
-     and (select count(*) from public.notif_alertes_envoyees e where e.agent_user_id = af.agent_user_id and e.sent_at > now() - interval '1 day') < 10
-   order by af.agent_user_id, ev.cle, ev.at) z order by z.at limit 100 $$;
+   order by af.agent_user_id, ev.cle, ev.at) y) z
+  where z.rang <= 10 - (select count(*) from public.notif_alertes_envoyees e where e.agent_user_id = z.agent_user_id and e.sent_at > now() - interval '1 day')
+  order by z.at limit 100 $$;
 create or replace function public.notif_alerte_marque(p_agent uuid, p_cle text) returns void
 language sql security definer set search_path = public as $$
   insert into public.notif_alertes_envoyees(agent_user_id, cle) values (p_agent, left(p_cle, 400)) on conflict do nothing $$;
@@ -561,7 +566,6 @@ do $$ begin
     grant execute on function public.notif_digests_dues(), public.notif_digest_marque(text), public.notif_alertes_dues(), public.notif_alerte_marque(uuid, text) to service_role;
   end if;
 end $$;
-
 
 
 -- ═══════════════ PARTIE 2 — planifications (pg_cron) ═══════════════

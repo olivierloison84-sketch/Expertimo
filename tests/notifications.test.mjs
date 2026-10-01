@@ -6,13 +6,14 @@ const jwt = role => 'Bearer x.' + Buffer.from(JSON.stringify({ role })).toString
 const req = (mode, auth = jwt('service_role'), method = 'POST') => new Request('https://x/functions/v1/notifications', { method, headers: { authorization: auth, 'content-type': 'application/json' }, body: method === 'POST' ? JSON.stringify({ mode }) : undefined });
 function deps({ alertes = [], digests = [], rapport = null, resendOk = true } = {}) {
   const sent = [], rpcs = [];
-  return { sent, rpcs, env: { RESEND_API_KEY: 'k' }, now: () => new Date('2026-10-05T06:00:00Z'),
+  return { sent, rpcs, env: { RESEND_API_KEY: 'k', SERVICE_ROLE_KEY: jwt('service_role').slice(7) }, now: () => new Date('2026-10-05T06:00:00Z'),
     db: { rpc: async (fn, args) => { rpcs.push([fn, args]); if (fn === 'notif_alertes_dues') return { data: alertes }; if (fn === 'notif_digests_dues') return { data: digests }; if (fn === 'vendeur_rapport') return { data: rapport }; return { data: null }; } },
     fetch: async (u, o) => { sent.push(JSON.parse(o.body)); return { ok: resendOk }; } };
 }
 // ── accès
 let d = deps(); assert.strictEqual((await handle(req('alertes', jwt('anon')), d)).status, 403, 'clé anon refusée');
 assert.strictEqual((await handle(req('alertes', ''), d)).status, 403, 'sans jeton refusé');
+assert.strictEqual((await handle(req('alertes', jwt('service_role').replace('.y', '.z')), d)).status, 403, 'jeton forgé (signature différente) refusé');
 assert.strictEqual((await handle(req('alertes', jwt('authenticated')), d)).status, 403, 'utilisateur connecté refusé');
 assert.strictEqual((await handle(req('x'), d)).status, 400, 'mode invalide');
 assert.strictEqual((await handle(req('alertes', jwt('service_role'), 'GET'), d)).status, 405, 'GET refusé');

@@ -3,14 +3,13 @@
 //   mode « digest »  : point hebdomadaire aux vendeurs (accord attesté par l'agent), appelé chaque lundi.
 import { buildAlerte, buildDigest, validEmail } from './format.js';
 
-function decodeJwtRole(authHeader) {
-  const token = String(authHeader || '').replace(/^Bearer\s+/i, '').trim();
-  const part = token.split('.')[1];
-  if (!part) return null;
-  try {
-    const b64 = part.replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(atob(b64.padEnd(b64.length + (4 - (b64.length % 4)) % 4, '='))).role || null;
-  } catch (e) { return null; }
+// Comparaison à temps constant du jeton reçu avec la clé service_role de l'environnement (aucune confiance dans un JWT non signé).
+function sameKey(authHeader, key) {
+  const t = String(authHeader || '').replace(/^Bearer\s+/i, '').trim();
+  const k = String(key || '');
+  if (!k || t.length !== k.length) return false;
+  let d = 0; for (let i = 0; i < k.length; i++) d |= t.charCodeAt(i) ^ k.charCodeAt(i);
+  return d === 0;
 }
 const json = (o, status = 200) => new Response(JSON.stringify(o), { status, headers: { 'Content-Type': 'application/json' } });
 
@@ -23,8 +22,8 @@ async function resend(deps, payload) {
 
 export async function handle(req, deps) {
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
-  // La passerelle Supabase a déjà vérifié la signature du JWT ; on réserve l'appel au service_role (la clé anon est publique).
-  if (decodeJwtRole(req.headers.get('authorization')) !== 'service_role') return json({ error: 'forbidden' }, 403);
+  // Appel réservé à la clé service_role (la clé anon est publique) : comparée au secret de l'environnement.
+  if (!sameKey(req.headers.get('authorization'), deps.env.SERVICE_ROLE_KEY)) return json({ error: 'forbidden' }, 403);
   if (!deps.env.RESEND_API_KEY) return json({ error: 'RESEND_API_KEY manquante' }, 500);
   let body = {}; try { body = await req.json(); } catch (e) {}
   const mode = body && body.mode;

@@ -6,4 +6,4 @@ import { createClient } from 'jsr:@supabase/supabase-js@2';
 import { handle } from './handler.js';
 
 const db = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false } });
-Deno.serve((req: Request) => handle(req, { env: { RESEND_API_KEY: Deno.env.get('RESEND_API_KEY') }, db, fetch }));
+Deno.serve((req: Request) => handle(req, { env: { RESEND_API_KEY: Deno.env.get('RESEND_API_KEY'), SERVICE_ROLE_KEY: Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') }, db, fetch }));

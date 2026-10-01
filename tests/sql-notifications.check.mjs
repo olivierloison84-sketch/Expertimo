@@ -67,7 +67,7 @@ d = await due(); await db.exec(`reset role; set role service_role`);
 for (const x of d.slice(0, 5)) await db.query(`select public.notif_alerte_marque($1, $2)`, [x.agent_user_id, x.cle]);
 await db.exec(`reset role`);
 const n = (await db.query(`select count(*)::int n from public.notif_alertes_envoyees where agent_user_id='${A1}'`)).rows[0].n;
-ok(n + (await due()).length >= 10 && (await due()).length === 0 || n >= 10, 'plafond de 10 alertes par agent et par jour : ' + n + ' envoyées, ' + (await due()).length + ' restantes');
+ok(d.length <= 10 && n === 5 && (await due()).length <= 5, 'plafond de 10 alertes par agent et par jour, appliqué dès le premier passage : ' + d.length + ' renvoyées, ' + n + ' marquées');
 
 // ── point hebdomadaire vendeur
 await db.exec(`set role authenticated; set app.uid='${A1}'`);
@@ -91,6 +91,9 @@ await db.exec(`reset role; set role anon`);
 ok((await db.query(`select public.vendeur_digest_statut($1) as s`, [tok])).rows[0].s === true, 'statut : abonné');
 ok((await db.query(`select public.vendeur_digest_stop($1) as s`, ['a'.repeat(64)])).rows[0].s === false, 'désinscription : jeton inconnu refusé');
 ok((await db.query(`select public.vendeur_digest_stop($1) as s`, [tok])).rows[0].s === true, 'désinscription par le vendeur');
+await db.exec(`reset role; set role authenticated; set app.uid='${A1}'`);
+denied = false; try { await db.exec(`update public.vendeur_liens set digest_email = 'vendeur@x.fr', digest_consent_at = now()`); } catch (e) { denied = true; } ok(denied, 'après désinscription, l\'agent ne peut pas réinscrire le vendeur');
+denied = false; try { await db.exec(`update public.vendeur_liens set digest_optout_at = null`); } catch (e) { denied = true; } ok(denied, 'l\'agent ne peut pas effacer le refus du vendeur');
 await db.exec(`reset role`);
 const row = (await db.query(`select digest_email, digest_consent_at from public.vendeur_liens`)).rows[0]; ok(row.digest_email === null && row.digest_consent_at === null, 'email et accord effacés');
 await db.exec(`set role anon`); ok((await db.query(`select public.vendeur_digest_statut($1) as s`, [tok])).rows[0].s === false, 'statut : plus abonné');
