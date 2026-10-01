@@ -5787,6 +5787,11 @@ async function loadFiches() {
         +           'onclick="modifierFiche(\'' + safeName + '\',\'' + safeSha + '\',\'' + safeDl + '\')">'
         +     '✏️ Modifier'
         +   '</button>'
+        +   '<button class="btn btn-sm btn-outline" style="margin-right:6px;" '
+        +           'data-fname="' + esc(f.filename) + '" '
+        +           'onclick="vendeurDialog(this.getAttribute(\'data-fname\'))">'
+        +     '🏠 Vendeur'
+        +   '</button>'
         +   '<button class="btn btn-sm btn-outline" '
         +           'data-fname="' + esc(f.filename) + '" '
         +           'onclick="supprimerFiche(this)">'
@@ -5801,6 +5806,114 @@ async function loadFiches() {
   } catch(err) {
     status.textContent = '❌ ' + err.message;
   }
+}
+
+// ── Espace vendeur : lien privé vers le compte rendu (acquéreurs anonymisés) ──
+async function vendeurDialog(fname) {
+  var db = window.privencyAuth;
+  if (!db || !fname) { showToast('❌ Session indisponible, reconnectez-vous.', true); return; }
+  var sess = await db.auth.getSession();
+  var uid = sess && sess.data && sess.data.session && sess.data.session.user && sess.data.session.user.id;
+  if (!uid) { showToast('❌ Session expirée, reconnectez-vous.', true); return; }
+
+  var overlay = document.createElement('div');
+  overlay.id = 'vendeur-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:10000;';
+  var card = document.createElement('div'); card.className = 'card'; card.style.cssText = 'max-width:460px;width:92%;margin:0;max-height:90vh;overflow:auto;';
+  var head = document.createElement('div'); head.className = 'card-header'; head.textContent = '🏠 Compte rendu vendeur';
+  var body = document.createElement('div'); body.className = 'card-body';
+  card.appendChild(head); card.appendChild(body); overlay.appendChild(card); document.body.appendChild(overlay);
+  function close() { overlay.remove(); }
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+  function txt(t, css) { var d = document.createElement('div'); d.style.cssText = css || 'font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5;'; d.textContent = t; return d; }
+  function btn(label, cls, fn) { var b = document.createElement('button'); b.className = 'btn ' + cls; b.textContent = label; b.onclick = fn; return b; }
+
+  async function draw() {
+    body.textContent = '';
+    body.appendChild(txt('Chargement…'));
+    var r = await db.from('vendeur_liens').select('token,note,note_at,revoked_at')
+      .eq('filename', fname).is('revoked_at', null).limit(1);
+    body.textContent = '';
+    if (r.error) { body.appendChild(txt('❌ Fonction non activée ou indisponible (' + (r.error.message || 'erreur') + ').', 'font-size:12px;color:var(--danger);margin-bottom:10px;')); body.appendChild(btn('Fermer', 'btn-outline', close)); return; }
+    var lien = r.data && r.data[0];
+    var actions = document.createElement('div'); actions.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;';
+    if (!lien) {
+      body.appendChild(txt("Créez un lien privé à envoyer à votre vendeur : il y suit l'activité sur son bien (ouvertures, documents demandés, rubriques consultées), semaine après semaine. Les acquéreurs sont désignés par une lettre : ni nom, ni email. Ce lien n'apparaît jamais sur la fiche des acquéreurs."));
+      actions.appendChild(btn('Fermer', 'btn-outline', close));
+      actions.appendChild(btn('Créer le lien vendeur', 'btn-primary', async function(e) {
+        e.target.disabled = true;
+        var ins = await db.from('vendeur_liens').insert({ agent_user_id: uid, filename: fname });
+        if (ins.error) { showToast('❌ ' + (ins.error.message || 'Création impossible'), true); e.target.disabled = false; return; }
+        draw();
+      }));
+      body.appendChild(actions); return;
+    }
+    var url = PRIVENCY_API_BASE + '/vendeur.html#' + lien.token;
+    body.appendChild(txt('Lien privé (à envoyer uniquement à votre vendeur) :', 'font-size:12px;font-weight:600;margin-bottom:6px;'));
+    var inp = document.createElement('input'); inp.type = 'text'; inp.readOnly = true; inp.id = 'vendeur-url'; inp.value = url; inp.style.cssText = 'width:100%;font-size:11px;margin-bottom:8px;';
+    inp.onfocus = function() { inp.select(); };
+    body.appendChild(inp);
+    body.appendChild(btn('📋 Copier le lien', 'btn-sm btn-outline', function() {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function() { showToast('✅ Lien copié.'); }, function() { inp.select(); });
+      else inp.select();
+    }));
+    var pt = btn('💬 Copier le point de la semaine', 'btn-sm btn-outline', async function(e) {
+      // Message prêt à envoyer (SMS / WhatsApp / mail) : de la matière concrète pour relancer le vendeur.
+      e.target.disabled = true;
+      try {
+        var rr = await fetch('https://hhqcumnatnslfjpsrmgb.supabase.co/rest/v1/rpc/vendeur_rapport', { method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY', 'Authorization': 'Bearer ' + ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY') },
+          body: JSON.stringify({ p_token: lien.token }) });
+        var rj = await rr.json();
+        if (!rj || rj.ok !== true) throw new Error('rapport indisponible');
+        var L = ['Bonjour, voici le point sur votre bien cette semaine :', '• ' + rj.semaine.visites + ' ouverture' + (rj.semaine.visites > 1 ? 's' : '') + ' de la fiche (' + rj.semaine.visites_prec + ' la semaine précédente), ' + rj.totaux.acquereurs + ' acquéreur' + (rj.totaux.acquereurs > 1 ? 's' : '') + ' identifié' + (rj.totaux.acquereurs > 1 ? 's' : '') + ' au total'];
+        var T = { simulation: 'a simulé son financement', documents: 'a demandé des documents', question: 'a posé une question', rubrique: 'a consulté une rubrique du dossier', ouverture: 'a ouvert la fiche' };
+        (rj.activite || []).filter(function(x) { return x.type !== 'ouverture'; }).slice(0, 4).forEach(function(x) {
+          var d = ''; try { var q = String(x.jour).split('-'); d = ' (' + new Intl.DateTimeFormat('fr-FR', { timeZone: 'UTC', weekday: 'long' }).format(new Date(Date.UTC(+q[0], +q[1] - 1, +q[2], 12))) + ' ' + q[2] + '/' + q[1] + ', ' + (x.moment === 'matin' ? 'matin' : 'après-midi') + ')'; } catch (er) {}
+          L.push('• Acquéreur ' + x.lettre + ' ' + (T[x.type] || 'est revenu sur la fiche') + (x.type === 'documents' && x.detail ? ' : ' + x.detail : '') + d);
+        });
+        L.push('Le détail complet, mis à jour en continu : ' + url);
+        var msg = L.join('\n');
+        var copied = false;
+        try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(msg); copied = true; } } catch (er2) {}
+        if (copied) showToast('✅ Message copié : collez-le dans un SMS, WhatsApp ou mail.');
+        else {
+          // Certains navigateurs (iPhone) refusent la copie automatique : le message reste sélectionnable ici.
+          var box = body.querySelector('#vendeur-msg') || document.createElement('textarea');
+          box.id = 'vendeur-msg'; box.readOnly = true; box.rows = 7; box.style.cssText = 'width:100%;font-size:12px;margin-top:10px;'; box.value = msg;
+          if (!box.parentNode) e.target.parentNode.insertBefore(box, e.target.nextSibling);
+          box.focus(); box.select(); showToast('Copiez le message ci-dessous (appui long → Copier).');
+        }
+      } catch (er) { showToast('❌ Impossible de préparer le message.', true); }
+      e.target.disabled = false;
+    });
+    pt.style.marginLeft = '8px';
+    body.appendChild(pt);
+    var lab = document.createElement('div'); lab.style.cssText = 'font-size:12px;font-weight:600;margin:14px 0 6px;'; lab.textContent = 'Votre mot pour le vendeur (facultatif, 600 caractères max)';
+    body.appendChild(lab);
+    var ta = document.createElement('textarea'); ta.id = 'vendeur-note'; ta.maxLength = 600; ta.rows = 4; ta.style.cssText = 'width:100%;font-size:13px;'; ta.value = lien.note || '';
+    ta.placeholder = 'Ex : Belle semaine, deux visites prévues jeudi. On en reparle vendredi.';
+    body.appendChild(ta);
+    actions.appendChild(btn('Fermer', 'btn-outline', close));
+    actions.appendChild(btn('Arrêter le lien', 'btn-outline', async function(e) {
+      e.target.disabled = true;
+      var up = await db.from('vendeur_liens').update({ revoked_at: new Date().toISOString() }).eq('token', lien.token);
+      if (up.error) { showToast('❌ ' + (up.error.message || 'Échec'), true); e.target.disabled = false; return; }
+      showToast('✅ Lien désactivé.'); draw();
+    }));
+    var save = btn('Enregistrer le mot', 'btn-primary', async function(e) {
+      e.target.disabled = true;
+      var n = ta.value.trim().slice(0, 600);
+      var up = await db.from('vendeur_liens').update({ note: n || null, note_at: n ? new Date().toISOString() : null }).eq('token', lien.token);
+      e.target.disabled = false;
+      if (up.error) { showToast('❌ ' + (up.error.message || 'Échec'), true); return; }
+      showToast('✅ Mot enregistré.');
+    });
+    save.id = 'vendeur-save';
+    actions.appendChild(save);
+    body.appendChild(actions);
+  }
+  draw();
 }
 
 async function supprimerFiche(btn) {
