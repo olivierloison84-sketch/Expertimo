@@ -1748,7 +1748,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
         <input type="checkbox" id="alerte-cb" onchange="setAlertePref(this.checked)" style="width:auto;margin-top:3px;">
         <span><b>🔔 Alertes par e-mail</b> : être prévenu dès qu'un acquéreur transmet une offre, demande des documents, simule son financement, donne son retour de visite ou rouvre la fiche pour la 3<sup>e</sup> fois. Envoi à l'adresse de votre profil, 10 alertes par jour maximum.</span>
       </label>
-      <div id="callist-block" style="display:none;margin-bottom:18px;"></div>
       <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);">
         <span style="font-size:13px;color:var(--muted);">Purger les statistiques de plus de</span>
         <select id="analytics-purge-days" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
@@ -1780,18 +1779,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
       <div id="analytics-table-wrap" style="display:none;overflow:auto;max-height:65vh;border:1px solid var(--border);border-radius:var(--radius);">
         <table id="analytics-table" style="width:100%;border-collapse:collapse;font-size:13px;">
-          <thead>
-            <tr style="background:var(--light);color:var(--muted);">
-              <th style="padding:9px 12px;width:34px;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;"></th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Client</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Bien</th>
-              <th style="padding:9px 12px;text-align:center;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Nb vues</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;" title="Temps réellement passé sur la fiche (onglet visible et actif)">Temps passé</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Dernière activité</th>
-              <th style="padding:9px 12px;text-align:left;font-weight:600;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;">Événements</th>
-              <th style="padding:9px 12px;width:44px;position:sticky;top:0;background:var(--light);border-bottom:1px solid var(--border);z-index:1;"></th>
-            </tr>
-          </thead>
           <tbody id="analytics-tbody"></tbody>
         </table>
       </div>
@@ -5396,7 +5383,6 @@ async function loadAnalytics() {
     });
 
     status.style.display = 'none';
-    try { renderCallList(); } catch (ecl) {}
     loadAlertePref();
     renderAnalytics();
   } catch(err) {
@@ -5430,55 +5416,34 @@ function _clStats(g, now) {
   if (best >= 2) reasons.push('consulte plutôt ' + slot);
   return { score: score, days: days, reasons: reasons };
 }
-function renderCallList() {
-  var box = document.getElementById('callist-block'); if (!box) return;
-  var now = Date.now(), hot = [], quiet = [];
-  _analyticsGroups.forEach(function(g) {
-    var c = (g.client || '').trim().toLowerCase();
-    if (!c || c === 'inconnu' || c === 'anonyme') return;
-    var st = _clStats(g, now); st.g = g;
-    if (st.score < 7) return;
-    if (st.days <= 5) hot.push(st); else if (st.days <= 45) quiet.push(st);
-  });
-  hot.sort(function(x, y) { return y.score - x.score || (y.g.last || '').localeCompare(x.g.last || ''); });
-  quiet.sort(function(x, y) { return y.score - x.score; });
-  box.textContent = '';
-  if (!hot.length && !quiet.length) { box.style.display = 'none'; return; }
-  box.style.display = 'block';
-  function section(title, sub, items, silent) {
-    if (!items.length) return;
-    var h = document.createElement('div'); h.style.cssText = 'font-weight:700;font-size:14px;margin:0 0 2px;'; h.textContent = title; box.appendChild(h);
-    var s = document.createElement('div'); s.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;'; s.textContent = sub; box.appendChild(s);
-    items.slice(0, 8).forEach(function(st) {
-      var row = document.createElement('div'); row.className = 'callist-row';
-      row.style.cssText = 'display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;margin-bottom:8px;background:#fff;border:1px solid var(--border);border-left:4px solid ' + (silent ? '#9CA3AF' : (st.score >= 14 ? '#0A6F4D' : '#C9A227')) + ';border-radius:var(--radius);';
-      var left = document.createElement('div'); left.style.cssText = 'min-width:0;flex:1 1 260px;';
-      var nm = document.createElement('div'); nm.style.cssText = 'font-weight:700;font-size:13.5px;'; nm.textContent = st.g.client + ' · ' + (st.score >= 14 ? 'très chaud' : 'intéressé'); left.appendChild(nm);
-      var ad = document.createElement('div'); ad.style.cssText = 'font-size:12px;color:var(--muted);'; ad.textContent = _clAddr(st.g.adresse) || st.g.adresse; left.appendChild(ad);
-      var rs = document.createElement('div'); rs.style.cssText = 'font-size:12.5px;margin-top:4px;line-height:1.45;white-space:normal;';
-      rs.textContent = (silent ? 'Sans ouverture depuis ' + st.days + ' jours. Dernière relance, ou passez à un autre acquéreur. ' : (st.days === 0 ? 'Actif aujourd’hui : ' : 'Dernière activité il y a ' + st.days + ' j : ')) + st.reasons.join(' · ');
-      left.appendChild(rs); row.appendChild(left);
-      var b = document.createElement('button'); b.className = 'btn btn-sm btn-outline'; b.textContent = '💬 Message adapté';
-      b.setAttribute('data-key', st.g.key); b.onclick = function() { clMessageDialog(this.getAttribute('data-key'), silent); };
-      row.appendChild(b); box.appendChild(row);
-    });
-  }
-  section('📞 À rappeler aujourd’hui', 'Acquéreurs identifiés les plus engagés, actifs ces 5 derniers jours.', hot, false);
-  if (hot.length && quiet.length) { var sp = document.createElement('div'); sp.style.height = '8px'; box.appendChild(sp); }
-  section('😶 Silence : à relancer ou à laisser', 'Étaient intéressés, plus aucune ouverture depuis plus de 5 jours.', quiet, true);
+// Niveau d'engagement d'un acquéreur identifié : « très chaud » / « intéressé » (actif ces 5 derniers jours) ou « silence » (inactif depuis 6 à 45 jours).
+function _clBadge(g, now) {
+  var c = (g.client || '').trim().toLowerCase();
+  if (!c || c === 'inconnu' || c === 'anonyme') return null;
+  var st = _clStats(g, now);
+  if (st.score < 7) return null;
+  if (st.days <= 5) return { st: st, silent: false, rang: st.score >= 14 ? 0 : 1, label: st.score >= 14 ? 'Très chaud · à rappeler' : 'Intéressé · à rappeler', color: st.score >= 14 ? '#0A6F4D' : '#C9A227' };
+  if (st.days <= 45) return { st: st, silent: true, rang: 2, label: 'Silence · à relancer', color: '#9CA3AF' };
+  return null;
 }
 var _CL_ANGLES = {
-  aucun: ['Aucun angle particulier', ' Je reste disponible pour répondre à toutes vos questions.'],
-  budget: ['Financement : mise en relation avec un courtier', ' Si cela peut vous aider, je peux vous mettre en relation avec un courtier pour chiffrer votre projet.'],
-  visite: ['Seconde visite', ' Je peux organiser une seconde visite, avec un point précis sur les aspects techniques si vous le souhaitez.'],
-  quartier: ['Quartier : écoles, transports, commerces', ' Je peux aussi vous envoyer les informations sur les écoles, les transports et les commerces du secteur.'],
-  documents: ['Documents complémentaires', ' Je tiens à votre disposition les documents complémentaires dont vous auriez besoin.'],
-  prix: ['Prix : en parler franchement', ' Si le prix fait partie de votre réflexion, n\u2019hésitez pas : on peut en parler franchement.'],
-  travaux: ['Travaux : contact artisan', ' Je peux vous mettre en contact avec un artisan pour chiffrer les travaux éventuels.'],
-  coup_coeur: ['Revoir le bien ensemble', ' Je serais ravi de vous revoir sur place pour avancer ensemble.']
+  aucun: ['Prise de nouvelles', 'Je voulais simplement prendre de vos nouvelles et savoir où vous en êtes dans votre projet. Que vous ayez des questions, des hésitations ou besoin d’un avis extérieur, je suis à votre disposition : un appel de quelques minutes suffit souvent à y voir plus clair.'],
+  coup_coeur: ['Revoir le bien ensemble', 'Je serais ravi de vous revoir sur place pour avancer ensemble : une seconde visite permet souvent de se projeter plus concrètement, de mesurer, de regarder les détails à tête reposée et, si vous le souhaitez, de venir avec un proche ou un artisan. Dites-moi quels jours vous conviennent et je m’organise en conséquence.'],
+  budget: ['Financement : mise en relation avec un courtier', 'Si le financement fait partie de votre réflexion, je peux vous mettre en relation avec un courtier de confiance : il chiffre votre projet précisément (apport, durée, taux, frais de notaire) et vous dit rapidement ce qui est faisable. C’est sans engagement, et cela permet d’y voir beaucoup plus clair avant de prendre une décision.'],
+  visite: ['Seconde visite', 'Je vous propose une seconde visite : nous prendrons le temps de revoir les pièces qui comptent pour vous, de faire un point précis sur les aspects techniques (isolation, chauffage, charges, état général) et de répondre à toutes les questions qui vous seraient venues depuis. Vous pouvez aussi venir accompagné.'],
+  quartier: ['Quartier : écoles, transports, commerces', 'Le quartier compte beaucoup dans une décision, et il se juge sur place : je peux vous envoyer les informations sur les écoles, les transports, les commerces et les projets d’aménagement du secteur, et vous proposer de faire un tour à pied à l’heure qui vous intéresse (sortie d’école, soirée, week-end) pour vous faire votre propre idée.'],
+  documents: ['Documents complémentaires', 'Je tiens à votre disposition tous les documents dont vous auriez besoin pour avancer sereinement : diagnostics, charges, taxe foncière, procès-verbaux d’assemblée générale, plans. Dites-moi simplement ce qui vous manque et je vous l’envoie dans la journée.'],
+  prix: ['Prix : en parler franchement', 'Si le prix fait partie de votre réflexion, n’hésitez pas à m’en parler franchement : je connais bien les ventes récentes du secteur et je peux vous expliquer comment il a été fixé. Si vous avez une idée précise de ce qui vous semblerait juste, je transmettrai volontiers votre point de vue au vendeur : mieux vaut en discuter que rester sur un doute.'],
+  travaux: ['Travaux : contact artisan', 'Concernant les travaux éventuels, je peux vous mettre en contact avec un artisan de confiance pour établir un chiffrage réaliste, voire passer sur place avec vous. Avoir un ordre de grandeur précis permet de décider sereinement, et de calibrer au mieux une éventuelle offre.'],
+  offre: ['Offre transmise : accusé de réception', 'Je reviens vers vous au sujet de l’offre que vous avez transmise : je l’ai bien reçue et je la porte auprès du vendeur dans les meilleurs délais. Je vous tiens informé dès que j’ai sa réponse. D’ici là, si vous souhaitez la compléter (conditions, délai, financement) ou en discuter, appelez-moi : nous pouvons la peaufiner ensemble pour maximiser ses chances.'],
+  docs_demandes: ['Documents demandés : je vous les prépare', 'Vous avez demandé des documents sur ce bien : je les rassemble et je vous les envoie très vite. Si d’autres pièces vous seraient utiles pour avancer (diagnostics, charges, procès-verbaux d’assemblée générale, plans), dites-le-moi, je m’en occupe.']
 };
-// Angle suggéré : uniquement d'après ce que l'acquéreur a dit lui-même (retour de visite) ; sinon aucun. L'agent peut en choisir un autre.
+// Angle suggéré : d'après ce que l'acquéreur a dit lui-même (retour de visite) ou envoyé explicitement à l'agent (offre, demande de documents) ; sinon aucun.
+// Jamais d'après ce qu'il a simplement lu ou simulé : le message ne doit pas trahir le suivi. L'agent peut choisir un autre angle.
 function clSuggestAngle(g) {
+  var ev = g.events || {};
+  if ((ev.offre_soumise || 0) > 0) return 'offre';
+  if ((g.demandes || []).length) return 'docs_demandes';
   var last = (g.retours && g.retours.length) ? g.retours[g.retours.length - 1].reponses : [];
   if (last.indexOf('prix') !== -1) return 'prix';
   if (last.indexOf('travaux') !== -1) return 'travaux';
@@ -5491,31 +5456,38 @@ function clBuildMessage(g, silent, angle) {
   var prenom = (g.client || '').trim().split(/\s+/)[0] || '';
   var me = ''; try { var pr = JSON.parse(PrivencyAuth.lsGet('_agent_profile') || '{}'); me = (pr.prenom || '').trim(); } catch (e) {}
   var bien = _clAddr(g.adresse) || 'le bien';
-  var hello = 'Bonjour' + (prenom ? ' ' + prenom : '') + ', ' + (me ? 'c\u2019est ' + me + '. ' : '');
-  if (silent) return hello + 'Je me permets une dernière relance concernant le bien ' + bien + ' : est-il toujours d\u2019actualité pour vous ? Si ce n\u2019est plus le cas, dites-le-moi simplement, cela m\u2019aide à vous proposer d\u2019autres biens.';
+  var hello = 'Bonjour' + (prenom ? ' ' + prenom : '') + ', ' + (me ? 'c’est ' + me + '. ' : '');
+  var sign = '\n\nBien cordialement' + (me ? ',\n' + me : '');
+  if (silent) return hello + 'Je me permets de revenir vers vous une dernière fois au sujet du bien ' + bien + ' : est-il toujours d’actualité pour vous ?'
+    + '\n\nSi votre projet a évolué, ou si vous avez trouvé autre chose, dites-le-moi simplement : aucun souci, cela m’aide au contraire à vous proposer d’autres biens qui correspondent vraiment à ce que vous cherchez. Et si vous hésitez encore, je suis disponible pour en parler ou organiser une nouvelle visite, sans aucun engagement.'
+    + '\n\nQuelques mots de votre part me suffiront.' + sign;
   var key = _CL_ANGLES[angle] ? angle : clSuggestAngle(g);
-  return hello + 'Avez-vous pu avancer dans votre réflexion sur le bien ' + bien + ' ?' + _CL_ANGLES[key][1];
+  var intro = key === 'offre' ? 'Merci pour votre intérêt pour le bien ' + bien + '.'
+    : key === 'docs_demandes' ? 'Merci pour votre intérêt pour le bien ' + bien + '.'
+    : 'Avez-vous pu avancer dans votre réflexion sur le bien ' + bien + ' ?';
+  return hello + intro + '\n\n' + _CL_ANGLES[key][1] + '\n\nN’hésitez pas à me répondre par message ou à m’appeler quand cela vous arrange.' + sign;
 }
 function clMessageDialog(key, silent) {
   var g = _analyticsGroups.filter(function(x) { return x.key === key; })[0]; if (!g) return;
   var overlay = document.createElement('div');
   overlay.id = 'cl-overlay';
   overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:10000;';
-  var card = document.createElement('div'); card.className = 'card'; card.style.cssText = 'max-width:480px;width:92%;margin:0;max-height:90vh;overflow:auto;';
+  var card = document.createElement('div'); card.className = 'card'; card.style.cssText = 'max-width:560px;width:92%;margin:0;max-height:90vh;overflow:auto;';
   var head = document.createElement('div'); head.className = 'card-header'; head.textContent = '💬 Message pour ' + g.client;
   var body = document.createElement('div'); body.className = 'card-body';
-  var hint = document.createElement('div'); hint.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;'; hint.textContent = 'Message proposé, à relire. Il ne cite jamais les rubriques consultées : l’angle suggéré ne vient que du retour de visite donné par l’acquéreur lui-même. Vous l’envoyez vous-même.'; body.appendChild(hint);
+  var hint = document.createElement('div'); hint.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;'; hint.textContent = 'Message proposé : modifiez-le librement ou écrivez le vôtre directement dans la zone ci-dessous. Il ne cite jamais les rubriques consultées : l’angle suggéré ne vient que de ce que l’acquéreur vous a dit ou envoyé lui-même (retour de visite, offre, demande de documents). Vous l’envoyez vous-même.'; body.appendChild(hint);
   var sel = null;
   if (!silent) {
     sel = document.createElement('select'); sel.id = 'cl-angle'; sel.style.cssText = 'width:100%;margin-bottom:8px;font-size:13px;';
     Object.keys(_CL_ANGLES).forEach(function(k) { var o = document.createElement('option'); o.value = k; o.textContent = _CL_ANGLES[k][0]; sel.appendChild(o); });
     sel.value = clSuggestAngle(g); body.appendChild(sel);
   }
-  var ta = document.createElement('textarea'); ta.id = 'cl-text'; ta.rows = 7; ta.style.cssText = 'width:100%;font-size:13.5px;'; ta.value = clBuildMessage(g, !!silent, sel ? sel.value : null); body.appendChild(ta);
+  var ta = document.createElement('textarea'); ta.id = 'cl-text'; ta.rows = 12; ta.style.cssText = 'width:100%;font-size:13.5px;'; ta.value = clBuildMessage(g, !!silent, sel ? sel.value : null); body.appendChild(ta);
   if (sel) sel.onchange = function() { ta.value = clBuildMessage(g, false, sel.value); };
   var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;';
   function close() { overlay.remove(); }
   var bc = document.createElement('button'); bc.className = 'btn btn-outline'; bc.textContent = 'Fermer'; bc.onclick = close; row.appendChild(bc);
+  var br = document.createElement('button'); br.className = 'btn btn-outline'; br.id = 'cl-reset'; br.textContent = '↺ Texte d\u2019origine'; br.onclick = function() { ta.value = clBuildMessage(g, !!silent, sel ? sel.value : null); }; row.appendChild(br);
   var sms = document.createElement('a'); sms.className = 'btn btn-outline'; sms.textContent = '📱 Ouvrir dans Messages'; sms.id = 'cl-sms'; sms.href = '#';
   sms.onclick = function() { sms.href = 'sms:?&body=' + encodeURIComponent(ta.value); return true; }; row.appendChild(sms);
   var cp = document.createElement('button'); cp.className = 'btn btn-primary'; cp.textContent = '📋 Copier'; cp.id = 'cl-copy';
@@ -5558,10 +5530,21 @@ function renderAnalytics() {
   }
   empty.style.display = 'none';
 
+  // Une seule liste : chaque acquéreur est une ligne (nom cliquable) qui se déplie sur ses statistiques complètes. Les plus engagés d'abord.
+  var bd = {}; list.forEach(function(g) { bd[g.key] = _clBadge(g, now); });
+  list = list.slice().sort(function(x, y) {
+    var rx = bd[x.key] ? bd[x.key].rang : 3, ry = bd[y.key] ? bd[y.key].rang : 3;
+    if (rx !== ry) return rx - ry;
+    if (rx < 2) return bd[y.key].st.score - bd[x.key].st.score || (y.last || '').localeCompare(x.last || '');
+    return (y.last || '').localeCompare(x.last || '');
+  });
+  var nHot = list.filter(function(g) { return bd[g.key] && !bd[g.key].silent; }).length, nSil = list.filter(function(g) { return bd[g.key] && bd[g.key].silent; }).length;
+  document.getElementById('analytics-count').textContent += (nHot ? ' · ' + nHot + ' à rappeler' : '') + (nSil ? ' · ' + nSil + ' en silence' : '');
   tbody.innerHTML = '';
   list.forEach(function(g, idx) {
     var tr = document.createElement('tr');
     tr.style.background = idx % 2 === 0 ? '#fff' : '#f8fafc';
+    var bg0 = bd[g.key];
     var dateStr = '—';
     if (g.last) {
       try { dateStr = new Date(g.last).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); } catch(e) {}
@@ -5569,18 +5552,23 @@ function renderAnalytics() {
     var evHtml = Object.keys(g.events).map(function(ev) {
       var bg  = ev === 'fiche_ouverte' ? '#E9F9F1' : ev.startsWith('onglet') ? '#fff' : '#E9F9F1';
       var col = '#0A6F4D';
-      var bd  = ev.startsWith('onglet') ? 'border:1px solid #A6E3C6;' : '';
-      return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';' + bd + 'border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
+      var bd2 = ev.startsWith('onglet') ? 'border:1px solid #A6E3C6;' : '';
+      return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';' + bd2 + 'border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
         + esc(ev) + ' ×' + g.events[ev] + '</span>';
     }).join(' ');
 
-    var dureeHtml = '<span style="color:var(--muted);">—</span>';
-    if (g.nbSessions) {
-      var topTab = Object.keys(g.onglets || {}).sort(function(a, b) { return g.onglets[b] - g.onglets[a]; })[0];
-      dureeHtml = '<div style="font-weight:700;">' + fmtDuree(g.dureeTotal) + '</div>'
-        + '<div style="font-size:11px;color:var(--muted);">' + g.nbSessions + ' visite' + (g.nbSessions > 1 ? 's' : '')
-        + ' · max ' + fmtDuree(g.dureeMax) + (topTab ? ' · surtout « ' + esc(topTab) + ' »' : '') + '</div>';
-    }
+    var topTab = Object.keys(g.onglets || {}).sort(function(a, b) { return g.onglets[b] - g.onglets[a]; })[0];
+    var slot = '', best = 0; Object.keys(g.hours || {}).forEach(function(k) { if (g.hours[k] > best) { best = g.hours[k]; slot = k; } });
+    function tile(lbl, val) { return '<div style="flex:1 1 130px;min-width:0;background:#fff;border:1px solid var(--border);border-radius:var(--radius);padding:8px 10px;"><div style="font-size:11px;color:var(--muted);">' + lbl + '</div><div style="font-weight:700;font-size:13.5px;white-space:normal;overflow-wrap:anywhere;">' + val + '</div></div>'; }
+    var ev = g.events || {};
+    var tiles = tile('Visites de la fiche', esc(String(ev.fiche_ouverte || 0)))
+      + tile('Temps passé', g.nbSessions ? esc(fmtDuree(g.dureeTotal)) + '<div style="font-weight:400;font-size:11px;color:var(--muted);">' + g.nbSessions + ' visite' + (g.nbSessions > 1 ? 's' : '') + ' · max ' + esc(fmtDuree(g.dureeMax)) + '</div>' : '—')
+      + tile('Rubrique la plus lue', topTab ? esc(topTab) : '—')
+      + tile('Consulte plutôt', slot ? esc(slot) : '—')
+      + tile('Simulation de financement', (ev.credit_simule || 0) > 0 ? 'Oui ×' + ev.credit_simule : 'Non')
+      + tile('Offre', (ev.offre_soumise || 0) > 0 ? 'Transmise' : 'Non')
+      + tile('Documents demandés', (g.demandes || []).length ? esc(String(g.demandes.reduce(function(n, d) { return n + d.docs.length; }, 0))) : 'Aucun')
+      + tile('Questions à l’assistant', esc(String((g.questions || []).length)));
 
     var qHtml = '';
     if (g.questions && g.questions.length) {
@@ -5610,19 +5598,38 @@ function renderAnalytics() {
       }).join('');
     }
 
+    var why = bg0 ? '<div style="font-size:12.5px;margin-bottom:10px;line-height:1.5;white-space:normal;"><b>' + esc(bg0.label.split(' · ')[0]) + '</b> : ' + (bg0.silent ? 'sans ouverture depuis ' + bg0.st.days + ' jours. Dernière relance, ou passez à un autre acquéreur. ' : (bg0.st.days === 0 ? 'actif aujourd’hui : ' : 'dernière activité il y a ' + bg0.st.days + ' j : ')) + esc(bg0.st.reasons.join(' · ')) + '</div>' : '';
+
+    var anon = ['', 'inconnu', 'anonyme'].indexOf((g.client || '').trim().toLowerCase()) !== -1;
+    var badgeHtml = bg0 ? '<span style="display:inline-block;margin-left:8px;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;color:#fff;background:' + bg0.color + ';white-space:nowrap;">' + esc(bg0.label) + '</span>' : '';
     tr.innerHTML =
-      '<td style="padding:9px 12px;"><input type="checkbox" class="analytics-cb" data-key="' + esc(g.key) + '" onchange="updateAnalyticsDelBtn()" style="width:auto;cursor:pointer;"></td>'
-      + '<td style="padding:9px 12px;font-weight:600;">' + esc(g.client) + '</td>'
-      + '<td style="padding:9px 12px;color:var(--muted);font-size:12px;">' + esc(g.adresse) + '</td>'
-      + '<td style="padding:9px 12px;text-align:center;"><span style="display:inline-block;background:var(--primary);color:#fff;border-radius:50%;min-width:28px;height:28px;line-height:28px;font-weight:700;font-size:13px;">' + g.count + '</span></td>'
-      + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + dureeHtml + '</td>'
-      + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + esc(dateStr) + '</td>'
-      + '<td style="padding:9px 12px;">' + evHtml + qHtml + '</td>'
-      + '<td style="padding:9px 12px;text-align:center;"><button class="btn btn-sm btn-outline" title="Supprimer cette ligne" data-key="' + esc(g.key) + '" onclick="deleteAnalyticsGroups([this.dataset.key])">🗑️</button></td>';
+      '<td style="padding:0;border-left:4px solid ' + (bg0 ? bg0.color : 'transparent') + ';">'
+      + '<div class="cl-row" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;">'
+      +   '<input type="checkbox" class="analytics-cb" data-key="' + esc(g.key) + '" onchange="updateAnalyticsDelBtn()" style="width:auto;cursor:pointer;">'
+      +   '<button type="button" class="cl-toggle" aria-expanded="false" onclick="toggleClientStats(this)" style="flex:1 1 220px;min-width:0;text-align:left;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit;">'
+      +     '<span class="cl-arrow" style="display:inline-block;width:14px;color:var(--muted);">▸</span><span style="font-weight:700;font-size:14px;">' + esc(g.client) + '</span>' + badgeHtml
+      +     '<div style="font-size:12px;color:var(--muted);margin-left:14px;white-space:normal;">' + esc(_clAddr(g.adresse) || g.adresse) + '</div>'
+      +   '</button>'
+      +   '<div style="font-size:12px;color:var(--muted);text-align:right;white-space:nowrap;">' + g.count + ' événement' + (g.count > 1 ? 's' : '') + (g.nbSessions ? ' · ' + esc(fmtDuree(g.dureeTotal)) : '') + '<br>' + esc(dateStr) + '</div>'
+      +   (anon ? '' : '<button type="button" class="btn btn-sm btn-outline cl-msg" data-key="' + esc(g.key) + '" data-silent="' + (bg0 && bg0.silent ? '1' : '') + '" onclick="clMessageDialog(this.dataset.key, !!this.dataset.silent)">💬 Message adapté</button>')
+      +   '<button class="btn btn-sm btn-outline" title="Supprimer cette ligne" data-key="' + esc(g.key) + '" onclick="deleteAnalyticsGroups([this.dataset.key])">🗑️</button>'
+      + '</div>'
+      + '<div class="cl-detail" hidden style="padding:4px 14px 14px 40px;white-space:normal;">'
+      +   why
+      +   '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">' + tiles + '</div>'
+      +   '<div>' + evHtml + qHtml + '</div>'
+      + '</div></td>';
     tbody.appendChild(tr);
   });
   wrap.style.display = 'block';
   updateAnalyticsDelBtn();
+}
+
+function toggleClientStats(btn) {
+  var td = btn.closest('td'), det = td && td.querySelector('.cl-detail'); if (!det) return;
+  var open = det.hidden; det.hidden = !open;
+  btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  var ar = btn.querySelector('.cl-arrow'); if (ar) ar.textContent = open ? '▾' : '▸';
 }
 
 function fmtDuree(sec) {
