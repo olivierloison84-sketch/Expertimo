@@ -40,8 +40,9 @@ function jeu(n, base, type, surfs) { return Array.from({ length: n }, (_, i) => 
   assert.strictEqual(M.estimer(jeu(20, 3000), 'appartement', 90, 300000).ok, false, 'pas de ventes du bon type');
   assert.strictEqual(M.estimer(jeu(2, 3000), 'maison', 90, 0).ok, false, 'moins de 3 ventes');
   assert.strictEqual(M.estimer(jeu(20, 3000), 'maison', 90, 0).position, undefined, 'sans prix : pas de position');
+  assert.strictEqual(M.estimer(jeu(20, 3000), 'maison', 90, 0).confiance, 'bonne');
   const f = M.estimer(jeu(20, 3000, 'Maison', [200]).concat(jeu(4, 3000, 'Maison', [90])), 'maison', 90, 0);
-  assert(f.ok && f.ecart_surface === null && f.n === 24 || f.n === 4, 'élargissement progressif : ' + JSON.stringify([f.ecart_surface, f.n]));
+  assert(f.ok && (f.ecart_surface === null ? f.confiance === 'faible' : true) && (f.ecart_surface === null && f.n === 24 || f.n === 4), 'élargissement progressif : ' + JSON.stringify([f.ecart_surface, f.n]));
   const out = M.estimer(jeu(12, 3000).concat([{ date: '2025-01-01', type: 'Maison', surface: 90, prix: 0, ppm: 25000 }]), 'maison', 90, 0);
   assert(out.n === 12 && out.ppm_median < 3200, 'valeur aberrante écartée');
   assert(e.ventes.length === 6 && e.ventes[0].mois && !('adresse' in e.ventes[0]), 'liste de ventes sans adresse');
@@ -60,7 +61,7 @@ function jeu(n, base, type, surfs) { return Array.from({ length: n }, (_, i) => 
   assert(d['91345'] && d['91345'][1] === 23320 && Object.keys(d).length > 5000, 'fichier Insee');
   assert(Object.values(d).every(l => l.length === 4 && l[3] > l[2] && l[1] > 0), 'lignes Insee cohérentes');
   assert.strictEqual(M.codeDvf('75056', '75011'), '75111'); assert.strictEqual(M.codeDvf('69123', '69003'), '69383');
-  assert.strictEqual(M.codeDvf('13055', '13008'), '13208'); assert.strictEqual(M.codeDvf('91345', '91160'), '91345');
+  assert.strictEqual(M.codeDvf('13055', '13008'), '13208'); assert.strictEqual(M.codeDvf('75056', '75116'), '75116'); assert.strictEqual(M.codeDvf('91345', '91160'), '91345');
 }
 
 // --- API (réseau simulé) ---
@@ -89,6 +90,14 @@ const call = (body, origin, method) => new Promise(resolve => { const res = { co
   r = await call({ adresse: '91160 longjumeau', type: 'maison', surface: 90 }, 'https://espace.privency.fr.evil.example'); assert.strictEqual(r.code, 403, 'préfixe d’origine refusé');
   r = await call({}, 'https://espace.privency.fr', 'GET'); assert.strictEqual(r.code, 405);
   r = await call({ adresse: '91160 longjumeau', type: 'maison', surface: 90 }); assert(r.b.ok && r.b.bassin.ok === false, 'sans prix : pas de bassin');
+  r = await call({ adresse: 'rue de la Paix Longjumeau', type: 'maison', surface: 90 }); assert(r.code === 200 && r.b.ok === false && r.b.error === 'commune', 'sans code postal : rien n’est deviné');
+  const n0 = calls.filter(u => /geo-dvf/.test(u)).length; r = await call({ adresse: '91160 longjumeau', type: 'maison', surface: 90 });
+  assert.strictEqual(calls.filter(u => /geo-dvf/.test(u)).length, n0, 'ventes de la commune servies depuis le cache');
+  { const k = global.fetch; global.fetch = async (u) => /geopf/.test(String(u)) ? { ok: true, json: async () => ({ features: [{ properties: { citycode: '67482', city: 'Strasbourg', postcode: '67000', score: 0.9 } }] }) } : { ok: false, text: async () => '' };
+    r = await call({ adresse: '67000 strasbourg', type: 'appartement', surface: 60, prix: 250000 });
+    assert(r.b.ok && r.b.estimation.ok === false && r.b.estimation.raison === 'dvf_indisponible', 'département sans DVF : message dédié'); global.fetch = k; }
+  { let last; for (let i = 0; i < 45; i++) last = await new Promise(resolve => { const res = { setHeader() {}, status(c) { this.c = c; return this; }, json() { resolve(this.c); }, end() { resolve(this.c); } }; handler({ method: 'POST', headers: { origin: 'https://espace.privency.fr', 'x-forwarded-for': '9.9.9.9' }, body: {} }, res); });
+    assert.strictEqual(last, 429, 'limite de débit par IP'); }
   const keep = global.fetch; global.fetch = async () => { throw new Error('réseau'); };
   r = await call({ adresse: '91160 longjumeau', type: 'maison', surface: 90 }); assert(r.code === 200 && r.b.ok === false && r.b.error === 'indisponible', 'panne réseau : message propre');
   global.fetch = keep;
@@ -112,8 +121,8 @@ const call = (body, origin, method) => new Promise(resolve => { const res = { co
   d.getElementById('m-go').click(); await new Promise(r => setTimeout(r, 40));
   assert.strictEqual(apiCalls.length, 1); assert(apiCalls[0].adresse.includes('Longjumeau') && apiCalls[0].type === 'maison' && apiCalls[0].surface === 92 && apiCalls[0].prix === 380000, JSON.stringify(apiCalls[0]));
   const o = d.getElementById('m-out').textContent.replace(/ | /g, ' ');
-  assert(/3 604 €\/m²/.test(o) && /324 000 €/.test(o) && /\+17,3 %/.test(o) && /au-dessus de la fourchette/.test(o), 'estimation affichée : ' + o.slice(0, 300));
-  assert(/8,9 % des foyers/.test(o) && /760 foyers sur 8 469/.test(o) && /5 560 €\/mois/.test(o) && /apport de 10 %/.test(o) && /ne remplace pas l'avis de valeur/.test(o), 'bassin affiché');
+  assert(/3 604 €\/m²/.test(o) && /324 000 €/.test(o) && /\+17,3 %/.test(o) && /au-dessus de la moitié centrale/.test(o), 'estimation affichée : ' + o.slice(0, 300));
+  assert(/8,9 % des foyers/.test(o) && /760 foyers sur 8 469/.test(o) && /5 560 €\/mois/.test(o) && /apport de 10 %/.test(o) && /ne remplace pas l.avis de valeur/.test(o), 'bassin affiché');
   assert(!w.__xss && !d.querySelector('img[src="x"]'), 'aucune injection HTML depuis la réponse');
   console.log('OK marche (estimation + bassin)'); process.exit(0);
 })().catch(e => { console.error('ÉCHEC', e); process.exit(1); });

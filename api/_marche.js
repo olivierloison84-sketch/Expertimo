@@ -74,7 +74,7 @@ function estimer(ventes, type, surface, prix) {
   const dates = comp.map((v) => v.date).sort();
   const r = {
     ok: true, n: comp.length, ecart_surface: ecart, du: dates[0], au: dates[dates.length - 1],
-    confiance: comp.length >= 15 ? 'bonne' : comp.length >= 6 ? 'moyenne' : 'faible',
+    confiance: ecart === null ? 'faible' : comp.length >= 15 ? 'bonne' : comp.length >= 6 ? 'moyenne' : 'faible',
     ppm_median: Math.round(med), ppm_bas: Math.round(p25), ppm_haut: Math.round(p75),
     estimation: Math.round(med * surface / 1000) * 1000, fourchette_basse: Math.round(p25 * surface / 1000) * 1000, fourchette_haute: Math.round(p75 * surface / 1000) * 1000,
     ventes: comp.slice().sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 6).map((v) => ({ mois: moisFr(v.date), surface: v.surface, prix: Math.round(v.prix / 1000) * 1000, ppm: v.ppm }))
@@ -123,6 +123,7 @@ function bassin(prix, ligne, commune) {
 function codeDvf(citycode, cp) {
   cp = String(cp || '');
   if (citycode === '75056' && /^750(0[1-9]|1\d|20)$/.test(cp)) return '751' + cp.slice(3);
+  if (citycode === '75056' && cp === '75116') return '75116';
   if (citycode === '69123' && /^6900[1-9]$/.test(cp)) return '6938' + cp.slice(4);
   if (citycode === '13055' && /^130(0[1-9]|1[0-6])$/.test(cp)) return '132' + cp.slice(3);
   return citycode;

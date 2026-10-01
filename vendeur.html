@@ -110,12 +110,12 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       <div class="card"><div class="lbl">Ce qui retient l'attention</div><h2>Les rubriques les plus lues</h2><div class="bars" id="tabs"></div></div>
       <div class="card"><div class="lbl">Ce qu'ils veulent savoir</div><h2>Les sujets qui reviennent</h2><div id="themes"></div><div class="lbl" style="margin-top:18px;">Documents les plus demandés</div><div id="docs"></div><div class="lbl" style="margin-top:18px;">Retours de visite</div><div id="retours"></div></div>
     </div>
-    <div class="card" id="mkt-card"><div class="lbl">Le marché autour de votre bien</div><h2>Votre prix face aux ventes réelles du secteur</h2>
+    <div class="card" id="mkt-card"><div class="lbl">Le marché autour de votre bien</div><h2>Votre prix face aux ventes réelles de votre commune</h2>
       <div class="hint" style="margin-bottom:14px;">Renseignez les caractéristiques du bien : nous le comparons aux ventes réellement signées dans votre commune (données officielles DVF, 3 dernières années) et estimons combien de foyers du secteur peuvent le financer (revenus Insee).</div>
       <div class="calc">
         <label><span>Type de bien</span><select id="m-type"><option value="appartement">Appartement</option><option value="maison">Maison</option></select></label>
         <label><span>Surface habitable (m²)</span><input id="m-surface" type="number" inputmode="decimal" min="9" max="400" step="1" placeholder="0"></label>
-        <label><span>Prix de vente affiché (€)</span><input id="m-prix" type="number" inputmode="decimal" min="0" step="1000" placeholder="0"></label>
+        <label><span>Prix de vente affiché (€, frais d\u2019agence inclus le cas échéant)</span><input id="m-prix" type="number" inputmode="decimal" min="0" step="1000" placeholder="0"></label>
         <label><span>&nbsp;</span><button type="button" class="btn dark" id="m-go" style="justify-content:center;">Comparer à ma commune</button></label>
       </div>
       <div class="cost-out" id="m-out" aria-live="polite" style="display:none;"></div>
@@ -328,18 +328,19 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       if (!d || d.ok !== true) return msg(d && d.error === 'commune' ? "Nous n'avons pas pu identifier la commune de ce bien." : 'Analyse momentanément indisponible. Réessayez dans quelques instants.');
       var e = d.estimation || {}, b = d.bassin || {}, nom = (d.commune && d.commune.nom) || 'votre commune';
       var l1 = el('div'); l1.appendChild(el('div', 'lbl', 'Estimation comparée'));
-      if (!e.ok) l1.appendChild(document.createTextNode('Trop peu de ventes comparables récentes à ' + nom + ' pour une estimation fiable.'));
+      if (!e.ok) l1.appendChild(document.createTextNode(e.raison === 'dvf_indisponible' ? 'Les ventes officielles (DVF) ne sont pas disponibles pour ' + nom + ' (certains départements, comme l\u2019Alsace-Moselle, ne sont pas couverts ; pour Paris, Lyon et Marseille, le code postal de l\u2019arrondissement est nécessaire).' : 'Trop peu de ventes comparables récentes à ' + nom + ' pour une estimation fiable.'));
       else {
         l1.appendChild(document.createTextNode('Les ventes comparables à ' + nom + ' valent ')); l1.appendChild(el('b', null, eur(e.ppm_median) + '/m²'));
         l1.appendChild(document.createTextNode(' en médiane, soit environ ')); l1.appendChild(el('b', null, eur(e.estimation)));
-        l1.appendChild(document.createTextNode(' pour ' + surface + ' m² (fourchette ' + eur(e.fourchette_basse) + ' à ' + eur(e.fourchette_haute) + ').'));
+        l1.appendChild(document.createTextNode(' pour ' + surface + ' m² (la moitié des ventes comparables se sont faites entre ' + eur(e.fourchette_basse) + ' et ' + eur(e.fourchette_haute) + ').'));
         if (prix) {
           var pos = el('div', 'l2'), s = e.ecart_pct > 0 ? '+' : '';
           pos.appendChild(document.createTextNode('Votre prix de ' + eur(prix) + ' (' + eur(e.ppm_prix) + '/m²) se situe ')); pos.appendChild(el('b', null, s + String(e.ecart_pct).replace('.', ',') + ' %'));
-          pos.appendChild(document.createTextNode(e.position === 'dans' ? ' par rapport à cette estimation : dans la fourchette des ventes récentes.' : e.position === 'au_dessus' ? ' par rapport à cette estimation : au-dessus de la fourchette des ventes récentes.' : ' par rapport à cette estimation : sous la fourchette des ventes récentes.'));
+          pos.appendChild(document.createTextNode(e.position === 'dans' ? ' par rapport à cette estimation : dans la moitié centrale des ventes comparables.' : e.position === 'au_dessus' ? ' par rapport à cette estimation : au-dessus de la moitié centrale des ventes comparables (environ un quart des ventes se sont faites plus haut).' : ' par rapport à cette estimation : sous la moitié centrale des ventes comparables (environ un quart des ventes se sont faites plus bas).'));
+          pos.appendChild(el('div', 'mkt-note', 'Les ventes officielles sont des prix signés, hors frais d\u2019agence et après négociation : un prix affiché paraît donc un peu plus haut qu\u2019il ne l\u2019est réellement.'));
           l1.appendChild(pos);
         }
-        l1.appendChild(el('div', 'mkt-note', 'Fiabilité : ' + e.confiance + ' (' + e.n + ' ventes' + (e.ecart_surface ? ' de surface proche (± ' + e.ecart_surface + ' %)' : '') + ', du ' + fmtDate(e.du) + ' au ' + fmtDate(e.au) + ').'));
+        l1.appendChild(el('div', 'mkt-note', 'Fiabilité : ' + e.confiance + ' (' + e.n + ' ventes' + (e.ecart_surface ? ' de surface proche (± ' + e.ecart_surface + ' %)' : ', toutes surfaces confondues') + ', du ' + fmtDate(e.du) + ' au ' + fmtDate(e.au) + ').'));
         if ((e.ventes || []).length) {
           var wr = el('div', 'mkt-tbl-wrap'), t = el('table', 'mkt-tbl'), hr = el('tr');
           ['Vente', 'Surface', 'Prix', '€/m²'].forEach(function(h) { hr.appendChild(el('th', null, h)); }); t.appendChild(hr);
@@ -360,7 +361,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
         }
         o.appendChild(l2);
       }
-      o.appendChild(el('div', 'mkt-note', "Estimation indicative fondée sur des statistiques publiques (DVF, Insee) : elle ne remplace pas l'avis de valeur de votre conseiller, qui tient compte de l'état, de l'étage, des prestations et du quartier."));
+      o.appendChild(el('div', 'mkt-note', "Estimation indicative fondée sur des statistiques publiques (DVF, Insee), à l\u2019échelle de la commune : elle ne remplace pas l\u2019avis de valeur de votre conseiller, qui tient compte de l\u2019état, de l\u2019étage, des prestations, du terrain et du quartier."));
     }
   }
 
