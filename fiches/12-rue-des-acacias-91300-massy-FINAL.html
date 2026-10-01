@@ -92,9 +92,6 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .btn-rdv:hover{background:var(--gold2);}
 .btn-offre{display:block;width:100%;padding:12px;background:transparent;color:var(--gold);border:1px solid rgba(201,162,39,.4);border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;transition:.2s;}
 .btn-offre:hover{background:rgba(201,162,39,.08);}
-.cons-stars{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);text-align:center;}
-.cons-stars .stars{font-size:13px;margin-bottom:1px;}
-.cons-stars .slbl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6a6358;}
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px;box-shadow:0 3px 16px rgba(0,0,0,.04);}
 .card-dark{background:var(--dark);border-radius:18px;padding:24px;margin-bottom:18px;color:white;}
@@ -348,7 +345,6 @@ html,body{overflow-x:hidden;}
 </style>
 <style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"3","adresse":"12 rue des Acacias, 91300 Massy","quartier":"Massy centre","acheteur_prenom":"","acheteur_nom":"","annee":"1998","description":"Appartement 4 pièces de 78 m² · 3 · DPE D","surface":78,"surfCarrez":0,"pieces":"4","dpe":"D","prix":315000,"prixm2":4038,"mediane":0,"tension":"","delai":"","loyer":0,"chargesCopro":190,"chargesDetail":"","taxeFonciere":1150,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Séjour double exposé sud","fort2":"Proche RER B","fort3":"Cave et place de parking incluses","vig1":"","vig2":"","vig3":"","photo1":"","photo2":"","photo3":"","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Sophie Martin","agentTel":"06 12 34 56 78","agentEmail":"sophie.martin@agence-exemple.fr","agentRdvUrl":"","agentSiteUrl":"","agentReseau":"Agence Exemple","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"","_rawState":{"photos":[]}}</script>
 
-<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 <style>
 #vr-card .vr-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);}
 #vr-card .vr-sub{font-size:12.5px;color:var(--muted);margin-top:3px;}
@@ -473,7 +469,6 @@ html,body{overflow-x:hidden;}
   </div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </div></section>
@@ -531,7 +526,6 @@ html,body{overflow-x:hidden;}
   </div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -574,7 +568,6 @@ html,body{overflow-x:hidden;}
   </div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -604,7 +597,6 @@ html,body{overflow-x:hidden;}
   </div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -634,7 +626,6 @@ html,body{overflow-x:hidden;}
   </div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -742,7 +733,6 @@ html,body{overflow-x:hidden;}
   </div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -844,7 +834,6 @@ html,body{overflow-x:hidden;}
   </div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div>
 </div>
 </div>
@@ -3002,26 +2991,6 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   };
   document.addEventListener('DOMContentLoaded', render);
   try { new MutationObserver(function() { render(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']}); } catch (e) {}
-})();
-</script>
-<script>
-// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
-(function() {
-  function afficherAvis() {
-  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
-  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
-  var full = Math.round(note), stars = '';
-  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
-  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
-  document.querySelectorAll('.cons-stars').forEach(function(el) {
-    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
-    if (s) s.textContent = stars;
-    if (l) l.textContent = label;
-    el.classList.add('avis-ok');
-  });
-  }
-  // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
 })();
 </script>
 <script>

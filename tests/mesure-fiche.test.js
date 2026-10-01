@@ -1,11 +1,11 @@
-// Mesure des fiches : aucun outil tiers, événements fiables (1 par onglet, offre = envoi réel, crédit = simulation), avis Google jamais en dur.
+// Mesure des fiches : aucun outil tiers, événements fiables (1 par onglet, offre = envoi réel, crédit = simulation), aucun avis Google sur les fiches.
 const fs = require('fs'), path = require('path'), assert = require('assert');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const root = path.join(__dirname, '..');
 const files = ['index.html', 'index_en.html'].concat(fs.readdirSync(path.join(root, 'fiches')).filter(f => f.endsWith('.html')).map(f => 'fiches/' + f));
-async function load(f, google) {
+async function load(f) {
   const events = [], agents = [], html = fs.readFileSync(path.join(root, f), 'utf8');
-  const injected = (google ? '<script>window.PRIVENCY_AGENT_ID="agent-1";window.PRIVENCY_GOOGLE=' + JSON.stringify(google) + ';</script>' : '<script>window.PRIVENCY_AGENT_ID="agent-1";</script>');
+  const injected = '<script>window.PRIVENCY_AGENT_ID="agent-1";</script>';
   const dom = new JSDOM(html.replace(/<\/body>(?![\s\S]*<\/body>)/, injected + '</body>'), { runScripts: 'dangerously', url: 'https://espace.privency.fr/' + f + '?client=Test', virtualConsole: new VirtualConsole(), beforeParse(w) {
     w.scrollTo = () => {}; w.alert = () => {}; w.matchMedia = w.matchMedia || (() => ({ matches: false, addListener() {}, addEventListener() {} }));
     w.fetch = async (url, opt) => { if (String(url).includes('/rest/v1/fiche_views')) { const b = JSON.parse(opt.body); events.push(b.evenement); agents.push(b.agent_id); } return { ok: true, status: 200, json: async () => ({}) }; };
@@ -37,14 +37,8 @@ async function load(f, google) {
     d.getElementById('offer-nom').value = 'Jean Dupont'; d.getElementById('offer-email').value = 'j@d.fr';
     try { w.submitOffer(); } catch (e) {}
     assert.strictEqual(events.filter(e => e === 'offre_soumise').length, 1, f + ' : offre_soumise');
-    assert(!d.querySelector('.cons-stars.avis-ok'), f + ' : avis Google affichés sans données');
-    assert(/\.cons-stars\{display:none\}/.test(html), f + ' : règle CSS de masquage');
+    assert(!/cons-stars|PRIVENCY_GOOGLE|Google Reviews/.test(html), f + ' : reste de code avis Google');
   }
-  const g = await load('index.html', { note: 4.86, nb: 37 });
-  const el = g.w.document.querySelector('.cons-stars');
-  assert(el.classList.contains('avis-ok') && /4,9\/5 · 37 avis Google/.test(el.textContent), 'avis réels : ' + el.textContent);
-  const bad = await load('index.html', { note: 9, nb: 0 });
-  assert(!bad.w.document.querySelector('.cons-stars.avis-ok'), 'données invalides : masqué');
   console.log('OK mesure-fiche : ' + files.length + ' fiches');
   process.exit(0);
 })().catch(e => { console.error(e); process.exit(1); });

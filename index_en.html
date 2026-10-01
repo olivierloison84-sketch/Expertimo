@@ -123,9 +123,6 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .btn-rdv:hover{background:var(--gold2);}
 .btn-offre{display:block;width:100%;padding:12px;background:transparent;color:var(--gold);border:1px solid rgba(201,162,39,.4);border-radius:10px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;text-align:center;transition:.2s;}
 .btn-offre:hover{background:rgba(201,162,39,.08);}
-.cons-stars{margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);text-align:center;}
-.cons-stars .stars{font-size:13px;margin-bottom:1px;}
-.cons-stars .slbl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:#6a6358;}
 /* CARDS */
 .card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:24px;margin-bottom:18px;box-shadow:0 3px 16px rgba(0,0,0,.04);}
 .card-dark{background:var(--dark);border-radius:18px;padding:24px;margin-bottom:18px;color:white;}
@@ -347,7 +344,6 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 <style>
 #vr-card .vr-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);}
 #vr-card .vr-sub{font-size:12.5px;color:var(--muted);margin-top:3px;}
@@ -465,7 +461,6 @@ html,body{overflow-x:hidden;}
   <div class="cons-role">Real Estate Agent · Expertimo</div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Book an Appointment</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Make an Offer</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -523,7 +518,6 @@ html,body{overflow-x:hidden;}
   <div class="cons-role">Real Estate Agent · Expertimo</div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Book an Appointment</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Make an Offer</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -562,7 +556,6 @@ html,body{overflow-x:hidden;}
   <div class="cons-role">Real Estate Agent · Expertimo</div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Book an Appointment</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Make an Offer</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -587,7 +580,6 @@ html,body{overflow-x:hidden;}
   <div class="cons-role">Real Estate Agent · Expertimo</div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Book an Appointment</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Make an Offer</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -643,7 +635,6 @@ html,body{overflow-x:hidden;}
   <div class="cons-role">Real Estate Agent · Expertimo</div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Book an Appointment</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Make an Offer</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -741,7 +732,6 @@ html,body{overflow-x:hidden;}
   <div class="cons-role">Real Estate Agent · Expertimo</div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Book an Appointment</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Make an Offer</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div></div>
 </div>
 </section>
@@ -839,7 +829,6 @@ html,body{overflow-x:hidden;}
   <div class="cons-role">Real Estate Agent · Expertimo</div>
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Book an Appointment</a>
   <button onclick="showTabById('offre')" class="btn-offre">✍️ Make an Offer</button>
-  <div class="cons-stars"><div class="stars">⭐⭐⭐⭐⭐</div><div class="slbl">5/5 · Google Reviews</div></div>
 </div>
 </div>
 </div>
@@ -1759,26 +1748,6 @@ document.addEventListener('DOMContentLoaded', function() {
   };
   document.addEventListener('DOMContentLoaded', render);
   try { new MutationObserver(function() { render(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']}); } catch (e) {}
-})();
-</script>
-<script>
-// Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
-(function() {
-  function afficherAvis() {
-  var g = window.PRIVENCY_GOOGLE, note = g && parseFloat(g.note), nb = g && parseInt(g.nb, 10);
-  if (!(note >= 1 && note <= 5) || !(nb > 0)) return;
-  var full = Math.round(note), stars = '';
-  for (var i = 0; i < 5; i++) stars += i < full ? '\u2B50' : '\u2606';
-  var label = String(note.toFixed(1)).replace('.', ',') + '/5 \u00B7 ' + nb + ' avis Google';
-  document.querySelectorAll('.cons-stars').forEach(function(el) {
-    var s = el.querySelector('.stars'), l = el.querySelector('.slbl');
-    if (s) s.textContent = stars;
-    if (l) l.textContent = label;
-    el.classList.add('avis-ok');
-  });
-  }
-  // La balise PRIVENCY_GOOGLE est injectée à la publication, en toute fin de page : on attend la fin du chargement.
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', afficherAvis); else afficherAvis();
 })();
 </script>
 <script>
