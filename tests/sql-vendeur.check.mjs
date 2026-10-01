@@ -18,7 +18,7 @@ alter table public.fiche_views enable row level security;
 grant usage on schema public, auth to anon, authenticated; grant select on public.agent_fiches to authenticated;
 insert into public.agent_fiches values ('${A1}','a-FINAL.html','12 rue des Lilas 91300 Massy'), ('${A2}','b-FINAL.html','1 rue B');`);
 await db.exec(rd('supabase-agent-profiles.sql').replace(/create policy/g, '-- create policy').replace(/^\s*on public\.agent_profiles.*$/gm, '').replace(/^\s*(to|using|with check).*$/gm, '').replace(/^-- create policy.*\n/gm, ''));
-for (const f of ['supabase-fiche-sessions.sql', 'supabase-fiche-questions.sql', 'supabase-fiche-documents.sql', 'supabase-vendeur.sql']) await db.exec(rd(f));
+for (const f of ['supabase-fiche-sessions.sql', 'supabase-fiche-questions.sql', 'supabase-fiche-documents.sql', 'supabase-fiche-retours.sql', 'supabase-vendeur.sql']) await db.exec(rd(f));
 await db.exec(`grant select on public.agent_profiles to authenticated; insert into public.agent_profiles(user_id, prenom, nom, tel, email, photo_url, reseau, rdv_url, color_primary) values ('${A1}','Olivier','Loison','0600000000','o@x.fr','https://p/x.jpg','Expertimo','https://rdv','#123456');`);
 let bad = 0; const ok = (c, m) => { if (!c) { console.log('ÉCHEC', m); bad++; process.exitCode = 1; } else console.log('ok', m); };
 const P = '/fiches/a-FINAL.html', ago = d => `now() - interval '${d} days'`;
@@ -31,6 +31,7 @@ await db.exec(`insert into public.fiche_sessions(session_id, fiche_path, client_
  ('s1aaaaaaaa','${P}','Marie Dupont', 600, '{"budget":300,"documents":200,"bien":100}', ${ago(3)}), ('s2aaaaaaaa','${P}','Marie Dupont', 420, '{"budget":400,"quartier":20}', ${ago(1)}), ('s3aaaaaaaa','${P}','Paul Martin', 60, '{"bien":60}', ${ago(2)})`);
 await db.exec(`insert into public.fiche_questions(fiche_path, client_nom, question) values ('${P}','Marie Dupont','Les charges incluent le chauffage ?'), ('${P}','Marie Dupont','Quel est le prix minimum accepté ?'), ('${P}','Paul Martin','Y a-t-il une école proche du quartier ?'), ('${P}','Paul Martin','Bonjour')`);
 await db.exec(`insert into public.fiche_demandes_documents(fiche_path, client_nom, docs) values ('${P}','Marie Dupont','{"DPE (diagnostic de performance énergétique)","Diagnostic amiante","Procès-verbaux des 3 dernières assemblées générales"}'), ('${P}','Paul Martin','{"DPE (diagnostic de performance énergétique)","<img src=x onerror=alert(1)>"}')`);
+await db.exec(`insert into public.fiche_retours(fiche_path, client_nom, reponses) values ('${P}','Marie Dupont','{prix,travaux}'), ('${P}','Paul Martin','{prix}'), ('/fiches/b-FINAL.html','Autre','{coup_coeur}')`);
 // liens
 await db.exec(`set role authenticated; set app.uid='${A1}'`);
 await db.exec(`insert into public.vendeur_liens(agent_user_id, filename, note, note_at) values ('${A1}','a-FINAL.html','Deux visites cette semaine, relance prévue.', now())`);
@@ -61,6 +62,8 @@ const act = t => rap.activite.filter(a => a.type === t);
 ok(act('documents').some(a => a.lettre === 'A' && /Diagnostic amiante/.test(a.detail)), 'activité : documents demandés par A (amiante)');
 ok(act('rubrique').some(a => a.lettre === 'A' && a.detail === 'budget' && a.sec >= 60) && !act('rubrique').some(a => a.detail === 'bien' || a.detail === 'quartier'), 'activité : rubriques pertinentes ≥ 1 min uniquement (pas « bien », pas 20 s de quartier)');
 ok(act('question').some(a => a.detail === 'Prix et négociation') && !/chauffage|prix minimum|école proche/.test(JSON.stringify(rap.activite)), 'activité : questions par thème, jamais le texte');
+ok(rap.retours.length === 2 && rap.retours[0].code === 'prix' && rap.retours[0].n === 2 && rap.retours[0].label === 'le prix' && rap.retours.some(r => r.code === 'travaux' && r.n === 1), 'retours de visite agrégés (cette fiche seulement) : ' + JSON.stringify(rap.retours));
+ok(act('retour').some(a => a.lettre === 'A' && a.detail === 'le prix, les travaux à prévoir') && act('retour').length === 2, 'activité : retour de visite par lettre, libellés fixes : ' + JSON.stringify(act('retour')));
 ok(act('simulation').length === 1 && act('ouverture').length >= 3, 'activité : simulation et ouvertures');
 ok(rap.activite.every(a => /^\d{4}-\d\d-\d\d$/.test(a.jour) && ['matin', 'apres-midi'].includes(a.moment) && !('at' in a)), 'activité : jour + demi-journée, aucune heure exacte');
 ok(rap.activite.every((a, i, t) => !i || t[i - 1].jour >= a.jour), 'activité triée du plus récent au plus ancien (par jour)');

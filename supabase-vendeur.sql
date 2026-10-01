@@ -1,5 +1,5 @@
--- Espace vendeur (lot 4) — À EXÉCUTER après validation, dans le SQL Editor Supabase. Prérequis : lots 2 et 3 (tables
--- fiche_questions et fiche_demandes_documents) et fiche_sessions déjà en place.
+-- Espace vendeur (lots 4 et 5) — À EXÉCUTER après validation, dans le SQL Editor Supabase. Prérequis : lots 2, 3 et 5 (tables
+-- fiche_questions, fiche_demandes_documents et fiche_retours) et fiche_sessions déjà en place. Rejouable.
 -- Principe : l'agent crée un lien privé par bien (jeton aléatoire de 96 caractères). La page vendeur.html appelle
 -- vendeur_rapport(jeton), fonction SECURITY DEFINER qui ne renvoie que des CHIFFRES AGRÉGÉS et des acquéreurs
 -- ANONYMISÉS (« Acquéreur A/B/C ») : jamais de nom, d'email, ni de texte de question. Les visiteurs (anon) n'ont
@@ -77,6 +77,12 @@ create or replace function public.vendeur_doc_cat(d text) returns text language 
       else 'Autres documents' end $$;
 revoke all on function public.vendeur_theme(text), public.vendeur_doc_cat(text) from public;
 
+create or replace function public.vendeur_retour_label(c text) returns text language sql immutable set search_path = public as $$
+  select case c when 'coup_coeur' then 'un coup de cœur' when 'prix' then 'le prix' when 'travaux' then 'les travaux à prévoir'
+    when 'quartier' then 'le quartier' when 'charges' then 'les charges' when 'agencement' then 'l''agencement'
+    when 'financement' then 'son financement' when 'reflechir' then 'un temps de réflexion' else null end $$;
+revoke all on function public.vendeur_retour_label(text) from public;
+
 create or replace function public.vendeur_rapport(p_token text) returns jsonb
 language plpgsql security definer set search_path = public as $$
 declare
@@ -88,7 +94,7 @@ declare
   v_first  timestamptz;
   v_vis_now int; v_vis_prev int; v_acq_now int; v_acq_prev int;
   v_tot_vis int; v_tot_min int; v_anon int; v_docs int; v_quest int; v_sim int;
-  v_courbe jsonb; v_onglets jsonb; v_themes jsonb; v_docs_top jsonb; v_acq jsonb; v_activite jsonb;
+  v_courbe jsonb; v_onglets jsonb; v_themes jsonb; v_docs_top jsonb; v_acq jsonb; v_activite jsonb; v_retours jsonb;
 begin
   if p_token is null or p_token !~ '^[0-9a-f]{64,96}$' then return jsonb_build_object('ok', false); end if;
   select * into v_lien from public.vendeur_liens where token = p_token and revoked_at is null;
@@ -172,6 +178,11 @@ begin
          ) order by score desc, first_at), '[]'::jsonb)
     into v_acq from scored;
 
+  -- Retours de visite : ce que disent les acquéreurs, en comptes par réponse (liste fermée), sans lien avec un nom.
+  select coalesce(jsonb_agg(jsonb_build_object('code', c, 'label', public.vendeur_retour_label(c), 'n', n) order by n desc, c), '[]'::jsonb) into v_retours
+    from (select x as c, count(*)::int as n from public.fiche_retours r, unnest(r.reponses) x where r.fiche_path = any(v_paths) group by x) z
+   where public.vendeur_retour_label(c) is not null;
+
   -- Fil d'activité : événements récents, acquéreurs désignés par leur lettre, libellés fixes uniquement.
   -- Rubriques pertinentes seulement, et seulement au-delà d'une minute de lecture.
   with lettres as (
@@ -189,6 +200,10 @@ begin
     select lower(btrim(dd.client_nom)), dd.created_at, 'documents',
            (select string_agg(c, ', ' order by c) from (select distinct public.vendeur_doc_cat(x) as c from unnest(dd.docs) x limit 3) q), 0
       from public.fiche_demandes_documents dd where dd.fiche_path = any(v_paths) and dd.created_at >= now() - interval '30 days'
+    union all
+    select lower(btrim(r.client_nom)), r.created_at, 'retour',
+           (select string_agg(public.vendeur_retour_label(c), ', ' order by c) from unnest(r.reponses) c), 0
+      from public.fiche_retours r where r.fiche_path = any(v_paths) and r.created_at >= now() - interval '30 days'
     union all
     select lower(btrim(client_nom)), created_at, 'question', public.vendeur_theme(question), 0
       from public.fiche_questions where fiche_path = any(v_paths) and created_at >= now() - interval '30 days'
@@ -215,7 +230,7 @@ begin
     'note', v_lien.note, 'note_at', v_lien.note_at, 'depuis', to_char(v_first, 'YYYY-MM-DD'), 'genere_le', to_char(now() at time zone 'utc', 'YYYY-MM-DD"T"HH24:MI:SS"Z"'),
     'totaux', jsonb_build_object('acquereurs', jsonb_array_length(v_acq), 'anonymes', v_anon, 'visites', v_tot_vis, 'minutes', v_tot_min, 'docs', v_docs, 'questions', v_quest, 'simulations', v_sim),
     'semaine', jsonb_build_object('visites', v_vis_now, 'visites_prec', v_vis_prev, 'acquereurs', v_acq_now, 'acquereurs_prec', v_acq_prev),
-    'courbe', v_courbe, 'onglets', v_onglets, 'themes', v_themes, 'docs_top', v_docs_top, 'acquereurs', v_acq, 'activite', v_activite);
+    'courbe', v_courbe, 'onglets', v_onglets, 'themes', v_themes, 'docs_top', v_docs_top, 'acquereurs', v_acq, 'activite', v_activite, 'retours', v_retours);
 end $$;
 revoke all on function public.vendeur_rapport(text) from public;
 grant execute on function public.vendeur_rapport(text) to anon, authenticated;

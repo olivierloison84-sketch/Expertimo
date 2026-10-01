@@ -352,6 +352,17 @@ html,body{overflow-x:hidden;}
 <script id="expertimo-data-es" type="application/json">{"fort1":"Piso luminoso. Tranquilo.","fort2":"Edificio rehabilitado con aislamiento térmico exterior en 2020.","fort3":"Balcón, trastero y parking.","vig1":"Pequeñas obras de actualización a prever.","vig2":"Gastos de comunidad: 300€ / mes.","vig3":"","historiqueLibre":"","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la misión, no se han detectado materiales y productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sujeto - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sujeto a decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"La instalación interior de electricidad presenta anomalías para las cuales se recomienda actuar a fin de eliminar los peligros que presenta(n)."},{"icon":"🔥","name":"Gaz","status":"favorable","result":"Instalación sin anomalías"},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme"}]}</script>
 <style>.cons-stars{display:none}.cons-stars.avis-ok{display:block}</style>
 <style>
+#vr-card .vr-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);}
+#vr-card .vr-sub{font-size:12.5px;color:var(--muted);margin-top:3px;}
+#vr-card .vr-chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;}
+#vr-card .vr-chip{background:var(--card);border:1px solid var(--border);border-radius:99px;padding:9px 14px;font:inherit;font-size:13px;color:var(--ink);cursor:pointer;transition:.15s;}
+#vr-card .vr-chip:hover{border-color:var(--gold);}
+#vr-card .vr-chip[aria-pressed="true"]{background:var(--dark);border-color:var(--dark);color:var(--gold);}
+#vr-card .vr-chip:disabled{opacity:.6;cursor:default;}
+#vr-card .vr-msg{font-size:12.5px;margin-top:10px;min-height:1.2em;color:var(--muted);}
+#vr-card .vr-msg.ok{color:var(--vert);}
+#vr-card .vr-msg.err{color:var(--rouge);}
+#vr-card .vr-note{font-size:10.5px;line-height:1.4;color:var(--muted);margin-top:10px;}
 #doc-picker .dp-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
 #doc-picker .dp-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);}
 #doc-picker .dp-sub{font-size:12.5px;color:var(--muted);margin-top:3px;}
@@ -753,7 +764,16 @@ html,body{overflow-x:hidden;}
 <section id="offre" class="tab">
 <div class="pg">
 <div>
-  <div class="card" style="background:var(--cream);border:1px solid var(--gold);margin-bottom:16px;">
+  <div class="card" id="vr-card">
+  <div class="lbl" id="vr-lbl">Votre retour de visite</div>
+  <div class="vr-title" id="vr-title"></div>
+  <div class="vr-sub" id="vr-sub"></div>
+  <div class="vr-chips" id="vr-chips" role="group"></div>
+  <button id="vr-send" class="btndark" type="button" onclick="vrSend()"></button>
+  <div class="vr-msg" id="vr-msg" role="status" aria-live="polite"></div>
+  <div class="vr-note" id="vr-note"></div>
+</div>
+<div class="card" style="background:var(--cream);border:1px solid var(--gold);margin-bottom:16px;">
     <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;"><span data-i18n="offre-progress-prefix">Vous avez exploré</span> <span id="offre-progress-count">1</span><span data-i18n="offre-progress-suffix"> / 10 sections</span></div>
     <div style="font-size:12.5px;color:var(--muted);" data-i18n="offre-progress-sub">Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.</div>
   </div>
@@ -2913,6 +2933,14 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       }).catch(function() {});
     } catch (e) {}
   };
+  // Retour de visite : réponses d'une liste fermée, transmises à l'agent (jamais de texte libre).
+  window.privencyRetour = function(codes, lang) {
+    return fetch(SUPABASE_URL + '/rest/v1/rpc/fiche_retour', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY },
+      body: JSON.stringify({ p_path: window.location.pathname, p_client: client, p_adresse: adresse, p_agent: window.PRIVENCY_AGENT_ID || null, p_reponses: (codes || []).slice(0, 4), p_lang: lang || null })
+    }).then(function(r) { if (!r.ok) throw new Error('rpc'); });
+  };
   // Questions posées à l'assistant : transmises à l'agent (mention affichée sous la zone de saisie).
   window.privencyQuestion = function(q, lang) {
     try {
@@ -2924,6 +2952,59 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     } catch (e) {}
   };
 })();</script>
+<script>
+// Retour de visite en un clic : réponses d'une liste fermée (jamais de texte libre), transmises à l'agent.
+(function() {
+  var CODES = ['coup_coeur', 'prix', 'travaux', 'quartier', 'charges', 'agencement', 'financement', 'reflechir'];
+  var T = {
+    fr: {lbl: 'Votre retour de visite', title: 'Vous avez visité le bien ?', sub: "Dites-nous en un clic ce qui compte pour vous (4 réponses au maximum) : votre conseiller en tient compte.", send: 'Envoyer mon retour', done: 'Merci ! Votre conseiller a bien reçu votre retour.', max: '4 réponses au maximum.', none: 'Choisissez au moins une réponse.', err: "L'envoi a échoué. Réessayez dans un instant.", note: "Votre retour est transmis à votre conseiller. Aucun texte libre ni coordonnée n'est envoyé.",
+      c: {coup_coeur: '💛 Un coup de cœur', prix: '💶 Le prix', travaux: '🛠️ Les travaux à prévoir', quartier: '📍 Le quartier', charges: '🧾 Les charges', agencement: "📐 L'agencement", financement: '🏦 Mon financement', reflechir: "⏳ J'ai besoin d'y réfléchir"}},
+    en: {lbl: 'Your visit feedback', title: 'Have you visited the property?', sub: 'Tell us in one tap what matters to you (up to 4 answers): your advisor will take it into account.', send: 'Send my feedback', done: 'Thank you! Your advisor has received your feedback.', max: 'Up to 4 answers.', none: 'Please choose at least one answer.', err: 'Sending failed. Please try again in a moment.', note: 'Your feedback is sent to your advisor. No free text or contact details are transmitted.',
+      c: {coup_coeur: '💛 Love at first sight', prix: '💶 The price', travaux: '🛠️ Works to plan for', quartier: '📍 The neighbourhood', charges: '🧾 The running costs', agencement: '📐 The layout', financement: '🏦 My financing', reflechir: '⏳ I need time to think'}},
+    pt: {lbl: 'O seu feedback da visita', title: 'Visitou o imóvel?', sub: 'Diga-nos com um toque o que é importante para si (até 4 respostas): o seu consultor tem-no em conta.', send: 'Enviar o meu feedback', done: 'Obrigado! O seu consultor recebeu o seu feedback.', max: 'No máximo 4 respostas.', none: 'Escolha pelo menos uma resposta.', err: 'O envio falhou. Tente novamente dentro de instantes.', note: 'O seu feedback é enviado ao seu consultor. Não é transmitido texto livre nem contactos.',
+      c: {coup_coeur: '💛 Gostei muito', prix: '💶 O preço', travaux: '🛠️ As obras a prever', quartier: '📍 A zona', charges: '🧾 As despesas', agencement: '📐 A distribuição', financement: '🏦 O meu financiamento', reflechir: '⏳ Preciso de pensar'}},
+    es: {lbl: 'Su opinión tras la visita', title: '¿Ha visitado el inmueble?', sub: 'Díganos con un toque lo que le importa (hasta 4 respuestas): su asesor lo tendrá en cuenta.', send: 'Enviar mi opinión', done: '¡Gracias! Su asesor ha recibido su opinión.', max: 'Máximo 4 respuestas.', none: 'Elija al menos una respuesta.', err: 'El envío ha fallado. Inténtelo de nuevo en un momento.', note: 'Su opinión se envía a su asesor. No se transmite texto libre ni datos de contacto.',
+      c: {coup_coeur: '💛 Me ha enamorado', prix: '💶 El precio', travaux: '🛠️ Las obras previstas', quartier: '📍 El barrio', charges: '🧾 Los gastos', agencement: '📐 La distribución', financement: '🏦 Mi financiación', reflechir: '⏳ Necesito pensarlo'}}
+  };
+  var sel = [], sent = false;
+  function L() { var l = (typeof _currentLang !== 'undefined' && _currentLang) || document.documentElement.lang || 'fr'; return T[l] ? l : 'fr'; }
+  function $(id) { return document.getElementById(id); }
+  function msg(t, cls) { var m = $('vr-msg'); if (!m) return; m.textContent = t || ''; m.className = 'vr-msg' + (cls ? ' ' + cls : ''); }
+  function render() {
+    var box = $('vr-chips'); if (!box) return;
+    var U = T[L()];
+    $('vr-lbl').textContent = U.lbl; $('vr-title').textContent = U.title; $('vr-sub').textContent = U.sub; $('vr-note').textContent = U.note;
+    var b = $('vr-send'); b.textContent = U.send; b.style.display = sent ? 'none' : '';
+    box.textContent = '';
+    CODES.forEach(function(c) {
+      var x = document.createElement('button'); x.type = 'button'; x.className = 'vr-chip'; x.setAttribute('data-code', c);
+      x.setAttribute('aria-pressed', sel.indexOf(c) !== -1 ? 'true' : 'false'); x.textContent = U.c[c]; x.disabled = sent;
+      x.onclick = function() {
+        var i = sel.indexOf(c);
+        if (i !== -1) { sel.splice(i, 1); msg(''); }
+        else if (sel.length >= 4) { msg(T[L()].max, 'err'); return; }
+        else { sel.push(c); msg(''); }
+        render();
+      };
+      box.appendChild(x);
+    });
+    if (sent) msg(U.done, 'ok');
+  }
+  window.vrSend = function() {
+    if (sent) return;
+    var U = T[L()];
+    if (!sel.length) { msg(U.none, 'err'); return; }
+    var b = $('vr-send'); b.disabled = true;
+    var p = (window.privencyRetour ? window.privencyRetour(sel.slice(), L()) : Promise.reject(new Error('indisponible')));
+    p.then(function() {
+      sent = true; try { if (window.privencyTrack) window.privencyTrack('retour_visite'); } catch (e) {}
+      render();
+    }, function() { msg(T[L()].err, 'err'); }).then(function() { b.disabled = false; });
+  };
+  document.addEventListener('DOMContentLoaded', render);
+  try { new MutationObserver(function() { render(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']}); } catch (e) {}
+})();
+</script>
 <script>
 // Avis Google : affichés seulement si l'agent a une note réelle (window.PRIVENCY_GOOGLE = {note, nb}), jamais en dur.
 (function() {
