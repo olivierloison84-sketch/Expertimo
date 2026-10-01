@@ -96,6 +96,17 @@ const call = (body, origin, method) => new Promise(resolve => { const res = { co
   { const k = global.fetch; global.fetch = async (u) => /geopf/.test(String(u)) ? { ok: true, json: async () => ({ features: [{ properties: { citycode: '67482', city: 'Strasbourg', postcode: '67000', score: 0.9 } }] }) } : { ok: false, text: async () => '' };
     r = await call({ adresse: '67000 strasbourg', type: 'appartement', surface: 60, prix: 250000 });
     assert(r.b.ok && r.b.estimation.ok === false && r.b.estimation.raison === 'dvf_indisponible', 'département sans DVF : message dédié'); global.fetch = k; }
+  { // Paris : le code postal donne l'arrondissement sans géocodeur (cas « 110 avenue Philippe-Auguste paris 75011 roquette »)
+    const k = global.fetch, urls = []; global.fetch = async (u) => { urls.push(String(u)); return /geo-dvf/.test(String(u)) ? { ok: false, text: async () => '' } : k(u); };
+    r = await call({ adresse: '110 avenue philippe auguste paris 75011 roquette', type: 'appartement', surface: 60, prix: 600000 });
+    assert(!urls.some(u => /geopf/.test(u)) && urls.some(u => /\/communes\/75\/75111\.csv$/.test(u)) && r.b.commune.nom === 'Paris 11e', 'Paris 11 : arrondissement reconnu : ' + JSON.stringify(r.b).slice(0, 200));
+    global.fetch = k; }
+  { // un mot de quartier ne doit pas faire deviner une autre commune : repli sur le code postal seul
+    const k = global.fetch, qs = []; global.fetch = async (u) => { u = String(u);
+      if (/geopf/.test(u)) { qs.push(decodeURIComponent(u.split('q=')[1])); return { ok: true, json: async () => ({ features: [/roquette/.test(u) ? { properties: { citycode: '27495', city: 'La Roquette', postcode: '27700', score: 0.8 } } : { properties: { citycode: '91345', city: 'Longjumeau', postcode: '91160', score: 0.9 } }] }) }; }
+      return k(u); };
+    r = await call({ adresse: '12 rue x 91160 roquette', type: 'maison', surface: 90 });
+    assert(r.b.ok && r.b.commune.nom === 'Longjumeau' && qs.length === 2 && qs[1] === '91160', 'repli sur le code postal : ' + qs.join(' | ')); global.fetch = k; }
   { let last; for (let i = 0; i < 45; i++) last = await new Promise(resolve => { const res = { setHeader() {}, status(c) { this.c = c; return this; }, json() { resolve(this.c); }, end() { resolve(this.c); } }; handler({ method: 'POST', headers: { origin: 'https://espace.privency.fr', 'x-forwarded-for': '9.9.9.9' }, body: {} }, res); });
     assert.strictEqual(last, 429, 'limite de débit par IP'); }
   const keep = global.fetch; global.fetch = async () => { throw new Error('réseau'); };
