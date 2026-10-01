@@ -80,6 +80,12 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
 .cost-out b{font-family:'Playfair Display',serif;font-size:21px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;}
 .cost-out .l2{margin-top:6px;}
 @media(max-width:720px){.calc{grid-template-columns:1fr;}}
+.calc select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;width:100%;}
+.mkt-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;}
+.mkt-tbl th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 6px;border-bottom:1px solid var(--border);}
+.mkt-tbl td{padding:6px 6px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;}
+.mkt-tbl-wrap{overflow-x:auto;}
+.mkt-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.45;}
 @media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #000;}header.top::before{display:none;}h1,.sub,.agent-name,.agent-role{color:#000;}.eyebrow{color:#8F7015;margin-top:14px;}main{margin-top:0;}.card,.kpi{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
 @media(prefers-reduced-motion:no-preference){.fill{transition:width .8s cubic-bezier(.22,.61,.36,1);}}
 </style>
@@ -103,6 +109,16 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     <div class="two">
       <div class="card"><div class="lbl">Ce qui retient l'attention</div><h2>Les rubriques les plus lues</h2><div class="bars" id="tabs"></div></div>
       <div class="card"><div class="lbl">Ce qu'ils veulent savoir</div><h2>Les sujets qui reviennent</h2><div id="themes"></div><div class="lbl" style="margin-top:18px;">Documents les plus demandés</div><div id="docs"></div><div class="lbl" style="margin-top:18px;">Retours de visite</div><div id="retours"></div></div>
+    </div>
+    <div class="card" id="mkt-card"><div class="lbl">Le marché autour de votre bien</div><h2>Votre prix face aux ventes réelles de votre commune</h2>
+      <div class="hint" style="margin-bottom:14px;">Renseignez les caractéristiques du bien : nous le comparons aux ventes réellement signées dans votre commune (données officielles DVF, 3 dernières années) et estimons combien de foyers du secteur peuvent le financer (revenus Insee).</div>
+      <div class="calc">
+        <label><span>Type de bien</span><select id="m-type"><option value="appartement">Appartement</option><option value="maison">Maison</option></select></label>
+        <label><span>Surface habitable (m²)</span><input id="m-surface" type="number" inputmode="decimal" min="9" max="400" step="1" placeholder="0"></label>
+        <label><span>Prix de vente affiché (€, frais d\u2019agence inclus le cas échéant)</span><input id="m-prix" type="number" inputmode="decimal" min="0" step="1000" placeholder="0"></label>
+        <label><span>&nbsp;</span><button type="button" class="btn dark" id="m-go" style="justify-content:center;">Comparer à ma commune</button></label>
+      </div>
+      <div class="cost-out" id="m-out" aria-live="polite" style="display:none;"></div>
     </div>
     <div class="card" id="cost-card"><div class="lbl">Le coût de l'attente</div><h2>Ce que coûte chaque mois sans vente</h2>
       <div class="hint" style="margin-bottom:14px;">Calcul indicatif, effectué sur cet écran : vos chiffres ne sont ni enregistrés ni transmis. Le capital remboursé de votre crédit n'est pas une perte : il n'est pas compté.</div>
@@ -182,6 +198,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     if (/^https:\/\//.test(ag.photo || '')) { var img = el('img', 'avatar'); img.src = ag.photo; img.alt = ''; img.referrerPolicy = 'no-referrer'; av.replaceWith(img); img.id = 'avatar'; }
     else av.textContent = (nom.split(/\s+/).map(function(w) { return w.charAt(0); }).join('').slice(0, 2) || 'P').toUpperCase();
     $('agent-name').textContent = nom || 'Votre conseiller'; $('agent-role').textContent = ag.reseau || 'Conseiller immobilier';
+    bienLabel = String(r.bien || '');
     $('bien').textContent = r.bien ? (r.bien.charAt(0).toUpperCase() + r.bien.slice(1)) : 'Votre bien';
     $('maj').textContent = 'Mis à jour le ' + fmtDate(r.genere_le) + (r.depuis ? ' · fiche en ligne depuis le ' + fmtDate(r.depuis) : '');
     document.title = 'Compte rendu — ' + $('bien').textContent;
@@ -287,6 +304,67 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     run();
   }
 
+  var bienLabel = '';
+  function initMarche() {
+    var API = 'https://expertimo-phi.vercel.app/api/marche-secteur';
+    function num(id) { var n = parseFloat($(id).value); return isFinite(n) && n > 0 ? n : 0; }
+    function eur(n) { return new Intl.NumberFormat('fr-FR', {maximumFractionDigits: 0}).format(Math.round(n)) + '\u00a0€'; }
+    function msg(text) { var o = $('m-out'); o.style.display = ''; o.textContent = ''; o.appendChild(el('div', null, text)); }
+    var prix1 = $('m-prix'), prix2 = $('c-prix');
+    prix1.addEventListener('input', function() { if (!prix2.value || prix2.dataset.sync === '1') { prix2.value = prix1.value; prix2.dataset.sync = '1'; prix2.dispatchEvent(new Event('input')); } });
+    prix2.addEventListener('input', function(ev) { if (ev.isTrusted) prix2.dataset.sync = '0'; });
+    $('m-go').addEventListener('click', function() {
+      var surface = num('m-surface'), prix = num('m-prix');
+      if (!bienLabel) return msg('Adresse du bien indisponible : demandez à votre conseiller de vous renvoyer le lien.');
+      if (surface < 9 || surface > 400) return msg('Indiquez la surface habitable du bien (entre 9 et 400 m²).');
+      var btn = $('m-go'); btn.disabled = true; msg('Analyse des ventes de votre commune en cours…');
+      fetch(API, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({adresse: bienLabel, type: $('m-type').value, surface: surface, prix: prix})})
+        .then(function(r) { return r.ok ? r.json() : Promise.reject(new Error('http')); })
+        .then(function(d) { btn.disabled = false; showMarche(d, prix, surface); })
+        .catch(function() { btn.disabled = false; msg('Analyse momentanément indisponible. Réessayez dans quelques instants.'); });
+    });
+    function showMarche(d, prix, surface) {
+      var o = $('m-out'); o.style.display = ''; o.textContent = '';
+      if (!d || d.ok !== true) return msg(d && d.error === 'commune' ? "Nous n'avons pas pu identifier la commune de ce bien." : 'Analyse momentanément indisponible. Réessayez dans quelques instants.');
+      var e = d.estimation || {}, b = d.bassin || {}, nom = (d.commune && d.commune.nom) || 'votre commune';
+      var l1 = el('div'); l1.appendChild(el('div', 'lbl', 'Estimation comparée'));
+      if (!e.ok) l1.appendChild(document.createTextNode(e.raison === 'dvf_indisponible' ? 'Les ventes officielles (DVF) ne sont pas disponibles pour ' + nom + ' (certains départements, comme l\u2019Alsace-Moselle, ne sont pas couverts ; pour Paris, Lyon et Marseille, le code postal de l\u2019arrondissement est nécessaire).' : 'Trop peu de ventes comparables récentes à ' + nom + ' pour une estimation fiable.'));
+      else {
+        l1.appendChild(document.createTextNode('Les ventes comparables à ' + nom + ' valent ')); l1.appendChild(el('b', null, eur(e.ppm_median) + '/m²'));
+        l1.appendChild(document.createTextNode(' en médiane, soit environ ')); l1.appendChild(el('b', null, eur(e.estimation)));
+        l1.appendChild(document.createTextNode(' pour ' + surface + ' m² (la moitié des ventes comparables se sont faites entre ' + eur(e.fourchette_basse) + ' et ' + eur(e.fourchette_haute) + ').'));
+        if (prix) {
+          var pos = el('div', 'l2'), s = e.ecart_pct > 0 ? '+' : '';
+          pos.appendChild(document.createTextNode('Votre prix de ' + eur(prix) + ' (' + eur(e.ppm_prix) + '/m²) se situe ')); pos.appendChild(el('b', null, s + String(e.ecart_pct).replace('.', ',') + ' %'));
+          pos.appendChild(document.createTextNode(e.position === 'dans' ? ' par rapport à cette estimation : dans la moitié centrale des ventes comparables.' : e.position === 'au_dessus' ? ' par rapport à cette estimation : au-dessus de la moitié centrale des ventes comparables (environ un quart des ventes se sont faites plus haut).' : ' par rapport à cette estimation : sous la moitié centrale des ventes comparables (environ un quart des ventes se sont faites plus bas).'));
+          pos.appendChild(el('div', 'mkt-note', 'Les ventes officielles sont des prix signés, hors frais d\u2019agence et après négociation : un prix affiché paraît donc un peu plus haut qu\u2019il ne l\u2019est réellement.'));
+          l1.appendChild(pos);
+        }
+        l1.appendChild(el('div', 'mkt-note', 'Fiabilité : ' + e.confiance + ' (' + e.n + ' ventes' + (e.ecart_surface ? ' de surface proche (± ' + e.ecart_surface + ' %)' : ', toutes surfaces confondues') + ', du ' + fmtDate(e.du) + ' au ' + fmtDate(e.au) + ').'));
+        if ((e.ventes || []).length) {
+          var wr = el('div', 'mkt-tbl-wrap'), t = el('table', 'mkt-tbl'), hr = el('tr');
+          ['Vente', 'Surface', 'Prix', '€/m²'].forEach(function(h) { hr.appendChild(el('th', null, h)); }); t.appendChild(hr);
+          e.ventes.forEach(function(v) { var r = el('tr'); r.appendChild(el('td', null, v.mois)); r.appendChild(el('td', null, v.surface + ' m²')); r.appendChild(el('td', null, eur(v.prix))); r.appendChild(el('td', null, eur(v.ppm))); t.appendChild(r); });
+          wr.appendChild(t); l1.appendChild(wr);
+        }
+      }
+      o.appendChild(l1);
+      if (prix) {
+        var l2 = el('div'); l2.style.marginTop = '18px'; l2.appendChild(el('div', 'lbl', "Bassin d'acheteurs"));
+        if (!b.ok) l2.appendChild(document.createTextNode("Les revenus de cette commune ne sont pas publiés par l'Insee : nous ne pouvons pas estimer le bassin d'acheteurs."));
+        else {
+          l2.appendChild(document.createTextNode('Pour acheter à ' + eur(prix) + ', un foyer doit disposer d\u2019environ ')); l2.appendChild(el('b', null, eur(b.revenu_mensuel) + '/mois'));
+          l2.appendChild(document.createTextNode(' nets (mensualité d\u2019environ ' + eur(b.mensualite) + '). À ' + nom + ', cela concerne environ ')); l2.appendChild(el('b', null, String(b.part_pct).replace('.', ',') + ' % des foyers'));
+          l2.appendChild(document.createTextNode(', soit près de ' + new Intl.NumberFormat('fr-FR').format(b.menages) + ' foyers sur ' + new Intl.NumberFormat('fr-FR').format(b.menages_total) + '.'));
+          var h = b.hyp || {};
+          l2.appendChild(el('div', 'mkt-note', 'Hypothèses : apport de ' + Math.round(h.apport * 100) + ' % du prix, frais de notaire ' + Math.round(h.notaire * 100) + ' %, crédit sur ' + h.annees + ' ans à ' + String(h.taux * 100).replace('.', ',') + ' % (assurance comprise), ' + Math.round(h.endettement * 100) + ' % d\u2019endettement maximum. Ce sont les foyers qui en ont les moyens, pas forcément des acquéreurs en recherche : le vivier réel est plus restreint.'));
+        }
+        o.appendChild(l2);
+      }
+      o.appendChild(el('div', 'mkt-note', "Estimation indicative fondée sur des statistiques publiques (DVF, Insee), à l\u2019échelle de la commune : elle ne remplace pas l\u2019avis de valeur de votre conseiller, qui tient compte de l\u2019état, de l\u2019étage, des prestations, du terrain et du quartier."));
+    }
+  }
+
   function initDigest(token) {
     var box = $('digest-box');
     fetch(SUPABASE_URL + '/rest/v1/rpc/vendeur_digest_statut', { method: 'POST', headers: {'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}, body: JSON.stringify({p_token: token}) })
@@ -306,7 +384,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
         box.appendChild(b);
       }).catch(function() {});
   }
-  initCalc();
+  initCalc(); initMarche();
   var token = (location.hash || '').replace(/^#/, '');
   if (!/^[0-9a-f]{64,96}$/.test(token)) { fail("Ce lien n'est pas valide. Demandez à votre conseiller de vous renvoyer le lien de votre compte rendu."); return; }
   fetch(SUPABASE_URL + '/rest/v1/rpc/vendeur_rapport', {
