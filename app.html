@@ -1036,6 +1036,14 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro"></div>
       <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" data-internal="1"></div>
     </div>
+    <div class="form-group appart-maison-only" style="margin-top:8px;">
+      <label>Le bien est-il en copropriété ?</label>
+      <div class="radio-group">
+        <label class="radio-item"><input type="radio" name="copro_statut" value="oui"> Oui</label>
+        <label class="radio-item"><input type="radio" name="copro_statut" value="non"> Non</label>
+      </div>
+      <p class="hint">Détermine la liste de documents proposée à l'acquéreur (PV d'AG, règlement de copropriété… ou documents d'une maison individuelle). Pré-rempli selon le type de bien : modifiez-le si besoin.</p>
+    </div>
     <div class="grid-2 terrain-only hidden">
       <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente_t"></div>
     </div>
@@ -1750,6 +1758,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
       </div>
     </div>
     <div class="card-body">
+      <label id="alerte-prefs" style="display:none;align-items:flex-start;gap:10px;margin-bottom:14px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;line-height:1.45;cursor:pointer;">
+        <input type="checkbox" id="alerte-cb" onchange="setAlertePref(this.checked)" style="width:auto;margin-top:3px;">
+        <span><b>🔔 Alertes par e-mail</b> : être prévenu dès qu'un acquéreur transmet une offre, demande des documents, simule son financement, donne son retour de visite ou rouvre la fiche pour la 3<sup>e</sup> fois. Envoi à l'adresse de votre profil, 10 alertes par jour maximum.</span>
+      </label>
+      <div id="callist-block" style="display:none;margin-bottom:18px;"></div>
       <div id="analytics-purge-block" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);">
         <span style="font-size:13px;color:var(--muted);">Purger les statistiques de plus de</span>
         <select id="analytics-purge-days" style="padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius);font-size:13px;">
@@ -2975,11 +2988,20 @@ function addPieceRow() { var t=document.getElementById('pieces_tbody'); if(t) t.
 // ═══════════════════════════════════════════════════════
 // STEP 2 — SWITCH TYPE
 // ═══════════════════════════════════════════════════════
+var _coproAuto = true;   // tant que l'agent n'a pas choisi lui-même, « copropriété » suit le type de bien
+function setCoproRadio(val) {
+  var r = document.querySelector('#page-2 input[type=radio][name="copro_statut"][value="' + val + '"]');
+  if (r) r.checked = true;
+}
+document.addEventListener('change', function(e) {
+  if (e.target && e.target.name === 'copro_statut') _coproAuto = false;
+});
 function switchType(type) {
   // Valeur inconnue (ex. "appartement" renvoyé par un import) : repli sur Appartement
   // plutôt qu'un état où aucune section propre au type n'est cohérente.
   if (type !== 'appart' && type !== 'maison' && type !== 'terrain') type = 'appart';
   currentType = type;
+  if (_coproAuto) setCoproRadio(type === 'appart' ? 'oui' : 'non');
   // Onglets actifs via data-type
   document.querySelectorAll('.type-tab').forEach(function(t) {
     t.classList.toggle('active', t.dataset.type === type);
@@ -3307,7 +3329,7 @@ function pricePosL(lang, pm2, med) {
 // Champs de collectBienData() autorisés dans le bloc <script id="expertimo-data"> du HTML publié.
 // Tout champ absent de cette liste est PRIVÉ (dont ref, fourchetBasse/Haute et _rawState).
 var PUBLIC_EMBED_KEYS = [
-  'type','etage','adresse','quartier','acheteur_prenom','acheteur_nom','annee','description',
+  'type','copro','etage','adresse','quartier','acheteur_prenom','acheteur_nom','annee','description',
   'surface','surfCarrez','pieces','dpe','prix','prixm2','mediane','tension','delai','loyer',
   'chargesCopro','chargesDetail','taxeFonciere','score','scorePrest','scoreSecteur','scoreQP','scoreEtat',
   'fort1','fort2','fort3','vig1','vig2','vig3','photo1','photo2','photo3','photo4','photo5',
@@ -4357,6 +4379,7 @@ function restoreRawFormState(d) {
       var r=document.querySelector('#page-2 input[type=radio][name="'+k.replace('radio_','')+'"][value="'+d[k]+'"]');
       if(r){
         r.checked=true;
+        if (k === 'radio_copro_statut' && d[k] !== ((d.type === 'appart' || !d.type) ? 'oui' : 'non')) _coproAuto = false;
         if (k === 'radio_travaux_ag') {
           var travauxAgDetailGroup = document.getElementById('travaux_ag_detail_group');
           if (travauxAgDetailGroup) travauxAgDetailGroup.style.display = (d[k] === 'oui') ? 'block' : 'none';
@@ -4468,6 +4491,11 @@ function collectBienData() {
   return {
     ref:           getV('ref_mandat')||'ref-mandat',
     type:          currentType,
+    copro:         (function() {
+      if (currentType === 'terrain') return 'non';
+      var r = document.querySelector('#page-2 input[type=radio][name="copro_statut"]:checked');
+      return r ? r.value : (currentType === 'appart' ? 'oui' : 'non');
+    })(),
     etage:         etage,
     adresse:       getV('adresse'),
     quartier:      getV('quartier'),
@@ -4565,6 +4593,7 @@ var CHAT_SPEC = [
     ['v', 'nb_wc_sep', 'WC séparés'],
     ['v', 'etage', 'Étage du bien'],
     ['r', 'ascenseur', 'Ascenseur'],
+    ['r', 'copro_statut', 'Bien en copropriété'],
     ['v', 'nb_etages', "Nombre d'étages de l'immeuble"],
     ['v', 'nb_etages_m', "Nombre d'étages"],
     ['v', 'annee_construction', 'Année de construction'],
@@ -5288,6 +5317,27 @@ function refreshStep4Summary() {
 var _analyticsGroups = [];   // groupes (client + bien) avec la liste des ids de lignes
 var _analyticsAuth   = null; // { url, key, token }
 
+async function loadAlertePref() {
+  var box = document.getElementById('alerte-prefs'); if (!box) return;
+  try {
+    var s = await window.privencyAuth.auth.getSession(), uid = s && s.data && s.data.session && s.data.session.user && s.data.session.user.id;
+    if (!uid) return;
+    var r = await window.privencyAuth.from('agent_notif_prefs').select('alertes_actives').eq('user_id', uid).maybeSingle();
+    if (r.error) return;   // table pas encore créée : la case reste masquée
+    document.getElementById('alerte-cb').checked = !!(r.data && r.data.alertes_actives);
+    box.style.display = 'flex';
+  } catch (e) {}
+}
+async function setAlertePref(on) {
+  var cb = document.getElementById('alerte-cb');
+  try {
+    var s = await window.privencyAuth.auth.getSession(), uid = s && s.data && s.data.session && s.data.session.user && s.data.session.user.id;
+    if (!uid) throw new Error('Session expirée');
+    var r = await window.privencyAuth.from('agent_notif_prefs').upsert({ user_id: uid, alertes_actives: !!on, updated_at: new Date().toISOString() });
+    if (r.error) throw new Error(r.error.message || 'Échec');
+    showToast(on ? '✅ Alertes activées.' : 'Alertes désactivées.');
+  } catch (e) { if (cb) cb.checked = !on; showToast('❌ ' + (e && e.message ? e.message : 'Échec'), true); }
+}
 async function loadAnalytics() {
   var status = document.getElementById('analytics-status');
   var wrap   = document.getElementById('analytics-table-wrap');
@@ -5349,7 +5399,7 @@ async function loadAnalytics() {
     try {
       var srows = [], soff = 0;
       while (true) {
-        var sr = await fetch(SUPABASE_URL + '/rest/v1/fiche_sessions?select=session_id,client_nom,bien_adresse,duree_sec,onglets'
+        var sr = await fetch(SUPABASE_URL + '/rest/v1/fiche_sessions?select=session_id,client_nom,bien_adresse,duree_sec,onglets,started_at'
           + '&order=started_at.desc&limit=' + PAGE + '&offset=' + soff, {
           headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
         });
@@ -5367,7 +5417,71 @@ async function loadAnalytics() {
         g2.nbSessions = (g2.nbSessions || 0) + 1;
         g2.dureeMax = Math.max(g2.dureeMax || 0, sx.duree_sec || 0);
         g2.onglets = g2.onglets || {};
+        try { var hh = parseInt(new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', hourCycle: 'h23' }).format(new Date(sx.started_at)), 10); var slot = hh >= 6 && hh < 12 ? 'le matin' : (hh >= 12 && hh < 18 ? 'l\u2019après-midi' : (hh >= 18 && hh < 23 ? 'le soir' : 'tard le soir')); g2.hours = g2.hours || {}; g2.hours[slot] = (g2.hours[slot] || 0) + 1; } catch (eh) {}
         Object.keys(sx.onglets || {}).forEach(function(k) { g2.onglets[k] = (g2.onglets[k] || 0) + sx.onglets[k]; });
+      });
+    } catch (e) {}
+
+    // Questions posées à l'assistant (table fiche_questions) — facultatif : si la table n'existe pas encore, rien ne change
+    try {
+      var qrows = [], qoff = 0;
+      while (true) {
+        var qr = await fetch(SUPABASE_URL + '/rest/v1/fiche_questions?select=id,client_nom,bien_adresse,question,created_at'
+          + '&order=created_at.desc&limit=' + PAGE + '&offset=' + qoff, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
+        });
+        if (!qr.ok) break;
+        var qchunk = await qr.json();
+        qrows = qrows.concat(qchunk);
+        if (qchunk.length < PAGE) break;
+        qoff += PAGE;
+      }
+      qrows.forEach(function(qx) {
+        var g3 = groups[(qx.client_nom || 'inconnu') + '|||' + (qx.bien_adresse || '—')];
+        if (!g3) return;
+        g3.questions = g3.questions || []; g3.questions.push({ id: qx.id, q: qx.question, at: qx.created_at });
+      });
+    } catch (e) {}
+
+    // Documents demandés par les acquéreurs (table fiche_demandes_documents) — facultatif, comme les questions
+    try {
+      var drows = [], doff = 0;
+      while (true) {
+        var dr = await fetch(SUPABASE_URL + '/rest/v1/fiche_demandes_documents?select=id,client_nom,bien_adresse,docs,note,created_at'
+          + '&order=created_at.desc&limit=' + PAGE + '&offset=' + doff, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
+        });
+        if (!dr.ok) break;
+        var dchunk = await dr.json();
+        drows = drows.concat(dchunk);
+        if (dchunk.length < PAGE) break;
+        doff += PAGE;
+      }
+      drows.forEach(function(dx) {
+        var g4 = groups[(dx.client_nom || 'inconnu') + '|||' + (dx.bien_adresse || '—')];
+        if (!g4) return;
+        g4.demandes = g4.demandes || []; g4.demandes.push({ id: dx.id, docs: dx.docs || [], note: dx.note || '', at: dx.created_at });
+      });
+    } catch (e) {}
+
+    // Retours de visite en un clic (table fiche_retours) — facultatif, comme les questions
+    try {
+      var rrows = [], roff = 0;
+      while (true) {
+        var rr = await fetch(SUPABASE_URL + '/rest/v1/fiche_retours?select=id,client_nom,bien_adresse,reponses,created_at'
+          + '&order=created_at.desc&limit=' + PAGE + '&offset=' + roff, {
+          headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + authToken }
+        });
+        if (!rr.ok) break;
+        var rchunk = await rr.json();
+        rrows = rrows.concat(rchunk);
+        if (rchunk.length < PAGE) break;
+        roff += PAGE;
+      }
+      rrows.forEach(function(rx) {
+        var g5 = groups[(rx.client_nom || 'inconnu') + '|||' + (rx.bien_adresse || '—')];
+        if (!g5 || !Array.isArray(rx.reponses) || !rx.reponses.length) return;
+        g5.retours = g5.retours || []; g5.retours.push({ id: rx.id, reponses: rx.reponses || [], at: rx.created_at });
       });
     } catch (e) {}
 
@@ -5376,10 +5490,137 @@ async function loadAnalytics() {
     });
 
     status.style.display = 'none';
+    try { renderCallList(); } catch (ecl) {}
+    loadAlertePref();
     renderAnalytics();
   } catch(err) {
     status.textContent = '❌ Erreur chargement : ' + err.message;
   }
+}
+
+// ── À rappeler aujourd'hui · silence · message adapté (calculé dans l'app, à partir des stats de l'agent) ──
+var _RETOUR_LBL = { coup_coeur: 'Un coup de cœur', prix: 'Le prix', travaux: 'Les travaux à prévoir', quartier: 'Le quartier', charges: 'Les charges', agencement: "L'agencement", financement: 'Son financement', reflechir: "Besoin d'y réfléchir" };
+function _clAddr(s) {
+  // bien_adresse = titre de la page : « 12 rue des Lilas, 91300 Massy · Espace Acheteur Privé · Expertimo »
+  var t = String(s || '').split(' · ')[0].replace(/\s*[-–|]\s*Espace.*$/i, '');
+  return t.replace(/[\s,(]*\b\d{5}\b.*$/, '').replace(/[\s,(–-]+$/, '').trim();
+}
+function _clStats(g, now) {
+  var DAY = 86400000, ev = g.events || {};
+  var visits = ev.fiche_ouverte || 0, minutes = (g.dureeTotal || 0) / 60;
+  var sim = (ev.credit_simule || 0) > 0, offre = (ev.offre_soumise || 0) > 0;
+  var docs = (g.demandes || []).length, qn = (g.questions || []).length, rt = (g.retours || []).length;
+  var score = Math.min(visits, 4) * 2 + Math.min(minutes, 15) / 1.5 + (sim ? 3 : 0) + (docs ? 4 : 0) + (qn ? 2 : 0) + (offre ? 6 : 0) + (rt ? 3 : 0);
+  var days = g.last ? Math.floor((now - new Date(g.last).getTime()) / DAY) : 999;
+  var reasons = [];
+  if (offre) reasons.push('a transmis une offre');
+  if (visits > 1) reasons.push('est revenu ' + visits + ' fois sur la fiche');
+  if (minutes >= 1) reasons.push(Math.round(minutes) + ' min de lecture');
+  if (sim) reasons.push('a simulé son financement');
+  if (docs) reasons.push('a demandé ' + g.demandes.reduce(function(s, d) { return s + d.docs.length; }, 0) + ' document(s)');
+  if (qn) reasons.push('a posé ' + qn + ' question(s) à l’assistant');
+  if (rt) reasons.push('retour de visite : ' + g.retours[g.retours.length - 1].reponses.map(function(c) { return (_RETOUR_LBL[c] || c).toLowerCase(); }).join(', '));
+  var slot = '', best = 0; Object.keys(g.hours || {}).forEach(function(k) { if (g.hours[k] > best) { best = g.hours[k]; slot = k; } });
+  if (best >= 2) reasons.push('consulte plutôt ' + slot);
+  return { score: score, days: days, reasons: reasons };
+}
+function renderCallList() {
+  var box = document.getElementById('callist-block'); if (!box) return;
+  var now = Date.now(), hot = [], quiet = [];
+  _analyticsGroups.forEach(function(g) {
+    var c = (g.client || '').trim().toLowerCase();
+    if (!c || c === 'inconnu' || c === 'anonyme') return;
+    var st = _clStats(g, now); st.g = g;
+    if (st.score < 7) return;
+    if (st.days <= 5) hot.push(st); else if (st.days <= 45) quiet.push(st);
+  });
+  hot.sort(function(x, y) { return y.score - x.score || (y.g.last || '').localeCompare(x.g.last || ''); });
+  quiet.sort(function(x, y) { return y.score - x.score; });
+  box.textContent = '';
+  if (!hot.length && !quiet.length) { box.style.display = 'none'; return; }
+  box.style.display = 'block';
+  function section(title, sub, items, silent) {
+    if (!items.length) return;
+    var h = document.createElement('div'); h.style.cssText = 'font-weight:700;font-size:14px;margin:0 0 2px;'; h.textContent = title; box.appendChild(h);
+    var s = document.createElement('div'); s.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;'; s.textContent = sub; box.appendChild(s);
+    items.slice(0, 8).forEach(function(st) {
+      var row = document.createElement('div'); row.className = 'callist-row';
+      row.style.cssText = 'display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;padding:10px 12px;margin-bottom:8px;background:#fff;border:1px solid var(--border);border-left:4px solid ' + (silent ? '#9CA3AF' : (st.score >= 14 ? '#0A6F4D' : '#C9A227')) + ';border-radius:var(--radius);';
+      var left = document.createElement('div'); left.style.cssText = 'min-width:0;flex:1 1 260px;';
+      var nm = document.createElement('div'); nm.style.cssText = 'font-weight:700;font-size:13.5px;'; nm.textContent = st.g.client + ' · ' + (st.score >= 14 ? 'très chaud' : 'intéressé'); left.appendChild(nm);
+      var ad = document.createElement('div'); ad.style.cssText = 'font-size:12px;color:var(--muted);'; ad.textContent = _clAddr(st.g.adresse) || st.g.adresse; left.appendChild(ad);
+      var rs = document.createElement('div'); rs.style.cssText = 'font-size:12.5px;margin-top:4px;line-height:1.45;white-space:normal;';
+      rs.textContent = (silent ? 'Sans ouverture depuis ' + st.days + ' jours. Dernière relance, ou passez à un autre acquéreur. ' : (st.days === 0 ? 'Actif aujourd’hui : ' : 'Dernière activité il y a ' + st.days + ' j : ')) + st.reasons.join(' · ');
+      left.appendChild(rs); row.appendChild(left);
+      var b = document.createElement('button'); b.className = 'btn btn-sm btn-outline'; b.textContent = '💬 Message adapté';
+      b.setAttribute('data-key', st.g.key); b.onclick = function() { clMessageDialog(this.getAttribute('data-key'), silent); };
+      row.appendChild(b); box.appendChild(row);
+    });
+  }
+  section('📞 À rappeler aujourd’hui', 'Acquéreurs identifiés les plus engagés, actifs ces 5 derniers jours.', hot, false);
+  if (hot.length && quiet.length) { var sp = document.createElement('div'); sp.style.height = '8px'; box.appendChild(sp); }
+  section('😶 Silence : à relancer ou à laisser', 'Étaient intéressés, plus aucune ouverture depuis plus de 5 jours.', quiet, true);
+}
+var _CL_ANGLES = {
+  aucun: ['Aucun angle particulier', ' Je reste disponible pour répondre à toutes vos questions.'],
+  budget: ['Financement : mise en relation avec un courtier', ' Si cela peut vous aider, je peux vous mettre en relation avec un courtier pour chiffrer votre projet.'],
+  visite: ['Seconde visite', ' Je peux organiser une seconde visite, avec un point précis sur les aspects techniques si vous le souhaitez.'],
+  quartier: ['Quartier : écoles, transports, commerces', ' Je peux aussi vous envoyer les informations sur les écoles, les transports et les commerces du secteur.'],
+  documents: ['Documents complémentaires', ' Je tiens à votre disposition les documents complémentaires dont vous auriez besoin.'],
+  prix: ['Prix : en parler franchement', ' Si le prix fait partie de votre réflexion, n\u2019hésitez pas : on peut en parler franchement.'],
+  travaux: ['Travaux : contact artisan', ' Je peux vous mettre en contact avec un artisan pour chiffrer les travaux éventuels.'],
+  coup_coeur: ['Revoir le bien ensemble', ' Je serais ravi de vous revoir sur place pour avancer ensemble.']
+};
+// Angle suggéré : uniquement d'après ce que l'acquéreur a dit lui-même (retour de visite) ; sinon aucun. L'agent peut en choisir un autre.
+function clSuggestAngle(g) {
+  var last = (g.retours && g.retours.length) ? g.retours[g.retours.length - 1].reponses : [];
+  if (last.indexOf('prix') !== -1) return 'prix';
+  if (last.indexOf('travaux') !== -1) return 'travaux';
+  if (last.indexOf('financement') !== -1) return 'budget';
+  if (last.indexOf('quartier') !== -1) return 'quartier';
+  if (last.indexOf('coup_coeur') !== -1) return 'coup_coeur';
+  return 'aucun';
+}
+function clBuildMessage(g, silent, angle) {
+  var prenom = (g.client || '').trim().split(/\s+/)[0] || '';
+  var me = ''; try { var pr = JSON.parse(PrivencyAuth.lsGet('_agent_profile') || '{}'); me = (pr.prenom || '').trim(); } catch (e) {}
+  var bien = _clAddr(g.adresse) || 'le bien';
+  var hello = 'Bonjour' + (prenom ? ' ' + prenom : '') + ', ' + (me ? 'c\u2019est ' + me + '. ' : '');
+  if (silent) return hello + 'Je me permets une dernière relance concernant le bien ' + bien + ' : est-il toujours d\u2019actualité pour vous ? Si ce n\u2019est plus le cas, dites-le-moi simplement, cela m\u2019aide à vous proposer d\u2019autres biens.';
+  var key = _CL_ANGLES[angle] ? angle : clSuggestAngle(g);
+  return hello + 'Avez-vous pu avancer dans votre réflexion sur le bien ' + bien + ' ?' + _CL_ANGLES[key][1];
+}
+function clMessageDialog(key, silent) {
+  var g = _analyticsGroups.filter(function(x) { return x.key === key; })[0]; if (!g) return;
+  var overlay = document.createElement('div');
+  overlay.id = 'cl-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:10000;';
+  var card = document.createElement('div'); card.className = 'card'; card.style.cssText = 'max-width:480px;width:92%;margin:0;max-height:90vh;overflow:auto;';
+  var head = document.createElement('div'); head.className = 'card-header'; head.textContent = '💬 Message pour ' + g.client;
+  var body = document.createElement('div'); body.className = 'card-body';
+  var hint = document.createElement('div'); hint.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;'; hint.textContent = 'Message proposé, à relire. Il ne cite jamais les rubriques consultées : l’angle suggéré ne vient que du retour de visite donné par l’acquéreur lui-même. Vous l’envoyez vous-même.'; body.appendChild(hint);
+  var sel = null;
+  if (!silent) {
+    sel = document.createElement('select'); sel.id = 'cl-angle'; sel.style.cssText = 'width:100%;margin-bottom:8px;font-size:13px;';
+    Object.keys(_CL_ANGLES).forEach(function(k) { var o = document.createElement('option'); o.value = k; o.textContent = _CL_ANGLES[k][0]; sel.appendChild(o); });
+    sel.value = clSuggestAngle(g); body.appendChild(sel);
+  }
+  var ta = document.createElement('textarea'); ta.id = 'cl-text'; ta.rows = 7; ta.style.cssText = 'width:100%;font-size:13.5px;'; ta.value = clBuildMessage(g, !!silent, sel ? sel.value : null); body.appendChild(ta);
+  if (sel) sel.onchange = function() { ta.value = clBuildMessage(g, false, sel.value); };
+  var row = document.createElement('div'); row.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;';
+  function close() { overlay.remove(); }
+  var bc = document.createElement('button'); bc.className = 'btn btn-outline'; bc.textContent = 'Fermer'; bc.onclick = close; row.appendChild(bc);
+  var sms = document.createElement('a'); sms.className = 'btn btn-outline'; sms.textContent = '📱 Ouvrir dans Messages'; sms.id = 'cl-sms'; sms.href = '#';
+  sms.onclick = function() { sms.href = 'sms:?&body=' + encodeURIComponent(ta.value); return true; }; row.appendChild(sms);
+  var cp = document.createElement('button'); cp.className = 'btn btn-primary'; cp.textContent = '📋 Copier'; cp.id = 'cl-copy';
+  cp.onclick = function() {
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(ta.value).then(function() { showToast('✅ Message copié.'); }, function() { ta.focus(); ta.select(); showToast('Copiez le texte sélectionné.'); });
+    else { ta.focus(); ta.select(); showToast('Copiez le texte sélectionné.'); }
+  };
+  row.appendChild(cp); body.appendChild(row);
+  card.appendChild(head); card.appendChild(body); overlay.appendChild(card);
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+  document.body.appendChild(overlay);
 }
 
 function renderAnalytics() {
@@ -5435,6 +5676,34 @@ function renderAnalytics() {
         + ' · max ' + fmtDuree(g.dureeMax) + (topTab ? ' · surtout « ' + esc(topTab) + ' »' : '') + '</div>';
     }
 
+    var qHtml = '';
+    if (g.questions && g.questions.length) {
+      qHtml = '<details style="margin-top:6px;"><summary style="cursor:pointer;font-size:12px;font-weight:600;color:var(--primary);">💬 ' + g.questions.length + ' question' + (g.questions.length > 1 ? 's' : '') + ' posée' + (g.questions.length > 1 ? 's' : '') + ' à l\'assistant</summary>'
+        + '<ul style="margin:6px 0 0;padding-left:18px;font-size:12px;line-height:1.5;">'
+        + g.questions.slice().sort(function(a, b) { return (a.at || '').localeCompare(b.at || ''); }).map(function(x) {
+            var d = ''; try { d = new Date(x.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch (e) {}
+            return '<li style="white-space:normal;"><span style="color:var(--muted);">' + esc(d) + '</span> — ' + esc(x.q) + '</li>';
+          }).join('')
+        + '</ul></details>';
+    }
+
+    if (g.retours && g.retours.length) {
+      qHtml += g.retours.slice().sort(function(x, y) { return (x.at || '').localeCompare(y.at || ''); }).map(function(rt) {
+        var d = ''; try { d = new Date(rt.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch (e) {}
+        return '<div style="margin-top:6px;font-size:12px;white-space:normal;">🗣️ <span style="font-weight:700;">Retour de visite</span> <span style="color:var(--muted);">' + esc(d) + '</span> : '
+          + rt.reponses.map(function(c) { return esc(_RETOUR_LBL[c] || c); }).join(', ') + '</div>';
+      }).join('');
+    }
+
+    if (g.demandes && g.demandes.length) {
+      qHtml += g.demandes.slice().sort(function(a, b) { return (a.at || '').localeCompare(b.at || ''); }).map(function(dm) {
+        var d = ''; try { d = new Date(dm.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch (e) {}
+        return '<details style="margin-top:6px;"><summary style="cursor:pointer;font-size:12px;font-weight:600;color:var(--primary);">📎 ' + dm.docs.length + ' document' + (dm.docs.length > 1 ? 's' : '') + ' demandé' + (dm.docs.length > 1 ? 's' : '') + ' <span style="font-weight:400;color:var(--muted);">(' + esc(d) + ')</span></summary>'
+          + '<ul style="margin:6px 0 0;padding-left:18px;font-size:12px;line-height:1.5;">' + dm.docs.map(function(x) { return '<li style="white-space:normal;">' + esc(x) + '</li>'; }).join('') + '</ul>'
+          + (dm.note ? '<div style="font-size:12px;margin-top:4px;white-space:normal;"><i>' + esc(dm.note) + '</i></div>' : '') + '</details>';
+      }).join('');
+    }
+
     tr.innerHTML =
       '<td style="padding:9px 12px;"><input type="checkbox" class="analytics-cb" data-key="' + esc(g.key) + '" onchange="updateAnalyticsDelBtn()" style="width:auto;cursor:pointer;"></td>'
       + '<td style="padding:9px 12px;font-weight:600;">' + esc(g.client) + '</td>'
@@ -5442,7 +5711,7 @@ function renderAnalytics() {
       + '<td style="padding:9px 12px;text-align:center;"><span style="display:inline-block;background:var(--primary);color:#fff;border-radius:50%;min-width:28px;height:28px;line-height:28px;font-weight:700;font-size:13px;">' + g.count + '</span></td>'
       + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + dureeHtml + '</td>'
       + '<td style="padding:9px 12px;font-size:12px;white-space:nowrap;">' + esc(dateStr) + '</td>'
-      + '<td style="padding:9px 12px;">' + evHtml + '</td>'
+      + '<td style="padding:9px 12px;">' + evHtml + qHtml + '</td>'
       + '<td style="padding:9px 12px;text-align:center;"><button class="btn btn-sm btn-outline" title="Supprimer cette ligne" data-key="' + esc(g.key) + '" onclick="deleteAnalyticsGroups([this.dataset.key])">🗑️</button></td>';
     tbody.appendChild(tr);
   });
@@ -5502,6 +5771,34 @@ async function deleteAnalyticsGroups(keys) {
     for (var j = 0; j < sids.length; j += 50) {
       try {
         await fetch(_analyticsAuth.url + '/rest/v1/fiche_sessions?session_id=in.(' + sids.slice(j, j + 50).map(encodeURIComponent).join(',') + ')', {
+          method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
+        });
+      } catch (e) {}
+    }
+    // Supprime aussi les questions posées à l'assistant (meilleur effort)
+    var qids = [];
+    groups.forEach(function(g) { (g.questions || []).forEach(function(x) { qids.push(x.id); }); });
+    for (var k = 0; k < qids.length; k += 50) {
+      try {
+        await fetch(_analyticsAuth.url + '/rest/v1/fiche_questions?id=in.(' + qids.slice(k, k + 50).map(encodeURIComponent).join(',') + ')', {
+          method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
+        });
+      } catch (e) {}
+    }
+    var rid = [];
+    groups.forEach(function(g) { (g.retours || []).forEach(function(x) { rid.push(x.id); }); });
+    for (var n2 = 0; n2 < rid.length; n2 += 50) {
+      try {
+        await fetch(_analyticsAuth.url + '/rest/v1/fiche_retours?id=in.(' + rid.slice(n2, n2 + 50).map(encodeURIComponent).join(',') + ')', {
+          method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
+        });
+      } catch (e) {}
+    }
+    var did = [];
+    groups.forEach(function(g) { (g.demandes || []).forEach(function(x) { did.push(x.id); }); });
+    for (var m = 0; m < did.length; m += 50) {
+      try {
+        await fetch(_analyticsAuth.url + '/rest/v1/fiche_demandes_documents?id=in.(' + did.slice(m, m + 50).map(encodeURIComponent).join(',') + ')', {
           method: 'DELETE', headers: { 'apikey': _analyticsAuth.key, 'Authorization': 'Bearer ' + _analyticsAuth.token }
         });
       } catch (e) {}
@@ -5605,6 +5902,9 @@ async function purgerStatsAnciennes() {
       throw new Error('HTTP ' + delRes.status + (errBody ? ' : ' + errBody : ''));
     }
     try { await fetch(SUPABASE_URL + '/rest/v1/fiche_sessions?started_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
+    try { await fetch(SUPABASE_URL + '/rest/v1/fiche_questions?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
+    try { await fetch(SUPABASE_URL + '/rest/v1/fiche_demandes_documents?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
+    try { await fetch(SUPABASE_URL + '/rest/v1/fiche_retours?created_at=lt.' + encodeURIComponent(cutoffIso), { method: 'DELETE', headers: headers }); } catch (e) {}
     showToast('✅ ' + total + ' ligne(s) de statistiques supprimée(s).');
     loadAnalytics();
   } catch (err) {
@@ -5680,6 +5980,11 @@ async function loadFiches() {
         +           'onclick="modifierFiche(\'' + safeName + '\',\'' + safeSha + '\',\'' + safeDl + '\')">'
         +     '✏️ Modifier'
         +   '</button>'
+        +   '<button class="btn btn-sm btn-outline" style="margin-right:6px;" '
+        +           'data-fname="' + esc(f.filename) + '" '
+        +           'onclick="vendeurDialog(this.getAttribute(\'data-fname\'))">'
+        +     '🏠 Vendeur'
+        +   '</button>'
         +   '<button class="btn btn-sm btn-outline" '
         +           'data-fname="' + esc(f.filename) + '" '
         +           'onclick="supprimerFiche(this)">'
@@ -5694,6 +5999,133 @@ async function loadFiches() {
   } catch(err) {
     status.textContent = '❌ ' + err.message;
   }
+}
+
+// ── Espace vendeur : lien privé vers le compte rendu (acquéreurs anonymisés) ──
+async function vendeurDialog(fname) {
+  var db = window.privencyAuth;
+  if (!db || !fname) { showToast('❌ Session indisponible, reconnectez-vous.', true); return; }
+  var sess = await db.auth.getSession();
+  var uid = sess && sess.data && sess.data.session && sess.data.session.user && sess.data.session.user.id;
+  if (!uid) { showToast('❌ Session expirée, reconnectez-vous.', true); return; }
+
+  var overlay = document.createElement('div');
+  overlay.id = 'vendeur-overlay';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:10000;';
+  var card = document.createElement('div'); card.className = 'card'; card.style.cssText = 'max-width:460px;width:92%;margin:0;max-height:90vh;overflow:auto;';
+  var head = document.createElement('div'); head.className = 'card-header'; head.textContent = '🏠 Compte rendu vendeur';
+  var body = document.createElement('div'); body.className = 'card-body';
+  card.appendChild(head); card.appendChild(body); overlay.appendChild(card); document.body.appendChild(overlay);
+  function close() { overlay.remove(); }
+  overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
+  function txt(t, css) { var d = document.createElement('div'); d.style.cssText = css || 'font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5;'; d.textContent = t; return d; }
+  function btn(label, cls, fn) { var b = document.createElement('button'); b.className = 'btn ' + cls; b.textContent = label; b.onclick = fn; return b; }
+
+  async function draw() {
+    body.textContent = '';
+    body.appendChild(txt('Chargement…'));
+    var hasDigest = true;
+    var r = await db.from('vendeur_liens').select('token,note,note_at,revoked_at,digest_email')
+      .eq('filename', fname).is('revoked_at', null).limit(1);
+    if (r.error) { hasDigest = false; r = await db.from('vendeur_liens').select('token,note,note_at,revoked_at').eq('filename', fname).is('revoked_at', null).limit(1); }   // colonnes du lot 6 pas encore créées
+    body.textContent = '';
+    if (r.error) { body.appendChild(txt('❌ Fonction non activée ou indisponible (' + (r.error.message || 'erreur') + ').', 'font-size:12px;color:var(--danger);margin-bottom:10px;')); body.appendChild(btn('Fermer', 'btn-outline', close)); return; }
+    var lien = r.data && r.data[0];
+    var actions = document.createElement('div'); actions.style.cssText = 'display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px;';
+    if (!lien) {
+      body.appendChild(txt("Créez un lien privé à envoyer à votre vendeur : il y suit l'activité sur son bien (ouvertures, documents demandés, rubriques consultées), semaine après semaine. Les acquéreurs sont désignés par une lettre : ni nom, ni email. Ce lien n'apparaît jamais sur la fiche des acquéreurs."));
+      actions.appendChild(btn('Fermer', 'btn-outline', close));
+      actions.appendChild(btn('Créer le lien vendeur', 'btn-primary', async function(e) {
+        e.target.disabled = true;
+        var ins = await db.from('vendeur_liens').insert({ agent_user_id: uid, filename: fname });
+        if (ins.error) { showToast('❌ ' + (ins.error.message || 'Création impossible'), true); e.target.disabled = false; return; }
+        draw();
+      }));
+      body.appendChild(actions); return;
+    }
+    var url = PRIVENCY_API_BASE + '/vendeur.html#' + lien.token;
+    body.appendChild(txt('Lien privé (à envoyer uniquement à votre vendeur) :', 'font-size:12px;font-weight:600;margin-bottom:6px;'));
+    var inp = document.createElement('input'); inp.type = 'text'; inp.readOnly = true; inp.id = 'vendeur-url'; inp.value = url; inp.style.cssText = 'width:100%;font-size:11px;margin-bottom:8px;';
+    inp.onfocus = function() { inp.select(); };
+    body.appendChild(inp);
+    body.appendChild(btn('📋 Copier le lien', 'btn-sm btn-outline', function() {
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(function() { showToast('✅ Lien copié.'); }, function() { inp.select(); });
+      else inp.select();
+    }));
+    var pt = btn('💬 Copier le point de la semaine', 'btn-sm btn-outline', async function(e) {
+      // Message prêt à envoyer (SMS / WhatsApp / mail) : de la matière concrète pour relancer le vendeur.
+      e.target.disabled = true;
+      try {
+        var rr = await fetch('https://hhqcumnatnslfjpsrmgb.supabase.co/rest/v1/rpc/vendeur_rapport', { method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY', 'Authorization': 'Bearer ' + ('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY') },
+          body: JSON.stringify({ p_token: lien.token }) });
+        var rj = await rr.json();
+        if (!rj || rj.ok !== true) throw new Error('rapport indisponible');
+        var L = ['Bonjour, voici le point sur votre bien cette semaine :', '• ' + rj.semaine.visites + ' ouverture' + (rj.semaine.visites > 1 ? 's' : '') + ' de la fiche (' + rj.semaine.visites_prec + ' la semaine précédente), ' + rj.totaux.acquereurs + ' acquéreur' + (rj.totaux.acquereurs > 1 ? 's' : '') + ' identifié' + (rj.totaux.acquereurs > 1 ? 's' : '') + ' au total'];
+        var T = { simulation: 'a simulé son financement', documents: 'a demandé des documents', question: 'a posé une question', rubrique: 'a consulté une rubrique du dossier', ouverture: 'a ouvert la fiche' };
+        (rj.activite || []).filter(function(x) { return x.type !== 'ouverture'; }).slice(0, 4).forEach(function(x) {
+          var d = ''; try { var q = String(x.jour).split('-'); d = ' (' + new Intl.DateTimeFormat('fr-FR', { timeZone: 'UTC', weekday: 'long' }).format(new Date(Date.UTC(+q[0], +q[1] - 1, +q[2], 12))) + ' ' + q[2] + '/' + q[1] + ', ' + (x.moment === 'matin' ? 'matin' : 'après-midi') + ')'; } catch (er) {}
+          L.push('• Acquéreur ' + x.lettre + ' ' + (T[x.type] || 'est revenu sur la fiche') + (x.type === 'documents' && x.detail ? ' : ' + x.detail : '') + d);
+        });
+        L.push('Le détail complet, mis à jour en continu : ' + url);
+        var msg = L.join('\n');
+        var copied = false;
+        try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(msg); copied = true; } } catch (er2) {}
+        if (copied) showToast('✅ Message copié : collez-le dans un SMS, WhatsApp ou mail.');
+        else {
+          // Certains navigateurs (iPhone) refusent la copie automatique : le message reste sélectionnable ici.
+          var box = body.querySelector('#vendeur-msg') || document.createElement('textarea');
+          box.id = 'vendeur-msg'; box.readOnly = true; box.rows = 7; box.style.cssText = 'width:100%;font-size:12px;margin-top:10px;'; box.value = msg;
+          if (!box.parentNode) e.target.parentNode.insertBefore(box, e.target.nextSibling);
+          box.focus(); box.select(); showToast('Copiez le message ci-dessous (appui long → Copier).');
+        }
+      } catch (er) { showToast('❌ Impossible de préparer le message.', true); }
+      e.target.disabled = false;
+    });
+    pt.style.marginLeft = '8px';
+    body.appendChild(pt);
+    var lab = document.createElement('div'); lab.style.cssText = 'font-size:12px;font-weight:600;margin:14px 0 6px;'; lab.textContent = 'Votre mot pour le vendeur (facultatif, 600 caractères max)';
+    body.appendChild(lab);
+    var ta = document.createElement('textarea'); ta.id = 'vendeur-note'; ta.maxLength = 600; ta.rows = 4; ta.style.cssText = 'width:100%;font-size:13px;'; ta.value = lien.note || '';
+    ta.placeholder = 'Ex : Belle semaine, deux visites prévues jeudi. On en reparle vendredi.';
+    body.appendChild(ta);
+    var emIn = null, emOk = null;
+    if (hasDigest) {
+      var lab2 = document.createElement('div'); lab2.style.cssText = 'font-size:12px;font-weight:600;margin:14px 0 6px;'; lab2.textContent = 'Point automatique chaque lundi par e-mail (facultatif)'; body.appendChild(lab2);
+      emIn = document.createElement('input'); emIn.type = 'email'; emIn.id = 'vendeur-email'; emIn.maxLength = 254; emIn.placeholder = 'E-mail du vendeur'; emIn.value = lien.digest_email || ''; emIn.style.cssText = 'width:100%;font-size:13px;margin-bottom:6px;'; body.appendChild(emIn);
+      var lbl3 = document.createElement('label'); lbl3.style.cssText = 'display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.45;color:var(--muted);';
+      emOk = document.createElement('input'); emOk.type = 'checkbox'; emOk.id = 'vendeur-accord'; emOk.checked = !!lien.digest_email; emOk.style.cssText = 'width:auto;margin-top:2px;';
+      var sp3 = document.createElement('span'); sp3.textContent = "Le vendeur est d'accord pour recevoir ce point par e-mail (ouvertures de la semaine, démarches des acquéreurs sous une lettre, jamais de nom). Il peut s'arrêter d'un clic depuis son compte rendu.";
+      lbl3.appendChild(emOk); lbl3.appendChild(sp3); body.appendChild(lbl3);
+    }
+    actions.appendChild(btn('Fermer', 'btn-outline', close));
+    actions.appendChild(btn('Arrêter le lien', 'btn-outline', async function(e) {
+      e.target.disabled = true;
+      var up = await db.from('vendeur_liens').update({ revoked_at: new Date().toISOString() }).eq('token', lien.token);
+      if (up.error) { showToast('❌ ' + (up.error.message || 'Échec'), true); e.target.disabled = false; return; }
+      showToast('✅ Lien désactivé.'); draw();
+    }));
+    var save = btn('Enregistrer', 'btn-primary', async function(e) {
+      e.target.disabled = true;
+      var n = ta.value.trim().slice(0, 600);
+      var patch = { note: n || null, note_at: n ? new Date().toISOString() : null };
+      if (emIn) {
+        var em = emIn.value.trim();
+        if (em && !/^[^\s@<>"',;]+@[^\s@<>"',;]+\.[^\s@<>"',;]+$/.test(em)) { showToast("❌ Adresse e-mail du vendeur invalide.", true); e.target.disabled = false; return; }
+        if (em && !emOk.checked) { showToast("❌ Cochez l'accord du vendeur pour activer l'envoi.", true); e.target.disabled = false; return; }
+        if (em !== (lien.digest_email || '')) { patch.digest_email = em || null; patch.digest_consent_at = em ? new Date().toISOString() : null; }
+      }
+      var up = await db.from('vendeur_liens').update(patch).eq('token', lien.token);
+      e.target.disabled = false;
+      if (up.error) { showToast(/optout/.test(up.error.message || '') ? '❌ Le vendeur s\'est désinscrit du point par e-mail : il doit en refaire la demande (nouveau lien).' : '❌ ' + (up.error.message || 'Échec'), true); return; }
+      if ('digest_email' in patch) lien.digest_email = patch.digest_email;
+      showToast(emIn && emIn.value.trim() ? '✅ Enregistré : le vendeur recevra le point chaque lundi.' : '✅ Enregistré.');
+    });
+    save.id = 'vendeur-save';
+    actions.appendChild(save);
+    body.appendChild(actions);
+  }
+  draw();
 }
 
 async function supprimerFiche(btn) {

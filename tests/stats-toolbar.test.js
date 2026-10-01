@@ -13,7 +13,7 @@ const { JSDOM, VirtualConsole } = require('jsdom');
     w.scrollTo = () => {}; w.confirm = () => true;
     w.fetch = async (url, opt) => {
       calls.push((opt && opt.method || 'GET') + ' ' + url);
-      if (url.includes('fiche_sessions')) return { ok: true, status: 200, json: async () => [] };   // durées de visite : table séparée, vide dans ce test
+      if (url.includes('fiche_sessions') || url.includes('fiche_questions') || url.includes('fiche_demandes_documents') || url.includes('fiche_retours')) return { ok: true, status: 200, json: async () => [] };   // durées de visite : table séparée, vide dans ce test
       if (opt && opt.method === 'DELETE') { const ids = decodeURIComponent(url.match(/id=in\.\(([^)]*)\)/)[1]).split(','); deleted = deleted.concat(ids); ids.forEach(id => { const i = rows.findIndex(r => r.id === id); if (i >= 0) rows.splice(i, 1); }); return { ok: true, status: 200, json: async () => ids.map(id => ({ id })) }; }
       const off = +(url.match(/offset=(\d+)/) || [0, 0])[1], lim = +(url.match(/limit=(\d+)/) || [0, 1000])[1];
       return { ok: true, status: 200, json: async () => rows.slice(off, off + lim) };
