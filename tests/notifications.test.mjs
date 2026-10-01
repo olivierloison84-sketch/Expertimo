@@ -61,4 +61,9 @@ assert(d.rpcs.filter(x => x[0] === 'notif_digest_marque').length === 1, 'marqué
 assert(!/Belle semaine/.test(buildDigest({ ...rap, note_at: '2026-09-01T00:00:00Z' }, tok, new Date('2026-10-05T06:00:00Z')).html), 'mot de l\'agent périmé non repris');
 assert(/Aucune démarche notable/.test(buildDigest({ ...rap, activite: [] }, tok, new Date('2026-10-05T06:00:00Z')).html), 'semaine calme : message honnête');
 assert.strictEqual(esc(`<a href="x">&'`), '&lt;a href=&quot;x&quot;&gt;&amp;&#39;'); assert.strictEqual(clean('a\r\nb<c>'), 'a b c');
+{ const withName = buildDigest(rap, tok, new Date('2026-10-05T06:00:00Z'), 'Graziella <b>H</b>'), without = buildDigest(rap, tok, new Date('2026-10-05T06:00:00Z'));
+  assert(/Bonjour Graziella b H b,/.test(withName.html) && !/<b>H/.test(withName.html), 'point du lundi personnalisé, caractères spéciaux retirés du nom');
+  assert(!/Bonjour/.test(without.html), 'sans nom : version habituelle');
+  d = deps({ digests: [{ token: tok, email: 'v@x.fr' }], rapport: rap }); const dr2 = d.db.rpc; d.db.rpc = async (fn, a) => fn === 'vendeur_proprio' ? { data: 'Graziella Horrelbecke' } : dr2(fn, a);
+  await handle(req('digest'), d); assert(/Bonjour Graziella Horrelbecke,/.test(d.sent[0].html), 'handler : nom du propriétaire repris'); }
 console.log('OK notifications');

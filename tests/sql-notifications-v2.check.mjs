@@ -80,4 +80,11 @@ ok((await rs()).length === 0, 'aucune activité : aucun résumé envoyé');
 await ev('Pia', 'fiche_ouverte', 60 * 24 * 10); await ev('Pia', 'fiche_ouverte', 60 * 24 * 9); await ev('Pia', 'fiche_ouverte', 60 * 24 * 8); await sess('Pia', 600, 60 * 24 * 9);
 await db.exec(`insert into public.fiche_views(client_nom, evenement, fiche_path, created_at) values ('Pia','credit_simule','${P}', now() - interval '9 days')`);
 r = await rs(); ok(r.length === 1 && r[0].silences.length === 1 && r[0].silences[0].client === 'Pia' && r[0].silences[0].jours >= 8 && r[0].chauds.length === 0, 'silence détecté : ' + JSON.stringify(r[0] && r[0].silences));
+// nom du propriétaire (vendeur_proprio)
+await db.exec(rd('supabase-fiche-private.sql')); await db.exec(rd('supabase-vendeur-proprio.sql'));
+await db.exec(`insert into public.vendeur_liens(agent_user_id, filename, token) values ('${A1}','a-FINAL.html','${'c'.repeat(96)}'), ('${A1}','b2-FINAL.html','${'d'.repeat(96)}');
+  insert into public.fiche_private(agent_user_id, filename, data) values ('${A1}','a-FINAL.html','{"_rawState":{"proprio_prenom":" Graziella ","proprio_nom":"Horrelbecke"}}'), ('${A1}','b2-FINAL.html','{"_rawState":{}}');`);
+const pn = async t => { await db.exec(`reset role; set role anon`); const r = (await db.query(`select public.vendeur_proprio($1) as n`, [t])).rows[0].n; await db.exec(`reset role`); return r; };
+ok(await pn('c'.repeat(96)) === 'Graziella Horrelbecke', 'vendeur_proprio : prénom + nom'); ok(await pn('d'.repeat(96)) === null, 'nom non saisi : NULL'); ok(await pn('e'.repeat(96)) === null && await pn('x') === null, 'jeton inconnu / invalide : NULL');
+await db.exec(`update public.vendeur_liens set revoked_at = now() where token = '${'c'.repeat(96)}'`); ok(await pn('c'.repeat(96)) === null, 'lien arrêté : NULL');
 console.log(bad ? bad + ' échec(s)' : 'OK sql notifications v2');

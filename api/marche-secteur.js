@@ -20,17 +20,26 @@ function limite(ip) {
 }
 
 // « 41 rue du four à pain 91160 longjumeau » -> commune (code Insee, nom, code postal) via la Géoplateforme (IGN)
-async function geocoder(adresse) {
-  const m = adresse.match(/\b(\d{5})\b\s*(.*)$/);
-  if (!m) return null; // sans code postal on ne devine pas la commune (et la rue ne part jamais chez le géocodeur)
-  const q = (m[1] + ' ' + (m[2] || '')).trim();
+async function chercherCommune(q, cp) {
   const r = await fetch('https://data.geopf.fr/geocodage/search?type=municipality&limit=1&q=' + encodeURIComponent(q), { signal: timeout(8000) });
   if (!r.ok) return null;
   const j = await r.json();
   const p = j && j.features && j.features[0] && j.features[0].properties;
-  if (!p || !p.citycode || !(p.score > 0.5)) return null;
-  const cp = m[1];
+  if (!p || !p.citycode || !(p.score > 0.5) || String(p.postcode || '').indexOf(cp) === -1) return null;   // un mot du quartier ne doit pas faire « deviner » une autre commune
   return { code: M.codeDvf(p.citycode, cp), codeInsee: p.citycode, nom: p.city || p.name, cp };
+}
+async function geocoder(adresse) {
+  const m = adresse.match(/\b(\d{5})\b\s*(.*)$/);
+  if (!m) return null; // sans code postal on ne devine pas la commune (et la rue ne part jamais chez le géocodeur)
+  const cp = m[1];
+  // Paris, Lyon, Marseille : le code postal donne directement l'arrondissement (le DVF est publié par arrondissement)
+  let a;
+  if ((a = /^750(0[1-9]|1\d|20)$/.exec(cp))) return { code: '751' + cp.slice(3), codeInsee: '75056', nom: 'Paris ' + parseInt(cp.slice(3), 10) + 'e', cp };
+  if ((a = /^6900([1-9])$/.exec(cp))) return { code: '6938' + a[1], codeInsee: '69123', nom: 'Lyon ' + a[1] + 'e', cp };
+  if ((a = /^130(0[1-9]|1[0-6])$/.exec(cp))) return { code: '132' + cp.slice(3), codeInsee: '13055', nom: 'Marseille ' + parseInt(cp.slice(3), 10) + 'e', cp };
+  // le texte après le code postal est la commune... ou un quartier : si cela ne donne rien de sûr, on se rabat sur le code postal seul
+  const rest = (m[2] || '').trim();
+  return (rest && await chercherCommune(cp + ' ' + rest, cp)) || await chercherCommune(cp, cp);
 }
 
 async function ventesCommune(code) {

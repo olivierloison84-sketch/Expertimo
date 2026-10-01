@@ -67,7 +67,7 @@ function activiteLigne(a) {
 }
 
 // rapport = résultat de vendeur_rapport(jeton) ; now = Date (injectée pour les tests)
-export function buildDigest(rapport, token, now = new Date()) {
+export function buildDigest(rapport, token, now = new Date(), proprio = null) {
   const ag = rapport.agent || {}, s = rapport.semaine || {}, t = rapport.totaux || {};
   const cutoff = new Date(now.getTime() - 8 * 86400000).toISOString().slice(0, 10);
   const lignes = (rapport.activite || []).filter(a => String(a.jour) >= cutoff).map(activiteLigne).filter(Boolean).slice(0, 6);
@@ -75,7 +75,8 @@ export function buildDigest(rapport, token, now = new Date()) {
   const bien = clean(rapport.bien, 120) || 'votre bien';
   const noteRecente = rapport.note && rapport.note_at && (now.getTime() - new Date(rapport.note_at).getTime()) < 8 * 86400000;
   const delta = (s.visites || 0) - (s.visites_prec || 0);
-  let h = '<p style="font-size:16px;font-weight:700;margin:0 0 4px;">Le point de la semaine sur votre bien</p><p style="margin:0 0 14px;color:#666;">' + esc(bien) + '</p>';
+  const salut = clean(proprio, 100).replace(/[^\p{L}\p{N} .'’-]/gu, '').trim();   // nom du propriétaire saisi par l'agent ; sans lui, la version habituelle
+  let h = (salut ? '<p style="margin:0 0 10px;">Bonjour ' + esc(salut) + ',</p>' : '') + '<p style="font-size:16px;font-weight:700;margin:0 0 4px;">Le point de la semaine sur votre bien</p><p style="margin:0 0 14px;color:#666;">' + esc(bien) + '</p>';
   h += '<p style="margin:0 0 10px;"><b style="font-size:20px;">' + Number(s.visites || 0) + '</b> ouverture' + ((s.visites || 0) > 1 ? 's' : '') + ' de la fiche cette semaine'
     + (s.visites_prec != null ? ' (' + (delta > 0 ? '+' : '') + delta + ' par rapport à la semaine précédente)' : '') + ', par <b>' + Number(s.acquereurs || 0) + '</b> acquéreur' + ((s.acquereurs || 0) > 1 ? 's' : '') + ' identifié' + ((s.acquereurs || 0) > 1 ? 's' : '') + '.</p>';
   if (lignes.length) h += '<p style="margin:14px 0 6px;font-weight:700;">Ce qui s’est passé</p><ul style="margin:0;padding-left:18px;">' + lignes.map(l => '<li><span style="color:#888;">' + esc(l.when) + ' — </span>' + esc(l.text) + '</li>').join('') + '</ul>';

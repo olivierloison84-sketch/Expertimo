@@ -64,7 +64,8 @@ export async function handle(req, deps) {
       if (!validEmail(l.email)) { failed++; continue; }
       const { data: rap } = await deps.db.rpc('vendeur_rapport', { p_token: l.token });
       if (!rap || rap.ok !== true) { failed++; continue; }
-      const mail = buildDigest(rap, l.token, deps.now ? deps.now() : new Date());
+      let proprio = null; try { const pr = await deps.db.rpc('vendeur_proprio', { p_token: l.token }); proprio = pr && typeof pr.data === 'string' ? pr.data : null; } catch (e) {}
+      const mail = buildDigest(rap, l.token, deps.now ? deps.now() : new Date(), proprio);
       let ok = false;
       try {
         const p = { from: mail.from, to: [l.email], subject: mail.subject, html: mail.html };
