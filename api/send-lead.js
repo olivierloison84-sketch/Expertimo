@@ -28,6 +28,8 @@ let agentLookup = async function(email) {
   return !!(data && data.length);
 };
 async function agentConnu(email) {
+  // Seuls des caractères ordinaires : ni joker (* % _), ni virgule, ni chevron dans la recherche.
+  if (!/^[A-Za-z0-9._+\-]+@[A-Za-z0-9.\-]+$/.test(email)) return false;
   const k = email.toLowerCase();
   // Adresses autorisées en plus des agents inscrits (anciens agents hors Privency) : variable Vercel LEAD_EXTRA_RECIPIENTS, séparées par des virgules.
   if (String(process.env.LEAD_EXTRA_RECIPIENTS || '').toLowerCase().split(',').map(function(x) { return x.trim(); }).indexOf(k) !== -1) return true;
@@ -73,7 +75,7 @@ function cleanDocs(docs) {
   return out;
 }
 
-function buildHtml(body, isOffre, docsList) {
+function buildHtml(body, isOffre, docsList, intended) {
   var isList = !isOffre && docsList && docsList.length > 0;
   var rows = isOffre
     ? [
@@ -95,6 +97,7 @@ function buildHtml(body, isOffre, docsList) {
   return '<div style="font-family:Arial,sans-serif;font-size:14px;color:#222;">'
     + '<h2 style="margin:0 0 12px;">' + (isOffre ? 'Nouvelle offre reçue' : (isList ? 'Documents souhaités' : 'Demande de documents')) + '</h2>'
     + '<table style="border-collapse:collapse;margin-bottom:16px;">'
+    + row('Destinataire prévu (non inscrit : message redirigé)', intended)
     + row('Bien', body.bien)
     + row('Référence', body.reference)
     + rows.join('')
@@ -138,12 +141,12 @@ module.exports = async function handler(req, res) {
     nom: flat(raw.nom, 100), email: flat(raw.email, 254), bien: flat(raw.bien, 200), montant: flat(raw.montant, 20),
     agentEmail: flat(raw.agentEmail, 254), type: flat(raw.type, 30),
     financement: flat(raw.financement, 100), apport: flat(raw.apport, 20), delai: flat(raw.delai, 100), prix_affiche: flat(raw.prix_affiche, 30),
-    reference: flat(raw.reference, 100), message: String(raw.message == null ? '' : raw.message).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]+/g, ' ').trim().slice(0, 1500)
+    reference: flat(raw.reference, 100), message: String(raw.message == null ? '' : raw.message).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f]+/g, ' ').trim().slice(0, 500)
   });
   const nom = body.nom;
   const email = body.email;
 
-  if (!nom || !email || !EMAIL_RE.test(email)) {
+  if (!nom || !email || !EMAIL_RE.test(email) || /[,;<>]/.test(email)) {
     return res.status(400).json({ ok: false, error: 'nom et email requis' });
   }
 
@@ -153,7 +156,9 @@ module.exports = async function handler(req, res) {
 
   const candidateEmail = body.agentEmail;
   const to = (EMAIL_RE.test(candidateEmail) && await agentConnu(candidateEmail)) ? candidateEmail : process.env.FALLBACK_LEAD_EMAIL;
-  if (!limite('to:' + String(to).toLowerCase(), 15)) return res.status(429).json({ ok: false, error: 'trop de demandes' });
+  // Plafonds larges par destinataire (l'adresse d'un agent est publique : un plafond bas permettrait de bloquer ses vrais leads)
+  // et plus serrés pour un même couple destinataire / visiteur.
+  if (!limite('to:' + String(to).toLowerCase(), 40) || !limite('tv:' + String(to).toLowerCase() + ':' + email.toLowerCase(), 5)) return res.status(429).json({ ok: false, error: 'trop de demandes' });
 
   if (!to) {
     console.error('[api/send-lead] agentEmail invalide et FALLBACK_LEAD_EMAIL non configuré');
@@ -190,7 +195,7 @@ module.exports = async function handler(req, res) {
         to: [to],
         reply_to: email,
         subject: subject,
-        html: buildHtml(body, isOffre, docsList)
+        html: buildHtml(body, isOffre, docsList, (to !== candidateEmail && EMAIL_RE.test(candidateEmail)) ? candidateEmail : '')
       })
     });
 

@@ -12,21 +12,24 @@ const run = (body, ip, origin) => new Promise(resolve => { sent = null; const re
   let r = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base));
   assert(r.code === 200 && r.sent.to[0] === 'agent@x.fr', 'agent inscrit : livré à l\'agent');
   r = await run(Object.assign({ agentEmail: 'victime@gmail.com' }, base));
-  assert(r.code === 200 && r.sent.to[0] === 'fallback@x.fr', 'adresse inconnue : jamais livrée à un tiers, boîte de secours : ' + JSON.stringify(r.sent && r.sent.to));
+  assert(r.code === 200 && /Destinataire prévu/.test(r.sent.html) && /victime@gmail\.com/.test(r.sent.html) && r.sent.to[0] === 'fallback@x.fr', 'adresse inconnue : jamais livrée à un tiers, boîte de secours : ' + JSON.stringify(r.sent && r.sent.to));
   r = await run(Object.assign({ agentEmail: 'AGENT@x.fr' }, base)); assert.strictEqual(r.sent.to[0], 'AGENT@x.fr', 'casse ignorée pour la vérification');
   process.env.LEAD_EXTRA_RECIPIENTS = 'Ancien@Cabinet.fr, autre@x.fr'; r = await run(Object.assign({ agentEmail: 'ancien@cabinet.fr' }, base)); assert.strictEqual(r.sent.to[0], 'ancien@cabinet.fr', 'liste d\'adresses autorisées en plus (variable Vercel)'); delete process.env.LEAD_EXTRA_RECIPIENTS;
+  for (const bad of ['*@x.fr', 'a%@x.fr', 'agent@x.fr,v@y.fr', 'a_b@x.fr']) { r = await run(Object.assign({}, base, { agentEmail: bad })); assert.strictEqual(r.sent.to[0], 'fallback@x.fr', 'adresse avec joker / virgule jamais reconnue : ' + bad); }
+  r = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base, { email: 'a@b.fr,c@d.fr' })); assert.strictEqual(r.code, 400, 'e-mail visiteur avec virgule refusé');
   const n = lookups; await run(Object.assign({ agentEmail: 'agent@x.fr' }, base)); assert.strictEqual(lookups, n, 'vérification mise en cache');
   r = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base, { email: 'pas-un-email' })); assert.strictEqual(r.code, 400, 'e-mail du visiteur invalide refusé');
   r = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base, { bien: 'x\r\nBcc: evil@x.fr' + 'y'.repeat(500), montant: '1\r\n2' }));
   assert(!/[\r\n]/.test(r.sent.subject) && r.sent.subject.length < 300, 'objet sans saut de ligne et plafonné : ' + r.sent.subject.length);
-  r = await run(Object.assign({ agentEmail: 'agent@x.fr', type: 'documents_liste', documents: ['DPE'], message: 'm'.repeat(5000) }, { nom: 'A', email: 'a@b.fr', bien: 'x' })); assert(r.sent.html.length < 4000, 'message plafonné');
+  r = await run(Object.assign({ agentEmail: 'agent@x.fr', type: 'documents_liste', documents: ['DPE'], message: 'm'.repeat(5000) }, { nom: 'A', email: 'a@b.fr', bien: 'x' })); assert(r.sent.html.length < 3000, 'message plafonné');
   { const k = global.fetch; handler.__test.setLookup(async () => { throw new Error('base indisponible'); });
     r = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base)); assert(r.code === 200 && r.sent.to[0] === 'fallback@x.fr', 'base indisponible : boîte de secours, le lead n\'est pas perdu'); global.fetch = k; }
   handler.__test.setLookup(async e => e === 'agent@x.fr');
   r = await run(base, '2.2.2.2', 'https://evil.example'); assert.strictEqual(r.code, 403, 'origine refusée');
   let last; for (let i = 0; i < 35; i++) last = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base), '3.3.3.3'); assert.strictEqual(last.code, 429, 'limite par IP');
   handler.__test.setLookup(async e => e === 'agent@x.fr'); let c429 = 0;
-  for (let i = 0; i < 20; i++) { const x = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base), '10.0.0.' + i); if (x.code === 429) c429++; }
-  assert(c429 >= 4, 'limite par destinataire (15 / 10 min) même en changeant d\'IP : ' + c429);
+  for (let i = 0; i < 20; i++) { const x = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base, { email: 'v' + i + '@d.fr' }), '10.0.0.' + i); if (x.code === 429) c429++; }
+  assert(c429 === 0, 'les vrais visiteurs ne sont pas bloqués par un plafond bas par destinataire : ' + c429);
+  { let last2; for (let i = 0; i < 7; i++) last2 = await run(Object.assign({ agentEmail: 'agent@x.fr' }, base), '20.0.0.1'); assert.strictEqual(last2.code, 429, 'même visiteur + même destinataire : 5 / 10 min'); }
   console.log('OK send-lead durcissement'); process.exit(0);
 })().catch(e => { console.error('ÉCHEC', e); process.exit(1); });
