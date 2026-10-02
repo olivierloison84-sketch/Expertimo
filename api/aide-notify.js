@@ -5,7 +5,7 @@ const { createClient } = require('@supabase/supabase-js');
 
 const ALLOWED_ORIGIN_PREFIXES = ['https://app.privency.fr', 'https://expertimo-phi.vercel.app', 'http://localhost'];
 const SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
-const DEST = 'olivier.loison84@gmail.com';
+const DEST = 'contact@privency.fr';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const LBL = { idee: '💡 Idée', bug: '🐞 Problème', remarque: '💬 Remarque' };
 
