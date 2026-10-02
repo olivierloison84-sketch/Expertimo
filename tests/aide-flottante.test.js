@@ -1,0 +1,18 @@
+const fs=require('fs'),path=require('path');const {JSDOM}=require('jsdom');
+const js=fs.readFileSync(path.join(__dirname,'..','aide-flottante.js'),'utf8');
+const dom=new JSDOM('<body></body>',{runScripts:'outside-only'});
+let inserted=[];dom.window.privencyAuth={from:t=>({insert:async r=>{inserted.push([t,r]);return{error:null}}})};
+dom.window.eval(js);if(!dom.window.document.getElementById('aide-btn'))dom.window.document.dispatchEvent(new dom.window.Event('DOMContentLoaded'));
+const d=dom.window.document;let fail=0;const ok=(c,m)=>{if(!c){console.log('FAIL',m);fail++}else console.log('ok',m)};
+ok(d.getElementById('aide-btn')&&d.getElementById('idee-btn'),'boutons flottants');
+const s=dom.window.__aideFaqSearch;
+ok(s('Comment résilier ?')[0][0].includes('résilier'),'recherche accents');
+ok(s('PRIX tarif')[0][0].includes('coûte'),'recherche prix');
+ok(s('zzzzqqq').length===0,'aucune réponse');
+(async()=>{d.getElementById('aide-q').value='zzzzqqq';d.getElementById('aide-q').oninput();d.getElementById('aide-send').onclick();
+d.getElementById('idee-txt').value='super idée';await d.getElementById('idee-send').onclick();
+await new Promise(r=>setTimeout(r,20));
+ok(inserted.length===2&&inserted[0][0]==='aide_questions'&&inserted[1][0]==='agent_idees','insertions');
+const app=fs.readFileSync(path.join(__dirname,'..','app.html'),'utf8');
+ok(/aide-flottante\.js/.test(app),'chargé par app.html');
+process.exit(fail?1:0)})();

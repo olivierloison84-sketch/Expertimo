@@ -65,7 +65,7 @@ header {
 .logo-circle img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 50%; }
 .header-brand h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 17px; }
 .header-brand p  { font-size: 11px; opacity: .75; margin-top: 1px; }
-.header-right { font-size: 11px; opacity: .7; text-align: right; }
+.header-right { font-size: 11px; text-align: right; }
 
 /* ═══════════════════════════════════════
    STEPPER — nav verticale (desktop) / horizontale scrollable (mobile, cf. media query 768px)
@@ -126,6 +126,18 @@ header {
   margin-top: 12px;
   border-radius: 10px;
 }
+/* Icônes des onglets de suivi et d'outils : plus de rond noir vide, juste l'icône (verte quand l'onglet est actif) */
+.step-ico { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--muted); }
+.step-tab:hover .step-ico { color: var(--text); }
+.step-tab.active .step-ico { color: var(--accent); }
+/* Groupes du menu : création (1 à 4), espace, puis suivi */
+.stepper-group-title { padding: 0 12px 4px; font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); opacity: .8; user-select: none; }
+.stepper-group { margin-top: 26px; display: flex; flex-direction: column; gap: 3px; }
+/* Zone d'actions en haut à droite : abonnement, tutoriel, compte */
+.header-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
+.hbtn { display: inline-flex; align-items: center; gap: 6px; background: var(--light); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; white-space: nowrap; transition: all .2s; }
+.hbtn:hover { border-color: var(--accent); color: var(--gold2); }
+.hbtn.active { background: #fff; border-color: var(--accent); color: var(--gold2); }
 /* Groupe « Outils commerciaux » : visuellement séparé, en bas du menu, juste avant « Nouvelle fiche » */
 .stepper-tools {
   margin-top: auto;
@@ -368,16 +380,18 @@ textarea { resize: vertical; min-height: 60px; }
   }
   .step-tab .step-label { display: none; }
   .step-tab.active { background: transparent; }
-  /* Boutons flottants « Déconnexion » / « Revoir le tutoriel » : ils passent dans l'en-tête (au-dessus de la barre
-     d'onglets) pour ne plus recouvrir aucun onglet, notamment le 7e « Coaching Express ». Mobile uniquement. */
-  #auth-actions { top: 6px !important; right: 8px !important; gap: 4px !important; }
-  #auth-actions button { padding: 3px 10px !important; font-size: 11px !important; }
-  #revoir-tutoriel-btn { top: 38px !important; right: 8px !important; padding: 3px 10px !important; font-size: 11px !important; }
+  /* Actions de l'en-tête (abonnement, tutoriel, compte) : compactes, sous le logo, jamais par-dessus les onglets */
+  header { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
+  .header-right { display: block !important; width: 100%; }
+  .header-actions { justify-content: flex-start; gap: 6px; }
+  .hbtn { padding: 5px 9px; font-size: 11px; }
+  .stepper-group { display: contents; }
+  .stepper-group-title, .stepper > .stepper-group-title { display: none; }
   /* Groupe « Outils commerciaux » : en barre horizontale, l'onglet redevient un onglet comme les autres */
   .stepper-tools { display: contents; }
   .stepper-tools-title { display: none; }
   /* Iframe Coaching Express : la barre est statique en haut, plus de colonne latérale */
-  #argu-frame { width: 100% !important; margin-left: 0 !important; height: calc(100vh - 72px - 46px) !important; height: calc(100dvh - 72px - 46px) !important; }
+  #argu-frame { width: 100% !important; margin-left: 0 !important; height: calc(100vh - 150px) !important; height: calc(100dvh - 150px) !important; }
   /* Bouton Nouvelle fiche : compact, revient à droite de la barre horizontale */
   .stepper > a {
     margin-top: 0 !important;
@@ -391,7 +405,6 @@ textarea { resize: vertical; min-height: 60px; }
   .container { margin: 0 auto; }
 
   /* Header */
-  .header-right { display: none; }
   .header-brand h1 { font-size: 15px; }
 
   /* DVF table → cartes empilées */
@@ -724,19 +737,19 @@ details[open] summary .chevron { transform: rotate(90deg); }
   document.addEventListener('DOMContentLoaded', () => {
     const wrap = document.createElement('div');
     wrap.id = 'auth-actions';
-    wrap.style.cssText = 'position:fixed;top:80px;right:12px;z-index:10000;display:flex;gap:6px;';
-    const btnStyle = 'background:var(--light);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 12px;font-size:12px;font-family:inherit;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);';
+    wrap.style.cssText = 'display:contents;';
+    const btnStyle = '';
 
     const switchBtn = document.createElement('button');
     switchBtn.id = 'switch-account-btn';
     switchBtn.textContent = 'Changer de compte';
-    switchBtn.style.cssText = btnStyle;
+    switchBtn.className = 'hbtn';
     switchBtn.addEventListener('click', () => { PrivencyAuth.switchAccount(); });
 
     const btn = document.createElement('button');
     btn.id = 'logout-btn';
     btn.textContent = 'Déconnexion';
-    btn.style.cssText = btnStyle;
+    btn.className = 'hbtn';
     btn.addEventListener('click', async () => {
       // Ne déconnecte que le compte de cet onglet (session + cache de ce compte).
       await PrivencyAuth.signOutActive();
@@ -745,7 +758,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
     wrap.appendChild(switchBtn);
     wrap.appendChild(btn);
-    document.body.appendChild(wrap);
+    (document.getElementById('header-actions') || document.body).appendChild(wrap);
   });
 })();
 </script>
@@ -765,12 +778,15 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
   </div>
   <div class="header-right">
-    Import → Saisie → Génération → Publication
+    <div class="header-actions" id="header-actions">
+      <button type="button" class="hbtn" id="hdr-abo" onclick="goToStep(8)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg><span>Mon abonnement</span></button>
+    </div>
   </div>
 </header>
 
 <!-- ══════════ STEPPER ══════════ -->
 <nav class="stepper" id="stepper">
+  <div class="stepper-group-title">Créer ma fiche</div>
   <div class="step-tab active" id="tab-1" onclick="goToStep(1)">
     <span class="step-num">1</span>
     <span class="step-label">Profil agent</span>
@@ -787,27 +803,26 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <span class="step-num">4</span>
     <span class="step-label">Publication</span>
   </div>
-  <div class="step-tab" id="tab-5" onclick="goToStep(5)">
-    <span class="step-num" style="background:var(--muted);font-size:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>
-    <span class="step-label">Mes stats</span>
-  </div>
-  <div class="step-tab" id="tab-6" onclick="goToStep(6)">
-    <span class="step-num" style="background:var(--muted);font-size:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>
-    <span class="step-label">Mes fiches</span>
-  </div>
-  <div class="step-tab" id="tab-8" onclick="goToStep(8)">
-    <span class="step-num" style="background:var(--muted);font-size:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg></span>
-    <span class="step-label">Mon abonnement</span>
+  <div class="stepper-group stepper-suivi">
+    <div class="stepper-group-title">Mon suivi</div>
+    <div class="step-tab" id="tab-5" onclick="goToStep(5)">
+      <span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg></span>
+      <span class="step-label">Mes stats</span>
+    </div>
+    <div class="step-tab" id="tab-6" onclick="goToStep(6)">
+      <span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>
+      <span class="step-label">Mes biens</span>
+    </div>
   </div>
   <div class="stepper-tools" id="stepper-tools">
     <div class="stepper-tools-title">Outils commerciaux</div>
     <div class="step-tab" id="tab-7" onclick="goToStep(7)">
-      <span class="step-num" style="background:var(--muted);font-size:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span>
+      <span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span>
       <span class="step-label">Coaching Express</span>
     </div>
     <div class="step-tab" id="tab-9" onclick="goToStep(9)">
-      <span class="step-num" style="background:var(--muted);font-size:14px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
-      <span class="step-label">Vidéos</span>
+      <span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
+      <span class="step-label">Vidéos tuto</span>
     </div>
   </div>
   <a href="/app.html?new=1" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Nouvelle fiche</a>
@@ -1868,7 +1883,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 <div class="page" id="page-9">
 <div class="container">
   <div class="card">
-    <div class="card-header">🎬 Vidéos</div>
+    <div class="card-header">🎬 Vidéos tuto</div>
     <div class="card-body">
       <p class="videos-intro">Des tutoriels courts (moins de 2 minutes) pour prendre en main Privency.</p>
       <div class="videos-grid" id="videos-grid"></div>
@@ -2122,11 +2137,10 @@ document.addEventListener('DOMContentLoaded', function() {
   var btn = document.createElement('button');
   btn.id = 'revoir-tutoriel-btn';
   btn.textContent = '❓ Revoir le tutoriel';
-  btn.style.cssText = 'position:fixed;top:116px;right:12px;z-index:10000;background:var(--light);'
-    + 'color:var(--text);border:1px solid var(--border);border-radius:6px;padding:5px 12px;'
-    + 'font-size:12px;font-family:inherit;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.06);';
+  btn.className = 'hbtn';
   btn.addEventListener('click', function() { showOnboardingOverlay(); });
-  document.body.appendChild(btn);
+  var zone = document.getElementById('header-actions'), abo = document.getElementById('hdr-abo');
+  if (zone) zone.insertBefore(btn, abo ? abo.nextSibling : zone.firstChild); else document.body.appendChild(btn);
 });
 
 
@@ -2214,6 +2228,7 @@ function goToStep(n) {
     if (i === n)             tab.classList.add('active');
     else if (_stepsComplete[i]) tab.classList.add('done');
   });
+  var _abo = document.getElementById('hdr-abo'); if (_abo) _abo.classList.toggle('active', n === 8);
   _currentStep = n;
   if (n === 3) { refreshStep3Summary(); }
   if (n === 4) { refreshStep4Summary(); }
@@ -6813,5 +6828,6 @@ if ('serviceWorker' in navigator) {
 
 
 </script>
+<script src="/aide-flottante.js"></script>
 </body>
 </html>
