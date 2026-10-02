@@ -5412,30 +5412,32 @@ function fmtAdresse(s) {
   if (!s) return s;
   var PART = {de: 1, du: 1, des: 1, la: 1, le: 1, les: 1, et: 1, sur: 1, sous: 1, en: 1, au: 1, aux: 1, 'à': 1, d: 1, l: 1};
   var VOIE = {rue: 1, avenue: 1, av: 1, boulevard: 1, bd: 1, impasse: 1, 'allée': 1, allee: 1, chemin: 1, place: 1, route: 1, square: 1, quai: 1, cours: 1, passage: 1, villa: 1, sentier: 1, ruelle: 1, esplanade: 1, parvis: 1, lotissement: 1, hameau: 1, venelle: 1, 'résidence': 1, residence: 1, 'cité': 1, cite: 1};
-  var ACC = {ecole: 'école', eglise: 'église', republique: 'république', liberte: 'liberté', egalite: 'égalité', fraternite: 'fraternité', marechal: 'maréchal', general: 'général', hotel: 'hôtel', etoile: 'étoile', epinay: 'épinay', bretigny: 'brétigny', genevieve: 'geneviève', therese: 'thérèse', rene: 'rené', andre: 'andré', jerome: 'jérôme', eugene: 'eugène', pere: 'père', peri: 'péri', allee: 'allée', residence: 'résidence', chateau: 'château', foret: 'forêt', cite: 'cité', orleans: 'orléans', chatillon: 'châtillon', cedre: 'cèdre', gerard: 'gérard', frederic: 'frédéric', helene: 'hélène', stephane: 'stéphane', societe: 'société', mediterranee: 'méditerranée', verite: 'vérité', senateur: 'sénateur', deportes: 'déportés', resistance: 'résistance', ecureuils: 'écureuils', eglantine: 'églantine', pecheurs: 'pêcheurs', pres: 'prés', pre: 'pré'};
-  var toks = s.split(' '), out = [], afterCp = false, commune = [];
+  var MIN = {bis: 1, ter: 1, quater: 1};
+  var ACC = {ecole: 'école', eglise: 'église', republique: 'république', liberte: 'liberté', egalite: 'égalité', fraternite: 'fraternité', marechal: 'maréchal', general: 'général', hotel: 'hôtel', etoile: 'étoile', epinay: 'épinay', bretigny: 'brétigny', genevieve: 'geneviève', therese: 'thérèse', rene: 'rené', andre: 'andré', jerome: 'jérôme', eugene: 'eugène', emile: 'émile', pere: 'père', peri: 'péri', allee: 'allée', residence: 'résidence', chateau: 'château', foret: 'forêt', cite: 'cité', orleans: 'orléans', chatillon: 'châtillon', gerard: 'gérard', frederic: 'frédéric', helene: 'hélène', stephane: 'stéphane', mediterranee: 'méditerranée', senateur: 'sénateur', deportes: 'déportés', resistance: 'résistance', ecureuils: 'écureuils', eglantine: 'églantine', pecheurs: 'pêcheurs'};
+  var toks = s.split(' '), out = [], cp = -1;
   toks.forEach(function(t, i) {
-    if (/\d/.test(t)) { if (/^\d{5}$/.test(t)) afterCp = true; out.push(t); return; }
+    if (/\d/.test(t)) { if (cp < 0 && /^\d{5}$/.test(t)) cp = i; out.push(t); return; }
     var low = t.toLowerCase();
-    if (low === 'a' && i > 0 && i < toks.length - 1 && !/\d/.test(toks[i - 1]) && !/\d/.test(toks[i + 1])) { out.push('à'); return; }
-    var parts = low.split(/(['’-])/).map(function(p, j) {
+    if (t === 'a' && i > 0 && i < toks.length - 1 && !/\d/.test(toks[i - 1]) && !/\d/.test(toks[i + 1])) { out.push('à'); return; }
+    if (MIN[low] && i > 0) { out.push(low); return; }
+    var prev = out.length ? out[out.length - 1] : '', debutCommune = (cp >= 0 && i === cp + 1) || /[,;:–—-]$/.test(prev);
+    out.push(low.split(/(['’-])/).map(function(p, j) {
       if (j % 2 === 1) return p;
       var w = ACC[p] || p;
       if (!w) return w;
-      var first = i === 0 && j === 0;
-      if (!first && !afterCp && VOIE[w] && j === 0) return w;
-      if (!first && PART[w]) return w;
+      if (!(i === 0 && j === 0) && !debutCommune) {
+        if (cp < 0 && VOIE[w] && j === 0) return w;
+        if (PART[w]) return w;
+      }
       return w.charAt(0).toUpperCase() + w.slice(1);
-    });
-    var r = parts.join('');
-    if (afterCp) commune.push(out.length);
-    out.push(r);
+    }).join(''));
   });
-  /* Commune : « Morsang sur Orge » devient « Morsang-sur-Orge » (tirets rétablis quand il y a sur/sous/en/les/des ou Saint/Sainte) */
-  if (commune.length > 1) {
-    var words = commune.map(function(ix) { return out[ix]; }), lw = words.map(function(w) { return w.toLowerCase(); });
-    var tiret = lw.some(function(w, k) { return k > 0 && (w === 'sur' || w === 'sous' || w === 'en' || w === 'les' || w === 'des'); }) || /^(saint|sainte)$/.test(lw[0]) || (lw.length === 2 && /^(chilly|viry)$/.test(lw[0]));
-    if (tiret) { out.splice(commune[0], commune.length, words.join('-')); }
+  /* Commune seule après le code postal (mots uniquement) : « Morsang sur Orge » devient « Morsang-sur-Orge ». Sinon, aucun tiret ajouté. */
+  if (cp >= 0 && out.length - cp - 1 > 1 && out.length - cp - 1 <= 5) {
+    var reste = out.slice(cp + 1), lw = reste.map(function(w) { return w.toLowerCase(); });
+    var seuls = reste.every(function(w) { return /^[A-Za-zÀ-ÿ'’]+$/.test(w); });
+    var tiret = /^(saint|sainte)$/.test(lw[0]) || (lw.length === 3 && /^(sur|sous|en)$/.test(lw[1])) || (lw.length === 2 && /^(chilly|viry)$/.test(lw[0]));
+    if (seuls && tiret) out = out.slice(0, cp + 1).concat([reste.join('-')]);
   }
   return out.join(' ');
 }
@@ -5926,7 +5928,7 @@ async function loadFiches() {
     tbody.innerHTML = '';
     htmlFiles.forEach(function(f, idx) {
       var label = fmtAdresse(String(f.label || f.filename)
-        .replace(/-FINAL\.html$/, '')
+        .replace(/(-[A-Za-z]{2})?-FINAL\.html$/, '')
         .replace(/\.html$/, '')
         .replace(/-/g, ' ')
         .replace(/\s(?=[0-9a-f]*\d)[0-9a-f]{6}$/, ''));

@@ -1,13 +1,13 @@
 -- Supprime la fiche fictive « 12 rue des Lilas, 91300 Massy » du compte de démonstration.
 -- À exécuter par Olivier dans l'éditeur SQL Supabase (Claude ne supprime jamais de données lui-même).
--- Étape 1 : lancer d'abord ce SELECT seul et vérifier qu'il montre bien 1 fiche + 1 fiche privée + 1 ouverture.
+-- Étape 1 : lancer d'abord ce SELECT seul et vérifier qu'il montre bien 1 fiche + 1 fiche privée + 1 ouverture (la ligne exacte, par son identifiant).
 select 'agent_fiches' as table_, count(*) from agent_fiches where id = '8d38a853-505a-4b7f-94f7-9c08da9f11d6'
 union all select 'fiche_private', count(*) from fiche_private where agent_user_id = 'd583214c-a703-42bd-bfc1-446ee966d573' and filename = '12-rue-des-lilas-91300-massy-d58321-FINAL.html'
-union all select 'fiche_views (Massy)', count(*) from fiche_views where bien_adresse ilike '12 rue des Lilas, 91300 Massy%';
+union all select 'fiche_views (Massy)', count(*) from fiche_views where id = '4e448614-9d3c-4954-8e3f-29854e92f6d9';
 
 -- Étape 2 : suppression (tout ou rien).
 begin;
-delete from fiche_views where bien_adresse ilike '12 rue des Lilas, 91300 Massy%';
+delete from fiche_views where id = '4e448614-9d3c-4954-8e3f-29854e92f6d9';  -- ouverture unique de la fiche fictive (agent_id vide), repérée par son identifiant
 delete from fiche_private where agent_user_id = 'd583214c-a703-42bd-bfc1-446ee966d573' and filename = '12-rue-des-lilas-91300-massy-d58321-FINAL.html';
 delete from agent_fiches where id = '8d38a853-505a-4b7f-94f7-9c08da9f11d6';
 commit;
