@@ -201,26 +201,27 @@
   // Session valide mais utilisateur différent d'Olivier : garde-fou
   // d'affichage uniquement (la vraie sécurité est côté serveur, dans
   // api/admin-stats.js, qui revérifie l'id sur le JWT et renvoie 403).
-  function forbidden() {
+  function forbidden(session) {
     if (resolved) return;
     resolved = true;
     reveal();
     onDomReady(function () {
       var root = document.getElementById('dash-root');
       if (root) {
-        root.innerHTML = '<div class="forbidden-msg">⛔ Accès non autorisé — cette page est réservée.</div>';
+        var qui = (session.user && session.user.email) ? session.user.email : 'inconnu';
+        root.innerHTML = '<div class="forbidden-msg">⛔ Accès non autorisé — cette page est réservée au compte administrateur.'
+          + '<div style="font-weight:400;margin-top:10px;font-size:13px;">Vous êtes connecté avec : <b>' + escapeHtml(qui) + '</b><br>Connectez-vous avec olivier.loison@expertimo.com (bouton « Changer de compte »).</div></div>';
       }
     });
-    setTimeout(function () { window.location.replace('/dashboard.html'); }, 1800);
   }
 
   function checkAdmin(session) {
     if (resolved) return;
-    resolved = true;
     if (!session.user || session.user.id !== ADMIN_USER_ID) {
-      forbidden();
+      forbidden(session); // (ne pas marquer « résolu » avant : forbidden() s'arrêterait aussitôt et la page resterait blanche)
       return;
     }
+    resolved = true;
     reveal();
     if (typeof window.initDashboard === 'function') {
       window.initDashboard(session);
