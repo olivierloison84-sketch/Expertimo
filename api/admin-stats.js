@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const Stripe = require('stripe');
 
 const ALLOWED_ORIGIN_PREFIXES = [
   'https://app.privency.fr',
@@ -124,6 +125,18 @@ module.exports = async function handler(req, res) {
     if (fichesRes.error) throw fichesRes.error;
     if (viewsRes.error) throw viewsRes.error;
 
+    // Essais gratuits en cours (Stripe) : un essai n'est pas encore du revenu. Best-effort.
+    const essais = new Map();
+    if (process.env.STRIPE_SECRET_KEY) {
+      try {
+        const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+        const subs = await stripe.subscriptions.list({ status: 'trialing', limit: 100 });
+        (subs.data || []).forEach(function(sub) { essais.set(sub.id, sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null); });
+      } catch (e) {
+        console.error('[api/admin-stats] Stripe essais:', e.message);
+      }
+    }
+
     const profilesByUser = new Map();
     (profilesRes.data || []).forEach(function(p) { profilesByUser.set(p.user_id, p); });
     const fichesByAgent = groupFiches(fichesRes.data);
@@ -139,7 +152,8 @@ module.exports = async function handler(req, res) {
 
       var isTest = (agent.email || '').indexOf('+test') !== -1;
       var isSelf = agent.id === ADMIN_USER_ID || agent.email === ADMIN_EMAIL;
-      var mrr = (agent.subscription_status === 'active' && !!agent.stripe_subscription_id && !isTest && !isSelf)
+      var enEssai = !!agent.stripe_subscription_id && essais.has(agent.stripe_subscription_id);
+      var mrr = (agent.subscription_status === 'active' && !!agent.stripe_subscription_id && !enEssai && !isTest && !isSelf)
         ? MRR_PAR_CLIENT
         : 0;
 
@@ -160,6 +174,8 @@ module.exports = async function handler(req, res) {
         nb_vues: views.nb_vues,
         nb_offres: views.nb_offres,
         derniere_activite: views.derniere_activite,
+        en_essai: enEssai,
+        fin_essai: enEssai ? essais.get(agent.stripe_subscription_id) : null,
         isTest: isTest,
         isSelf: isSelf,
         mrr: mrr
@@ -178,11 +194,29 @@ module.exports = async function handler(req, res) {
     const nbVuesTotal = clients.reduce(function(sum, a) { return sum + a.nb_vues; }, 0);
     const nbOffresTotal = clients.reduce(function(sum, a) { return sum + a.nb_offres; }, 0);
 
+    // Messages des agents (chatbot + boîte à idées). Best-effort : tables absentes = listes vides.
+    const nomAgent = new Map();
+    agentsEnrichis.forEach(function(a) { nomAgent.set(a.id, [a.prenom, a.nom].filter(Boolean).join(' ').trim() || a.email); });
+    const depuis = new Date(Date.now() - 60 * 24 * 3600 * 1000).toISOString();
+    let questions = [], idees = [];
+    try {
+      const [qr, ir] = await Promise.all([
+        supabaseAdmin.from('aide_questions').select('id, agent_user_id, question, created_at').gte('created_at', depuis).order('created_at', { ascending: false }).limit(50),
+        supabaseAdmin.from('agent_idees').select('id, agent_user_id, categorie, message, created_at').gte('created_at', depuis).order('created_at', { ascending: false }).limit(50)
+      ]);
+      questions = (qr.data || []).map(function(r) { return { id: r.id, agent: nomAgent.get(r.agent_user_id) || '—', texte: r.question, created_at: r.created_at }; });
+      idees = (ir.data || []).map(function(r) { return { id: r.id, agent: nomAgent.get(r.agent_user_id) || '—', categorie: r.categorie, texte: r.message, created_at: r.created_at }; });
+    } catch (e) {
+      console.error('[api/admin-stats] messages:', e.message);
+    }
+
     return res.status(200).json({
+      messages: { questions: questions, idees: idees },
       totaux: {
         mrr_total: mrrTotal,
         arr_total: mrrTotal * 12,
         nb_clients_actifs: nbClientsActifs,
+        nb_essais_en_cours: clients.filter(function(a) { return a.en_essai; }).length,
         nb_nouvelles_inscriptions_ce_mois: nbNouvellesInscriptionsCeMois,
         nb_fiches_total: nbFichesTotal,
         nb_vues_total: nbVuesTotal,
