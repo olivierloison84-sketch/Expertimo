@@ -6,95 +6,87 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="referrer" content="no-referrer">
 <title>Compte rendu de commercialisation</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#fff;--ink:#0F1A16;--gold:#0E9F6E;--gold2:#0A6F4D;--cream:#E9F9F1;--muted:#667085;--border:#E5E9EF;--vert:#0E9F6E;--rouge:#B7791F;--agent:#0E9F6E;--soft:#A6E3C6;}
+:root{--bg:#F5FAF7;--card:#fff;--ink:#0F1A16;--gold:#0E9F6E;--gold2:#0A6F4D;--cream:#E9F9F1;--muted:#667085;--border:#E5E9EF;--vert:#0E9F6E;--rouge:#667085;--dark:#0A6F4D;--agent:#0E9F6E;--soft:#A6E3C6;--line:#E5E9EF;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-text-size-adjust:100%;}
-.wrap{max-width:760px;margin:0 auto;padding:0 22px;}
-header.top{padding:34px 0 8px;}
-.agent{display:flex;align-items:center;gap:12px;}
-.avatar{width:52px;height:52px;border-radius:50%;background:var(--gold);color:#fff;border:2px solid #fff;box-shadow:0 2px 8px rgba(15,26,22,.15);object-position:center 25%;display:flex;align-items:center;justify-content:center;font-weight:600;flex:none;object-fit:cover;}
-.agent-name{font-weight:700;font-size:15px;}
-.agent-role{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--muted);text-transform:uppercase;}
-h1{font-weight:800;font-size:clamp(34px,7vw,56px);line-height:1.08;letter-spacing:-.02em;margin-top:64px;text-wrap:balance;}
-h1 span{display:block;color:var(--gold2);}h1 #hello-nom{color:var(--ink);}
-.addr{font-size:15px;font-weight:600;margin-top:22px;}
-.sub{color:var(--muted);font-size:13px;margin-top:2px;}
-section{margin-top:84px;}
-.lbl{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;}
-h2{font-weight:800;font-size:clamp(22px,4vw,28px);line-height:1.2;letter-spacing:-.01em;margin-bottom:6px;text-wrap:balance;}
-.hint{font-size:13px;color:var(--muted);max-width:60ch;}
-.big{display:flex;align-items:baseline;gap:18px;flex-wrap:wrap;margin-top:64px;}
-.big .v{font-weight:800;font-size:clamp(88px,22vw,150px);line-height:.9;color:var(--gold2);letter-spacing:-.04em;font-variant-numeric:tabular-nums;}
-.big .l{font-size:19px;font-weight:600;max-width:15ch;line-height:1.3;}
-.big .d{font-family:'JetBrains Mono',monospace;font-size:13px;width:100%;margin-top:6px;}
-.up{color:var(--vert);}.down{color:var(--rouge);}.flat{color:var(--muted);}
-.story{font-size:19px;line-height:1.55;font-weight:500;max-width:60ch;}
-.story em{font-style:normal;font-weight:700;color:var(--gold2);}
-.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:30px;}
-.kpi .v{font-weight:800;color:var(--ink);font-size:clamp(30px,6vw,44px);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.02em;}
-.kpi .l{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.35;}
-.note{border-left:3px solid var(--gold);padding:4px 0 4px 22px;}
-.note p{white-space:pre-wrap;font-size:19px;line-height:1.5;font-weight:500;}
-.note .who{font-size:13px;color:var(--muted);margin-top:14px;}
-svg.chart{width:100%;height:auto;display:block;margin-top:18px;}
-svg.chart text{font-family:'JetBrains Mono',monospace;font-size:9.5px;fill:var(--muted);}
+body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-text-size-adjust:100%;}
+.wrap{max-width:920px;margin:0 auto;padding:0 20px;}
+header.top{background:linear-gradient(160deg,#064E3B 0%,#0A6F4D 100%);color:#fff;padding:34px 0 64px;position:relative;overflow:hidden;}
+header.top::before{content:'';position:absolute;width:420px;height:420px;background:radial-gradient(circle,rgba(166,227,198,.22),transparent 70%);top:-180px;right:-90px;border-radius:50%;}
+.agent{display:flex;align-items:center;gap:12px;position:relative;z-index:1;}
+.avatar{width:46px;height:46px;border-radius:50%;background:#fff;color:#0A6F4D;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;flex:none;object-fit:cover;}
+.agent-name{font-weight:600;font-size:14px;}
+.agent-role{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.82);text-transform:uppercase;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#C8F0DC;margin:30px 0 8px;position:relative;z-index:1;}
+h1{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(26px,5.2vw,40px);line-height:1.15;position:relative;z-index:1;text-wrap:balance;}
+.sub{color:rgba(255,255,255,.85);font-size:13.5px;margin-top:8px;position:relative;z-index:1;}
+main{margin-top:-40px;position:relative;z-index:2;padding-bottom:40px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 14px rgba(15,26,22,.05);}
+.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+h2{font-family:'Playfair Display',serif;font-weight:500;font-size:21px;line-height:1.25;margin-bottom:4px;text-wrap:balance;}
+.hint{font-size:12.5px;color:var(--muted);}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 14px;box-shadow:0 2px 14px rgba(15,26,22,.05);}
+.kpi .v{font-family:'Playfair Display',serif;font-size:32px;line-height:1;font-variant-numeric:tabular-nums;}
+.kpi .l{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.3;}
+.kpi .d{font-family:'IBM Plex Mono',monospace;font-size:10.5px;margin-top:6px;}
+.up{color:var(--gold2);}.down{color:var(--rouge);}.flat{color:var(--muted);}
+.story{font-family:'Playfair Display',serif;font-size:clamp(18px,3.4vw,23px);line-height:1.4;}
+.story em{font-style:normal;color:var(--gold2);}
+.note{background:var(--cream);border-color:var(--soft);}
+.note p{white-space:pre-wrap;font-size:15px;}
+.note .who{font-size:12px;color:var(--muted);margin-top:10px;}
+svg.chart{width:100%;height:auto;display:block;}
+ul.feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;}
+ul.feed li{display:flex;gap:14px;padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.45;}
+ul.feed li:first-child{border-top:0;}
+ul.feed .when{flex:0 0 12em;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);padding-top:2px;}
+ul.feed .what{min-width:0;overflow-wrap:anywhere;}
+@media(max-width:600px){ul.feed li{flex-direction:column;gap:2px;}ul.feed .when{flex-basis:auto;white-space:normal;}}
+svg.chart text{font-family:'IBM Plex Mono',monospace;font-size:9.5px;fill:var(--muted);}
 @media(max-width:600px){svg.chart text{font-size:15px;}}
 svg.chart .val{fill:var(--ink);font-weight:500;}
-ul.feed{list-style:none;margin:22px 0 0;padding:0 0 0 22px;border-left:2px solid var(--cream);display:flex;flex-direction:column;gap:18px;}
-ul.feed li{position:relative;font-size:15px;line-height:1.45;}
-ul.feed li::before{content:'';position:absolute;left:-29px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid #fff;}
-ul.feed .when{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:2px;}
-ul.feed .what{min-width:0;overflow-wrap:anywhere;}
-.buyers{display:flex;flex-direction:column;margin-top:22px;}
-.buyer{display:grid;grid-template-columns:44px 1fr auto;gap:4px 16px;align-items:center;padding:22px 0;border-top:1px solid var(--border);}
-.buyer:last-child{border-bottom:1px solid var(--border);}
-.buyer .ltr{width:44px;height:44px;border-radius:50%;background:var(--cream);color:var(--gold2);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;grid-row:1/3;}
-.buyer .nm{font-weight:700;font-size:15px;}
-.buyer .meta{font-size:13px;color:var(--muted);grid-column:2;}
-.buyer .what{font-size:13px;color:var(--ink);grid-column:2;}
-.buyer .lvl{grid-column:3;grid-row:1/3;text-align:right;}
-.seg{display:inline-flex;gap:4px;}
-.seg i{display:block;width:22px;height:6px;border-radius:99px;background:var(--border);}
-.seg i.on{background:var(--gold);}
-.lvl b{display:block;font-size:13px;font-weight:700;color:var(--gold2);margin-top:6px;}
-.lvl.ecoute b{color:var(--muted);}
-@media(max-width:560px){.buyer{grid-template-columns:44px 1fr;}.buyer .lvl{grid-column:2;grid-row:auto;text-align:left;margin-top:6px;}}
-.bars .row{display:grid;grid-template-columns:minmax(120px,190px) 1fr 42px;gap:10px;align-items:center;margin:9px 0;font-size:13px;}
-.bars .track{height:10px;border-radius:99px;background:#E5E9EF;overflow:hidden;}
+.bars .row{display:grid;grid-template-columns:minmax(120px,190px) 1fr 42px;gap:10px;align-items:center;margin:9px 0;font-size:13.5px;}
+.bars .track{height:10px;border-radius:99px;background:#E4F3EC;overflow:hidden;}
 .bars .fill{height:100%;border-radius:99px;background:var(--gold);}
-.bars .pct{font-family:'JetBrains Mono',monospace;font-size:11px;text-align:right;color:var(--muted);}
+.bars .pct{font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-align:right;color:var(--muted);}
+.buyers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+.buyer{border:1px solid var(--border);border-radius:14px;padding:16px;background:var(--bg);}
+.buyer .top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
+.buyer .nm{font-family:'Playfair Display',serif;font-size:18px;}
+.badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;padding:4px 10px;border-radius:99px;white-space:nowrap;}
+.badge.tres{background:#D4F3E4;color:#0A6F4D;}.badge.interesse{background:var(--cream);color:var(--gold2);}.badge.ecoute{background:#eee;color:#555;}
+.buyer ul{list-style:none;font-size:13px;color:#333;}
+.buyer li{padding:3px 0;display:flex;gap:8px;}
+.buyer li::before{content:'•';color:var(--gold2);}
 .pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-.pill{border:1px solid var(--border);border-radius:99px;padding:6px 12px;font-size:13px;}
-.pill b{font-family:'JetBrains Mono',monospace;font-weight:500;margin-left:6px;color:var(--gold2);}
-.more{margin-top:84px;border-top:1px solid var(--border);padding-top:20px;}
-.more summary{cursor:pointer;font-weight:700;font-size:15px;list-style:none;}
-.more summary::before{content:'＋ ';color:var(--gold2);}
-.more[open] summary::before{content:'－ ';}
-.more .blk{margin-top:30px;}
-.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 22px;border-radius:99px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.06em;text-decoration:none;text-transform:uppercase;cursor:pointer;border:0;font-weight:500;}
-.btn.dark{background:var(--gold);color:#fff;}.btn.line{border:1px solid var(--border);color:var(--ink);background:#fff;}
-.empty{padding:14px 0;color:var(--muted);font-size:15px;}
-.foot{font-size:11px;color:var(--muted);text-align:center;padding:8px 0 40px;margin-top:40px;}
+.pill{border:1px solid var(--border);background:var(--bg);border-radius:99px;padding:6px 12px;font-size:13px;}
+.pill b{font-family:'IBM Plex Mono',monospace;font-weight:500;margin-left:6px;color:var(--gold2);}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:99px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-decoration:none;text-transform:uppercase;}
+.btn.dark{background:var(--dark);color:#fff;}.btn.line{border:1px solid var(--border);color:var(--ink);background:var(--card);}
+.empty{padding:26px 10px;text-align:center;color:var(--muted);font-size:14px;}
+.foot{font-size:11.5px;color:var(--muted);text-align:center;padding:8px 0 40px;}
 #state{padding:80px 20px;text-align:center;color:var(--muted);}
 .hidden{display:none!important;}
-@media(max-width:720px){.kpis{gap:14px;}.bars .row{grid-template-columns:1fr 42px;}.bars .row .track{grid-column:1/-1;order:3;}}
-.calc{display:grid;grid-template-columns:repeat(2,1fr);gap:14px 18px;margin-top:22px;}
-.calc label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--muted);min-width:0;}
-.calc input,.calc select{font:inherit;font-size:15px;color:var(--ink);background:#F7F8FB;border:1px solid var(--border);border-radius:12px;padding:12px 14px;width:100%;}
-.calc input:focus,.calc select:focus{outline:2px solid var(--gold);outline-offset:1px;}
-.cost-out{margin-top:22px;padding:18px 20px;border-radius:14px;background:var(--cream);font-size:15px;line-height:1.55;}
-.cost-out b{font-size:15px;font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums;}
+@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr);}.buyers,.two{grid-template-columns:1fr;}.bars .row{grid-template-columns:1fr 42px;}.bars .row .track{grid-column:1/-1;order:3;}}
+.calc{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 16px;}
+.calc label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted);min-width:0;}
+.calc input{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;width:100%;}
+.calc input:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.cost-out{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--cream);font-size:14.5px;line-height:1.55;}
+.cost-out b{font-family:'Playfair Display',serif;font-size:21px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;}
 .cost-out .l2{margin-top:6px;}
 @media(max-width:720px){.calc{grid-template-columns:1fr;}}
+.calc select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;width:100%;}
 .mkt-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;}
-.mkt-tbl th{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px;border-bottom:1px solid var(--border);}
-.mkt-tbl td{padding:6px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;}
+.mkt-tbl th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 6px;border-bottom:1px solid var(--border);}
+.mkt-tbl td{padding:6px 6px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;}
 .mkt-tbl-wrap{overflow-x:auto;}
-.mkt-note{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.45;}
-@media print{header.top{padding:8px 0;}h1{margin-top:20px;}section,.more{margin-top:30px;}.big{margin-top:24px;}section,.buyer,.note{break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
+.mkt-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.45;}
+@media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #0A6F4D;}header.top::before{display:none;}h1,.sub,.agent-name,.agent-role{color:#0F1A16;}.eyebrow{color:#0A6F4D;margin-top:14px;}main{margin-top:0;}.card,.kpi,.buyer,ul.feed li{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
 @media(prefers-reduced-motion:no-preference){.fill{transition:width .8s cubic-bezier(.22,.61,.36,1);}}
 </style>
 </head>
@@ -103,18 +95,23 @@ ul.feed .what{min-width:0;overflow-wrap:anywhere;}
 <div id="report" class="hidden">
   <header class="top"><div class="wrap">
     <div class="agent"><span id="avatar" class="avatar"></span><div><div class="agent-name" id="agent-name"></div><div class="agent-role" id="agent-role"></div></div></div>
-    <h1 id="hello"><span id="hello-nom">Bonjour,</span><span>voici où en est votre bien.</span></h1>
-    <div class="addr" id="bien"></div>
+    <div class="eyebrow">Compte rendu de commercialisation</div>
+    <h1 id="bien"></h1>
     <div class="sub" id="maj"></div>
   </div></header>
   <main class="wrap">
-    <div class="big" id="big"></div>
-    <section style="margin-top:56px;"><div class="lbl">L'essentiel</div><div class="story" id="story"></div><div class="kpis" id="kpis"></div></section>
-    <section><div class="lbl">Intérêt semaine après semaine</div><h2>Combien d'acquéreurs ouvrent la fiche de votre bien ?</h2><div class="hint">Chaque barre est le nombre d'ouvertures de la fiche sur une semaine.</div><div id="chart"></div></section>
-    <section><div class="lbl">Les acquéreurs</div><h2>Qui s'intéresse à votre bien ?</h2><div class="hint">Chaque acquéreur est désigné par une lettre : vous ne voyez jamais son nom ni ses coordonnées.</div><div class="buyers" id="buyers"></div></section>
-    <section><div class="lbl">Activité récente</div><h2>Ce qui s'est passé sur votre bien</h2><div class="hint">Les démarches des acquéreurs sur la fiche, y compris en dehors des visites (30 derniers jours).</div><ul class="feed" id="feed"></ul></section>
-    <section id="mkt-card"><div class="lbl">Le marché autour de votre bien</div><h2>Votre prix face aux ventes réelles de votre commune</h2>
-      <div class="hint">Renseignez les caractéristiques du bien : nous le comparons aux ventes réellement signées dans votre commune (données officielles DVF, 3 dernières années) et estimons combien de foyers du secteur peuvent le financer (revenus Insee).</div>
+    <div class="kpis" id="kpis"></div>
+    <div class="card" style="margin-top:16px;"><div class="lbl">L'essentiel</div><div class="story" id="story"></div></div>
+    <div class="card note hidden" id="note-card"><div class="lbl">Le mot de votre conseiller</div><p id="note"></p><div class="who" id="note-who"></div></div>
+    <div class="card"><div class="lbl">Activité récente</div><h2>Ce qui s'est passé sur votre bien</h2><div class="hint" style="margin-bottom:12px;">Les démarches des acquéreurs sur la fiche, y compris en dehors des visites (30 derniers jours).</div><ul class="feed" id="feed"></ul></div>
+    <div class="card"><div class="lbl">Intérêt semaine après semaine</div><h2>Combien d'acquéreurs ouvrent la fiche de votre bien ?</h2><div class="hint" style="margin-bottom:10px;">Chaque barre est le nombre d'ouvertures de la fiche sur une semaine.</div><div id="chart"></div></div>
+    <div class="card"><div class="lbl">Les acquéreurs</div><h2>Qui s'intéresse à votre bien ?</h2><div class="hint" style="margin-bottom:14px;">Chaque acquéreur est désigné par une lettre : vous ne voyez jamais son nom ni ses coordonnées.</div><div class="buyers" id="buyers"></div></div>
+    <div class="two">
+      <div class="card"><div class="lbl">Ce qui retient l'attention</div><h2>Les rubriques les plus lues</h2><div class="bars" id="tabs"></div></div>
+      <div class="card"><div class="lbl">Ce qu'ils veulent savoir</div><h2>Les sujets qui reviennent</h2><div id="themes"></div><div class="lbl" style="margin-top:18px;">Documents les plus demandés</div><div id="docs"></div><div class="lbl" style="margin-top:18px;">Retours de visite</div><div id="retours"></div></div>
+    </div>
+    <div class="card" id="mkt-card"><div class="lbl">Le marché autour de votre bien</div><h2>Votre prix face aux ventes réelles de votre commune</h2>
+      <div class="hint" style="margin-bottom:14px;">Renseignez les caractéristiques du bien : nous le comparons aux ventes réellement signées dans votre commune (données officielles DVF, 3 dernières années) et estimons combien de foyers du secteur peuvent le financer (revenus Insee).</div>
       <div class="calc">
         <label><span>Type de bien</span><select id="m-type"><option value="appartement">Appartement</option><option value="maison">Maison</option></select></label>
         <label><span>Surface habitable (m²)</span><input id="m-surface" type="number" inputmode="decimal" min="9" max="400" step="1" placeholder="0"></label>
@@ -122,25 +119,20 @@ ul.feed .what{min-width:0;overflow-wrap:anywhere;}
         <label><span>&nbsp;</span><button type="button" class="btn dark" id="m-go" style="justify-content:center;">Comparer à ma commune</button></label>
       </div>
       <div class="cost-out" id="m-out" aria-live="polite" style="display:none;"></div>
-    </section>
-    <details class="more"><summary>Pour aller plus loin : rubriques lues, sujets et coût de l'attente</summary>
-      <div class="blk"><div class="lbl">Ce qui retient l'attention</div><h2>Les rubriques les plus lues</h2><div class="bars" id="tabs"></div></div>
-      <div class="blk"><div class="lbl">Ce qu'ils veulent savoir</div><h2>Les sujets qui reviennent</h2><div id="themes"></div><div class="lbl" style="margin-top:22px;">Documents les plus demandés</div><div id="docs"></div><div class="lbl" style="margin-top:22px;">Retours de visite</div><div id="retours"></div></div>
-      <div class="blk" id="cost-card"><div class="lbl">Le coût de l'attente</div><h2>Ce que coûte chaque mois sans vente</h2>
-        <div class="hint">Calcul indicatif, effectué sur cet écran : vos chiffres ne sont ni enregistrés ni transmis. Le capital remboursé de votre crédit n'est pas une perte : il n'est pas compté.</div>
-        <div class="calc">
-          <label><span>Crédit : intérêts et assurance (€ / mois, hors capital remboursé)</span><input id="c-credit" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
-          <label><span>Charges de copropriété (€ / mois)</span><input id="c-charges" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
-          <label><span>Taxe foncière (€ / an)</span><input id="c-taxe" type="number" inputmode="decimal" min="0" step="50" placeholder="0"></label>
-          <label><span>Autres frais : énergie, assurance (€ / mois)</span><input id="c-autres" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
-          <label><span>Prix de vente actuel (€)</span><input id="c-prix" type="number" inputmode="decimal" min="0" step="1000" placeholder="0"></label>
-          <label><span>Baisse de prix envisagée (%)</span><input id="c-baisse" type="number" inputmode="decimal" min="0" max="30" step="0.5" value="3"></label>
-        </div>
-        <div class="cost-out" id="c-out" aria-live="polite"></div>
+    </div>
+    <div class="card" id="cost-card"><div class="lbl">Le coût de l'attente</div><h2>Ce que coûte chaque mois sans vente</h2>
+      <div class="hint" style="margin-bottom:14px;">Calcul indicatif, effectué sur cet écran : vos chiffres ne sont ni enregistrés ni transmis. Le capital remboursé de votre crédit n'est pas une perte : il n'est pas compté.</div>
+      <div class="calc">
+        <label><span>Crédit : intérêts et assurance (€ / mois, hors capital remboursé)</span><input id="c-credit" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
+        <label><span>Charges de copropriété (€ / mois)</span><input id="c-charges" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
+        <label><span>Taxe foncière (€ / an)</span><input id="c-taxe" type="number" inputmode="decimal" min="0" step="50" placeholder="0"></label>
+        <label><span>Autres frais : énergie, assurance (€ / mois)</span><input id="c-autres" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
+        <label><span>Prix de vente actuel (€)</span><input id="c-prix" type="number" inputmode="decimal" min="0" step="1000" placeholder="0"></label>
+        <label><span>Baisse de prix envisagée (%)</span><input id="c-baisse" type="number" inputmode="decimal" min="0" max="30" step="0.5" value="3"></label>
       </div>
-    </details>
-    <section class="note hidden" id="note-card"><div class="lbl">Le mot de votre conseiller</div><p id="note"></p><div class="who" id="note-who"></div></section>
-    <section><div class="lbl">Votre conseiller</div><h2 id="contact-title"></h2><div class="cta" id="cta"></div></section>
+      <div class="cost-out" id="c-out" aria-live="polite"></div>
+    </div>
+    <div class="card"><div class="lbl">Votre conseiller</div><h2 id="contact-title"></h2><div class="cta" id="cta"></div></div>
     <div id="digest-box" class="foot hidden" style="padding-bottom:6px;"></div>
 <div class="foot">Document confidentiel destiné au propriétaire du bien. Les données proviennent de la fiche interactive Privency de votre bien.</div>
   </main>
@@ -208,18 +200,17 @@ ul.feed .what{min-width:0;overflow-wrap:anywhere;}
     $('agent-name').textContent = nom || 'Votre conseiller'; $('agent-role').textContent = ag.reseau || 'Conseiller immobilier';
     bienLabel = String(r.bien || '');
     $('bien').textContent = r.bien ? (r.bien.charAt(0).toUpperCase() + r.bien.slice(1)) : 'Votre bien';
-    $('maj').textContent = 'Mis à jour le ' + fmtDate(r.genere_le) + (r.depuis ? ' · fiche en ligne depuis le ' + fmtDate(r.depuis) : '');
+    var majTxt = 'Mis à jour le ' + fmtDate(r.genere_le) + (r.depuis ? ' · fiche en ligne depuis le ' + fmtDate(r.depuis) : '');
+    $('maj').textContent = majTxt;
     document.title = 'Compte rendu — ' + $('bien').textContent;
     // Personnalisation : « Préparé pour <propriétaire> » si l'agent a renseigné son nom dans la fiche (sinon rien ne change).
     fetch(SUPABASE_URL + '/rest/v1/rpc/vendeur_proprio', { method: 'POST', headers: {'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}, body: JSON.stringify({p_token: token}) })
       .then(function(x) { return x.ok ? x.json() : null; })
-      .then(function(n) { if (typeof n === 'string' && n.trim() && n.length <= 110) $('hello-nom').textContent = 'Bonjour ' + n.trim() + ','; })
+      .then(function(n) { if (typeof n === 'string' && n.trim() && n.length <= 110) $('maj').textContent = 'Préparé pour ' + n.trim() + ' · ' + majTxt; })
       .catch(function() {});
 
-    var bg = $('big'); bg.textContent = '';
-    var dl = delta(sm.visites || 0, sm.visites_prec || 0);
-    bg.appendChild(el('div', 'v', String(sm.visites || 0))); bg.appendChild(el('div', 'l', (sm.visites > 1 ? 'ouvertures' : 'ouverture') + ' de la fiche cette semaine')); bg.appendChild(el('div', 'd ' + dl.cls, dl.text));
     var k = $('kpis'); k.textContent = '';
+    k.appendChild(kpi(sm.visites || 0, 'ouvertures de la fiche cette semaine', delta(sm.visites || 0, sm.visites_prec || 0)));
     k.appendChild(kpi(t.acquereurs || 0, (t.acquereurs > 1 ? 'acquéreurs identifiés' : 'acquéreur identifié') + (t.anonymes ? ' (+ ' + plur(t.anonymes, 'visite anonyme', 'visites anonymes') + ')' : '')));
     k.appendChild(kpi(fmtMin(t.minutes), 'de lecture au total'));
     k.appendChild(kpi(t.docs || 0, t.docs > 1 ? 'documents demandés' : 'document demandé'));
@@ -259,22 +250,18 @@ ul.feed .what{min-width:0;overflow-wrap:anywhere;}
     });
     var b = $('buyers'); b.textContent = '';
     if (!(r.acquereurs || []).length) { b.appendChild(el('div', 'empty', "Aucun acquéreur identifié pour l'instant. Les visites anonymes sont comptées ci-dessus.")); b.style.display = 'block'; }
-    var RANK = {tres: 3, interesse: 2, ecoute: 1};
     (r.acquereurs || []).forEach(function(a) {
-      var c = el('div', 'buyer');
-      c.appendChild(el('div', 'ltr', String(a.lettre || '')));
-      c.appendChild(el('div', 'nm', 'Acquéreur ' + a.lettre));
-      c.appendChild(el('div', 'meta', plur(a.visites, 'visite', 'visites') + (a.minutes ? ' · ' + fmtMin(a.minutes) + ' de lecture' : '') + (a.derniere ? ' · dernière le ' + fmtDate(a.derniere) : '')));
-      var seen = (a.onglets || []).map(function(i) { return tabLabel(i); }).filter(Boolean), bits = [];
-      if (seen.length) bits.push('A consulté : ' + seen.join(', '));
-      if (a.simulation) bits.push('a simulé son financement');
-      if (a.docs) bits.push('a demandé ' + plur(a.docs, 'document', 'documents'));
-      if (a.questions) bits.push('a posé ' + plur(a.questions, 'question', 'questions') + ' sur le bien');
-      if (bits.length) { var tx = bits.join(' · '); c.appendChild(el('div', 'what', tx.charAt(0).toUpperCase() + tx.slice(1))); }
-      var lv = el('div', 'lvl ' + a.niveau), sg = el('span', 'seg'), rk = RANK[a.niveau] || 1;
-      for (var q = 1; q <= 3; q++) sg.appendChild(el('i', q <= rk ? 'on' : ''));
-      lv.appendChild(sg); lv.appendChild(el('b', null, LEVELS[a.niveau] || '')); c.appendChild(lv);
-      b.appendChild(c);
+      var c = el('div', 'buyer'), top = el('div', 'top');
+      top.appendChild(el('div', 'nm', 'Acquéreur ' + a.lettre)); top.appendChild(el('span', 'badge ' + a.niveau, LEVELS[a.niveau] || ''));
+      c.appendChild(top);
+      var ul = el('ul');
+      ul.appendChild(el('li', null, plur(a.visites, 'visite', 'visites') + (a.minutes ? ' · ' + fmtMin(a.minutes) + ' de lecture' : '') + (a.derniere ? ' · dernière le ' + fmtDate(a.derniere) : '')));
+      var seen = (a.onglets || []).map(function(i) { return tabLabel(i); }).filter(Boolean);
+      if (seen.length) ul.appendChild(el('li', null, 'A consulté : ' + seen.join(', ')));
+      if (a.simulation) ul.appendChild(el('li', null, 'A simulé son financement'));
+      if (a.docs) ul.appendChild(el('li', null, 'A demandé ' + plur(a.docs, 'document', 'documents')));
+      if (a.questions) ul.appendChild(el('li', null, 'A posé ' + plur(a.questions, 'question', 'questions') + ' sur le bien'));
+      c.appendChild(ul); b.appendChild(c);
     });
 
     var tb = $('tabs'); tb.textContent = '';
