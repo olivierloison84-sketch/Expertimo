@@ -5406,10 +5406,58 @@ async function loadAnalytics() {
 
 // ── À rappeler aujourd'hui · silence · message adapté (calculé dans l'app, à partir des stats de l'agent) ──
 var _RETOUR_LBL = { coup_coeur: 'Un coup de cœur', prix: 'Le prix', travaux: 'Les travaux à prévoir', quartier: 'Le quartier', charges: 'Les charges', agencement: "L'agencement", financement: 'Son financement', reflechir: "Besoin d'y réfléchir" };
+/* Adresse affichée proprement : majuscules, accents courants, prépositions en minuscules. N'altère jamais les chiffres. */
+function fmtAdresse(s) {
+  s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+  if (!s) return s;
+  var PART = {de: 1, du: 1, des: 1, la: 1, le: 1, les: 1, et: 1, sur: 1, sous: 1, en: 1, au: 1, aux: 1, 'à': 1, d: 1, l: 1};
+  var VOIE = {rue: 1, avenue: 1, av: 1, boulevard: 1, bd: 1, impasse: 1, 'allée': 1, allee: 1, chemin: 1, place: 1, route: 1, square: 1, quai: 1, cours: 1, passage: 1, villa: 1, sentier: 1, ruelle: 1, esplanade: 1, parvis: 1, lotissement: 1, hameau: 1, venelle: 1, 'résidence': 1, residence: 1, 'cité': 1, cite: 1};
+  var MIN = {bis: 1, ter: 1, quater: 1};
+  var ACC = {ecole: 'école', eglise: 'église', republique: 'république', liberte: 'liberté', egalite: 'égalité', fraternite: 'fraternité', marechal: 'maréchal', general: 'général', hotel: 'hôtel', etoile: 'étoile', epinay: 'épinay', bretigny: 'brétigny', genevieve: 'geneviève', therese: 'thérèse', rene: 'rené', andre: 'andré', jerome: 'jérôme', eugene: 'eugène', emile: 'émile', pere: 'père', peri: 'péri', allee: 'allée', residence: 'résidence', chateau: 'château', foret: 'forêt', cite: 'cité', orleans: 'orléans', chatillon: 'châtillon', gerard: 'gérard', frederic: 'frédéric', helene: 'hélène', stephane: 'stéphane', mediterranee: 'méditerranée', senateur: 'sénateur', deportes: 'déportés', resistance: 'résistance', ecureuils: 'écureuils', eglantine: 'églantine', pecheurs: 'pêcheurs'};
+  var toks = s.split(' '), out = [], cp = -1;
+  toks.forEach(function(t, i) {
+    if (/\d/.test(t)) { if (cp < 0 && /^\d{5}$/.test(t)) cp = i; out.push(t); return; }
+    var low = t.toLowerCase();
+    if (t === 'a' && i > 0 && i < toks.length - 1 && !/\d/.test(toks[i - 1]) && !/\d/.test(toks[i + 1])) { out.push('à'); return; }
+    if (MIN[low] && i > 0) { out.push(low); return; }
+    var prev = out.length ? out[out.length - 1] : '', debutCommune = (cp >= 0 && i === cp + 1) || /[,;:–—-]$/.test(prev);
+    out.push(low.split(/(['’-])/).map(function(p, j) {
+      if (j % 2 === 1) return p;
+      var w = ACC[p] || p;
+      if (!w) return w;
+      if (!(i === 0 && j === 0) && !debutCommune) {
+        if (cp < 0 && VOIE[w] && j === 0) return w;
+        if (PART[w]) return w;
+      }
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    }).join(''));
+  });
+  /* Commune seule après le code postal (mots uniquement) : « Morsang sur Orge » devient « Morsang-sur-Orge ». Sinon, aucun tiret ajouté. */
+  if (cp >= 0 && out.length - cp - 1 > 1 && out.length - cp - 1 <= 5) {
+    var reste = out.slice(cp + 1), lw = reste.map(function(w) { return w.toLowerCase(); });
+    var seuls = reste.every(function(w) { return /^[A-Za-zÀ-ÿ'’]+$/.test(w); });
+    var tiret = /^(saint|sainte)$/.test(lw[0]) || (lw.length === 3 && /^(sur|sous|en)$/.test(lw[1])) || (lw.length === 2 && /^(chilly|viry)$/.test(lw[0]));
+    if (seuls && tiret) out = out.slice(0, cp + 1).concat([reste.join('-')]);
+  }
+  return out.join(' ');
+}
+
+/* Libellés lisibles pour Mes stats (au lieu des codes bruts « fiche_ouverte », « onglet_budget »…) */
+var _TAB_LBL = { bien: 'Le bien', marche: 'Ventes comparables', rentabilite: 'Simulateur investisseur', historique: 'Historique du bien', diagnostics: 'Diagnostics', budget: 'Financement et budget', financement: 'Financement et budget', quartier: 'Quartier et carte', documents: 'Documents', assistant: 'Assistant', offre: 'Faire une offre' };
+var _EVT_LBL = { fiche_ouverte: 'Fiche ouverte', credit_simule: 'Financement simulé', offre_soumise: 'Offre transmise', documents_demandes: 'Documents demandés', retour_visite: 'Retour de visite', inconnu: 'Autre' };
+function _tabLabel(k) { k = String(k == null ? '' : k); return Object.prototype.hasOwnProperty.call(_TAB_LBL, k) ? _TAB_LBL[k] : (k.replace(/_/g, ' ').replace(/^./, function(c) { return c.toUpperCase(); })); }
+function _evtLabel(ev) {
+  ev = String(ev == null ? '' : ev);
+  if (Object.prototype.hasOwnProperty.call(_EVT_LBL, ev)) return _EVT_LBL[ev];
+  if (ev.indexOf('onglet_') === 0) return 'Onglet « ' + _tabLabel(ev.slice(7)) + ' »';
+  return ev.replace(/_/g, ' ').replace(/^./, function(c) { return c.toUpperCase(); });
+}
+
+
 function _clAddr(s) {
   // bien_adresse = titre de la page : « 12 rue des Lilas, 91300 Massy · Espace Acheteur Privé · Expertimo »
   var t = String(s || '').split(' · ')[0].replace(/\s*[-–|]\s*Espace.*$/i, '');
-  return t.replace(/[\s,(]*\b\d{5}\b.*$/, '').replace(/[\s,(–-]+$/, '').trim();
+  return fmtAdresse(t.replace(/[\s,(]*\b\d{5}\b.*$/, '').replace(/[\s,(–-]+$/, '').trim());
 }
 function _clStats(g, now) {
   var DAY = 86400000, ev = g.events || {};
@@ -5568,7 +5616,7 @@ function renderAnalytics() {
       var col = '#0A6F4D';
       var bd2 = ev.startsWith('onglet') ? 'border:1px solid #A6E3C6;' : '';
       return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';' + bd2 + 'border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
-        + esc(ev) + ' ×' + g.events[ev] + '</span>';
+        + esc(_evtLabel(ev)) + ' ×' + g.events[ev] + '</span>';
     }).join(' ');
 
     var topTab = Object.keys(g.onglets || {}).sort(function(a, b) { return g.onglets[b] - g.onglets[a]; })[0];
@@ -5577,7 +5625,7 @@ function renderAnalytics() {
     var ev = g.events || {};
     var tiles = tile('Visites de la fiche', esc(String(ev.fiche_ouverte || 0)))
       + tile('Temps passé', g.nbSessions ? esc(fmtDuree(g.dureeTotal)) + '<div style="font-weight:400;font-size:11px;color:var(--muted);">' + g.nbSessions + ' visite' + (g.nbSessions > 1 ? 's' : '') + ' · max ' + esc(fmtDuree(g.dureeMax)) + '</div>' : '—')
-      + tile('Rubrique la plus lue', topTab ? esc(topTab) : '—')
+      + tile('Rubrique la plus lue', topTab ? esc(_tabLabel(topTab)) : '—')
       + tile('Consulte plutôt', slot ? esc(slot) : '—')
       + tile('Simulation de financement', (ev.credit_simule || 0) > 0 ? 'Oui ×' + ev.credit_simule : 'Non')
       + tile('Offre', (ev.offre_soumise || 0) > 0 ? 'Transmise' : 'Non')
@@ -5879,10 +5927,11 @@ async function loadFiches() {
 
     tbody.innerHTML = '';
     htmlFiles.forEach(function(f, idx) {
-      var label = (f.label || f.filename)
-        .replace(/-FINAL\.html$/, '')
+      var label = fmtAdresse(String(f.label || f.filename)
+        .replace(/(-[A-Za-z]{2})?-FINAL\.html$/, '')
         .replace(/\.html$/, '')
-        .replace(/-/g, ' ');
+        .replace(/-/g, ' ')
+        .replace(/\s(?=[0-9a-f]*\d)[0-9a-f]{6}$/, ''));
       var tr = document.createElement('tr');
       tr.style.background = idx % 2 === 0 ? '#fff' : '#f8fafc';
       var safeName = f.filename.replace(/'/g, "\\'");
