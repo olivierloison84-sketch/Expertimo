@@ -7,7 +7,7 @@ const T={agents:AG,agent_profiles:[{user_id:'a1',prenom:'Ana',nom:'D'}],agent_fi
 aide_questions:[{id:'q1',agent_user_id:'a1',question:'Q ?',created_at:'2026-10-02'}],agent_idees:[{id:'i1',agent_user_id:'a2',categorie:'bug',message:'M',created_at:'2026-10-02'}]};
 const q=t=>{const o={select:()=>o,gte:()=>o,order:()=>o,limit:()=>o,then:f=>f({data:T[t]})};return o};
 const fake={'@supabase/supabase-js':{createClient:()=>({auth:{getUser:async j=>j==='admin'?{data:{user:{id:'79e4e432-2232-4d2c-b41d-8c7c907c4dec'}}}:j==='other'?{data:{user:{id:'zz'}}}:{data:{},error:{}}},from:q})},
-stripe:()=>({subscriptions:{list:async()=>({data:[{id:'sub_try',trial_end:1791000000}]})}})};
+stripe:()=>({subscriptions:{list:()=>({autoPagingEach:async f=>{f({id:'sub_try',trial_end:1791000000})}})}})};
 const orig=Module._load;Module._load=function(r,...a){return fake[r]||orig.call(this,r,...a)};
 process.env.SUPABASE_SECRET_KEY='k';process.env.STRIPE_SECRET_KEY='s';
 const h=require('../api/admin-stats.js');let fail=0;const ok=(c,m)=>{console.log(c?'ok':'FAIL',m);if(!c)fail++};
@@ -21,5 +21,6 @@ await h({method:'GET',headers:{origin:'https://app.privency.fr',authorization:to
  ok(b.totaux.mrr_total===69&&b.totaux.nb_essais_en_cours===1,'essai exclu du MRR (69 €), 1 essai');
  ok(b.clients.find(c=>c.id==='a2').en_essai===true&&b.clients.find(c=>c.id==='a2').fin_essai,'fin d\'essai renseignée');
  ok(b.messages.questions[0].agent==='Ana D'&&b.messages.idees[0].agent==='essai@x.fr','messages avec nom de l\'agent');
+ ok(b.stripe_ok===true,'stripe_ok vrai');
  ok(b.comptes_internes.length===1,'compte test à part');
  process.exit(fail?1:0)})();

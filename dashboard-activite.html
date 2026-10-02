@@ -264,7 +264,7 @@ function statutBadge(agent) {
 }
 function nomReseauCell(agent) {
   var nomComplet = [agent.prenom, agent.nom].filter(Boolean).join(' ').trim();
-  var nom = nomComplet || '<span style="color:var(--muted);">—</span>';
+  var nom = nomComplet ? escapeHtml(nomComplet) : '<span style="color:var(--muted);">—</span>';
   var reseau = agent.reseau ? '<span class="cell-sub">' + escapeHtml(agent.reseau) + '</span>' : '';
   return nom + reseau;
 }
@@ -337,12 +337,12 @@ function showDetail(key) {
   } else if (key === 'inactifs') {
     titre = 'Agents sans activité depuis 7 jours';
     html = petiteTable(['Agent', 'Dernière activité', 'Fiches', 'Statut'], inactifs(clients).map(function (a) {
-      return [escapeHtml(nomCourt(a)), a.derniere_activite ? ilYa(a.derniere_activite) : 'jamais', a.nb_fiches || 0, statutBadge(a)]; }), 'Tous vos agents ont été actifs cette semaine.');
+      var der = [a.derniere_activite, a.derniere_maj_fiche].filter(Boolean).sort().pop();
+      return [escapeHtml(nomCourt(a)), der ? ilYa(der) : 'jamais', a.nb_fiches || 0, statutBadge(a)]; }), 'Tous vos agents ont été actifs cette semaine.');
   } else if (key === 'abonnes') {
-    titre = 'Inscriptions de ce mois-ci';
-    var mois = new Date().toISOString().slice(0, 7);
-    html = petiteTable(['Agent', 'Inscription', 'Statut'], clients.filter(function (a) { return String(a.created_at || '').slice(0, 7) === mois; }).map(function (a) {
-      return [escapeHtml(nomCourt(a)), fmtDate(a.created_at), statutBadge(a)]; }), 'Aucune inscription ce mois-ci.');
+    titre = 'Abonnés actifs (qui paient)';
+    html = petiteTable(['Agent', 'Inscription', 'Statut'], clients.filter(function (a) { return a.mrr > 0; }).map(function (a) {
+      return [escapeHtml(nomCourt(a)), fmtDate(a.created_at), statutBadge(a)]; }), 'Aucun abonné payant pour l\'instant.');
   }
   box.setAttribute('data-k', key);
   box.innerHTML = '<div class="panel"><div class="panel-header">' + titre + '</div><div class="panel-body"><div class="table-wrap">' + html + '</div></div></div>';
@@ -351,8 +351,9 @@ function inactifs(clients) {
   // Agent payant ou en essai, sans aucune activité de ses clients depuis 7 jours.
   return clients.filter(function (a) {
     if (!(a.mrr > 0 || a.en_essai)) return false;
-    var j = jours(a.derniere_activite || a.derniere_maj_fiche);
-    return j === null || j >= 7;
+    if (jours(a.created_at) < 7) return false; // inscrit depuis moins d'une semaine : pas encore « inactif »
+    var j = Math.min(jours(a.derniere_activite) == null ? 9999 : jours(a.derniere_activite), jours(a.derniere_maj_fiche) == null ? 9999 : jours(a.derniere_maj_fiche));
+    return j >= 7;
   });
 }
 
@@ -366,18 +367,19 @@ function renderDashboard(data) {
   var nbQ = (data.messages && data.messages.questions || []).length, nbI = (data.messages && data.messages.idees || []).length;
   var kpis = [
     { k: 'abonnes', label: 'Abonnés actifs', value: totaux.nb_clients_actifs || 0, sub: '+' + (totaux.nb_nouvelles_inscriptions_ce_mois || 0) + ' inscrit(s) ce mois-ci' },
-    { k: 'revenu', label: 'Revenu mensuel (MRR)', value: fmtEUR(totaux.mrr_total), sub: fmtEUR(totaux.arr_total) + ' / an' },
+    { k: 'revenu', label: 'Revenu mensuel (MRR)', value: fmtEUR(totaux.mrr_total), sub: data.stripe_ok === false ? '⚠️ Provisoire : essais non vérifiés (Stripe)' : fmtEUR(totaux.arr_total) + ' / an', warn: data.stripe_ok === false },
     { k: 'essais', label: 'En essai gratuit', value: totaux.nb_essais_en_cours || 0, sub: prochainEssai === undefined ? '' : (prochainEssai <= 0 ? 'Un essai se termine aujourd\'hui' : 'Prochaine fin d\'essai : dans ' + prochainEssai + ' j'), warn: prochainEssai !== undefined && prochainEssai <= 3 },
     { k: 'inactifs', label: 'Agents inactifs (7 j)', value: nbInactifs, sub: nbInactifs ? 'À relancer' : 'Tout le monde est actif', warn: nbInactifs > 0, alerte: nbInactifs > 0 },
     { k: 'msg', label: 'Messages (60 j)', value: nbQ + nbI, sub: nbQ + ' question(s) · ' + nbI + ' idée(s)', msg: true }
   ];
   document.getElementById('kpi-grid').innerHTML = kpis.map(function (k) {
-    return '<div class="kpi-tile clic' + (k.alerte ? ' alerte' : '') + '" data-k="' + k.k + '">'
+    return '<div class="kpi-tile clic' + (k.alerte ? ' alerte' : '') + '" data-k="' + k.k + '" role="button" tabindex="0">'
       + '<div class="kpi-label">' + escapeHtml(k.label) + '</div><div class="kpi-value">' + k.value + '</div>'
       + '<div class="kpi-sub' + (k.warn ? ' warn' : '') + '">' + escapeHtml(k.sub || '') + '</div>'
       + '<div class="kpi-more">' + (k.msg ? 'Voir ci-dessous ▾' : 'Voir le détail ▾') + '</div></div>';
   }).join('');
   document.querySelectorAll('#kpi-grid .kpi-tile').forEach(function (t) {
+    t.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t.click(); } };
     t.onclick = function () {
       var k = t.getAttribute('data-k');
       if (k === 'msg') { document.getElementById('msg-questions').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }

@@ -127,11 +127,12 @@ module.exports = async function handler(req, res) {
 
     // Essais gratuits en cours (Stripe) : un essai n'est pas encore du revenu. Best-effort.
     const essais = new Map();
+    let stripeOk = false;
     if (process.env.STRIPE_SECRET_KEY) {
       try {
         const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
-        const subs = await stripe.subscriptions.list({ status: 'trialing', limit: 100 });
-        (subs.data || []).forEach(function(sub) { essais.set(sub.id, sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null); });
+        await stripe.subscriptions.list({ status: 'trialing', limit: 100 }).autoPagingEach(function(sub) { essais.set(sub.id, sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null); });
+        stripeOk = true;
       } catch (e) {
         console.error('[api/admin-stats] Stripe essais:', e.message);
       }
@@ -204,6 +205,7 @@ module.exports = async function handler(req, res) {
         supabaseAdmin.from('aide_questions').select('id, agent_user_id, question, created_at').gte('created_at', depuis).order('created_at', { ascending: false }).limit(50),
         supabaseAdmin.from('agent_idees').select('id, agent_user_id, categorie, message, created_at').gte('created_at', depuis).order('created_at', { ascending: false }).limit(50)
       ]);
+      if (qr.error || ir.error) console.error('[api/admin-stats] messages:', (qr.error || ir.error).message);
       questions = (qr.data || []).map(function(r) { return { id: r.id, agent: nomAgent.get(r.agent_user_id) || '—', texte: r.question, created_at: r.created_at }; });
       idees = (ir.data || []).map(function(r) { return { id: r.id, agent: nomAgent.get(r.agent_user_id) || '—', categorie: r.categorie, texte: r.message, created_at: r.created_at }; });
     } catch (e) {
@@ -211,6 +213,7 @@ module.exports = async function handler(req, res) {
     }
 
     return res.status(200).json({
+      stripe_ok: stripeOk,
       messages: { questions: questions, idees: idees },
       totaux: {
         mrr_total: mrrTotal,
