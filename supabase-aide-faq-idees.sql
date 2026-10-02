@@ -21,3 +21,5 @@ create policy aide_questions_insert on public.aide_questions for insert to authe
 drop policy if exists agent_idees_insert on public.agent_idees;
 create policy agent_idees_insert on public.agent_idees for insert to authenticated
   with check (agent_user_id = auth.uid());
+grant insert on public.aide_questions to authenticated;
+grant insert on public.agent_idees to authenticated;

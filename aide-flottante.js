@@ -23,7 +23,7 @@
     ['Où voir les vidéos tuto ?', 'Onglet « Vidéos tuto » : quatre vidéos courtes expliquent comment utiliser Privency. Vous pouvez aussi cliquer sur « Revoir le tutoriel » en haut à droite.', 'video videos tuto tutoriel aide apprendre revoir'],
     ['Combien coûte Privency ?', '69 € par mois, avec 14 jours d\'essai gratuit. TVA non applicable, art. 293 B du CGI.', 'prix tarif cout combien abonnement 69 tva'],
     ['Comment fonctionne l\'essai gratuit ?', 'Vous avez 14 jours gratuits. Votre carte est enregistrée mais n\'est pas débitée pendant l\'essai. Vous pouvez arrêter avant la fin sans rien payer.', 'essai gratuit 14 jours carte debit test'],
-    ['Comment résilier mon abonnement ?', 'En haut à droite : « Mon abonnement » → « Gérer mon abonnement ». Vous pouvez résilier et reprendre à tout moment, sans engagement.', 'resilier annuler abonnement arreter reprendre stripe'],
+    ['Comment résilier mon abonnement ?', 'En haut de la page : « Mon abonnement » → « Gérer mon abonnement » (en haut de la page). Vous pouvez résilier et reprendre à tout moment, sans engagement.', 'resilier annuler abonnement arreter reprendre stripe'],
     ['Comment changer ma carte bancaire ou voir mes factures ?', 'Même chemin : « Mon abonnement » → « Gérer mon abonnement » (portail sécurisé Stripe). Vous y changez de carte et téléchargez vos factures.', 'carte bancaire facture factures changer paiement stripe'],
     ['Mes données et celles de mes clients sont-elles protégées ?', 'Oui. Chaque agent ne voit que ses propres données, et les clients ne voient que leur espace. Les liens vendeur sont privés et révocables.', 'donnees securite rgpd confidentialite protection prive'],
     ['Je n\'arrive pas à me connecter', 'Vérifiez que vous utilisez le même compte Google que d\'habitude (bouton « Changer de compte » en haut à droite si besoin). Sinon, écrivez-nous : contact@privency.fr.', 'connexion connecter login mot de passe google compte probleme'],
@@ -55,7 +55,7 @@
     '.aide-btn{width:50px;height:50px;border-radius:50%;border:0;cursor:pointer;color:#fff;background:#0E9F6E;box-shadow:0 6px 18px rgba(10,111,77,.35);font-size:22px;display:flex;align-items:center;justify-content:center}' +
     '.aide-btn.idee{background:#fff;color:#0A6F4D;border:1.5px solid #0E9F6E;width:44px;height:44px;font-size:19px}' +
     '.aide-btn:hover{transform:translateY(-2px)}' +
-    '.aide-panel{position:fixed;right:18px;bottom:150px;width:340px;max-width:calc(100vw - 24px);max-height:70vh;background:#fff;border:1px solid #E5E9EF;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.18);z-index:9001;display:none;flex-direction:column;overflow:hidden;font-family:inherit}' +
+    '.aide-panel{position:fixed;right:18px;bottom:150px;width:340px;max-width:calc(100vw - 24px);max-height:calc(100vh - 170px);background:#fff;border:1px solid #E5E9EF;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.18);z-index:9001;display:none;flex-direction:column;overflow:hidden;font-family:inherit}' +
     '.aide-panel.open{display:flex}' +
     '.aide-head{background:#0A6F4D;color:#fff;padding:12px 14px;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}' +
     '.aide-head button{background:none;border:0;color:#fff;font-size:18px;cursor:pointer}' +
