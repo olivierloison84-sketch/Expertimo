@@ -2141,6 +2141,17 @@ document.addEventListener('DOMContentLoaded', function() {
   btn.addEventListener('click', function() { showOnboardingOverlay(); });
   var zone = document.getElementById('header-actions'), abo = document.getElementById('hdr-abo');
   if (zone) zone.insertBefore(btn, abo ? abo.nextSibling : zone.firstChild); else document.body.appendChild(btn);
+  // Compte administrateur uniquement : accès direct au tableau de bord (même onglet, donc même compte connecté).
+  setTimeout(async function () {
+    try {
+      var s = await window.privencyAuth.auth.getSession(), u = s && s.data && s.data.session && s.data.session.user;
+      if (!u || u.id !== '79e4e432-2232-4d2c-b41d-8c7c907c4dec' || !zone) return;
+      var a = document.createElement('a');
+      a.id = 'admin-dash-btn'; a.className = 'hbtn'; a.href = '/dashboard-activite.html'; a.textContent = '📊 Tableau de bord';
+      a.style.textDecoration = 'none';
+      zone.insertBefore(a, zone.firstChild);
+    } catch (e) {}
+  }, 1200);
 });
 
 

@@ -208,10 +208,11 @@
     onDomReady(function () {
       var root = document.getElementById('dash-root');
       if (root) {
-        root.innerHTML = '<div class="forbidden-msg">⛔ Accès non autorisé — cette page est réservée.</div>';
+        var qui = (session.user && session.user.email) ? session.user.email : 'inconnu';
+        root.innerHTML = '<div class="forbidden-msg">⛔ Accès non autorisé — cette page est réservée au compte administrateur.'
+          + '<div style="font-weight:400;margin-top:10px;font-size:13px;">Vous êtes connecté avec : <b>' + escapeHtml(qui) + '</b><br>Connectez-vous avec olivier.loison@expertimo.com (bouton « Changer de compte »).</div></div>';
       }
     });
-    setTimeout(function () { window.location.replace('/dashboard.html'); }, 1800);
   }
 
   function checkAdmin(session) {
