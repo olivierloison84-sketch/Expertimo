@@ -8,7 +8,7 @@
 <title>Compte rendu de commercialisation</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F5FAF7;--card:#fff;--ink:#0F1A16;--gold:#0E9F6E;--gold2:#0A6F4D;--cream:#E9F9F1;--muted:#667085;--border:#E5E9EF;--vert:#0E9F6E;--rouge:#B7791F;--dark:#0A6F4D;--agent:#0E9F6E;--soft:#A6E3C6;--line:#E5E9EF;}
+:root{--bg:#F5FAF7;--card:#fff;--ink:#0F1A16;--gold:#0E9F6E;--gold2:#0A6F4D;--cream:#E9F9F1;--muted:#667085;--border:#E5E9EF;--vert:#0E9F6E;--rouge:#667085;--dark:#0A6F4D;--agent:#0E9F6E;--soft:#A6E3C6;--line:#E5E9EF;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-text-size-adjust:100%;}
 .wrap{max-width:920px;margin:0 auto;padding:0 20px;}
@@ -17,10 +17,10 @@ header.top::before{content:'';position:absolute;width:420px;height:420px;backgro
 .agent{display:flex;align-items:center;gap:12px;position:relative;z-index:1;}
 .avatar{width:46px;height:46px;border-radius:50%;background:#fff;color:#0A6F4D;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;flex:none;object-fit:cover;}
 .agent-name{font-weight:600;font-size:14px;}
-.agent-role{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.6);text-transform:uppercase;}
-.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#A6E3C6;margin:30px 0 8px;position:relative;z-index:1;}
+.agent-role{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.82);text-transform:uppercase;}
+.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#C8F0DC;margin:30px 0 8px;position:relative;z-index:1;}
 h1{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(26px,5.2vw,40px);line-height:1.15;position:relative;z-index:1;text-wrap:balance;}
-.sub{color:rgba(255,255,255,.7);font-size:13.5px;margin-top:8px;position:relative;z-index:1;}
+.sub{color:rgba(255,255,255,.85);font-size:13.5px;margin-top:8px;position:relative;z-index:1;}
 main{margin-top:-40px;position:relative;z-index:2;padding-bottom:40px;}
 .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 14px rgba(15,26,22,.05);}
 .lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
@@ -31,7 +31,7 @@ h2{font-family:'Playfair Display',serif;font-weight:500;font-size:21px;line-heig
 .kpi .v{font-family:'Playfair Display',serif;font-size:32px;line-height:1;font-variant-numeric:tabular-nums;}
 .kpi .l{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.3;}
 .kpi .d{font-family:'IBM Plex Mono',monospace;font-size:10.5px;margin-top:6px;}
-.up{color:var(--vert);}.down{color:var(--rouge);}.flat{color:var(--muted);}
+.up{color:var(--gold2);}.down{color:var(--rouge);}.flat{color:var(--muted);}
 .story{font-family:'Playfair Display',serif;font-size:clamp(18px,3.4vw,23px);line-height:1.4;}
 .story em{font-style:normal;color:var(--gold2);}
 .note{background:var(--cream);border-color:var(--soft);}
@@ -86,7 +86,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
 .mkt-tbl td{padding:6px 6px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;}
 .mkt-tbl-wrap{overflow-x:auto;}
 .mkt-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.45;}
-@media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #000;}header.top::before{display:none;}h1,.sub,.agent-name,.agent-role{color:#000;}.eyebrow{color:#0A6F4D;margin-top:14px;}main{margin-top:0;}.card,.kpi{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
+@media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #0A6F4D;}header.top::before{display:none;}h1,.sub,.agent-name,.agent-role{color:#0F1A16;}.eyebrow{color:#0A6F4D;margin-top:14px;}main{margin-top:0;}.card,.kpi,.buyer,ul.feed li{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
 @media(prefers-reduced-motion:no-preference){.fill{transition:width .8s cubic-bezier(.22,.61,.36,1);}}
 </style>
 </head>
@@ -200,12 +200,13 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     $('agent-name').textContent = nom || 'Votre conseiller'; $('agent-role').textContent = ag.reseau || 'Conseiller immobilier';
     bienLabel = String(r.bien || '');
     $('bien').textContent = r.bien ? (r.bien.charAt(0).toUpperCase() + r.bien.slice(1)) : 'Votre bien';
-    $('maj').textContent = 'Mis à jour le ' + fmtDate(r.genere_le) + (r.depuis ? ' · fiche en ligne depuis le ' + fmtDate(r.depuis) : '');
+    var majTxt = 'Mis à jour le ' + fmtDate(r.genere_le) + (r.depuis ? ' · fiche en ligne depuis le ' + fmtDate(r.depuis) : '');
+    $('maj').textContent = majTxt;
     document.title = 'Compte rendu — ' + $('bien').textContent;
     // Personnalisation : « Préparé pour <propriétaire> » si l'agent a renseigné son nom dans la fiche (sinon rien ne change).
     fetch(SUPABASE_URL + '/rest/v1/rpc/vendeur_proprio', { method: 'POST', headers: {'Content-Type': 'application/json', 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY}, body: JSON.stringify({p_token: token}) })
       .then(function(x) { return x.ok ? x.json() : null; })
-      .then(function(n) { if (typeof n === 'string' && n.trim() && n.length <= 110) $('maj').textContent = 'Préparé pour ' + n.trim() + ' · ' + $('maj').textContent; })
+      .then(function(n) { if (typeof n === 'string' && n.trim() && n.length <= 110) $('maj').textContent = 'Préparé pour ' + n.trim() + ' · ' + majTxt; })
       .catch(function() {});
 
     var k = $('kpis'); k.textContent = '';
