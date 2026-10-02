@@ -62,7 +62,7 @@
     $('cs-verdict').innerHTML = gain>=PRIX
       ? 'Même en ne récupérant que '+Math.round(part*100)+' % de ce temps, Privency vous rend <b>'+eur(gain)+' €</b> par mois pour <b>'+PRIX+' €</b>'+(ratio>=1.5?', soit <b>×'+nf1.format(ratio)+'</b>.':'.')
       : 'Avec ces chiffres, le temps récupéré ne couvre pas l’abonnement. Vérifiez les heures que vous avez saisies.';
-    var b1 = be1>=1 ? [nf1.format(be1)+(be1<=1?' vente':' ventes'),'de plus sur l’année'] : ['1 vente','couvre plus de '+nf.format(Math.floor(1/be1))+' ans d’abonnement'];
+    var b1 = be1>=1 ? [nf1.format(be1)+(be1<=1?' vente':' ventes'),'de plus sur l’année'] : ['1 vente','couvre plus de '+nf.format(Math.floor(1/be1))+(Math.floor(1/be1)>1?' ans':' an')+' d’abonnement'];
     function stat(k,n,t,acc){return '<div class="cs-stat'+(acc?' acc':'')+'"><div class="k">'+k+'</div><div class="n">'+n+'</div><p>'+t+'</p></div>';}
     $('cs-stats').innerHTML = stat('Rentabilisé dès',b1[0],b1[1],true)+stat('Ou dès',eur(be2)+' min','récupérées par semaine',true)+stat('Temps à faible rendement',nf1.format(hSem)+' h','soit '+nf.format(Math.round(pct*100))+' % de votre temps de travail')+stat('Coût annuel de Privency',eur(prixAn)+' €','contre le montant perdu ci-dessus');
     detail.hidden = false;
