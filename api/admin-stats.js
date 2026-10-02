@@ -202,11 +202,11 @@ module.exports = async function handler(req, res) {
     let questions = [], idees = [];
     try {
       const [qr, ir] = await Promise.all([
-        supabaseAdmin.from('aide_questions').select('id, agent_user_id, question, created_at').gte('created_at', depuis).order('created_at', { ascending: false }).limit(50),
+        supabaseAdmin.from('aide_questions').select('*').gte('created_at', depuis).order('created_at', { ascending: false }).limit(50),
         supabaseAdmin.from('agent_idees').select('id, agent_user_id, categorie, message, created_at').gte('created_at', depuis).order('created_at', { ascending: false }).limit(50)
       ]);
       if (qr.error || ir.error) console.error('[api/admin-stats] messages:', (qr.error || ir.error).message);
-      questions = (qr.data || []).map(function(r) { return { id: r.id, agent: nomAgent.get(r.agent_user_id) || '—', texte: r.question, created_at: r.created_at }; });
+      questions = (qr.data || []).map(function(r) { return { id: r.id, agent: nomAgent.get(r.agent_user_id) || '—', texte: r.question, reponse: r.reponse || null, repondu_at: r.repondu_at || null, created_at: r.created_at }; });
       idees = (ir.data || []).map(function(r) { return { id: r.id, agent: nomAgent.get(r.agent_user_id) || '—', categorie: r.categorie, texte: r.message, created_at: r.created_at }; });
     } catch (e) {
       console.error('[api/admin-stats] messages:', e.message);

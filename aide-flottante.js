@@ -81,6 +81,7 @@
     '.aide-msg{font-size:12px;color:#667085;margin:6px 0}' +
     '@media(max-width:700px){#aide-fab{right:12px;bottom:12px}.aide-panel{right:12px;bottom:140px}}';
   function init() {
+    if (document.getElementById('aide-fab')) return;
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     var fab = document.createElement('div'); fab.id = 'aide-fab';
     fab.innerHTML = '<button type="button" class="aide-btn idee aide-pill" id="idee-btn" title="Une idée ? Un problème ?" aria-label="Boîte à idées"><span style="font-size:17px">💡</span><span>Idées</span></button><button type="button" class="aide-btn aide-pill" id="aide-btn" title="Une question ? Cliquez ici" aria-label="Aide : poser une question"><span style="font-size:19px">💬</span><span>Aide</span></button>';
@@ -91,7 +92,30 @@
     pI.innerHTML = '<div class="aide-head"><span>💡 Boîte à idées</span><button type="button" data-close aria-label="Fermer">×</button></div><div class="aide-body"><select id="idee-cat"><option value="idee">💡 Une idée</option><option value="bug">🐞 Un problème</option><option value="remarque">💬 Une remarque</option></select><textarea id="idee-txt" placeholder="Dites-nous tout…"></textarea><button type="button" class="aide-go" id="idee-send">Envoyer</button><div class="aide-msg" id="idee-msg"></div></div>';
     document.body.appendChild(pA); document.body.appendChild(pI);
     function toggle(p, other) { other.classList.remove('open'); p.classList.toggle('open'); }
-    document.getElementById('aide-btn').onclick = function () { toggle(pA, pI); renderRes(''); };
+    var rep = document.createElement('div'); rep.id = 'aide-rep';
+    pA.querySelector('.aide-body').insertBefore(rep, document.getElementById('aide-q'));
+    var badge = document.createElement('span'); badge.id = 'aide-badge'; badge.style.cssText = 'display:none;background:#F04438;color:#fff;border-radius:99px;font-size:11px;padding:1px 7px;margin-left:2px';
+    document.getElementById('aide-btn').appendChild(badge);
+    var reponses = [];
+    function vus() { try { return JSON.parse(localStorage.getItem('privency_reponses_vues') || '[]'); } catch (e) { return []; } }
+    function marquerVus() { try { localStorage.setItem('privency_reponses_vues', JSON.stringify(reponses.map(function (r) { return r.id; }))); } catch (e) {} badge.style.display = 'none'; }
+    function renderRep() {
+      rep.innerHTML = reponses.length ? '<div class="aide-msg" style="color:#0A6F4D;font-weight:700">Réponses de l\'équipe :</div>' + reponses.map(function (r) {
+        return '<div class="aide-q open"><button type="button">' + esc(r.question) + '</button><div>' + esc(r.reponse) + '</div></div>'; }).join('') : '';
+    }
+    async function chargerReponses() {
+      var c = window.privencyAuth; if (!c) return;
+      try {
+        var s = await c.auth.getSession(); if (!s || !s.data || !s.data.session) return;
+        var r = await c.from('aide_questions').select('id, question, reponse, repondu_at').not('reponse', 'is', null).order('repondu_at', { ascending: false }).limit(5);
+        if (r.error || !r.data) return;
+        reponses = r.data; renderRep();
+        var v = vus(), nouvelles = reponses.filter(function (x) { return v.indexOf(x.id) < 0; }).length;
+        if (nouvelles) { badge.textContent = nouvelles + (nouvelles > 1 ? ' réponses' : ' réponse'); badge.style.display = 'inline-block'; }
+      } catch (e) {}
+    }
+    setTimeout(chargerReponses, 1500);
+    document.getElementById('aide-btn').onclick = function () { toggle(pA, pI); renderRes(''); if (pA.classList.contains('open')) { chargerReponses().then(marquerVus); } };
     document.getElementById('idee-btn').onclick = function () { toggle(pI, pA); };
     [pA, pI].forEach(function (p) { p.querySelector('[data-close]').onclick = function () { p.classList.remove('open'); }; });
     var res = document.getElementById('aide-res'), more = document.getElementById('aide-more'), qi = document.getElementById('aide-q');
