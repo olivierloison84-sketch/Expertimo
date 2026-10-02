@@ -49,7 +49,19 @@
   async function envoyer(table, row) {
     var c = window.privencyAuth;
     if (!c) return false;
-    try { var r = await c.from(table).insert(row); return !r.error; } catch (e) { return false; }
+    try {
+      row.id = (window.crypto && crypto.randomUUID) ? crypto.randomUUID() : null;
+      if (!row.id) delete row.id;
+      var r = await c.from(table).insert(row);
+      if (r.error) return false;
+      if (row.id) { // e-mail immédiat à l'équipe (best-effort, ne bloque jamais l'agent)
+        try {
+          var s = await c.auth.getSession(), t = s && s.data && s.data.session && s.data.session.access_token;
+          if (t) fetch('/api/aide-notify', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + t }, body: JSON.stringify({ kind: table === 'aide_questions' ? 'question' : 'idee', id: row.id }) }).catch(function () {});
+        } catch (e) {}
+      }
+      return true;
+    } catch (e) { return false; }
   }
   var css = '#aide-fab{position:fixed;right:18px;bottom:18px;z-index:9000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}' +
     '.aide-btn{width:50px;height:50px;border-radius:50%;border:0;cursor:pointer;color:#fff;background:#0E9F6E;box-shadow:0 6px 18px rgba(10,111,77,.35);font-size:22px;display:flex;align-items:center;justify-content:center}' +
