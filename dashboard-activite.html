@@ -195,7 +195,7 @@
   function denied() {
     if (resolved) return;
     resolved = true;
-    window.location.replace('/login.html');
+    window.location.replace('/login.html?next=/dashboard-activite.html');
   }
 
   // Session valide mais utilisateur différent d'Olivier : garde-fou
