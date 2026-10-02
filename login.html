@@ -272,6 +272,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="/auth-client.js"></script>
 <script>
+// Page d'arrivée après connexion : l'app, sauf si on vient du tableau de bord administrateur (liste blanche stricte).
+function destApresConnexion() { try { var n = new URLSearchParams(window.location.search).get('next'); if (n === '/dashboard-activite.html') return n; } catch (e) {} return '/app.html'; }
   // Client jetable (rien n'est écrit dans le storage) : la session du compte
   // est enregistrée par PrivencyAuth sous « privency-auth-<uid> ».
   const client = PrivencyAuth.createTempClient();
@@ -338,7 +340,7 @@
       return;
     }
 
-    window.location.href = '/app.html';
+    window.location.href = destApresConnexion();
   });
 
   // ─── Inscription (signup) ───────────────────────────────
@@ -469,7 +471,7 @@
     pick.disabled = true;
     const ok = await PrivencyAuth.activate(a.uid);
     if (ok) {
-      window.location.href = '/app.html';
+      window.location.href = destApresConnexion();
       return;
     }
     // Refresh token expiré ou révoqué : on redemande le mot de passe.
@@ -494,7 +496,7 @@
   // Retour par lien email (confirmation, magic link) : session déjà enregistrée
   // par auth-client.js sous le bon compte → on entre directement.
   if (PrivencyAuth.consumedUrlSession) {
-    window.location.replace('/app.html');
+    window.location.replace(destApresConnexion());
   } else {
     renderChooser();
   }
@@ -569,7 +571,7 @@
         signupSubmitBtn.textContent = 'Créer mon compte';
         return;
       }
-      window.location.href = '/app.html';
+      window.location.href = destApresConnexion();
       return;
     }
 
