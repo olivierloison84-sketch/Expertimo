@@ -83,12 +83,26 @@
     font-weight:600;
   }
 
-  #kpi-grid{
-    margin-bottom:var(--s-6);
-  }
+  #kpi-grid{margin-bottom:var(--s-4)}
+  .kpi-tile.clic{cursor:pointer;transition:.15s}
+  .kpi-tile.clic:hover,.kpi-tile.clic.on{border-color:var(--brand-500);box-shadow:0 6px 18px rgba(14,159,110,.12)}
+  .kpi-tile.alerte{background:var(--amber-50)}
+  .kpi-sub{font-size:var(--text-xs);color:var(--brand-700);font-weight:600;margin-top:8px}
+  .kpi-sub.warn{color:#b54708}
+  .kpi-more{font-size:11px;color:var(--muted);margin-top:6px}
+  .sec-title{font-size:var(--text-xs);font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:28px 0 12px}
+  .sec-title span{text-transform:none;letter-spacing:0;font-weight:500;margin-left:8px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4)}
+  .two-col .panel{margin-bottom:0}
+  .msg{padding:12px 16px;border-bottom:1px solid var(--gray-200);font-size:var(--text-sm);color:var(--gray-700)}
+  .msg:last-child{border-bottom:none}
+  .msg b{color:var(--ink)}.msg i{font-style:normal;color:var(--muted);font-size:var(--text-xs)}
+  .msg p{margin:4px 0 0;white-space:pre-wrap}
+  .container{max-width:1100px}
 
   @media(max-width: 700px){
     #kpi-grid{grid-template-columns:repeat(2, 1fr)}
+    .two-col{grid-template-columns:1fr}
   }
 </style>
 </head>
@@ -99,7 +113,7 @@
   <div class="header-brand">
     <div class="logo-circle">P</div>
     <div>
-      <h1>Dashboard Activité</h1>
+      <h1>Tableau de bord</h1>
       <p>Vue d'ensemble des comptes agents Privency</p>
     </div>
   </div>
@@ -114,23 +128,25 @@
 
   <div id="dash-content" style="display:none;">
 
+    <div class="sec-title">En un coup d'œil <span>Cliquez sur une carte pour voir le détail</span></div>
     <div class="kpi-grid" id="kpi-grid"></div>
+    <div id="kpi-detail"></div>
 
+    <div class="sec-title">Messages des agents</div>
+    <div class="two-col">
+      <div class="panel"><div class="panel-header">❓ Questions des agents</div><div class="panel-body" id="msg-questions"></div></div>
+      <div class="panel"><div class="panel-header">💡 Idées, problèmes et remarques</div><div class="panel-body" id="msg-idees"></div></div>
+    </div>
+
+    <div class="sec-title">Activité des agents</div>
     <div class="panel">
       <div class="panel-header">👥 Clients</div>
-      <div class="panel-body">
-        <div class="table-wrap" id="clients-table-wrap"></div>
-      </div>
+      <div class="panel-body"><div class="table-wrap" id="clients-table-wrap"></div></div>
     </div>
 
     <details class="panel" id="internal-section">
-      <summary class="panel-header">
-        🔒 Comptes internes / test
-        <span class="chevron">▶</span>
-      </summary>
-      <div class="panel-body">
-        <div class="table-wrap" id="internal-table-wrap"></div>
-      </div>
+      <summary class="panel-header">🔒 Comptes internes / test <span class="chevron">▶</span></summary>
+      <div class="panel-body"><div class="table-wrap" id="internal-table-wrap"></div></div>
     </details>
 
   </div>
@@ -240,15 +256,15 @@ function escapeHtml(s) {
   });
 }
 function statutBadge(agent) {
-  var status = agent.subscription_status || 'inconnu';
+  var status = agent.en_essai ? 'essai' : (agent.subscription_status || 'inconnu');
   var cls = 'is-other';
-  if (status === 'active') cls = 'is-active';
+  if (status === 'active' || status === 'essai') cls = 'is-active';
   else if (status === 'canceled' || status === 'incomplete_expired') cls = 'is-canceled';
   return '<span class="status-dot ' + cls + '">' + escapeHtml(status) + '</span>';
 }
 function nomReseauCell(agent) {
   var nomComplet = [agent.prenom, agent.nom].filter(Boolean).join(' ').trim();
-  var nom = nomComplet || '<span style="color:var(--muted);">—</span>';
+  var nom = nomComplet ? escapeHtml(nomComplet) : '<span style="color:var(--muted);">—</span>';
   var reseau = agent.reseau ? '<span class="cell-sub">' + escapeHtml(agent.reseau) + '</span>' : '';
   return nom + reseau;
 }
@@ -275,39 +291,116 @@ function tableHtml(agents) {
     + '</tr></thead><tbody>' + rows + '</tbody></table>';
 }
 
+function jours(iso) {
+  if (!iso) return null;
+  return Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
+}
+function dansJours(iso) {
+  if (!iso) return null;
+  return Math.ceil((new Date(iso).getTime() - Date.now()) / 86400000);
+}
+function nomCourt(a) {
+  return [a.prenom, a.nom].filter(Boolean).join(' ').trim() || a.email || '—';
+}
+function ilYa(iso) {
+  var j = jours(iso);
+  if (j === null) return '—';
+  if (j <= 0) return "aujourd'hui";
+  return 'il y a ' + j + ' j';
+}
+function petiteTable(entetes, lignes, vide) {
+  if (!lignes.length) return '<div class="panel-empty">' + vide + '</div>';
+  return '<table class="table"><thead><tr>' + entetes.map(function (h) { return '<th>' + h + '</th>'; }).join('')
+    + '</tr></thead><tbody>' + lignes.map(function (l) { return '<tr>' + l.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table>';
+}
+var CAT_LBL = { idee: '<span class="badge badge-green">💡 Idée</span>', bug: '<span class="badge badge-amber">🐞 Problème</span>', remarque: '<span class="badge badge-green">💬 Remarque</span>' };
+var _data = null;
+
+function showDetail(key) {
+  var box = document.getElementById('kpi-detail');
+  var tiles = document.querySelectorAll('#kpi-grid .kpi-tile');
+  tiles.forEach(function (t) { t.classList.toggle('on', t.getAttribute('data-k') === key && box.getAttribute('data-k') !== key); });
+  if (box.getAttribute('data-k') === key) { box.innerHTML = ''; box.removeAttribute('data-k'); return; }
+  var clients = (_data.clients || []);
+  var html = '', titre = '';
+  if (key === 'revenu') {
+    titre = 'Abonnés qui paient';
+    html = petiteTable(['Agent', 'Depuis', 'Revenu mensuel'], clients.filter(function (a) { return a.mrr > 0; }).map(function (a) {
+      return [escapeHtml(nomCourt(a)), fmtDate(a.created_at), fmtEUR(a.mrr)]; }), 'Aucun abonné payant pour l\'instant.');
+  } else if (key === 'essais') {
+    titre = 'Essais gratuits en cours';
+    html = petiteTable(['Agent', 'Fin d\'essai', 'Fiches créées'], clients.filter(function (a) { return a.en_essai; }).sort(function (a, b) {
+      return String(a.fin_essai || '').localeCompare(String(b.fin_essai || '')); }).map(function (a) {
+      var d = dansJours(a.fin_essai);
+      return [escapeHtml(nomCourt(a)), d === null ? '—' : (d <= 0 ? 'terminé' : 'dans ' + d + ' j') + ' (' + fmtDate(a.fin_essai) + ')',
+        (a.nb_fiches || 0) + (a.nb_fiches ? '' : ' <span class="badge badge-amber">n\'a pas démarré</span>')]; }), 'Aucun essai en cours.');
+  } else if (key === 'inactifs') {
+    titre = 'Agents sans activité depuis 7 jours';
+    html = petiteTable(['Agent', 'Dernière activité', 'Fiches', 'Statut'], inactifs(clients).map(function (a) {
+      var der = [a.derniere_activite, a.derniere_maj_fiche].filter(Boolean).sort().pop();
+      return [escapeHtml(nomCourt(a)), der ? ilYa(der) : 'jamais', a.nb_fiches || 0, statutBadge(a)]; }), 'Tous vos agents ont été actifs cette semaine.');
+  } else if (key === 'abonnes') {
+    titre = 'Abonnés actifs (qui paient)';
+    html = petiteTable(['Agent', 'Inscription', 'Statut'], clients.filter(function (a) { return a.mrr > 0; }).map(function (a) {
+      return [escapeHtml(nomCourt(a)), fmtDate(a.created_at), statutBadge(a)]; }), 'Aucun abonné payant pour l\'instant.');
+  }
+  box.setAttribute('data-k', key);
+  box.innerHTML = '<div class="panel"><div class="panel-header">' + titre + '</div><div class="panel-body"><div class="table-wrap">' + html + '</div></div></div>';
+}
+function inactifs(clients) {
+  // Agent payant ou en essai, sans aucune activité de ses clients depuis 7 jours.
+  return clients.filter(function (a) {
+    if (!(a.mrr > 0 || a.en_essai)) return false;
+    if (jours(a.created_at) < 7) return false; // inscrit depuis moins d'une semaine : pas encore « inactif »
+    var j = Math.min(jours(a.derniere_activite) == null ? 9999 : jours(a.derniere_activite), jours(a.derniere_maj_fiche) == null ? 9999 : jours(a.derniere_maj_fiche));
+    return j >= 7;
+  });
+}
+
 function renderDashboard(data) {
+  _data = data;
   var totaux = data.totaux || {};
+  var clients = data.clients || [];
+  var essais = clients.filter(function (a) { return a.en_essai; });
+  var prochainEssai = essais.map(function (a) { return dansJours(a.fin_essai); }).filter(function (d) { return d !== null; }).sort(function (a, b) { return a - b; })[0];
+  var nbInactifs = inactifs(clients).length;
+  var nbQ = (data.messages && data.messages.questions || []).length, nbI = (data.messages && data.messages.idees || []).length;
   var kpis = [
-    { label: 'MRR', value: fmtEUR(totaux.mrr_total) },
-    { label: 'ARR', value: fmtEUR(totaux.arr_total) },
-    { label: 'Clients actifs', value: totaux.nb_clients_actifs || 0 },
-    { label: 'Nouvelles inscriptions (mois)', value: totaux.nb_nouvelles_inscriptions_ce_mois || 0 },
-    { label: 'Fiches créées', value: totaux.nb_fiches_total || 0 },
-    { label: 'Vues totales', value: totaux.nb_vues_total || 0 },
-    { label: 'Offres soumises', value: totaux.nb_offres_total || 0 }
+    { k: 'abonnes', label: 'Abonnés actifs', value: totaux.nb_clients_actifs || 0, sub: '+' + (totaux.nb_nouvelles_inscriptions_ce_mois || 0) + ' inscrit(s) ce mois-ci' },
+    { k: 'revenu', label: 'Revenu mensuel (MRR)', value: fmtEUR(totaux.mrr_total), sub: data.stripe_ok === false ? '⚠️ Provisoire : essais non vérifiés (Stripe)' : fmtEUR(totaux.arr_total) + ' / an', warn: data.stripe_ok === false },
+    { k: 'essais', label: 'En essai gratuit', value: totaux.nb_essais_en_cours || 0, sub: prochainEssai === undefined ? '' : (prochainEssai <= 0 ? 'Un essai se termine aujourd\'hui' : 'Prochaine fin d\'essai : dans ' + prochainEssai + ' j'), warn: prochainEssai !== undefined && prochainEssai <= 3 },
+    { k: 'inactifs', label: 'Agents inactifs (7 j)', value: nbInactifs, sub: nbInactifs ? 'À relancer' : 'Tout le monde est actif', warn: nbInactifs > 0, alerte: nbInactifs > 0 },
+    { k: 'msg', label: 'Messages (60 j)', value: nbQ + nbI, sub: nbQ + ' question(s) · ' + nbI + ' idée(s)', msg: true }
   ];
   document.getElementById('kpi-grid').innerHTML = kpis.map(function (k) {
-    return '<div class="kpi-tile"><div class="kpi-label">' + escapeHtml(k.label) + '</div>'
-      + '<div class="kpi-value">' + k.value + '</div></div>';
+    return '<div class="kpi-tile clic' + (k.alerte ? ' alerte' : '') + '" data-k="' + k.k + '" role="button" tabindex="0">'
+      + '<div class="kpi-label">' + escapeHtml(k.label) + '</div><div class="kpi-value">' + k.value + '</div>'
+      + '<div class="kpi-sub' + (k.warn ? ' warn' : '') + '">' + escapeHtml(k.sub || '') + '</div>'
+      + '<div class="kpi-more">' + (k.msg ? 'Voir ci-dessous ▾' : 'Voir le détail ▾') + '</div></div>';
   }).join('');
-
-  var clients = (data.clients || []).slice().sort(function (a, b) {
-    return String(b.created_at || '').localeCompare(String(a.created_at || ''));
+  document.querySelectorAll('#kpi-grid .kpi-tile').forEach(function (t) {
+    t.onkeydown = function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); t.click(); } };
+    t.onclick = function () {
+      var k = t.getAttribute('data-k');
+      if (k === 'msg') { document.getElementById('msg-questions').scrollIntoView({ behavior: 'smooth', block: 'center' }); return; }
+      showDetail(k);
+    };
   });
-  var clientsWrap = document.getElementById('clients-table-wrap');
-  if (clients.length === 0) {
-    clientsWrap.innerHTML = '<div class="panel-empty">Aucun client actif pour l\'instant.</div>';
-  } else {
-    clientsWrap.innerHTML = tableHtml(clients);
-  }
+  document.getElementById('kpi-detail').innerHTML = '';
 
-  var internes = (data.comptes_internes || []).slice().sort(function (a, b) {
-    return String(b.created_at || '').localeCompare(String(a.created_at || ''));
-  });
-  var internalWrap = document.getElementById('internal-table-wrap');
-  internalWrap.innerHTML = internes.length === 0
-    ? '<div class="panel-empty">Aucun compte interne / test.</div>'
-    : tableHtml(internes);
+  var q = (data.messages && data.messages.questions) || [], idees = (data.messages && data.messages.idees) || [];
+  document.getElementById('msg-questions').innerHTML = q.length ? q.map(function (m) {
+    return '<div class="msg"><b>' + escapeHtml(m.agent) + '</b> <i>· ' + ilYa(m.created_at) + '</i><p>' + escapeHtml(m.texte) + '</p></div>'; }).join('')
+    : '<div class="panel-empty">Aucune question pour l\'instant.</div>';
+  document.getElementById('msg-idees').innerHTML = idees.length ? idees.map(function (m) {
+    return '<div class="msg"><b>' + escapeHtml(m.agent) + '</b> ' + (CAT_LBL[m.categorie] || '') + ' <i>· ' + ilYa(m.created_at) + '</i><p>' + escapeHtml(m.texte) + '</p></div>'; }).join('')
+    : '<div class="panel-empty">Aucune idée pour l\'instant.</div>';
+
+  var tri = function (arr) { return arr.slice().sort(function (a, b) { return String(b.created_at || '').localeCompare(String(a.created_at || '')); }); };
+  var cl = tri(clients);
+  document.getElementById('clients-table-wrap').innerHTML = cl.length ? tableHtml(cl) : '<div class="panel-empty">Aucun client actif pour l\'instant.</div>';
+  var internes = tri(data.comptes_internes || []);
+  document.getElementById('internal-table-wrap').innerHTML = internes.length ? tableHtml(internes) : '<div class="panel-empty">Aucun compte interne / test.</div>';
 }
 
 window.initDashboard = async function (session) {
