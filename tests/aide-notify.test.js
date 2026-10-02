@@ -15,5 +15,5 @@ const call=async(headers,body)=>{const r=mk();await h({method:'POST',headers:Obj
  r=await call({authorization:'Bearer good'},{kind:'question',id:'22222222-2222-2222-2222-222222222222'});ok(r.code===404&&!sent.length,'ligne inconnue ignorée');
  rows.aide_questions.agent_user_id='autre';r=await call({authorization:'Bearer good'},{kind:'question',id:rows.aide_questions.id});ok(r.code===404&&!sent.length,'ligne d\'un autre agent ignorée');
  rows.aide_questions.agent_user_id='u1';r=await call({authorization:'Bearer good'},{kind:'question',id:rows.aide_questions.id});
- ok(r.code===200&&sent.length===1&&sent[0].to[0]==='olivier.loison84@gmail.com'&&/Ana D/.test(sent[0].subject)&&!/<b>faire/.test(sent[0].html),'mail envoyé, texte échappé');
+ ok(r.code===200&&sent.length===1&&sent[0].to[0]==='contact@privency.fr'&&/Ana D/.test(sent[0].subject)&&!/<b>faire/.test(sent[0].html),'mail envoyé, texte échappé');
  process.exit(fail?1:0)})();
