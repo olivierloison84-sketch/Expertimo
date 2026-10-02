@@ -54,7 +54,7 @@
   var css = '#aide-fab{position:fixed;right:18px;bottom:18px;z-index:9000;display:flex;flex-direction:column;gap:10px;align-items:flex-end}' +
     '.aide-btn{width:50px;height:50px;border-radius:50%;border:0;cursor:pointer;color:#fff;background:#0E9F6E;box-shadow:0 6px 18px rgba(10,111,77,.35);font-size:22px;display:flex;align-items:center;justify-content:center}' +
     '.aide-btn.idee{background:#fff;color:#0A6F4D;border:1.5px solid #0E9F6E;width:44px;height:44px;font-size:19px}' +
-    '.aide-btn:hover{transform:translateY(-2px)}' +
+    '.aide-pill{width:auto;height:46px;border-radius:23px;padding:0 16px;gap:7px;font:inherit;font-weight:700;font-size:14px}.aide-btn.idee.aide-pill{width:auto;height:40px;padding:0 14px;font-size:13px}.aide-btn:hover{transform:translateY(-2px)}' +
     '.aide-panel{position:fixed;right:18px;bottom:150px;width:340px;max-width:calc(100vw - 24px);max-height:calc(100vh - 170px);background:#fff;border:1px solid #E5E9EF;border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.18);z-index:9001;display:none;flex-direction:column;overflow:hidden;font-family:inherit}' +
     '.aide-panel.open{display:flex}' +
     '.aide-head{background:#0A6F4D;color:#fff;padding:12px 14px;font-weight:700;font-size:14px;display:flex;justify-content:space-between;align-items:center}' +
@@ -71,7 +71,7 @@
   function init() {
     var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     var fab = document.createElement('div'); fab.id = 'aide-fab';
-    fab.innerHTML = '<button type="button" class="aide-btn idee" id="idee-btn" title="Boîte à idées" aria-label="Boîte à idées">💡</button><button type="button" class="aide-btn" id="aide-btn" title="Aide" aria-label="Aide">?</button>';
+    fab.innerHTML = '<button type="button" class="aide-btn idee aide-pill" id="idee-btn" title="Une idée ? Un problème ?" aria-label="Boîte à idées"><span style="font-size:17px">💡</span><span>Idées</span></button><button type="button" class="aide-btn aide-pill" id="aide-btn" title="Une question ? Cliquez ici" aria-label="Aide : poser une question"><span style="font-size:19px">💬</span><span>Aide</span></button>';
     document.body.appendChild(fab);
     var pA = document.createElement('div'); pA.className = 'aide-panel'; pA.id = 'aide-panel';
     pA.innerHTML = '<div class="aide-head"><span>Aide Privency</span><button type="button" data-close aria-label="Fermer">×</button></div><div class="aide-body"><input id="aide-q" type="search" placeholder="Posez votre question…" autocomplete="off"><div id="aide-res"></div><div id="aide-more" style="display:none"><div class="aide-msg" id="aide-nores"></div><button type="button" class="aide-go" id="aide-send">Envoyer ma question à l\'équipe</button><div class="aide-msg" id="aide-sent"></div></div></div>';
