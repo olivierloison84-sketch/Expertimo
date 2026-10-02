@@ -1,7 +1,7 @@
 const fs=require('fs'),path=require('path');const {JSDOM}=require('jsdom');
 const js=fs.readFileSync(path.join(__dirname,'..','aide-flottante.js'),'utf8');
 const dom=new JSDOM('<body></body>',{runScripts:'outside-only'});
-let inserted=[];dom.window.privencyAuth={from:t=>({insert:async r=>{inserted.push([t,r]);return{error:null}}})};
+let inserted=[];dom.window.crypto=undefined;dom.window.privencyAuth={from:t=>({insert:async r=>{inserted.push([t,r]);return{error:null}}})};
 dom.window.eval(js);if(!dom.window.document.getElementById('aide-btn'))dom.window.document.dispatchEvent(new dom.window.Event('DOMContentLoaded'));
 const d=dom.window.document;let fail=0;const ok=(c,m)=>{if(!c){console.log('FAIL',m);fail++}else console.log('ok',m)};
 ok(d.getElementById('aide-btn')&&d.getElementById('idee-btn'),'boutons flottants');
