@@ -145,6 +145,39 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
   function tabLabel(id) { return Object.prototype.hasOwnProperty.call(TAB_LABELS, id) ? TAB_LABELS[id] : ''; }
   var LEVELS = {tres: 'Très intéressé', interesse: 'Intéressé', ecoute: "À l'écoute"};
   function $(id) { return document.getElementById(id); }
+  /* Adresse affichée proprement : majuscules, accents courants, prépositions en minuscules. N'altère jamais les chiffres. */
+  function fmtAdresse(s) {
+    s = String(s == null ? '' : s).replace(/\s+/g, ' ').trim();
+    if (!s) return s;
+    var PART = {de: 1, du: 1, des: 1, la: 1, le: 1, les: 1, et: 1, sur: 1, sous: 1, en: 1, au: 1, aux: 1, 'à': 1, d: 1, l: 1};
+    var VOIE = {rue: 1, avenue: 1, av: 1, boulevard: 1, bd: 1, impasse: 1, 'allée': 1, allee: 1, chemin: 1, place: 1, route: 1, square: 1, quai: 1, cours: 1, passage: 1, villa: 1, sentier: 1, ruelle: 1, esplanade: 1, parvis: 1, lotissement: 1, hameau: 1, venelle: 1, 'résidence': 1, residence: 1, 'cité': 1, cite: 1};
+    var ACC = {ecole: 'école', eglise: 'église', republique: 'république', liberte: 'liberté', egalite: 'égalité', fraternite: 'fraternité', marechal: 'maréchal', general: 'général', hotel: 'hôtel', etoile: 'étoile', epinay: 'épinay', bretigny: 'brétigny', genevieve: 'geneviève', therese: 'thérèse', rene: 'rené', andre: 'andré', jerome: 'jérôme', eugene: 'eugène', pere: 'père', peri: 'péri', allee: 'allée', residence: 'résidence', chateau: 'château', foret: 'forêt', cite: 'cité', orleans: 'orléans', chatillon: 'châtillon', cedre: 'cèdre', gerard: 'gérard', frederic: 'frédéric', helene: 'hélène', stephane: 'stéphane', societe: 'société', mediterranee: 'méditerranée', verite: 'vérité', senateur: 'sénateur', deportes: 'déportés', resistance: 'résistance', ecureuils: 'écureuils', eglantine: 'églantine', pecheurs: 'pêcheurs', pres: 'prés', pre: 'pré'};
+    var toks = s.split(' '), out = [], afterCp = false, commune = [];
+    toks.forEach(function(t, i) {
+      if (/\d/.test(t)) { if (/^\d{5}$/.test(t)) afterCp = true; out.push(t); return; }
+      var low = t.toLowerCase();
+      if (low === 'a' && i > 0 && i < toks.length - 1 && !/\d/.test(toks[i - 1]) && !/\d/.test(toks[i + 1])) { out.push('à'); return; }
+      var parts = low.split(/(['’-])/).map(function(p, j) {
+        if (j % 2 === 1) return p;
+        var w = ACC[p] || p;
+        if (!w) return w;
+        var first = i === 0 && j === 0;
+        if (!first && !afterCp && VOIE[w] && j === 0) return w;
+        if (!first && PART[w]) return w;
+        return w.charAt(0).toUpperCase() + w.slice(1);
+      });
+      var r = parts.join('');
+      if (afterCp) commune.push(out.length);
+      out.push(r);
+    });
+    /* Commune : « Morsang sur Orge » devient « Morsang-sur-Orge » (tirets rétablis quand il y a sur/sous/en/les/des ou Saint/Sainte) */
+    if (commune.length > 1) {
+      var words = commune.map(function(ix) { return out[ix]; }), lw = words.map(function(w) { return w.toLowerCase(); });
+      var tiret = lw.some(function(w, k) { return k > 0 && (w === 'sur' || w === 'sous' || w === 'en' || w === 'les' || w === 'des'); }) || /^(saint|sainte)$/.test(lw[0]) || (lw.length === 2 && /^(chilly|viry)$/.test(lw[0]));
+      if (tiret) { out.splice(commune[0], commune.length, words.join('-')); }
+    }
+    return out.join(' ');
+  }
   function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   function plur(n, s, p) { return n + ' ' + (n > 1 ? p : s); }
   function fmtDate(iso) { try { var p = String(iso).slice(0, 10).split('-'); return p[2] + '/' + p[1] + '/' + p[0]; } catch (e) { return ''; } }
@@ -199,7 +232,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     else av.textContent = (nom.split(/\s+/).map(function(w) { return w.charAt(0); }).join('').slice(0, 2) || 'P').toUpperCase();
     $('agent-name').textContent = nom || 'Votre conseiller'; $('agent-role').textContent = ag.reseau || 'Conseiller immobilier';
     bienLabel = String(r.bien || '');
-    $('bien').textContent = r.bien ? (r.bien.charAt(0).toUpperCase() + r.bien.slice(1)) : 'Votre bien';
+    $('bien').textContent = r.bien ? fmtAdresse(r.bien) : 'Votre bien';
     var majTxt = 'Mis à jour le ' + fmtDate(r.genere_le) + (r.depuis ? ' · fiche en ligne depuis le ' + fmtDate(r.depuis) : '');
     $('maj').textContent = majTxt;
     document.title = 'Compte rendu — ' + $('bien').textContent;
