@@ -406,8 +406,10 @@ function renderDashboard(data) {
       if (!txt) return;
       btn.disabled = true; btn.textContent = 'Envoi…';
       try {
+        var fresh = await PrivencyAuth.getClient().auth.getSession();
+        var tok = (fresh && fresh.data && fresh.data.session && fresh.data.session.access_token) || _session.access_token;
         var res = await fetch(PRIVENCY_API_BASE + '/api/aide-repondre', { method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _session.access_token },
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
           body: JSON.stringify({ id: btn.getAttribute('data-id'), reponse: txt }) });
         var r = await res.json();
         if (!res.ok) throw new Error(r.error || ('Erreur ' + res.status));

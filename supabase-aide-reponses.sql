@@ -7,3 +7,9 @@ drop policy if exists aide_questions_select_own on public.aide_questions;
 create policy aide_questions_select_own on public.aide_questions for select to authenticated
   using (agent_user_id = auth.uid());
 grant select on public.aide_questions to authenticated;
+
+-- Sécurité : un agent ne peut pas s'écrire lui-même une « réponse » à l'insertion, ni modifier/supprimer de lignes.
+drop policy if exists aide_questions_insert on public.aide_questions;
+create policy aide_questions_insert on public.aide_questions for insert to authenticated
+  with check (agent_user_id = auth.uid() and reponse is null and repondu_at is null);
+revoke update, delete on public.aide_questions from authenticated, anon;

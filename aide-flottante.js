@@ -98,7 +98,7 @@
     document.getElementById('aide-btn').appendChild(badge);
     var reponses = [];
     function vus() { try { return JSON.parse(localStorage.getItem('privency_reponses_vues') || '[]'); } catch (e) { return []; } }
-    function marquerVus() { try { localStorage.setItem('privency_reponses_vues', JSON.stringify(reponses.map(function (r) { return r.id; }))); } catch (e) {} badge.style.display = 'none'; }
+    function marquerVus() { if (!reponses.length) return; try { localStorage.setItem('privency_reponses_vues', JSON.stringify(reponses.map(function (r) { return r.id; }))); } catch (e) {} badge.style.display = 'none'; }
     function renderRep() {
       rep.innerHTML = reponses.length ? '<div class="aide-msg" style="color:#0A6F4D;font-weight:700">Réponses de l\'équipe :</div>' + reponses.map(function (r) {
         return '<div class="aide-q open"><button type="button">' + esc(r.question) + '</button><div>' + esc(r.reponse) + '</div></div>'; }).join('') : '';
