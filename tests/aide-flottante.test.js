@@ -15,4 +15,18 @@ await new Promise(r=>setTimeout(r,20));
 ok(inserted.length===2&&inserted[0][0]==='aide_questions'&&inserted[1][0]==='agent_idees','insertions');
 const app=fs.readFileSync(path.join(__dirname,'..','app.html'),'utf8');
 ok(/aide-flottante\.js/.test(app),'chargé par app.html');
-process.exit(fail?1:0)})();
+global.__fail=fail})();
+// --- réponses de l'équipe dans le chatbot ---
+(async()=>{
+ const dom2=new JSDOM('<body></body>',{runScripts:'outside-only',url:'https://app.privency.fr/'});
+ const q={select:()=>q,not:()=>q,order:()=>q,limit:()=>Promise.resolve({data:[{id:'r1',question:'Photos <b>?</b>',reponse:'Voici <i>comment</i>'}]})};
+ dom2.window.privencyAuth={auth:{getSession:async()=>({data:{session:{access_token:'t'}}})},from:()=>q};
+ dom2.window.eval(js);await new Promise(r=>setTimeout(r,50));if(!dom2.window.document.getElementById('aide-btn'))dom2.window.document.dispatchEvent(new dom2.window.Event('DOMContentLoaded'));
+ await new Promise(r=>setTimeout(r,1800));
+ const d2=dom2.window.document;
+ const t=(c,m)=>{console.log(c?'ok':'FAIL',m);if(!c)global.__fail=1};t(d2.getElementById('aide-badge').style.display==='inline-block','pastille de nouvelle réponse');
+ t(/Voici &lt;i&gt;comment/.test(d2.getElementById('aide-rep').innerHTML)&&!d2.getElementById('aide-rep').querySelector('i'),'réponse affichée et échappée');
+ d2.getElementById('aide-btn').onclick();await new Promise(r=>setTimeout(r,100));
+ t(d2.getElementById('aide-badge').style.display==='none','pastille retirée à l\'ouverture');
+ process.exit(global.__fail||/FAIL/.test(global.__out||'')?1:0);
+})();

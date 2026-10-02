@@ -99,6 +99,11 @@
   .msg b{color:var(--ink)}.msg i{font-style:normal;color:var(--muted);font-size:var(--text-xs)}
   .msg p{margin:4px 0 0;white-space:pre-wrap}
   .container{max-width:1100px}
+  .rep-form{display:flex;gap:8px;margin-top:8px;align-items:flex-start}
+  .rep-form textarea{flex:1;border:1px solid var(--gray-300);border-radius:var(--r-md,8px);padding:8px;font:inherit;resize:vertical}
+  .rep-form .btn{padding:8px 14px;white-space:nowrap}
+  .rep-ok{margin-top:8px;padding:8px 10px;background:var(--brand-50);border-radius:8px;color:var(--brand-700);font-size:var(--text-xs);font-weight:600}
+  .rep-ok p{font-weight:400;color:var(--gray-700);font-size:var(--text-sm)}
 
   @media(max-width: 700px){
     #kpi-grid{grid-template-columns:repeat(2, 1fr)}
@@ -314,7 +319,7 @@ function petiteTable(entetes, lignes, vide) {
     + '</tr></thead><tbody>' + lignes.map(function (l) { return '<tr>' + l.map(function (c) { return '<td>' + c + '</td>'; }).join('') + '</tr>'; }).join('') + '</tbody></table>';
 }
 var CAT_LBL = { idee: '<span class="badge badge-green">💡 Idée</span>', bug: '<span class="badge badge-amber">🐞 Problème</span>', remarque: '<span class="badge badge-green">💬 Remarque</span>' };
-var _data = null;
+var _data = null, _session = null;
 
 function showDetail(key) {
   var box = document.getElementById('kpi-detail');
@@ -390,8 +395,30 @@ function renderDashboard(data) {
 
   var q = (data.messages && data.messages.questions) || [], idees = (data.messages && data.messages.idees) || [];
   document.getElementById('msg-questions').innerHTML = q.length ? q.map(function (m) {
-    return '<div class="msg"><b>' + escapeHtml(m.agent) + '</b> <i>· ' + ilYa(m.created_at) + '</i><p>' + escapeHtml(m.texte) + '</p></div>'; }).join('')
+    var bas = m.reponse
+      ? '<div class="rep-ok">✅ Votre réponse <i>· ' + ilYa(m.repondu_at) + '</i><p>' + escapeHtml(m.reponse) + '</p></div>'
+      : '<div class="rep-form"><textarea rows="2" placeholder="Votre réponse (l\'agent la verra dans son chatbot)…"></textarea><button type="button" class="btn btn-primary" data-id="' + escapeHtml(m.id) + '">Répondre</button></div>';
+    return '<div class="msg"><b>' + escapeHtml(m.agent) + '</b> <i>· ' + ilYa(m.created_at) + '</i><p>' + escapeHtml(m.texte) + '</p>' + bas + '</div>'; }).join('')
     : '<div class="panel-empty">Aucune question pour l\'instant.</div>';
+  document.querySelectorAll('#msg-questions .rep-form button').forEach(function (btn) {
+    btn.onclick = async function () {
+      var ta = btn.parentNode.querySelector('textarea'), txt = ta.value.trim();
+      if (!txt) return;
+      btn.disabled = true; btn.textContent = 'Envoi…';
+      try {
+        var fresh = await PrivencyAuth.getClient().auth.getSession();
+        var tok = (fresh && fresh.data && fresh.data.session && fresh.data.session.access_token) || _session.access_token;
+        var res = await fetch(PRIVENCY_API_BASE + '/api/aide-repondre', { method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tok },
+          body: JSON.stringify({ id: btn.getAttribute('data-id'), reponse: txt }) });
+        var r = await res.json();
+        if (!res.ok) throw new Error(r.error || ('Erreur ' + res.status));
+        var item = (_data.messages.questions || []).filter(function (x) { return x.id === btn.getAttribute('data-id'); })[0];
+        if (item) { item.reponse = txt; item.repondu_at = new Date().toISOString(); }
+        renderDashboard(_data);
+      } catch (e) { btn.disabled = false; btn.textContent = 'Répondre'; alert('Réponse non envoyée : ' + e.message); }
+    };
+  });
   document.getElementById('msg-idees').innerHTML = idees.length ? idees.map(function (m) {
     return '<div class="msg"><b>' + escapeHtml(m.agent) + '</b> ' + (CAT_LBL[m.categorie] || '') + ' <i>· ' + ilYa(m.created_at) + '</i><p>' + escapeHtml(m.texte) + '</p></div>'; }).join('')
     : '<div class="panel-empty">Aucune idée pour l\'instant.</div>';
@@ -404,6 +431,7 @@ function renderDashboard(data) {
 }
 
 window.initDashboard = async function (session) {
+  _session = session;
   var statusEl = document.getElementById('dash-status');
   var contentEl = document.getElementById('dash-content');
   statusEl.textContent = '⏳ Chargement des statistiques…';
