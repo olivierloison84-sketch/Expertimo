@@ -123,6 +123,7 @@
     </div>
   </div>
   <div style="display:flex;gap:8px;">
+    <a id="back-to-app-btn" class="btn btn-secondary" href="/app.html" style="text-decoration:none;">← Retour à l'app</a>
     <button id="switch-account-btn" class="btn btn-ghost" onclick="PrivencyAuth.switchAccount();">Changer de compte</button>
     <button id="logout-btn" class="btn btn-ghost" onclick="PrivencyAuth.signOutActive().then(function(){ window.location.replace('/login.html'); });">Déconnexion</button>
   </div>
