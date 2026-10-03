@@ -227,6 +227,32 @@ header {
 .videos-support { font-size: 13px; color: var(--muted); margin-top: 18px; }
 .videos-support a { color: var(--primary); font-weight: 600; }
 
+/* Badge « Nouveau » d'un onglet du menu (même pilule que .video-badge-vue) ; pastille en mobile, où les libellés sont masqués */
+.step-tab { position: relative; }
+.step-badge-new { margin-left: auto; font-size: 10px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: #fff; background: var(--accent); padding: 2px 8px; border-radius: 999px; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════
+   ONGLET KIT RDV — vidéos pour les clients (réutilise .videos-grid / .video-card)
+═══════════════════════════════════════ */
+#page-10 .kit-rule { font-size: 13px; line-height: 1.5; color: var(--text); background: var(--light); border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; }
+#page-10 .kit-rule a { color: var(--primary); font-weight: 600; cursor: pointer; }
+#kit-grid { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 900px) { #kit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+#kit-grid .video-card { min-width: 0; }
+#kit-grid .kit-tag { align-self: flex-start; display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; color: var(--gold2); background: var(--light); border: 1px solid var(--border); padding: 2px 8px; border-radius: 999px; margin-bottom: 6px; }
+#kit-grid .kit-body { padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+#kit-grid .kit-when { font-size: 13px; line-height: 1.5; color: var(--muted); }
+#kit-grid .kit-when b { color: var(--text); font-weight: 600; }
+#kit-grid .kit-seg { display: inline-flex; align-self: flex-start; max-width: 100%; gap: 2px; padding: 3px; background: var(--light); border: 1px solid var(--border); border-radius: 10px; }
+#kit-grid .kit-seg button { font-family: inherit; font-size: 12px; font-weight: 600; color: var(--muted); background: transparent; border: 0; border-radius: 7px; padding: 6px 12px; cursor: pointer; text-align: left; line-height: 1.25; min-height: 40px; }
+#kit-grid .kit-seg button small { display: block; font-size: 10.5px; font-weight: 500; opacity: .85; }
+#kit-grid .kit-seg button[aria-pressed="true"] { background: #fff; color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+#kit-grid .kit-acts { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+#kit-grid .kit-acts .btn { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
+#kit-grid .kit-acts .btn-primary { border: 2px solid var(--accent); }
+#kit-grid .kit-size { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#kit-grid .kit-seg button:focus-visible, #kit-grid .kit-acts .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
 /* ═══════════════════════════════════════
    PAGES
 ═══════════════════════════════════════ */
@@ -413,6 +439,7 @@ textarea { resize: vertical; min-height: 60px; }
   }
   .step-tab .step-label { display: none; }
   .step-tab.active { background: transparent; }
+  .step-badge-new { position: absolute; top: 8px; right: 7px; width: 8px; height: 8px; padding: 0; font-size: 0; border-radius: 50%; }
   /* Actions de l'en-tête (abonnement, tutoriel, compte) : compactes, sous le logo, jamais par-dessus les onglets */
   header { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
   .header-right { display: block !important; width: 100%; }
@@ -873,6 +900,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
     <div class="step-tab" id="tab-7" onclick="goToStep(7)">
       <span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg></span>
       <span class="step-label">Coaching Express</span>
+    </div>
+    <div class="step-tab" id="tab-10" onclick="goToStep(10)">
+      <span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"></rect><path d="M16 10l6-3v10l-6-3"></path></svg></span>
+      <span class="step-label">Kit RDV</span>
+      <span class="step-badge-new" aria-label="Nouveau">Nouveau</span>
     </div>
     <div class="step-tab" id="tab-9" onclick="goToStep(9)">
       <span class="step-ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg></span>
@@ -1951,6 +1983,22 @@ details[open] summary .chevron { transform: rotate(90deg); }
 </div>
 </div>
 
+<!-- ══════════════════════════════════════════════════════
+     PAGE 10 — KIT RDV (vidéos pour les clients ; cartes rendues depuis KIT_RDV, cf. initKitTab)
+══════════════════════════════════════════════════════ -->
+<div class="page" id="page-10">
+<div class="container">
+  <div class="card">
+    <div class="card-header">🤝 Kit RDV</div>
+    <div class="card-body">
+      <p class="videos-intro">Des vidéos prêtes à montrer ou envoyer à vos clients. Téléchargez-les ou copiez le lien.</p>
+      <p class="kit-rule"><b>Pensées pour vos clients.</b> Les vidéos qui vous expliquent comment utiliser Privency restent dans l'onglet <a onclick="goToStep(9)">Vidéos tuto</a>.</p>
+      <div class="videos-grid" id="kit-grid"></div>
+    </div>
+  </div>
+</div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -2293,7 +2341,7 @@ function goToStep(n) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + n).classList.add('active');
   // Update tabs
-  [1,2,3,4,5,6,7,8,9].forEach(function(i) {
+  [1,2,3,4,5,6,7,8,9,10].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
@@ -2320,11 +2368,16 @@ function goToStep(n) {
   } else {
     pauseAllVideos();
   }
+  if (n === 10) {
+    initKitTab();
+    var t10 = document.getElementById('tab-10');
+    if (t10 && t10.scrollIntoView) { try { t10.scrollIntoView({inline: 'nearest', block: 'nearest'}); } catch (e) {} }
+  }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateStepperTabs() {
-  [1,2,3,4,5,6,7,8,9].forEach(function(i) {
+  [1,2,3,4,5,6,7,8,9,10].forEach(function(i) {
     var tab = document.getElementById('tab-' + i);
     if (!tab) return;
     tab.classList.remove('active', 'done');
@@ -2376,7 +2429,7 @@ function videoBientot(card, player) {
 }
 
 function pauseAllVideos(except) {
-  document.querySelectorAll('#videos-grid video').forEach(function(v) { if (v !== except) v.pause(); });
+  document.querySelectorAll('#videos-grid video, #kit-grid video').forEach(function(v) { if (v !== except) v.pause(); });
 }
 
 function initVideosTab() {
@@ -2434,6 +2487,151 @@ function initVideosTab() {
     support.appendChild(a);
     support.appendChild(document.createTextNode('.'));
   }
+}
+
+// ═══════════════════════════════════════════════════════
+// ONGLET KIT RDV — vidéos destinées aux clients (vendeurs / acquéreurs)
+// Fichiers servis en statique depuis /videos/kit/ (hors garde d'auth : le lien copié
+// se lit sans connexion). Pour ajouter une vidéo, n'ajouter qu'une entrée ci-dessous.
+// ═══════════════════════════════════════════════════════
+var KIT_RDV = [
+  { id: 'presentation-vendeur', tag: 'Prise de mandat', titre: 'Présentation vendeur', duree: '1 min 02',
+    quand: 'À montrer en RDV de prise de mandat, ou à envoyer au propriétaire après.',
+    formats: {
+      paysage:  { src: '/videos/kit/privency-presentation-vendeur-paysage.mp4',  poids: '4 Mo',   poster: '/videos/kit/pv-l.jpg' },
+      vertical: { src: '/videos/kit/privency-presentation-vendeur-vertical.mp4', poids: '3,7 Mo', poster: '/videos/kit/pv-v.jpg' }
+    } },
+  { id: 'espace-acheteur', tag: 'Acquéreurs et vendeurs', titre: 'L\'espace acheteur en 10 fonctionnalités', duree: '1 min 14',
+    quand: 'À envoyer à un acquéreur après la visite, ou à montrer au vendeur pour expliquer le suivi.',
+    formats: {
+      paysage:  { src: '/videos/kit/privency-espace-acheteur-paysage.mp4',  poids: '4,6 Mo', poster: '/videos/kit/af-l.jpg' },
+      vertical: { src: '/videos/kit/privency-espace-acheteur-vertical.mp4', poids: '4,3 Mo', poster: '/videos/kit/af-v.jpg' }
+    } }
+];
+var KIT_FORMATS = [
+  { key: 'paysage',  label: 'Paysage 16:9', usage: 'RDV, écran' },
+  { key: 'vertical', label: 'Vertical 9:16', usage: 'WhatsApp, Stories' }
+];
+var _kitInited = false;
+
+// Lien public absolu (même domaine que l'app, cf. PRIVENCY_API_BASE).
+function kitLienAbsolu(src) { return PRIVENCY_API_BASE + src; }
+
+function kitCopier(texte) {
+  function viaExecCommand() {
+    var ta = document.createElement('textarea');
+    ta.value = texte;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    try { ta.setSelectionRange(0, texte.length); } catch (e) {}
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) {}
+    ta.remove();
+    return ok ? Promise.resolve() : Promise.reject(new Error('copie impossible'));
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(texte).catch(viaExecCommand);
+  }
+  return viaExecCommand();
+}
+
+function initKitTab() {
+  if (_kitInited) return;
+  _kitInited = true;
+  var grid = document.getElementById('kit-grid');
+  if (!grid) return;
+
+  KIT_RDV.forEach(function(v) {
+    var format = 'paysage';
+    var card = document.createElement('div');
+    card.className = 'video-card';
+    card.setAttribute('data-kit-id', v.id);
+
+    var player = document.createElement('video');
+    player.controls = true;
+    player.setAttribute('preload', 'metadata');
+    player.setAttribute('playsinline', '');
+    player.setAttribute('aria-label', v.titre);
+    var soon = document.createElement('div');
+    soon.className = 'video-card-soon';
+    soon.textContent = 'Bientôt disponible';
+    soon.style.display = 'none';
+    // Fichier absent ou illisible : « Bientôt disponible » à la place d'un lecteur cassé (réessayé au changement de format).
+    player.addEventListener('error', function() { player.style.display = 'none'; soon.style.display = ''; });
+    player.addEventListener('play', function() { pauseAllVideos(player); });
+    card.appendChild(player);
+    card.appendChild(soon);
+
+    var body = document.createElement('div');
+    body.className = 'kit-body';
+    var head = document.createElement('div');
+    var tag = document.createElement('span'); tag.className = 'kit-tag'; tag.textContent = v.tag;
+    var title = document.createElement('div'); title.className = 'video-card-title'; title.textContent = v.titre;
+    var meta = document.createElement('div'); meta.className = 'video-card-meta'; meta.textContent = v.duree;
+    head.appendChild(tag); head.appendChild(title); head.appendChild(meta);
+    var when = document.createElement('p'); when.className = 'kit-when';
+    var b = document.createElement('b'); b.textContent = 'Quand l\'utiliser : ';
+    when.appendChild(b); when.appendChild(document.createTextNode(v.quand));
+
+    var seg = document.createElement('div');
+    seg.className = 'kit-seg';
+    seg.setAttribute('role', 'group');
+    seg.setAttribute('aria-label', 'Format de la vidéo');
+    var segBtns = KIT_FORMATS.map(function(f) {
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('data-format', f.key);
+      btn.appendChild(document.createTextNode(f.label));
+      var small = document.createElement('small'); small.textContent = f.usage;
+      btn.appendChild(small);
+      btn.addEventListener('click', function() { appliquer(f.key); });
+      seg.appendChild(btn);
+      return btn;
+    });
+
+    var acts = document.createElement('div');
+    acts.className = 'kit-acts';
+    var dl = document.createElement('a');
+    dl.className = 'btn btn-primary';
+    dl.textContent = '⬇ Télécharger';
+    dl.addEventListener('click', function() { showToast('Téléchargement lancé'); });
+    var cp = document.createElement('button');
+    cp.type = 'button';
+    cp.className = 'btn btn-outline';
+    cp.textContent = '🔗 Copier le lien';
+    cp.addEventListener('click', function() {
+      kitCopier(kitLienAbsolu(v.formats[format].src)).then(
+        function() { showToast('Lien copié ✓'); },
+        function() { showToast('Copie impossible : ' + kitLienAbsolu(v.formats[format].src), true); }
+      );
+    });
+    var size = document.createElement('span');
+    size.className = 'kit-size';
+    acts.appendChild(dl); acts.appendChild(cp); acts.appendChild(size);
+
+    body.appendChild(head); body.appendChild(when); body.appendChild(seg); body.appendChild(acts);
+    card.appendChild(body);
+    grid.appendChild(card);
+
+    // Le format pilote la source du lecteur, l'affiche, le poids affiché et la cible du téléchargement.
+    function appliquer(key) {
+      format = key;
+      var f = v.formats[key];
+      segBtns.forEach(function(btn) { btn.setAttribute('aria-pressed', btn.getAttribute('data-format') === key ? 'true' : 'false'); });
+      player.pause();
+      player.style.display = '';
+      soon.style.display = 'none';
+      player.poster = f.poster;
+      player.src = f.src;
+      dl.href = f.src;
+      dl.setAttribute('download', f.src.split('/').pop());
+      size.textContent = f.poids;
+      cp.setAttribute('aria-label', 'Copier le lien de la vidéo ' + v.titre + ' (' + key + ')');
+    }
+    appliquer(format);
+  });
 }
 
 // ═══════════════════════════════════════════════════════
