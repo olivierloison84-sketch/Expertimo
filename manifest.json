@@ -1,6 +1,6 @@
 {
-  "name": "Expertimo — Générateur Fiche Acheteur",
-  "short_name": "Expertimo",
+  "name": "Privency — Espace agent",
+  "short_name": "Privency",
   "start_url": "/app.html",
   "scope": "/",
   "display": "standalone",

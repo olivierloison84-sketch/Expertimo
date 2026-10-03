@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Connexion — Privency</title>
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<meta name="theme-color" content="#14171F">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/design-system.css">
 <style>
   body{
@@ -28,16 +30,19 @@
     margin-bottom:var(--s-6);
   }
 
+  /* Wordmark Privency : identique à l'espace acheteur et à l'app agent (Playfair Display, capitales espacées, or sur nuit) */
   .auth-brand .logo{
-    font-weight:800;
-    font-size:1.5rem;
-    letter-spacing:-.02em;
-    color:var(--ink);
-  }
-
-  .auth-brand .logo b{
-    color:var(--brand-500);
-    font-weight:800;
+    display:inline-block;
+    background:#14171F;
+    border-radius:var(--r-md);
+    padding:14px 22px;
+    font-family:'Playfair Display', Georgia, serif;
+    font-weight:500;
+    font-size:1.375rem;
+    line-height:1;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:#C9A227;
   }
 
   .auth-brand p{
@@ -208,8 +213,8 @@
 
 <div class="auth-wrap">
   <div class="auth-brand">
-    <div class="logo">Priven<b>cy</b></div>
-    <p>Votre espace immobilier professionnel</p>
+    <div class="logo">Privency</div>
+    <p>L'exclusivité, même sans expérience</p>
   </div>
 
   <div class="card" id="chooser-box" style="display:none;">
