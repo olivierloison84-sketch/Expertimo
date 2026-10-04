@@ -1045,7 +1045,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
 <!-- ── Import rapide depuis une annonce (démo IA) ── -->
 <div style="margin:16px 16px 0;">
-  <button type="button" class="btn" style="background:var(--accent);color:#141414;font-weight:700;width:100%;justify-content:center;padding:12px 18px;font-size:14px;box-shadow:var(--shadow);" onclick="openImportAnnonceModal()">⚡ Import rapide depuis une annonce</button>
+  <button type="button" class="btn" style="background:var(--accent);color:#fff;font-weight:700;width:100%;justify-content:center;padding:12px 18px;font-size:14px;box-shadow:var(--shadow);" onclick="openImportAnnonceModal()">⚡ Import rapide depuis une annonce</button>
 </div>
 
 <!-- ── Adresse du bien (doit être en tête — critique pour Leaflet, DVF, slug) ── -->
@@ -2285,13 +2285,13 @@ function showContextTip(key) {
   if (!msg) return;
 
   var el = document.createElement('div');
-  el.style.cssText = 'position:fixed;bottom:24px;right:24px;max-width:320px;background:#141414;'
-    + 'color:#f0ede6;border:1px solid rgba(184,146,58,.45);border-radius:10px;padding:14px 16px;'
-    + 'font-size:13px;line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:9999;'
+  el.style.cssText = 'position:fixed;bottom:24px;right:24px;max-width:320px;background:#fff;'
+    + 'color:var(--text);border:1px solid var(--border);border-left:4px solid #0E9F6E;border-radius:10px;padding:14px 16px;'
+    + 'font-size:13px;line-height:1.5;box-shadow:0 8px 24px rgba(16,24,40,.16);z-index:9999;'
     + 'display:flex;gap:10px;align-items:flex-start;font-family:inherit;';
   el.innerHTML = '<span style="font-size:16px;">💡</span>'
     + '<span style="flex:1;">' + msg + '</span>'
-    + '<button type="button" aria-label="Fermer" style="background:none;border:none;color:#8a7550;'
+    + '<button type="button" aria-label="Fermer" style="background:none;border:none;color:var(--muted);'
     + 'font-size:14px;cursor:pointer;line-height:1;padding:0;">✕</button>';
   el.querySelector('button').onclick = function() { el.remove(); };
   document.body.appendChild(el);
@@ -6646,7 +6646,7 @@ function openImportAnnonceModal() {
     +     '<div id="import-annonce-status" style="font-size:12px;margin-bottom:10px;display:none;"></div>'
     +     '<div style="display:flex;gap:10px;justify-content:flex-end;">'
     +       '<button type="button" class="btn btn-outline" id="import-annonce-cancel-btn">Fermer</button>'
-    +       '<button type="button" class="btn" style="background:var(--accent);color:#141414;font-weight:700;" id="import-annonce-analyze-btn">✨ Analyser &amp; pré-remplir la fiche</button>'
+    +       '<button type="button" class="btn" style="background:var(--accent);color:#fff;font-weight:700;" id="import-annonce-analyze-btn">✨ Analyser &amp; pré-remplir la fiche</button>'
     +     '</div>'
     +   '</div>'
     + '</div>';
