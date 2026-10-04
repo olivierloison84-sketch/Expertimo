@@ -7,14 +7,15 @@
      tant que la session et l'abonnement ne sont pas confirmés (retiré par reveal()). -->
 <style id="auth-guard-hide">body > *:not(#boot-splash) { display: none !important; } #boot-splash { display: flex !important; }</style>
 <title>Privency — Espace agent</title>
-<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon-192.png">
-<meta name="theme-color" content="#14171F">
+<meta name="theme-color" content="#0E9F6E">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Privency">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/brand.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
@@ -34,36 +35,26 @@
   --shadow:  0 2px 8px rgba(0,0,0,.12);
   --gold2:   #0A6F4D;
   --vert:    #0E9F6E;
-  /* Marque Privency (fixe, jamais surchargée par les couleurs de l'agent) :
-     mêmes valeurs que l'espace acheteur (index.html) et que l'icône de l'app. */
-  --pv-night: #14171F;
-  --pv-gold:  #C9A227;
-  --pv-gold-ink: #8F7015;  /* or lisible sur fond blanc */
 }
 
 /* ═══════════════════════════════════════
-   MARQUE PRIVENCY — wordmark « PRIVENCY » (Playfair Display, capitales espacées, or)
+   MARQUE PRIVENCY — emplacements du wordmark (.brand-wordmark, défini dans /brand.css)
 ═══════════════════════════════════════ */
-.pv-wordmark { font-family: 'Playfair Display', Georgia, serif; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--pv-gold); line-height: 1; white-space: nowrap; }
-.pv-plate { display: flex; flex-direction: column; gap: 7px; background: var(--pv-night); border-radius: 10px; padding: 14px 14px 12px; text-decoration: none; }
-.pv-plate .pv-wordmark { font-size: 16px; }
-.pv-plate-sub { font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: rgba(255,255,255,.6); }
-.sb-brand { margin: 0 0 20px; }
+.brand-sub { font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
+.sb-brand { display: flex; flex-direction: column; gap: 6px; padding: 2px 12px 0; margin: 0 0 22px; }
 .sb-foot { margin-top: 12px; padding: 10px 12px 2px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); }
-.sb-foot .pv-wordmark { font-size: 10px; color: var(--pv-gold-ink); }
 .sb-foot a { color: var(--muted); font-weight: 600; text-decoration: none; }
 .sb-foot a:hover { color: var(--text); text-decoration: underline; }
 /* Bandeau de marque du header : mobile uniquement (en desktop, la marque est en haut du menu latéral) */
 .hdr-brandbar { display: none; }
 /* Écran de chargement (affiché seulement sous le voile d'authentification, cf. #auth-guard-hide) */
-#boot-splash { display: none; position: fixed; inset: 0; z-index: 10003; background: var(--pv-night); flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px; }
-#boot-splash .pv-wordmark { font-size: 30px; letter-spacing: .2em; }
-#boot-splash .boot-baseline { font-size: 13px; color: rgba(255,255,255,.62); }
+#boot-splash { display: none; position: fixed; inset: 0; z-index: 10003; background: var(--light); flex-direction: column; align-items: center; justify-content: center; gap: 14px; text-align: center; padding: 24px; }
+#boot-splash .boot-baseline { font-size: 14px; color: var(--muted); }
 #boot-splash .boot-dots { display: flex; gap: 6px; margin-top: 8px; }
-#boot-splash .boot-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--pv-gold); opacity: .35; animation: bootPulse 1.2s infinite ease-in-out; }
+#boot-splash .boot-dots span { width: 6px; height: 6px; border-radius: 50%; background: #0E9F6E; opacity: .3; animation: bootPulse 1.2s infinite ease-in-out; }
 #boot-splash .boot-dots span:nth-child(2) { animation-delay: .2s; }
 #boot-splash .boot-dots span:nth-child(3) { animation-delay: .4s; }
-@keyframes bootPulse { 0%,100% { opacity: .35; } 50% { opacity: 1; } }
+@keyframes bootPulse { 0%,100% { opacity: .3; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { #boot-splash .boot-dots span { animation: none; opacity: .7; } }
 
 /* ═══════════════════════════════════════
@@ -446,9 +437,7 @@ textarea { resize: vertical; min-height: 60px; }
   .header-actions { justify-content: flex-start; gap: 6px; }
   .hbtn { padding: 5px 9px; font-size: 11px; }
   /* Marque : bandeau sombre pleine largeur en tête du header ; le bloc du menu latéral et son pied sont masqués */
-  .hdr-brandbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; order: -1; flex: 0 0 auto; width: calc(100% + 24px); margin: -10px -12px 2px; padding: 9px 14px; background: var(--pv-night); }
-  .hdr-brandbar .pv-wordmark { font-size: 14px; }
-  .hdr-brandbar .pv-plate-sub { font-size: 9px; }
+  .hdr-brandbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; order: -1; flex: 0 0 auto; width: calc(100% + 24px); margin: -10px -12px 2px; padding: 10px 14px; background: #fff; border-bottom: 1px solid var(--border); }
   .sb-brand, .sb-foot { display: none; }
   .stepper-group { display: contents; }
   .stepper-group-title, .stepper > .stepper-group-title { display: none; }
@@ -832,7 +821,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
 <!-- ══════════ ÉCRAN DE CHARGEMENT (visible tant que le garde d'auth n'a pas révélé la page) ══════════ -->
 <div id="boot-splash" role="status" aria-live="polite">
-  <div class="pv-wordmark">Privency</div>
+  <span class="brand-wordmark brand-wordmark--lg">Priven<span class="brand-cy">cy</span></span>
   <div class="boot-baseline">L'exclusivité, même sans expérience</div>
   <div class="boot-dots" aria-hidden="true"><span></span><span></span><span></span></div>
   <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);">Chargement de votre espace agent…</span>
@@ -841,8 +830,8 @@ details[open] summary .chevron { transform: rotate(90deg); }
 <!-- ══════════ HEADER ══════════ -->
 <header>
   <div class="hdr-brandbar" aria-label="Privency, espace agent">
-    <span class="pv-wordmark">Privency</span>
-    <span class="pv-plate-sub">Espace agent</span>
+    <span class="brand-wordmark brand-wordmark--sm">Priven<span class="brand-cy">cy</span></span>
+    <span class="brand-sub">Espace agent</span>
   </div>
   <div class="header-brand">
     <div class="logo-circle" id="header-logo">
@@ -863,9 +852,9 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
 <!-- ══════════ STEPPER ══════════ -->
 <nav class="stepper" id="stepper">
-  <div class="pv-plate sb-brand" aria-label="Privency, espace agent">
-    <span class="pv-wordmark">Privency</span>
-    <span class="pv-plate-sub">Espace agent</span>
+  <div class="sb-brand" aria-label="Privency, espace agent">
+    <span class="brand-wordmark brand-wordmark--sm">Priven<span class="brand-cy">cy</span></span>
+    <span class="brand-sub">Espace agent</span>
   </div>
   <div class="stepper-group-title">Créer ma fiche</div>
   <div class="step-tab active" id="tab-1" onclick="goToStep(1)">
@@ -913,7 +902,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
   </div>
   <a href="/app.html?new=1" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Nouvelle fiche</a>
   <div class="sb-foot">
-    <span class="pv-wordmark">Privency</span>
+    <span class="brand-wordmark brand-wordmark--sm">Priven<span class="brand-cy">cy</span></span>
     <a href="mailto:contact@privency.fr" onclick="var b=document.getElementById('aide-btn'); if (b) { event.preventDefault(); b.click(); }">Aide</a>
   </div>
 </nav>
@@ -2077,27 +2066,27 @@ function showWelcomeScreen() {
     + 'z-index:10002;padding:20px;';
   var checklistItem = function(label) {
     return '<div style="display:flex;align-items:center;gap:10px;padding:8px 0;">'
-      + '<span style="color:#4caf50;font-size:15px;">✓</span>'
-      + '<span style="font-size:13px;color:#e6e2d8;">' + label + '</span>'
+      + '<span style="color:#0E9F6E;font-size:15px;font-weight:700;">✓</span>'
+      + '<span style="font-size:13px;color:var(--text);">' + label + '</span>'
       + '</div>';
   };
   overlay.innerHTML =
-    '<div style="max-width:440px;width:100%;background:#141414;'
-    + 'border:1px solid rgba(184,146,58,.35);border-radius:12px;padding:40px 32px 28px;'
-    + 'color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:inherit;text-align:center;">'
-    +   '<div class="pv-wordmark" style="font-size:22px;letter-spacing:.2em;">Privency</div>'
-    +   '<div style="font-size:12px;color:#8a8f99;margin:8px 0 26px;">L\'exclusivité, même sans expérience</div>'
+    '<div style="max-width:440px;width:100%;background:#fff;'
+    + 'border:1px solid var(--border);border-radius:16px;padding:40px 32px 28px;'
+    + 'color:var(--text);box-shadow:0 12px 32px rgba(16,24,40,.18);font-family:inherit;text-align:center;">'
+    +   '<span class="brand-wordmark brand-wordmark--lg">Priven<span class="brand-cy">cy</span></span>'
+    +   '<div style="font-size:13px;color:var(--muted);margin:10px 0 26px;">L\'exclusivité, même sans expérience</div>'
     +   '<div style="font-size:20px;font-weight:700;margin-bottom:6px;">'
     +     'Bienvenue' + (prenom ? ' ' + esc(prenom) : '') + '</div>'
-    +   '<div style="font-size:14px;color:#c7ccd3;margin-bottom:22px;">'
+    +   '<div style="font-size:14px;color:var(--muted);margin-bottom:22px;">'
     +     'Votre espace personnalisé est prêt</div>'
-    +   '<div style="text-align:left;background:rgba(184,146,58,.08);border-radius:8px;padding:12px 16px;margin-bottom:26px;">'
+    +   '<div style="text-align:left;background:var(--light);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:26px;">'
     +     checklistItem('Abonnement activé')
     +     checklistItem('Facture envoyée par email')
     +     checklistItem('Prête à créer sa première fiche')
     +   '</div>'
     +   '<button type="button" id="welcome-cta-btn" style="width:100%;background:var(--accent);'
-    +     'border:none;color:#141414;font-weight:700;border-radius:6px;padding:12px 16px;'
+    +     'border:none;color:#fff;font-weight:700;border-radius:10px;padding:12px 16px;'
     +     'font-size:14px;cursor:pointer;font-family:inherit;">Découvrir mon espace</button>'
     + '</div>';
   document.body.appendChild(overlay);
@@ -2168,7 +2157,7 @@ function renderOnboardingSlide() {
   dotsWrap.innerHTML = _ONBOARDING_SLIDES.map(function(s, i) {
     var active = i === _onboardingSlideIdx;
     return '<span style="width:8px;height:8px;border-radius:50%;display:inline-block;'
-      + 'background:' + (active ? 'var(--accent)' : 'rgba(184,146,58,.3)') + ';'
+      + 'background:' + (active ? 'var(--accent)' : 'var(--border)') + ';'
       + 'transform:' + (active ? 'scale(1.2)' : 'scale(1)') + ';transition:.15s;"></span>';
   }).join('');
 }
@@ -2191,25 +2180,25 @@ function showOnboardingOverlay() {
     + 'background:rgba(0,0,0,.65);display:flex;align-items:center;justify-content:center;'
     + 'z-index:10001;padding:20px;';
   overlay.innerHTML =
-    '<div style="position:relative;max-width:560px;width:100%;background:#141414;'
-    + 'border:1px solid rgba(184,146,58,.35);border-radius:12px;padding:44px 36px 32px;'
-    + 'color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:inherit;">'
+    '<div style="position:relative;max-width:560px;width:100%;background:#fff;'
+    + 'border:1px solid var(--border);border-radius:16px;padding:44px 36px 32px;'
+    + 'color:var(--text);box-shadow:0 12px 32px rgba(16,24,40,.18);font-family:inherit;">'
     +   '<button type="button" id="onboarding-skip-btn" style="position:absolute;top:12px;right:14px;'
-    +     'background:none;border:none;color:#8a7550;font-size:12px;cursor:pointer;font-family:inherit;">'
+    +     'background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;">'
     +     'Passer</button>'
-    +   '<div style="text-align:center;margin-bottom:22px;"><span class="pv-wordmark" style="font-size:18px;letter-spacing:.2em;">Privency</span></div>'
+    +   '<div style="text-align:center;margin-bottom:22px;"><span class="brand-wordmark brand-wordmark--lg">Priven<span class="brand-cy">cy</span></span></div>'
     +   '<div id="onboarding-icon" style="font-size:64px;text-align:center;margin-bottom:14px;"></div>'
     +   '<div id="onboarding-title" style="font-size:22px;font-weight:700;text-align:center;'
-    +     'color:#fff;margin-bottom:10px;"></div>'
+    +     'color:var(--text);margin-bottom:10px;"></div>'
     +   '<div id="onboarding-text" style="font-size:15px;line-height:1.7;text-align:center;'
-    +     'color:#c7ccd3;margin-bottom:22px;"></div>'
+    +     'color:var(--muted);margin-bottom:22px;"></div>'
     +   '<div id="onboarding-dots" style="display:flex;justify-content:center;gap:8px;margin-bottom:24px;"></div>'
     +   '<div style="display:flex;justify-content:space-between;gap:10px;">'
     +     '<button type="button" id="onboarding-prev-btn" style="background:none;'
-    +       'border:1px solid #8a7550;color:#b8923a;border-radius:6px;padding:8px 16px;'
+    +       'border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 16px;'
     +       'font-size:13px;cursor:pointer;font-family:inherit;">Précédent</button>'
     +     '<button type="button" id="onboarding-next-btn" style="background:var(--accent);'
-    +       'border:none;color:#141414;font-weight:700;border-radius:6px;padding:8px 16px;'
+    +       'border:none;color:#fff;font-weight:700;border-radius:10px;padding:8px 16px;'
     +       'font-size:13px;cursor:pointer;font-family:inherit;margin-left:auto;"></button>'
     +   '</div>'
     + '</div>';
