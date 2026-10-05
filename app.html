@@ -41,8 +41,10 @@
    MARQUE PRIVENCY — emplacements du wordmark (.brand-wordmark, défini dans /brand.css)
 ═══════════════════════════════════════ */
 .brand-sub { font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); }
-.sb-brand { display: flex; flex-direction: column; gap: 6px; padding: 2px 12px 0; margin: 0 0 22px; }
-.sb-foot { margin-top: 12px; padding: 10px 12px 2px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--muted); }
+.sb-brand { display: flex; flex-direction: column; gap: 6px; padding: 0 12px; margin: 0 0 24px; }
+.sb-brand .brand-wordmark { font-size: 26px; font-weight: 800; }
+.sb-brand .brand-sub { font-size: 11px; font-weight: 600; letter-spacing: .1em; color: #6b7280; }
+.sb-foot { margin-top: auto; padding: 18px 12px 2px; display: flex; align-items: center; justify-content: flex-start; gap: 8px; font-size: 12px; color: var(--muted); }
 .sb-foot a { color: var(--muted); font-weight: 600; text-decoration: none; }
 .sb-foot a:hover { color: var(--text); text-decoration: underline; }
 /* Bandeau de marque du header : mobile uniquement (en desktop, la marque est en haut du menu latéral) */
@@ -69,16 +71,19 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; background
 header {
   background: #fff;
   color: var(--text);
-  border-bottom: 1px solid var(--border);
-  padding: 14px 24px;
-  display: flex;
+  border-bottom: 1px solid #e5e7eb;
+  height: 76px;
+  padding: 0 24px;
+  /* 3 colonnes : vide · identité de l'agent (centrée) · actions */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
+  gap: 16px;
   position: sticky;
   top: 0;
   z-index: 100;
 }
-.header-brand { display: flex; align-items: center; gap: 14px; }
+.header-brand { grid-column: 2; display: flex; align-items: center; gap: 12px; min-width: 0; }
 .logo-circle {
   width: 44px; height: 44px; border-radius: 50%;
   background: var(--accent);
@@ -87,9 +92,9 @@ header {
   flex-shrink: 0; overflow: hidden;
 }
 .logo-circle img { width: 100%; height: 100%; object-fit: cover; object-position: top center; border-radius: 50%; }
-.header-brand h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 17px; }
-.header-brand p  { font-size: 11px; opacity: .75; margin-top: 1px; }
-.header-right { font-size: 11px; text-align: right; }
+.header-brand h1 { font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 15px; }
+.header-brand p  { font-size: 12px; color: #6b7280; margin-top: 2px; }
+.header-right { grid-column: 3; font-size: 11px; text-align: right; min-width: 0; }
 
 /* ═══════════════════════════════════════
    STEPPER — nav verticale (desktop) / horizontale scrollable (mobile, cf. media query 768px)
@@ -99,16 +104,16 @@ header {
 ═══════════════════════════════════════ */
 .stepper {
   background: #fff;
-  border-right: 1px solid var(--border);
-  padding: 20px 12px;
+  border-right: 1px solid #e5e7eb;
+  padding: 28px 20px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
   position: fixed;
-  top: 72px;
+  top: 76px;
   left: 0;
-  width: 210px;
-  height: calc(100vh - 72px);
+  width: 272px;
+  height: calc(100vh - 76px);
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 90;
@@ -116,29 +121,31 @@ header {
 .step-tab {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
+  gap: 14px;
+  height: 46px;
+  flex-shrink: 0;
+  padding: 0 12px;
   cursor: pointer;
-  color: var(--muted);
-  font-size: 13px;
+  color: #374151;
+  font-size: 15px;
   font-weight: 500;
-  border-radius: 10px;
+  border-radius: 12px;
   transition: all .2s;
   white-space: nowrap;
   user-select: none;
 }
-.step-tab:hover  { background: var(--light); color: var(--text); }
-.step-tab.active { color: var(--gold2); background: var(--light); font-weight: 600; }
+.step-tab:hover  { background: #f5f6f8; color: var(--text); }
+.step-tab.active { color: #057a55; background: #e8f7f0; font-weight: 700; }
 .step-tab.done   { color: var(--vert); }
 .step-num {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--border);
-  color: var(--muted); font-size: 11px; font-weight: 900;
+  width: 26px; height: 26px; border-radius: 50%;
+  background: #eef0f2;
+  color: #6b7280; font-size: 13px; font-weight: 800;
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
   position: relative;
 }
-.step-tab.active .step-num { background: var(--accent); color: #fff; }
+.step-tab.active .step-num { background: #0e9f6e; color: #fff; }
 .step-tab.done   .step-num { background: var(--vert); color: transparent; }
 .step-tab.done   .step-num::after {
   content: '✓';
@@ -146,40 +153,36 @@ header {
   display: flex; align-items: center; justify-content: center;
   color: #fff; font-size: 11px; font-weight: 900;
 }
-.stepper > a {
-  margin-top: 12px;
-  border-radius: 10px;
-}
 /* Icônes des onglets de suivi et d'outils : plus de rond noir vide, juste l'icône (verte quand l'onglet est actif) */
-.step-ico { width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--muted); }
+.step-ico { width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #6b7280; }
+.step-ico svg { width: 20px; height: 20px; }
 .step-tab:hover .step-ico { color: var(--text); }
 .step-tab.active .step-ico { color: var(--accent); }
-/* Groupes du menu : création (1 à 4), espace, puis suivi */
-.stepper-group-title { padding: 0 12px 4px; font-size: 10px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); opacity: .8; user-select: none; }
-.stepper-group { margin-top: 26px; display: flex; flex-direction: column; gap: 3px; }
+/* Groupes du menu : création (1 à 4), séparateur, suivi, séparateur, outils */
+.stepper-group-title, .stepper-tools-title { padding: 0 12px 6px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #9ca3af; user-select: none; }
+.stepper-group { display: flex; flex-direction: column; gap: 5px; }
+.stepper-group::before, .stepper-tools::before { content: ''; display: block; height: 1px; background: #eceff1; margin: 18px 12px 14px; }
 /* Zone d'actions en haut à droite : abonnement, tutoriel, compte */
 .header-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 8px; }
-.hbtn { display: inline-flex; align-items: center; gap: 6px; background: var(--light); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; white-space: nowrap; transition: all .2s; }
+.hbtn { display: inline-flex; align-items: center; gap: 6px; height: 40px; background: #fff; color: var(--text); border: 1px solid #e5e7eb; border-radius: 10px; padding: 0 14px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; white-space: nowrap; transition: all .2s; }
+/* Menu « Compte » : tutoriel, changement de compte, déconnexion */
+.acct-menu { position: relative; }
+.acct-menu-list { position: absolute; top: calc(100% + 6px); right: 0; z-index: 120; min-width: 220px; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 10px 28px rgba(15,26,22,.12); padding: 6px; display: flex; flex-direction: column; gap: 2px; text-align: left; }
+.acct-menu-list[hidden] { display: none; }
+.acct-menu-list .hbtn { width: 100%; justify-content: flex-start; border: 0; border-radius: 8px; }
+.acct-menu-list .hbtn:hover { background: #e8f7f0; color: #057a55; }
+/* Bouton « Nouvelle fiche » : en haut à droite de la zone de contenu, sur toutes les pages */
+.newfiche-bar { max-width: 900px; margin: 0 0 0 304px; padding: 20px 20px 0; display: flex; justify-content: flex-end; }
+.newfiche-btn { display: inline-flex; align-items: center; gap: 8px; height: 48px; padding: 0 20px; border-radius: 12px; background: #0e9f6e; color: #fff; font-size: 15px; font-weight: 700; text-decoration: none; white-space: nowrap; box-shadow: 0 6px 16px rgba(14,159,110,.25); transition: background .2s; }
+.newfiche-btn:hover { background: #0a8a5f; }
+.newfiche-btn:focus-visible, .acct-menu-list .hbtn:focus-visible, .hbtn:focus-visible { outline: 2px solid #0e9f6e; outline-offset: 2px; }
 .hbtn:hover { border-color: var(--accent); color: var(--gold2); }
 .hbtn.active { background: #fff; border-color: var(--accent); color: var(--gold2); }
-/* Groupe « Outils commerciaux » : visuellement séparé, en bas du menu, juste avant « Nouvelle fiche » */
+/* Groupe « Outils commerciaux » : séparé du suivi par le même trait que les autres groupes */
 .stepper-tools {
-  margin-top: auto;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  gap: 3px;
-}
-.stepper-tools-title {
-  padding: 0 12px 4px;
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .09em;
-  text-transform: uppercase;
-  color: var(--muted);
-  opacity: .8;
-  user-select: none;
+  gap: 5px;
 }
 
 /* ═══════════════════════════════════════
@@ -249,7 +252,7 @@ header {
 ═══════════════════════════════════════ */
 .page { display: none; }
 .page.active { display: block; }
-.container { max-width: 900px; margin: 0 0 0 244px; padding: 24px 20px; }
+.container { max-width: 900px; margin: 0 0 0 304px; padding: 24px 20px; }
 
 /* ═══════════════════════════════════════
    CARDS
@@ -423,6 +426,7 @@ textarea { resize: vertical; min-height: 60px; }
   }
   .stepper::-webkit-scrollbar { display: none; }
   .step-tab {
+    height: auto;
     padding: 12px 14px;
     gap: 6px;
     flex-shrink: 0;
@@ -432,30 +436,27 @@ textarea { resize: vertical; min-height: 60px; }
   .step-tab.active { background: transparent; }
   .step-badge-new { position: absolute; top: 8px; right: 7px; width: 8px; height: 8px; padding: 0; font-size: 0; border-radius: 50%; }
   /* Actions de l'en-tête (abonnement, tutoriel, compte) : compactes, sous le logo, jamais par-dessus les onglets */
-  header { flex-wrap: wrap; gap: 8px; padding: 10px 12px; }
+  header { display: flex; flex-wrap: wrap; gap: 8px; height: auto; padding: 10px 12px; }
   .header-right { display: block !important; width: 100%; }
   .header-actions { justify-content: flex-start; gap: 6px; }
-  .hbtn { padding: 5px 9px; font-size: 11px; }
+  .hbtn { height: 34px; padding: 0 10px; font-size: 12px; }
+  /* Menu « Compte » : pleine largeur sous le bouton, jamais hors écran (top calculé en JS) */
+  .acct-menu { position: static; }
+  .acct-menu-list { position: fixed; left: 12px; right: 12px; min-width: 0; }
+  .acct-menu-list .hbtn { height: 44px; font-size: 14px; }
+  .newfiche-bar { margin: 0; padding: 12px 12px 0; }
+  .newfiche-btn { height: 44px; font-size: 14px; }
   /* Marque : bandeau sombre pleine largeur en tête du header ; le bloc du menu latéral et son pied sont masqués */
   .hdr-brandbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; order: -1; flex: 0 0 auto; width: calc(100% + 24px); margin: -10px -12px 2px; padding: 10px 14px; background: #fff; border-bottom: 1px solid var(--border); }
   .sb-brand, .sb-foot { display: none; }
   .stepper-group { display: contents; }
+  .stepper-group::before, .stepper-tools::before { display: none; }
   .stepper-group-title, .stepper > .stepper-group-title { display: none; }
   /* Groupe « Outils commerciaux » : en barre horizontale, l'onglet redevient un onglet comme les autres */
   .stepper-tools { display: contents; }
   .stepper-tools-title { display: none; }
   /* Iframe Coaching Express : la barre est statique en haut, plus de colonne latérale */
-  #argu-frame { width: 100% !important; margin-left: 0 !important; height: calc(100vh - 150px) !important; height: calc(100dvh - 150px) !important; }
-  /* Bouton Nouvelle fiche : compact, revient à droite de la barre horizontale */
-  .stepper > a {
-    margin-top: 0 !important;
-    margin-left: auto !important;
-    padding: 12px 12px !important;
-    font-size: 12px !important;
-    white-space: nowrap;
-    flex-shrink: 0;
-    border-radius: 0 !important;
-  }
+  #argu-frame { width: 100% !important; margin-left: 0 !important; height: calc(100vh - 206px) !important; height: calc(100dvh - 206px) !important; }
   .container { margin: 0 auto; }
 
   /* Header */
@@ -812,7 +813,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
     wrap.appendChild(switchBtn);
     wrap.appendChild(btn);
-    (document.getElementById('header-actions') || document.body).appendChild(wrap);
+    (document.getElementById('acct-menu-list') || document.getElementById('header-actions') || document.body).appendChild(wrap);
   });
 })();
 </script>
@@ -846,6 +847,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="header-right">
     <div class="header-actions" id="header-actions">
       <button type="button" class="hbtn" id="hdr-abo" onclick="goToStep(8)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg><span>Mon abonnement</span></button>
+      <div class="acct-menu" id="acct-menu">
+        <button type="button" class="hbtn" id="acct-menu-btn" aria-haspopup="true" aria-expanded="false" aria-controls="acct-menu-list">Compte <span aria-hidden="true">▾</span></button>
+        <!-- Rempli au chargement : « Revoir le tutoriel », « Changer de compte », « Déconnexion » -->
+        <div class="acct-menu-list" id="acct-menu-list" hidden></div>
+      </div>
     </div>
   </div>
 </header>
@@ -900,12 +906,15 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <span class="step-label">Vidéos tuto</span>
     </div>
   </div>
-  <a href="/app.html?new=1" style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--accent);color:#fff;font-size:13px;font-weight:600;text-decoration:none;white-space:nowrap;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Nouvelle fiche</a>
   <div class="sb-foot">
-    <span class="brand-wordmark brand-wordmark--sm">Priven<span class="brand-cy">cy</span></span>
     <a href="mailto:contact@privency.fr" onclick="var b=document.getElementById('aide-btn'); if (b) { event.preventDefault(); b.click(); }">Aide</a>
   </div>
 </nav>
+
+<!-- Bouton « Nouvelle fiche » : en haut à droite du contenu, commun à toutes les pages -->
+<div class="newfiche-bar">
+  <a href="/app.html?new=1" class="newfiche-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg> Nouvelle fiche</a>
+</div>
 
 <!-- ══════════════════════════════════════════════════════
      PAGE 1 — PROFIL AGENT
@@ -1937,7 +1946,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 ══════════════════════════════════════════════════════ -->
 <div class="page" id="page-7">
   <iframe id="argu-frame" title="Coaching Express — boîte à outils commerciale" data-src="/argumentaire.html" loading="lazy"
-    style="display:block;border:0;width:calc(100% - 210px);margin-left:210px;height:calc(100vh - 72px);background:var(--light);"></iframe>
+    style="display:block;border:0;width:calc(100% - 272px);margin-left:272px;height:calc(100vh - 144px);background:var(--light);"></iframe>
 </div>
 
 <!-- ══════════════════════════════════════════════════════
@@ -2228,6 +2237,30 @@ if (window._onboardingPending) {
   showOnboardingOverlay();
 }
 
+// Menu « Compte » de l'en-tête : ouverture au clic, fermeture au clic dehors,
+// sur Échap et après le choix d'une entrée.
+document.addEventListener('DOMContentLoaded', function() {
+  var menuBtn = document.getElementById('acct-menu-btn'), list = document.getElementById('acct-menu-list');
+  if (!menuBtn || !list) return;
+  function setOpen(open) {
+    list.hidden = !open;
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    // Mobile : la liste est en position fixe, on la place juste sous le bouton
+    if (open && window.matchMedia('(max-width: 768px)').matches) {
+      list.style.top = Math.round(menuBtn.getBoundingClientRect().bottom + 6) + 'px';
+    } else {
+      list.style.top = '';
+    }
+  }
+  menuBtn.addEventListener('click', function(e) { e.stopPropagation(); setOpen(list.hidden); });
+  list.addEventListener('click', function(e) { if (e.target.closest('button, a')) setOpen(false); });
+  document.addEventListener('click', function(e) { if (!list.hidden && !e.target.closest('#acct-menu')) setOpen(false); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && !list.hidden) { setOpen(false); menuBtn.focus(); }
+  });
+  window.addEventListener('resize', function() { if (!list.hidden) setOpen(false); });
+});
+
 // Petit bouton discret pour revoir le tutoriel à la demande — n'écrit
 // jamais onboarding_seen (la fermeture le remet à true, ce qui est déjà
 // son état dans ce cas).
@@ -2237,8 +2270,8 @@ document.addEventListener('DOMContentLoaded', function() {
   btn.textContent = '❓ Revoir le tutoriel';
   btn.className = 'hbtn';
   btn.addEventListener('click', function() { showOnboardingOverlay(); });
-  var zone = document.getElementById('header-actions'), abo = document.getElementById('hdr-abo');
-  if (zone) zone.insertBefore(btn, abo ? abo.nextSibling : zone.firstChild); else document.body.appendChild(btn);
+  var zone = document.getElementById('header-actions'), acct = document.getElementById('acct-menu-list');
+  if (acct) acct.insertBefore(btn, acct.firstChild); else if (zone) zone.appendChild(btn); else document.body.appendChild(btn);
   // Compte administrateur uniquement : accès direct au tableau de bord (même onglet, donc même compte connecté).
   setTimeout(async function () {
     try {
