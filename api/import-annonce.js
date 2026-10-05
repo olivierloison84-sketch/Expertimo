@@ -79,6 +79,12 @@ const SYSTEM_PROMPT = [
   '  "parkingInt", "parkingExt" et "parkingBox". Si la pièce n\'est pas',
   '  mentionnée du tout (ex. aucun WC cité), omets la clé. Pour le parking,',
   '  la règle sur l\'emplacement ci-dessous reste prioritaire.',
+  '- Avant de répondre, relis le texte et vérifie une par une : chambres,',
+  '  salles de bains / salles d\'eau, WC, ascenseur, parkings. Si une de ces',
+  '  pièces est citée dans le texte, même en fin de phrase ou dans une',
+  '  énumération ("côté nuit, vous disposez de quatre chambres, dont une de',
+  '  plus de 12 m², ainsi que d\'une salle de bains"), la clé correspondante',
+  '  doit être renseignée.',
   '- "etagesTotal" : nombre d\'étages de l\'immeuble (ex. "3e étage sur 5" →',
   '  "etage": "3", "etagesTotal": 5).',
   '- "ascenseur" : "oui" si l\'annonce mentionne un ascenseur, "non" si elle',
@@ -156,6 +162,7 @@ module.exports = async function handler(req, res) {
     const body = {
       model: 'claude-sonnet-4-5',
       max_tokens: 1500,
+      temperature: 0,
       system: SYSTEM_PROMPT,
       messages: [
         { role: 'user', content: text.trim() }
