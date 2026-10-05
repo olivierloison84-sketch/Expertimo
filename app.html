@@ -4325,23 +4325,57 @@ var _ficheMap=null, _ficheMapMarkers={transport:[],parc:[],commerce:[],ecole:[]}
 var _geoLat=null, _geoLng=null;
 window._geoX=null; window._geoY=null; window._geoCityCode=null; window._geoCityName=null;
 
+// Normalise une adresse pour comparer saisie et libellé officiel (casse, accents, ponctuation).
+function normAdresse(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
 function initFicheMap() {
   var adresse=getV('adresse');
   if (!adresse){showToast("Entrez d'abord l'adresse",true);return;}
   var mapDiv=document.getElementById('fiche-map');
   mapDiv.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);">⏳ Géolocalisation…</div>';
   document.getElementById('btn-geolocate').disabled=true;
-  fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(adresse)+'&limit=1')
+  // 1. API Adresse (IGN) : tolérante aux fautes d'orthographe sur la rue
+  fetch('https://data.geopf.fr/geocodage/search?q='+encodeURIComponent(adresse)+'&limit=1')
     .then(function(r){return r.json();})
     .then(function(data) {
-      if (!data||!data[0]) throw new Error('Adresse introuvable');
-      var lat=parseFloat(data[0].lat), lng=parseFloat(data[0].lon);
+      var feat=data&&data.features&&data.features[0];
+      if (!feat||!(feat.properties&&feat.properties.score>=0.5)) return false;
+      var lng=feat.geometry.coordinates[0], lat=feat.geometry.coordinates[1];
+      var label=feat.properties.label||adresse;
       _geoLat=lat; _geoLng=lng;
-      document.getElementById('geo-status').textContent='📍 '+data[0].display_name.slice(0,60)+'…';
+      window._geoX=feat.properties.x;
+      window._geoY=feat.properties.y;
+      window._geoCityCode=feat.properties.citycode;
+      window._geoCityName=feat.properties.city;
+      if (normAdresse(label)!==normAdresse(adresse)) {
+        setV('adresse',label); window._adresse=label; adresse=label;
+        showToast('Adresse corrigée : '+label);
+      }
+      document.getElementById('geo-status').textContent='📍 '+label;
       buildFicheMap(lat,lng,adresse);
+      return true;
+    })
+    .catch(function(){return false;})
+    .then(function(ok) {
+      if (ok) return;
+      // 2. Secours : Nominatim (OpenStreetMap)
+      return fetch('https://nominatim.openstreetmap.org/search?format=json&q='+encodeURIComponent(adresse)+'&limit=1')
+        .then(function(r){return r.json();})
+        .then(function(data) {
+          if (!data||!data[0]) throw new Error('not found');
+          var lat=parseFloat(data[0].lat), lng=parseFloat(data[0].lon);
+          _geoLat=lat; _geoLng=lng;
+          document.getElementById('geo-status').textContent='📍 '+data[0].display_name.slice(0,60)+'…';
+          buildFicheMap(lat,lng,adresse);
+        });
+    })
+    .then(function() {
       var cp=adresse.match(/\b(\d{5})\b/); if(cp) setV('dvf_cp',cp[1]);
     })
-    .catch(function(e){mapDiv.innerHTML='<div style="color:var(--danger);padding:20px;">❌ '+e.message+'</div>';document.getElementById('btn-geolocate').disabled=false;});
+    .catch(function(){mapDiv.innerHTML='<div style="color:var(--danger);padding:20px;">❌ Adresse introuvable. Vérifiez l\'orthographe de la rue et le code postal.</div>';document.getElementById('btn-geolocate').disabled=false;});
 }
 
 function buildFicheMap(lat,lng,adresse) {
