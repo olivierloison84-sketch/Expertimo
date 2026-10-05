@@ -6440,6 +6440,14 @@ function injectBienData(data) {
     if (val === undefined || val === null) return;
     dbgSet(id, val);
   }
+  // Champs <input type="number"> : une chaîne comme "1 250 €" y est rejetée en silence
+  // (le champ reste vide). On ramène donc toute valeur à un nombre, ou undefined.
+  function toNum(val) {
+    if (val === undefined || val === null || val === '') return undefined;
+    if (typeof val === 'number') return isFinite(val) ? val : undefined;
+    var n = parseFloat(String(val).replace(/[\s\u00a0\u202f€]/g, '').replace(',', '.'));
+    return isFinite(n) ? n : undefined;
+  }
 
   // Switch to correct type
   // Sans type dans data : un import d'annonce garde le type déjà choisi par l'agent ;
@@ -6463,16 +6471,45 @@ function injectBienData(data) {
   setIfPresent('prix_vente_t', data.prix);
 
   // Charges & fiscalité
-  setIfPresent('charges_copro', data.chargesCopro);
-  setIfPresent('taxe_fonciere', data.taxeFonciere);
-  setIfPresent('taxe_fonciere_t', data.taxeFonciere);
+  // charges_copro est en €/mois. Une fiche rechargée (mode édition) le stocke déjà en
+  // mensuel ; un import d'annonce fournit le montant brut + sa période (annuel → /12).
+  // Import sans période claire : on ne remplit pas.
+  var chargesCopro = toNum(data.chargesCopro);
+  if (chargesCopro !== undefined && !window._editMode) {
+    if (data.chargesCoproPeriode === 'annuel') chargesCopro = Math.round(chargesCopro / 12);
+    else if (data.chargesCoproPeriode === 'mensuel') chargesCopro = Math.round(chargesCopro);
+    else chargesCopro = undefined;
+    console.log('[inject] chargesCopro:', data.chargesCopro, '— période:', data.chargesCoproPeriode, '→ €/mois:', chargesCopro);
+  }
+  setIfPresent('charges_copro', window._editMode ? data.chargesCopro : chargesCopro);
+  setIfPresent('taxe_fonciere', toNum(data.taxeFonciere));
+  setIfPresent('taxe_fonciere_t', toNum(data.taxeFonciere));
   setIfPresent('charges_detail', data.chargesDetail);
 
   // Caractéristiques
   setIfPresent('nb_pieces', data.pieces);
+  setIfPresent('nb_chambres', toNum(data.chambres));
+  setIfPresent('nb_sdb', toNum(data.sdb));
+  setIfPresent('nb_wc', toNum(data.wc));
   setIfPresent('etage', data.etage);
+  setIfPresent('nb_etages', toNum(data.etagesTotal));
   setIfPresent('annee_construction', data.annee);
   setIfPresent('ref_mandat', data.ref);
+
+  // Ascenseur : on ne coche que si l'information est fournie ("oui" / "non")
+  if (data.ascenseur === 'oui' || data.ascenseur === 'non') {
+    var ascRadio = document.querySelector('#page-2 input[name="ascenseur"][value="' + data.ascenseur + '"]');
+    console.log('[inject] ascenseur —', ascRadio ? 'FOUND' : 'NOT FOUND', '— value:', data.ascenseur);
+    if (ascRadio) {
+      ascRadio.checked = true;
+      ascRadio.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+
+  // Parking
+  setIfPresent('parking_int', toNum(data.parkingInt));
+  setIfPresent('parking_ext', toNum(data.parkingExt));
+  setIfPresent('parking_box', toNum(data.parkingBox));
 
   // DPE : cliquer le bon bouton via data-letter (créés dynamiquement par initStep2)
   var dpeBtns = document.querySelectorAll('#page-2 .dpe-btn[data-group="dpe"]');
@@ -6519,7 +6556,13 @@ function injectBienData(data) {
   setIfPresent('bien_credit_taux_bas', data.creditBas);
 
   // Historique & documents
-  setIfPresent('historique_libre', data.historiqueLibre);
+  // Ne jamais écraser un texte déjà saisi par l'agent
+  var histEl = document.getElementById('historique_libre');
+  if (histEl && histEl.value.trim()) {
+    if (data.historiqueLibre != null) console.log('[inject] historique_libre — déjà rempli, non écrasé');
+  } else {
+    setIfPresent('historique_libre', data.historiqueLibre);
+  }
   setIfPresent('facture1_url', data.facture1Url);
   setIfPresent('facture2_url', data.facture2Url);
   setIfPresent('facture3_url', data.facture3Url);
