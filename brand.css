@@ -1,0 +1,20 @@
+/* ============================================================================
+   PRIVENCY — WORDMARK DE L'APP AGENT (composant unique, réutilisé partout)
+   « Priven » #0F1A16 + « cy » #0E9F6E, Plus Jakarta Sans 800, sur fond clair.
+   Couleurs en dur : elles ne suivent PAS les couleurs personnalisables de l'agent (--accent).
+   Usage : <span class="brand-wordmark brand-wordmark--sm">Priven<span class="brand-cy">cy</span></span>
+   Tailles : --sm (menu, header, pied de menu) · --lg (connexion, chargement, accueil, onboarding)
+   Nécessite Plus Jakarta Sans (graisse 800) chargée par la page.
+   L'identité or/noir est réservée au site vitrine et aux espaces acquéreurs : jamais ici.
+   ============================================================================ */
+.brand-wordmark{
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,sans-serif;
+  font-weight:800;
+  letter-spacing:-.02em;
+  line-height:1;
+  color:#0F1A16;
+  white-space:nowrap;
+}
+.brand-wordmark .brand-cy{color:#0E9F6E}
+.brand-wordmark--sm{font-size:19px}
+.brand-wordmark--lg{font-size:34px}
