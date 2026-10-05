@@ -1109,6 +1109,10 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div class="form-group"><label>Salle(s) de bains</label><input type="number" id="nb_sdb" min="0"></div>
       <div class="form-group"><label>WC</label><input type="number" id="nb_wc" min="0"></div>
     </div>
+    <div class="grid-4 appart-maison-only">
+      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" min="0"></div>
+      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" min="0"></div>
+    </div>
     <div class="section-title appart-only">Immeuble</div>
     <div class="grid-2 appart-only">
       <div class="form-group"><label>Étage du bien</label><input type="text" id="etage"></div>
@@ -1119,11 +1123,32 @@ details[open] summary .chevron { transform: rotate(90deg); }
         </div>
       </div>
     </div>
+    <div class="grid-3 appart-only">
+      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages"></div>
+      <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction"></div>
+      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom"></div>
+      <div class="form-group"><label>Travaux votés en AG</label>
+        <div class="radio-group">
+          <label class="radio-item"><input type="radio" name="travaux_ag" value="non" onchange="document.getElementById('travaux_ag_detail_group').style.display='none'"> Non</label>
+          <label class="radio-item"><input type="radio" name="travaux_ag" value="oui" onchange="document.getElementById('travaux_ag_detail_group').style.display='block'"> Oui</label>
+        </div>
+      </div>
+      <div class="form-group col-span-3" id="travaux_ag_detail_group" style="display:none"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail"></div>
+      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble"></div>
+    </div>
     <div class="section-title appart-maison-only">Prix &amp; Charges</div>
     <div class="grid-3 appart-maison-only">
       <div class="form-group"><label>Prix de mise en vente (€)</label><input type="number" id="prix_vente"></div>
       <div class="form-group"><label>Charges copro (€/mois)</label><input type="number" id="charges_copro"></div>
       <div class="form-group"><label>Charges mensuelles (€)</label><input type="number" id="charges_mensuelles" data-internal="1"></div>
+    </div>
+    <div class="grid-2 appart-maison-only">
+      <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere"></div>
+      <div class="form-group"><label>Taxe d'habitation (€/an)</label><input type="number" id="taxe_hab" data-internal="1"></div>
+    </div>
+    <div class="form-group appart-maison-only mt-8">
+      <label>Détail des charges (contexte chatbot)</label>
+      <input type="text" id="charges_detail">
     </div>
     <div class="form-group appart-maison-only" style="margin-top:8px;">
       <label>Le bien est-il en copropriété ?</label>
@@ -1444,25 +1469,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
 <div class="card">
   <div class="card-header">📐 Caractéristiques du bien</div>
   <div class="card-body">
-    <div class="section-title appart-maison-only">Pièces (détail)</div>
-    <div class="grid-2 appart-maison-only">
-      <div class="form-group"><label>Salle(s) d'eau</label><input type="number" id="nb_sde" min="0"></div>
-      <div class="form-group"><label>WC séparés</label><input type="number" id="nb_wc_sep" min="0"></div>
-    </div>
-    <div class="section-title appart-only">Immeuble (suite)</div>
-    <div class="grid-3 appart-only">
-      <div class="form-group"><label>Nb d'étages total</label><input type="number" id="nb_etages"></div>
-      <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction"></div>
-      <div class="form-group"><label>Syndic</label><input type="text" id="syndic_nom"></div>
-      <div class="form-group"><label>Travaux votés en AG</label>
-        <div class="radio-group">
-          <label class="radio-item"><input type="radio" name="travaux_ag" value="non" onchange="document.getElementById('travaux_ag_detail_group').style.display='none'"> Non</label>
-          <label class="radio-item"><input type="radio" name="travaux_ag" value="oui" onchange="document.getElementById('travaux_ag_detail_group').style.display='block'"> Oui</label>
-        </div>
-      </div>
-      <div class="form-group col-span-3" id="travaux_ag_detail_group" style="display:none"><label>Si oui : quoi et combien ?</label><input type="text" id="travaux_ag_detail"></div>
-      <div class="form-group col-span-3"><label>Travaux récents (immeuble)</label><input type="text" id="travaux_recents_immeuble"></div>
-    </div>
     <div class="section-title maison-only hidden">Construction</div>
     <div class="grid-3 maison-only hidden">
       <div class="form-group"><label>Année de construction</label><input type="number" id="annee_construction_m"></div>
@@ -1473,15 +1479,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
           <option>Luxe</option><option>Haut de gamme</option><option>Très bon</option><option>Standard</option><option>Entrée de gamme</option>
         </select>
       </div>
-    </div>
-    <div class="section-title appart-maison-only">Fiscalité</div>
-    <div class="grid-2 appart-maison-only">
-      <div class="form-group"><label>Taxe foncière (€/an)</label><input type="number" id="taxe_fonciere"></div>
-      <div class="form-group"><label>Taxe d'habitation (€/an)</label><input type="number" id="taxe_hab" data-internal="1"></div>
-    </div>
-    <div class="form-group appart-maison-only mt-8">
-      <label>Détail des charges (contexte chatbot)</label>
-      <input type="text" id="charges_detail">
     </div>
     <div class="section-title appart-maison-only">Les + du bien</div>
     <div class="form-group appart-maison-only">
