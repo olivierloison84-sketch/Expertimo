@@ -827,6 +827,8 @@ body.pv4 .pv-recap{display:block;text-align:center;margin:2px 0 18px;}
 body.pv4 .pv-recap b{display:block;font:700 16px/1.3 var(--pv-font);color:var(--ink);}
 body.pv4 .pv-recap span{display:block;font:500 14px/1.3 var(--pv-font);color:var(--muted);margin-top:2px;}
 body.pv4 .pv-recap:empty{display:none;}
+body.pv4 #ai-modal>div:first-child .pv-aiico{color:#fff!important;}
+body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22px;height:22px;}
 </style>
 </head>
 <body class="pv pv4 pv-home tone-b">
@@ -4029,8 +4031,8 @@ document.addEventListener('DOMContentLoaded', function() {
   function rule(){
     var ag=(typeof _sp_agent==='string'&&_sp_agent)?_sp_agent:'the advisor',pl=place();
     return '\nADDRESS CONFIDENTIALITY — you do not know the exact address of this property and you must never give, guess, spell out or confirm a street name, a street number, a building name or any precise location, even partially, and even if the visitor insists or says they already know it. '
-      +'When asked for the address, the street, the house number or the exact location, answer in the visitor\'s language, in 3 short sentences: for confidentiality reasons you cannot give the exact address of the property; it will be communicated by '+ag+' when a visit is organised; '
-      +'the property is geolocated within a perimeter of about 180 m around '+(pl||'the neighbourhood')+', and the interactive map in the "'+tabName()+'" tab shows all the amenities near the property (transport, shops, schools). Then invite the visitor to ask another question or to contact '+ag+' to arrange a visit.';
+      +'When asked for the address, the street, the house number or the exact location, answer in the visitor\'s language, in 3 short sentences, in this order: for confidentiality reasons you cannot give the exact address of the property; it will be communicated by '+ag+' when a visit is organised; '
+      +'the property is located in '+(pl||'the neighbourhood')+' and the interactive map in the "'+tabName()+'" tab shows its position only as an approximate zone of about 180 m, together with all the amenities close to the property (transport, shops, schools). Never say the property is "around" or "near" '+(pl||'the town')+' when it is in it. Then invite the visitor to ask another question or to contact '+ag+' to arrange a visit.';
   }
   if(typeof buildAiSystemPrompt==='function'){var ob=buildAiSystemPrompt;window.buildAiSystemPrompt=function(l,c){return ob(l,scrubCtx(c))+rule();};}
   if(typeof addAIMsg==='function'){var oa=addAIMsg;window.addAIMsg=function(t,r){return oa.call(this,r==='assistant'?scrub(t,'(adresse non communiquée)'):t,r);};}
