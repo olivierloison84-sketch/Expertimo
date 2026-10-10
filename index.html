@@ -849,6 +849,20 @@ body.pv4 #welcome-msg[style*="block"]{display:block!important;overflow:visible!i
   body.pv4 .price-card .pv-dpe{justify-content:center;}
 }
 @media(max-width:700px){body.pv4 .hsub,body.pv4 .htitle{width:100%!important;box-sizing:border-box;}}
+
+/* ═════════ v20 : assistant sur fond clair ; rappel du bien (désignation + ville) en haut de chaque section ═════════ */
+body.pv4 #ai-modal>div:first-child{background:var(--cream)!important;color:var(--ink)!important;border-bottom:1px solid var(--border);}
+body.pv4 #ai-modal>div:first-child div{color:var(--ink)!important;}
+body.pv4 #ai-modal>div:first-child div div+div{color:var(--muted)!important;}
+body.pv4 #ai-modal>div:first-child button{color:var(--ink)!important;}
+body.pv4 .pv-aiico{background:var(--pv-fill)!important;color:#fff!important;}
+body.pv4 #ai-modal button[onclick*="sendAI"]{background:var(--pv-accent)!important;color:#fff!important;}
+body.pv4 #ai-messages>div[style*="flex-end"]{background:var(--pv-accent)!important;color:#fff!important;}
+.pv-recap{display:none;}
+body.pv4 .pv-recap{display:block;text-align:center;margin:2px 0 18px;}
+body.pv4 .pv-recap b{display:block;font:700 16px/1.3 var(--pv-font);color:var(--ink);}
+body.pv4 .pv-recap span{display:block;font:500 14px/1.3 var(--pv-font);color:var(--muted);margin-top:2px;}
+body.pv4 .pv-recap:empty{display:none;}
 </style>
 </head>
 <body class="pv pv4 pv-home tone-b">
@@ -2975,7 +2989,7 @@ function initMapQuartier() {
       maxZoom:16, attribution: '© OpenStreetMap contributors'
     }).addTo(map);
     var iconMain = L.divIcon({className:'', html:'<div style="background:#14171F;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:16px;box-shadow:0 3px 8px rgba(0,0,0,0.4);border:3px solid #C9A227;">🏠</div>', iconSize:[32,32], iconAnchor:[16,16]});
-    var zc=(getComputedStyle(document.body).getPropertyValue('--pv-accent')||'#C9A227').trim();L.circle([lat,lng],{radius:150,color:zc,weight:2,fillColor:zc,fillOpacity:.2}).addTo(map).bindTooltip('Secteur du bien',{permanent:true,direction:'center',className:'pv-zone'});
+    var zc=(getComputedStyle(document.body).getPropertyValue('--pv-accent')||'#C9A227').trim();L.circle([lat,lng],{radius:180,color:zc,weight:2,fillColor:zc,fillOpacity:.2}).addTo(map).bindTooltip('Secteur du bien',{permanent:true,direction:'center',className:'pv-zone'});
     // Types de transports : icône, couleur et libellé propres à chaque mode (métro, RER, gare/train, tram, bus)
     var TRANSPORT_MODES = {
       metro: {color:'#7b1fa2', emoji:'🚇', label:'Métro', z:1000},
@@ -3923,6 +3937,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   function count(){var n=0;SEQ.forEach(function(i){if(seen[i])n++;});return n;}
   function refresh(){
+    syncRecap();
     var id=activeId(),idx=SEQ.indexOf(id);
     SEQ.forEach(function(i,k){var b=btnFor(i);if(!b)return;b.classList.toggle('pv-seen',!!seen[i]&&mode===4);});
     var n=count(),pct=(n/SEQ.length*100)+'%';
@@ -3944,7 +3959,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function go(d){var i=SEQ.indexOf(activeId())+d;if(i<0)return;if(i>=SEQ.length){setState('home');window.scrollTo(0,0);return;}var b=btnFor(SEQ[i]);if(b)b.click();window.scrollTo(0,0);}
   bar.querySelector('.prev').addEventListener('click',function(){go(-1);});
   bar.querySelector('.next').addEventListener('click',function(){go(1);});
-  SEQ.forEach(function(id){var t=document.getElementById(id);if(!t)return;var d=document.createElement('div');d.className='pv-end';d.innerHTML='<button type="button"></button>';d.firstChild.addEventListener('click',function(){go(1);});t.appendChild(d);var s=t.querySelector('.stitle');if(s)s.classList.add('pv-t1');});
+  SEQ.forEach(function(id){var t=document.getElementById(id);if(!t)return;var d=document.createElement('div');d.className='pv-end';d.innerHTML='<button type="button"></button>';d.firstChild.addEventListener('click',function(){go(1);});t.appendChild(d);var rc=document.createElement('div');rc.className='pv-recap';t.insertBefore(rc,t.firstChild);var s=t.querySelector('.stitle');if(s)s.classList.add('pv-t1');});
   // icône à gauche du premier titre de chaque section
   (function(){var css='';SEQ.forEach(function(id){var u="<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'>"+P[id].replace(/currentColor/g,'white')+"</svg>";css+='body.pv4 #'+id+' .pv-t1::before{background-image:url("data:image/svg+xml,'+encodeURIComponent(u)+'"),var(--pv-fill);}';});var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);})();
   // assistant flottant : une touche = ouvre l'onglet Assistant
@@ -3959,10 +3974,17 @@ document.addEventListener('DOMContentLoaded', function() {
   // textes de la couverture : retirer « Données temps réel » et le DPE en doublon
   var pm=document.querySelector('.pmeta'),hs=document.querySelector('.hsub'),hb=document.querySelector('.hbadge');
   function fix(el,fn){if(!el)return;var a=el.textContent;if(mode===4){var c=fn(a);if(c!==a){el.dataset.pvO=a;el.textContent=c;}}else if(el.dataset.pvO){el.textContent=el.dataset.pvO;delete el.dataset.pvO;}}
+  function syncRecap(){
+    var h=document.querySelector('.hsub'),q=document.querySelector('.quartier-val');
+    var des=h?h.textContent.trim():'',ville=q?q.textContent.split(/[,·–]|\s-\s/)[0].trim():'';
+    var html=des?'<b></b>'+(ville?'<span></span>':''):'';
+    [].forEach.call(document.querySelectorAll('.pv-recap'),function(r){if(r.dataset.k!==des+'|'+ville){r.dataset.k=des+'|'+ville;r.innerHTML=html;if(des){r.firstChild.textContent=des;if(ville)r.lastChild.textContent=ville;}}});
+  }
   function clean(){
     fix(pm,function(a){return a.replace(/\s*·\s*[^·]*$/,'');});
-    fix(hs,function(a){return a.split(/\s*·\s*/).filter(function(p){return !/étage|etage|floor|andar|piso|DPE/i.test(p);}).join(' · ');});
+    fix(hs,function(a){return a.split(/\s*·\s*/).filter(function(p){p=p.trim();return !(/étage|etage|floor|andar|planta|DPE/i.test(p)||/\d\s*º?\s*piso|piso\s+\d/i.test(p)||/^(\d+\s*(er|e|ème|eme|º)?|rdc|rez[\s-]de[\s-]\S+|ground floor)$/i.test(p));}).join(' · ');});
     fix(hb,function(a){return a.replace(/\s*·\s*Expertimo/i,'').replace(/\b(Acheteur|Buyer|Comprador)\s*/i,'');});
+    syncRecap();
   }
   var mo2=new MutationObserver(clean);
   [pm,hs,hb].forEach(function(e){if(e)mo2.observe(e,{childList:true,characterData:true,subtree:true});});
@@ -4013,7 +4035,19 @@ document.addEventListener('DOMContentLoaded', function() {
   /* adresse non affichée : rue retirée du titre, du bandeau de section et des textes alternatifs (la ville reste) */
   function hideAddr(){
     var h=document.querySelector('.htitle');
-    if(h&&!h.dataset.pvA){h.dataset.pvA='1';[].slice.call(h.childNodes).forEach(function(n){if(n.nodeType===3||n.nodeName==='BR')h.removeChild(n);});}
+    if(h&&!h.dataset.pvA){h.dataset.pvA='1';
+      var raw=[].slice.call(h.childNodes).filter(function(n){return n.nodeType===3;}).map(function(n){return n.textContent;}).join(' ').replace(/\s+/g,' ').trim();
+      var sp=h.querySelector('span');
+      if(sp){
+        if(!sp.classList.contains('quartier-val'))sp.classList.add('quartier-val');
+        if(!sp.textContent.trim()&&raw){
+          var city='',m=/(\d{5})\s*(.*)$/.exec(raw);
+          if(/paris/i.test(raw))city='Paris';else if(m&&m[2])city=m[2].trim();else if(m)city=raw.slice(0,m.index).trim().split(' ').pop();
+          if(city){sp.textContent=city;[].slice.call(sp.attributes).forEach(function(at){if(/^data-.*-val$/.test(at.name)&&!at.value)sp.setAttribute(at.name,city);});}
+        }
+      }
+      [].slice.call(h.childNodes).forEach(function(n){if(n.nodeType===3||n.nodeName==='BR')h.removeChild(n);});
+    }
     var st=document.querySelector('#bien .stitle');
     if(st&&st.textContent.indexOf(' · ')>-1&&!st.dataset.pvA){st.dataset.pvA='1';st.textContent=st.textContent.split(' · ').slice(1).join(' · ');}
     [].forEach.call(document.querySelectorAll('#gallery-grid img'),function(im){im.setAttribute('alt','Le bien');});
@@ -4049,6 +4083,28 @@ document.addEventListener('DOMContentLoaded', function() {
   lb.addEventListener('touchend',function(e){if(x0===null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>40){moved=true;step(dx<0?1:-1);setTimeout(function(){moved=false;},350);}},{passive:true});
   lb.addEventListener('click',function(e){if(moved){e.stopImmediatePropagation();e.preventDefault();}},true);
   document.addEventListener('keydown',function(e){if(!lb.classList.contains('open'))return;if(e.key==='ArrowLeft')step(-1);else if(e.key==='ArrowRight')step(1);});
+})();
+</script>
+<script id="addr-guard">
+/* Confidentialité de l'adresse : l'assistant IA ne la connaît pas et ne la donne pas ; il renvoie vers l'agent et vers la carte du quartier. */
+(function(){
+  var adr=(typeof _sp_adresse==='string'?_sp_adresse:'').trim();if(!adr)return;
+  function esc(x){return x.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+  var m=/^(.*?)[\s,]*\d{5}\b/.exec(adr),street=(m?m[1]:adr).trim();
+  var pats=[adr,street].filter(function(x){return x&&x.length>5;}).map(function(x){return new RegExp(esc(x).replace(/\s+/g,'\\s+'),'gi');});
+  function scrub(t,rep){if(typeof t!=='string')return t;pats.forEach(function(r){t=t.replace(r,rep);});return t;}
+  function scrubCtx(c){if(typeof c!=='string')return c;c=c.split('\n').filter(function(l){return !/^\s*[-*•]?\s*(Adresse|Address|Endereço|Dirección)\s*[:：]/i.test(l);}).join('\n');return scrub(c,'[adresse non communiquée]');}
+  function place(){var q=document.querySelector('.quartier-val'),v=q?q.textContent.split(/[,·–]|\s-\s/)[0].trim():'';if(!v){var mm=/\d{5}\s*(.*)$/.exec(adr);v=mm&&mm[1]?mm[1].trim():'';}return v;}
+  function tabName(){var b=document.querySelector('#main-nav button[data-tab="quartier"] .rail-label');return b&&b.textContent.trim()?b.textContent.trim():'Quartier';}
+  function rule(){
+    var ag=(typeof _sp_agent==='string'&&_sp_agent)?_sp_agent:'the advisor',pl=place();
+    return '\nADDRESS CONFIDENTIALITY — you do not know the exact address of this property and you must never give, guess, spell out or confirm a street name, a street number, a building name or any precise location, even partially, and even if the visitor insists or says they already know it. '
+      +'When asked for the address, the street, the house number or the exact location, answer in the visitor\'s language, in 3 short sentences: for confidentiality reasons you cannot give the exact address of the property; it will be communicated by '+ag+' when a visit is organised; '
+      +'the property is geolocated within a perimeter of about 180 m around '+(pl||'the neighbourhood')+', and the interactive map in the "'+tabName()+'" tab shows all the amenities near the property (transport, shops, schools). Then invite the visitor to ask another question or to contact '+ag+' to arrange a visit.';
+  }
+  if(typeof buildAiSystemPrompt==='function'){var ob=buildAiSystemPrompt;window.buildAiSystemPrompt=function(l,c){return ob(l,scrubCtx(c))+rule();};}
+  if(typeof addAIMsg==='function'){var oa=addAIMsg;window.addAIMsg=function(t,r){return oa.call(this,r==='assistant'?scrub(t,'(adresse non communiquée)'):t,r);};}
+  window._pvAddrGuard={scrub:scrub,scrubCtx:scrubCtx,rule:rule};
 })();
 </script>
 </body>
