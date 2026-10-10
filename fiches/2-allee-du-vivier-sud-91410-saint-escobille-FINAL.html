@@ -133,6 +133,9 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .gcar-dot{width:20px;height:20px;border:none;background:transparent;cursor:pointer;padding:0;position:relative;}
 .gcar-dot::after{content:'';position:absolute;top:50%;left:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:rgba(255,255,255,.55);transition:background .25s,transform .25s;}
 .gcar-dot.on::after{background:var(--gold);transform:scale(1.25);}
+.gcar-dots.many{gap:0;}
+.gcar-dots.many .gcar-dot{width:14px;}
+.gcar-dots.many .gcar-dot::after{width:6px;height:6px;margin:-3px 0 0 -3px;}
 @media(hover:none){.gcar-btn{opacity:.85;width:34px;height:34px;}}
 @media(prefers-reduced-motion:reduce){.gallery.gcar img,.gallery.gcar img.gc-on{transition:none;}}
 /* POINTS */
@@ -343,10 +346,6 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"2 Allée du Vivier Sud - 91410 Saint Escobille","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1996","description":"Maison 9 pièces de 157 m² · DPE C","surface":157,"surfCarrez":0,"pieces":"9","dpe":"C","prix":296200,"prixm2":1887,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":2000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1481,"score":"8.25","scorePrest":"8","scoreSecteur":"9","scoreQP":"8","scoreEtat":"8","fort1":"Maison lumineuse offrant une double exposition Sud et Ouest","fort2":"Beaux volumes : 202m² au sol dont garage de 45m²","fort3":"Terrain de 1073m²","vig1":"Située dans un village de moins de 500 habitants.","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/rcr0gi5jfz3jholil8py.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ryzy7uqsxcnd2ibphcqm.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ipp1sgg6s9md12htfzep.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201352/qlksfdbcdmopumayi0gn.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201351/txyid52hz1g21v9himuh.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Rue des Guigniers (à ~771 m)","surface":"100","prix":236000,"prixm2":2360},{"date":"10/2024","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":180000,"prixm2":1935},{"date":"02/2023","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":102000,"prixm2":1097},{"date":"12/2021","adresse":"Rue du Vivier (à ~338 m)","surface":"85","prix":245000,"prixm2":2882},{"date":"09/2021","adresse":"Rue de la Gare (à ~137 m)","surface":"99","prix":180000,"prixm2":1818},{"date":"06/2021","adresse":"Rue du Stade (à ~710 m)","surface":"90","prix":217000,"prixm2":2411}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1996 : Construction en brique rouge\n2000 : Aménagement des combles en 4 chambres + salle d'eau + WC\n2000 : Construction du garage de 45m²\n\nDiverse informations sur le bien :\nCheminée avec récupérateur de chaleur à l'étage\nTerrasse de 70m²exposée Sud / Ouest.\nPergola bioclimatique - Piscine hors sol (qui reste).\nVolets électriques. Fenêtres en double vitrage avec oscillo-battants 2021.\nBallon d'eau chaude installé en 2011.\nPlancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles.\nFibre optique. \nTerrain de 1073m².","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ipp1sgg6s9md12htfzep.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/rcr0gi5jfz3jholil8py.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ryzy7uqsxcnd2ibphcqm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201353/qg30ebqsa6tkphs3du9h.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201351/txyid52hz1g21v9himuh.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201352/qlksfdbcdmopumayi0gn.jpg","caption":"","uploading":false}]}}</script>
-<script id="expertimo-data-en" type="application/json">{"type":"maison","etage":"","adresse":"2 Allée du Vivier Sud - 91410 Saint Escobille","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1996","description":"9-room house of 157 m² · DPE C","surface":157,"surfCarrez":0,"pieces":"9","dpe":"C","prix":296200,"prixm2":1887,"mediane":0,"tension":"Very high","delai":"21 days","loyer":2000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1481,"score":"8.25","scorePrest":"8","scoreSecteur":"9","scoreQP":"8","scoreEtat":"8","fort1":"Bright house with dual South and West exposure","fort2":"Beautiful volumes: 202m² floor area including 45m² garage","fort3":"1,073m² plot","vig1":"Located in a village of fewer than 500 inhabitants.","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/rcr0gi5jfz3jholil8py.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ryzy7uqsxcnd2ibphcqm.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ipp1sgg6s9md12htfzep.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201352/qlksfdbcdmopumayi0gn.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201351/txyid52hz1g21v9himuh.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Rue des Guigniers (à ~771 m)","surface":"100","prix":236000,"prixm2":2360},{"date":"10/2024","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":180000,"prixm2":1935},{"date":"02/2023","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":102000,"prixm2":1097},{"date":"12/2021","adresse":"Rue du Vivier (à ~338 m)","surface":"85","prix":245000,"prixm2":2882},{"date":"09/2021","adresse":"Rue de la Gare (à ~137 m)","surface":"99","prix":180000,"prixm2":1818},{"date":"06/2021","adresse":"Rue du Stade (à ~710 m)","surface":"90","prix":217000,"prixm2":2411}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1996: Construction in red brick\n2000: Conversion of attic into 4 bedrooms + shower room + WC\n2000: Construction of 45m² garage\n\nVarious information about the property:\nFireplace with heat recovery system upstairs\n70m² terrace facing South/West.\nBioclimatic pergola - Above-ground pool (included).\nElectric shutters. Double-glazed windows with tilt-and-turn mechanism 2021.\nWater heater installed in 2011.\nFirst floor flooring is wooden. An IPN beam installed throughout the house. No load-bearing walls, allowing for easy layout modifications.\nFibre optic.\n1,073m² plot.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the assessment, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural decree."},{"icon":"⚡","name":"Électricité","status":"attention","result":"The internal electrical installation presents anomalies for which action is recommended to eliminate the hazards they present."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to collective network compliant"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ipp1sgg6s9md12htfzep.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/rcr0gi5jfz3jholil8py.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ryzy7uqsxcnd2ibphcqm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201353/qg30ebqsa6tkphs3du9h.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201351/txyid52hz1g21v9himuh.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201352/qlksfdbcdmopumayi0gn.jpg","caption":"","uploading":false}]}}</script>
-<script id="expertimo-data-pt" type="application/json">{"fort1":"Casa luminosa com dupla exposição Sul e Oeste","fort2":"Excelentes volumes: 202m² ao nível do solo, incluindo garagem de 45m²","fort3":"Terreno de 1073m²","vig1":"Situada numa aldeia com menos de 500 habitantes.","vig2":"","vig3":"","historiqueLibre":"1996: Construção em tijolo vermelho\n2000: Adaptação do sótão em 4 quartos + casa de banho + WC\n2000: Construção da garagem de 45m²\n\nDiversas informações sobre o imóvel:\nLareira com recuperador de calor no piso superior\nTerraço de 70m² virado a Sul/Oeste.\nPérgula bioclimática - Piscina acima do solo (que permanece).\nEstores elétricos. Janelas com vidros duplos e sistema oscilobatente 2021.\nCilindro de água quente instalado em 2011.\nPavimento do 1º andar em madeira. Viga IPN instalada em toda a casa. Nenhuma parede estrutural, o que permite modificações de disposição facilmente.\nFibra ótica.\nTerreno de 1073m².","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram identificados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito - edifício construído após 1 de janeiro de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a despacho prefeitoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"A instalação elétrica interior apresenta anomalias para as quais se recomenda agir a fim de eliminar os perigos que apresenta(m)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Não sujeito - Instalação com menos de 15 anos."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede coletiva conforme"}]}</script>
-<script id="expertimo-data-es" type="application/json">{"fort1":"Casa luminosa con doble orientación Sur y Oeste","fort2":"Bonitos volúmenes: 202m² en planta baja incluyendo garaje de 45m²","fort3":"Terreno de 1073m²","vig1":"Situada en un pueblo de menos de 500 habitantes.","vig2":"","vig3":"","historiqueLibre":"1996: Construcción en ladrillo rojo\n2000: Acondicionamiento de la buhardilla en 4 dormitorios + cuarto de baño + WC\n2000: Construcción del garaje de 45m²\n\nInformación diversa sobre la propiedad:\nChimenea con recuperador de calor en la planta superior\nTerraza de 70m² orientada Sur / Oeste.\nPérgola bioclimática - Piscina desmontable (que permanece).\nPersianas eléctricas. Ventanas con doble acristalamiento y sistema oscilo-batiente 2021.\nCalentador de agua instalado en 2011.\nSuelo de la 1ª planta en madera. Viga IPN instalada en toda la casa. Ningún muro de carga lo que permite modificaciones de distribución fáciles.\nFibra óptica.\nTerreno de 1073m².","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la inspección, no se han identificado materiales y productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sujeto - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sujeto a decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"La instalación interior de electricidad presenta anomalías para las cuales se recomienda actuar con el fin de eliminar los peligros que presenta(n)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"No sujeto - Instalación de menos de 15 años."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme"}]}</script>
 <style>
 #vr-card .vr-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);}
 #vr-card .vr-sub{font-size:12.5px;color:var(--muted);margin-top:3px;}
@@ -380,7 +379,7 @@ html,body{overflow-x:hidden;}
 #doc-picker .dp-msg.err{background:#fdecea;color:#a12622;}
 @media (max-width:640px){#doc-picker .dp-grid{grid-template-columns:1fr;}}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
 <style id="pv-skin">
 /* Habillage « parcours » (bleu nuit). Tout est sous body.pv / body.pv4 : ajouter ?classic=1 à l'adresse affiche l'ancien design. */
 /* MAQUETTES v2 : trois directions, chacune avec sa propre disposition des onglets.
@@ -830,6 +829,10 @@ body.pv4 .pv-recap:empty{display:none;}
 body.pv4 #ai-modal>div:first-child .pv-aiico{color:#fff!important;}
 body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22px;height:22px;}
 </style>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","copro":"non","etage":"","adresse":"2 Allée du Vivier Sud - 91410 Saint Escobille","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1996","description":"Maison 9 pièces de 157 m² · DPE C","surface":157,"surfCarrez":0,"pieces":"9","dpe":"C","prix":296200,"prixm2":1887,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":2000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1481,"score":"8.25","scorePrest":"8","scoreSecteur":"9","scoreQP":"8","scoreEtat":"8","fort1":"Maison lumineuse offrant une double exposition Sud et Ouest","fort2":"Beaux volumes : 202m² au sol dont garage de 45m²","fort3":"Terrain de 1073m²","vig1":"Située dans un village de moins de 500 habitants.","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","photo18":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","photo19":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","photo20":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Rue des Guigniers (à ~771 m)","surface":"100","prix":236000,"prixm2":2360},{"date":"10/2024","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":180000,"prixm2":1935},{"date":"02/2023","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":102000,"prixm2":1097},{"date":"12/2021","adresse":"Rue du Vivier (à ~338 m)","surface":"85","prix":245000,"prixm2":2882},{"date":"09/2021","adresse":"Rue de la Gare (à ~137 m)","surface":"99","prix":180000,"prixm2":1818},{"date":"06/2021","adresse":"Rue du Stade (à ~710 m)","surface":"90","prix":217000,"prixm2":2411}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1996 : Construction en brique rouge\n2000 : Aménagement des combles en 4 chambres + salle d'eau + WC\n2000 : Construction du garage de 45m²\n\nDiverse informations sur le bien :\nCheminée avec récupérateur de chaleur à l'étage\nTerrasse de 70m²exposée Sud / Ouest.\nPergola bioclimatique - Piscine hors sol (qui reste).\nVolets électriques. Fenêtres en double vitrage avec oscillo-battants 2021.\nBallon d'eau chaude installé en 2011.\nPlancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles.\nFibre optique. \nTerrain de 1073m².","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme"}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-en" type="application/json">{"type":"maison","copro":"non","etage":"","adresse":"2 Allée du Vivier Sud - 91410 Saint Escobille","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1996","description":"9-room house of 157 m² · DPE C","surface":157,"surfCarrez":0,"pieces":"9","dpe":"C","prix":296200,"prixm2":1887,"mediane":0,"tension":"Very high","delai":"21 days","loyer":2000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1481,"score":"8.25","scorePrest":"8","scoreSecteur":"9","scoreQP":"8","scoreEtat":"8","fort1":"Bright house offering dual South and West exposure","fort2":"Beautiful volumes: 202m² floor area including 45m² garage","fort3":"1073m² plot","vig1":"Located in a village of fewer than 500 inhabitants.","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","photo18":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","photo19":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","photo20":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Rue des Guigniers (à ~771 m)","surface":"100","prix":236000,"prixm2":2360},{"date":"10/2024","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":180000,"prixm2":1935},{"date":"02/2023","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":102000,"prixm2":1097},{"date":"12/2021","adresse":"Rue du Vivier (à ~338 m)","surface":"85","prix":245000,"prixm2":2882},{"date":"09/2021","adresse":"Rue de la Gare (à ~137 m)","surface":"99","prix":180000,"prixm2":1818},{"date":"06/2021","adresse":"Rue du Stade (à ~710 m)","surface":"90","prix":217000,"prixm2":2411}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1996: Construction in red brick\n2000: Conversion of attic space into 4 bedrooms + shower room + WC\n2000: Construction of 45m² garage\n\nVarious information about the property:\nFireplace with heat recovery system upstairs\n70m² terrace with South/West exposure.\nBioclimatic pergola - Above-ground pool (included).\nElectric shutters. Double-glazed tilt-and-turn windows 2021.\nWater heater installed in 2011.\nFirst floor is wooden flooring. An IPN beam installed throughout the house. No load-bearing walls, allowing easy layout modifications.\nFibre optic broadband.\n1073m² plot.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the inspection, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order."},{"icon":"⚡","name":"Électricité","status":"attention","result":"The internal electrical installation contains anomalies for which action is recommended to eliminate the hazards they present."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to collective network compliant"}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-pt" type="application/json">{"fort1":"Casa luminosa com dupla exposição Sul e Poente","fort2":"Belos volumes: 202m² de área útil, dos quais 45m² de garagem","fort3":"Terreno de 1073m²","vig1":"Situada numa aldeia com menos de 500 habitantes.","vig2":"","vig3":"","historiqueLibre":"1996: Construção em tijolo vermelho\n2000: Arranjo do sótão em 4 quartos + casa de banho + WC\n2000: Construção da garagem de 45m²\n\nDiversas informações sobre o imóvel:\nLareira com recuperador de calor no primeiro andar\nTerraço de 70m² exposto a Sul/Poente.\nPérgola bioclimática - Piscina desmontável (que fica).\nEstores elétricos. Janelas com vidros duplos oscilobatentes 2021.\nTermoacumulador instalado em 2011.\nPavimento do 1.º andar em madeira. Viga IPN instalada em toda a casa. Nenhuma parede estrutural, o que permite modificações de disposição fáceis.\nFibra ótica.\nTerreno de 1073m².","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram detetados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito - edifício construído após 1 de janeiro de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a despacho prefeitoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"A instalação elétrica interior apresenta anomalias para as quais se recomenda agir a fim de eliminar os perigos que apresenta(m)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Não sujeito - Instalação com menos de 15 anos."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede coletiva conforme"}]}</script>
+<script id="expertimo-data-es" type="application/json">{"fort1":"Casa luminosa con doble orientación Sur y Oeste","fort2":"Amplios volúmenes: 202m² en planta baja incluyendo garaje de 45m²","fort3":"Terreno de 1073m²","vig1":"Situada en un pueblo de menos de 500 habitantes.","vig2":"","vig3":"","historiqueLibre":"1996: Construcción en ladrillo rojo\n2000: Acondicionamiento de la buhardilla en 4 dormitorios + cuarto de baño + WC\n2000: Construcción del garaje de 45m²\n\nDiversas informaciones sobre la propiedad:\nChimenea con recuperador de calor en la planta superior\nTerraza de 70m² orientada Sur/Oeste.\nPérgola bioclimática - Piscina desmontable (que permanece).\nPersianas eléctricas. Ventanas con doble acristalamiento oscilobatientes 2021.\nCalentador de agua instalado en 2011.\nSuelo de la primera planta en madera. Viga IPN instalada en toda la casa. Ningún muro de carga, lo que permite modificaciones de distribución fáciles.\nFibra óptica.\nTerreno de 1073m².","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la inspección, no se han identificado materiales y productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sujeto - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sujeto a decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"La instalación interior de electricidad presenta anomalías para las cuales se recomienda actuar con el fin de eliminar los peligros que presenta(n)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"No sujeto - Instalación de menos de 15 años."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme"}]}</script>
 </head>
 <body class="pv pv4 pv-home tone-b">
 
@@ -851,7 +854,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
         <div id="lang-toggle" style="display:none;" role="group" aria-label="Langue / Language"></div>
       </div>
       <h1 class="htitle">2 Allée du Vivier Sud - 91410 Saint Escobille<br><span style="color:var(--gold);font-style:italic;" data-fr-val="" data-en-val="" data-pt-val="" data-es-val=""></span></h1>
-      <p class="hsub" data-fr-val="Maison 9 pièces de 157 m² · DPE C" data-en-val="9-room house of 157 m² · DPE C" data-pt-val="Casa de 9 divisões com 157 m² · DPE C" data-es-val="Casa de 9 habitaciones de 157 m² · DPE C">Maison 9 pièces de 157 m² · DPE C</p>
+      <p class="hsub" data-fr-val="Maison 9 pièces de 157 m² · DPE C" data-en-val="9-room house of 157 m² · DPE C" data-pt-val="Casa T9 de 157 m² · DPE C" data-es-val="Casa de 9 habitaciones de 157 m² · DPE C">Maison 9 pièces de 157 m² · DPE C</p>
     </div>
     <div class="price-card">
       <div class="plabel" data-i18n="price-label">Prix affiché</div>
@@ -888,19 +891,34 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
   <div class="card">
     <div class="lbl" data-i18n="lbl-le-bien">Le bien</div>
     <h2 class="stitle">2 Allée du Vivier Sud - 91410 Saint Escobille · 9 pièces</h2>
-    <p class="ssub" data-fr-val="Maison 9 pièces de 157 m² · DPE C" data-en-val="9-room house of 157 m² · DPE C" data-pt-val="Casa de 9 divisões com 157 m² · DPE C" data-es-val="Casa de 9 habitaciones de 157 m² · DPE C">Maison 9 pièces de 157 m² · DPE C</p>
+    <p class="ssub" data-fr-val="Maison 9 pièces de 157 m² · DPE C" data-en-val="9-room house of 157 m² · DPE C" data-pt-val="Casa T9 de 157 m² · DPE C" data-es-val="Casa de 9 habitaciones de 157 m² · DPE C">Maison 9 pièces de 157 m² · DPE C</p>
     <div class="gallery" id="gallery-grid">
-    <img id="photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/rcr0gi5jfz3jholil8py.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille - Vue principale" class="gm" onclick="openLightbox(this.src)">
-    <img id="photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ryzy7uqsxcnd2ibphcqm.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
-    <img id="photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201350/ipp1sgg6s9md12htfzep.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
-    <img id="photo4" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201352/qlksfdbcdmopumayi0gn.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
-    <img id="photo5" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1786201351/txyid52hz1g21v9himuh.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille - Vue principale" class="gm" onclick="openLightbox(this.src)">
+    <img id="photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo4" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo5" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo6" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo7" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo8" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo9" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo10" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo11" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo12" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo13" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo14" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo15" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo16" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo17" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo18" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo19" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
+    <img id="photo20" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
   </div>
-  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption" data-fr-val="📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles" data-en-val="📷 Click on a photo to enlarge it · 5 photos available" data-pt-val="📷 Clique numa foto para a ampliar · 5 fotos disponíveis" data-es-val="📷 Haga clic en una foto para ampliarla · 5 fotos disponibles">📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles</div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption" data-fr-val="📷 Cliquez sur une photo pour l'agrandir · 20 photos disponibles" data-en-val="📷 Click on a photo to enlarge it · 20 photos available" data-pt-val="📷 Clique numa foto para a ampliar · 20 fotos disponíveis" data-es-val="📷 Haga clic en una foto para ampliarla · 20 fotos disponibles">📷 Cliquez sur une photo pour l'agrandir · 20 photos disponibles</div>
   <div id="video-links-section" style="display:none;margin-bottom:18px;">
     <div id="video-links-list"></div>
   </div>
-  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>Maison lumineuse offrant une double exposition Sud et Ouest</li><li>Beaux volumes : 202m² au sol dont garage de 45m²</li><li>Terrain de 1073m²</li></ul><ul id="pf-list-en" style="display:none;"><li>Bright house with dual South and West exposure</li><li>Beautiful volumes: 202m² floor area including 45m² garage</li><li>1,073m² plot</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>Située dans un village de moins de 500 habitants.</li></ul><ul id="vg-list-en" style="display:none;"><li>Located in a village of fewer than 500 inhabitants.</li></ul></div></div><div class="score-box">
+  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>Maison lumineuse offrant une double exposition Sud et Ouest</li><li>Beaux volumes : 202m² au sol dont garage de 45m²</li><li>Terrain de 1073m²</li></ul><ul id="pf-list-en" style="display:none;"><li>Bright house offering dual South and West exposure</li><li>Beautiful volumes: 202m² floor area including 45m² garage</li><li>1073m² plot</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>Située dans un village de moins de 500 habitants.</li></ul><ul id="vg-list-en" style="display:none;"><li>Located in a village of fewer than 500 inhabitants.</li></ul></div></div><div class="score-box">
   <div class="lbl" style="color:#6a6358;" data-i18n="score-title">Score Qualité du Bien</div>
   <div class="score-num">8,25</div>
   <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;margin-top:8px;" id="score-desc" data-fr-val="Score 8,25/10. DPE C. Prix à confirmer." data-en-val="Score 8,25/10. DPE C. Price to be confirmed." data-pt-val="Pontuação 8,25/10. DPE C. Preço a confirmar." data-es-val="Puntuación 8,25/10. DPE C. Precio por confirmar.">Score 8,25/10. DPE C. Prix à confirmer.</p>
@@ -913,7 +931,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -970,7 +988,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1012,7 +1030,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1033,14 +1051,14 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
       <div class="lbl" data-i18n="lbl-infos-complementaires">Informations complémentaires</div>
       <h2 class="stitle" data-i18n="tab-historique">Tout savoir sur ce bien</h2>
       <ul class="info-list" style="margin-top:13px;" id="historique-timeline-fr"><li class="info-item">1996 : Construction en brique rouge</li><li class="info-item">2000 : Aménagement des combles en 4 chambres + salle d'eau + WC</li><li class="info-item">2000 : Construction du garage de 45m²</li><li class="info-item">Diverse informations sur le bien :</li><li class="info-item">Cheminée avec récupérateur de chaleur à l'étage</li><li class="info-item">Terrasse de 70m²exposée Sud / Ouest.</li><li class="info-item">Pergola bioclimatique - Piscine hors sol (qui reste).</li><li class="info-item">Volets électriques. Fenêtres en double vitrage avec oscillo-battants 2021.</li><li class="info-item">Ballon d'eau chaude installé en 2011.</li><li class="info-item">Plancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles.</li><li class="info-item">Fibre optique.</li><li class="info-item">Terrain de 1073m².</li></ul>
-      <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en"><li class="info-item">1996: Construction in red brick</li><li class="info-item">2000: Conversion of attic into 4 bedrooms + shower room + WC</li><li class="info-item">2000: Construction of 45m² garage</li><li class="info-item">Various information about the property:</li><li class="info-item">Fireplace with heat recovery system upstairs</li><li class="info-item">70m² terrace facing South/West.</li><li class="info-item">Bioclimatic pergola - Above-ground pool (included).</li><li class="info-item">Electric shutters. Double-glazed windows with tilt-and-turn mechanism 2021.</li><li class="info-item">Water heater installed in 2011.</li><li class="info-item">First floor flooring is wooden. An IPN beam installed throughout the house. No load-bearing walls, allowing for easy layout modifications.</li><li class="info-item">Fibre optic.</li><li class="info-item">1,073m² plot.</li></ul>
+      <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en"><li class="info-item">1996: Construction in red brick</li><li class="info-item">2000: Conversion of attic space into 4 bedrooms + shower room + WC</li><li class="info-item">2000: Construction of 45m² garage</li><li class="info-item">Various information about the property:</li><li class="info-item">Fireplace with heat recovery system upstairs</li><li class="info-item">70m² terrace with South/West exposure.</li><li class="info-item">Bioclimatic pergola - Above-ground pool (included).</li><li class="info-item">Electric shutters. Double-glazed tilt-and-turn windows 2021.</li><li class="info-item">Water heater installed in 2011.</li><li class="info-item">First floor is wooden flooring. An IPN beam installed throughout the house. No load-bearing walls, allowing easy layout modifications.</li><li class="info-item">Fibre optic broadband.</li><li class="info-item">1073m² plot.</li></ul>
     </div>
   </div>
 </div>
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1062,14 +1080,14 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
       <h2 class="stitle" data-i18n="stitle-diagnostics">Diagnostics Techniques</h2>
       <p class="ssub" data-i18n="ssub-diagnostics">Résultats officiels des diagnostics réglementaires</p>
       <div class="diag-grid" id="diag-grid-fr"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis - bâtiment construit après le 1er janvier 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis à un arrêté préfectoral.</div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt).</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Non soumis - Installation de moins de 15 ans.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Raccordement au réseau collectif conforme</div></div></div>
-      <div class="diag-grid" id="diag-grid-en" style="display:none;"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Asbestos</div><div class="diag-result">As part of the assessment, no materials or products likely to contain asbestos were identified.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Lead (CREP)</div><div class="diag-result">Not subject - building constructed after 1st January 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Not subject to a prefectural decree.</div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Electricity</div><div class="diag-result">The internal electrical installation presents anomalies for which action is recommended to eliminate the hazards they present.</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gas</div><div class="diag-result">Not subject - Installation less than 15 years old.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Sanitation</div><div class="diag-result">Connection to collective network compliant</div></div></div>
+      <div class="diag-grid" id="diag-grid-en" style="display:none;"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Asbestos</div><div class="diag-result">As part of the inspection, no materials or products likely to contain asbestos were identified.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Lead (CREP)</div><div class="diag-result">Not subject - building constructed after 1st January 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Not subject to a prefectural order.</div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Electricity</div><div class="diag-result">The internal electrical installation contains anomalies for which action is recommended to eliminate the hazards they present.</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gas</div><div class="diag-result">Not subject - Installation less than 15 years old.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Sanitation</div><div class="diag-result">Connection to collective network compliant</div></div></div>
     </div>
   </div>
 </div>
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1176,7 +1194,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1275,7 +1293,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
   <div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1462,7 +1480,7 @@ var I18N = {
     'ai-modal-title': 'Assistant Privency',
     'ai-modal-available': 'Disponible 24h/24',
     'footer-tagline': "L'immobilier avec l'expertise d'un professionnel",
-    'footer-analyse-par': 'Analyse réalisée par Olivier LOISON · Mandataire Expertimo · olivier.loison@expertimo.com',
+    'footer-analyse-par': 'Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com',
     'footer-mentions': 'Mentions légales',
     'footer-cgv': 'CGV',
     'footer-confidentialite': 'Politique de confidentialité',
@@ -1700,7 +1718,7 @@ var I18N = {
     'ai-modal-title': 'Privency Assistant',
     'ai-modal-available': 'Available 24/7',
     'footer-tagline': 'Real estate with professional expertise',
-    'footer-analyse-par': 'Analysis by Olivier LOISON · Expertimo Agent · olivier.loison@expertimo.com',
+    'footer-analyse-par': 'Analysis by Olivier Loison · Expertimo Agent · olivier.loison@expertimo.com',
     'footer-mentions': 'Legal Notice',
     'footer-cgv': 'Terms & Conditions',
     'footer-confidentialite': 'Privacy Policy',
@@ -1786,7 +1804,7 @@ var I18N = {
   pt: {
     label: "PT", name: "Português",
     ui: {
-    "doc-charges": "Chamadas de encargos",
+    "doc-charges": "Encargos de condomínio",
     "doc-taxe": "Aviso de imposto predial (taxe foncière)",
     "lbl-diag-reg": "Diagnósticos regulamentares",
     "diag-carrez": "Lei Carrez",
@@ -1893,12 +1911,12 @@ var I18N = {
     "doc-reglement-desc": "Documentos do condomínio",
     "offre-progress-prefix": "Explorou",
     "offre-progress-suffix": " / 10 secções",
-    "offre-progress-sub": "Quanto mais explorar o dossiê, mais confiança terá para fazer uma proposta.",
+    "offre-progress-sub": "Quanto mais explorar o dossier, mais confiança terá para fazer uma proposta.",
     "lbl-processus": "Processo de aquisição",
     "step-visite": "Visita",
     "step-offre": "Proposta",
     "step-negociation": "Negociação",
-    "step-promesse": "Promessa",
+    "step-promesse": "Contrato-promessa",
     "step-10jours": "10 dias",
     "step-financement": "Financiamento",
     "step-signature": "Assinatura",
@@ -1919,14 +1937,14 @@ var I18N = {
     "lbl-apres-offre": "Depois da sua proposta — os passos seguintes",
     "etape1-titre": "PASSO 1 · RESPOSTA DO VENDEDOR",
     "etape1-txt": "Aceitação, recusa ou contraproposta. Prazo habitual: 2–5 dias.",
-    "etape2-titre": "PASSO 2 · ASSINATURA DA PROMESSA",
+    "etape2-titre": "PASSO 2 · ASSINATURA DO CONTRATO-PROMESSA DE COMPRA E VENDA",
     "etape2-txt": "No notário, 8–10 dias após o acordo. Sinal de 5–10%.",
     "etape3-titre": "PASSO 3 · 10 DIAS DE RETRATAÇÃO",
     "etape3-txt": "Prazo legal sem penalização. Verifique todos os documentos.",
     "etape4-titre": "PASSO 4 · VALIDAÇÃO BANCÁRIA",
     "etape4-txt": "O seu banco dispõe de cerca de 60 dias para aprovar o crédito.",
     "etape5-titre": "PASSO 5 · ESCRITURA DEFINITIVA 🔑",
-    "etape5-txt": "Cerca de 3 meses após a promessa — escritura e entrega das chaves.",
+    "etape5-txt": "Cerca de 3 meses após o contrato-promessa de compra e venda — escritura e entrega das chaves.",
     "lbl-votre-offre": "A sua proposta",
     "marge-negociation-prefix": "Margem de negociação estimada:",
     "marge-negociation-suffix": "com base no DPE e nas transações DVF da zona.",
@@ -1938,7 +1956,7 @@ var I18N = {
     "ai-modal-title": "Assistente Privency",
     "ai-modal-available": "Disponível 24 h/24",
     "footer-tagline": "Imobiliário com a experiência de um profissional",
-    "footer-analyse-par": "Análise realizada por Olivier LOISON · Consultor Expertimo · olivier.loison@expertimo.com",
+    "footer-analyse-par": "Análise realizada por Olivier Loison · Consultor Expertimo · olivier.loison@expertimo.com",
     "footer-mentions": "Menções legais",
     "footer-cgv": "Condições gerais de venda",
     "footer-confidentialite": "Política de privacidade",
@@ -1952,13 +1970,13 @@ var I18N = {
       "offer-diff-below": " face ao preço anunciado",
       "offer-diff-above": " acima do preço anunciado",
       "offer-diff-at": "Ao preço anunciado",
-      "offer-missing": "Preencha pelo menos o valor, o seu nome e o seu email.",
+      "offer-missing": "Preencha pelo menos o valor, o seu nome e o seu e-mail.",
       "offer-sent": "<p>✅ A sua proposta de <strong>{montant} €</strong> foi transmitida. {agent} entrará em contacto nas próximas 24 h.</p>",
       "agent-fallback": "o seu consultor",
       "at-phone": " pelo número {tel}",
       "offer-err": "Erro ao enviar o pedido. Contacte diretamente {agent}{tel}.",
       "offer-neterr": "Erro de rede. Contacte diretamente {agent}{tel}.",
-      "docs-missing": "Indique o seu nome e o seu email.",
+      "docs-missing": "Indique o seu nome e o seu e-mail.",
       "diag-not-subject": "Não sujeito a obrigação",
       "welcome-greeting": "Bem-vindo(a)",
       "welcome-buyer": "Bem-vindo(a) {name}",
@@ -1984,7 +2002,7 @@ var I18N = {
       "price-pos-below": "Preço abaixo do mercado",
       "price-pos-in": "Preço em linha com o mercado",
       "price-pos-tbc": "Preço a confirmar",
-      "rent-info": "Imóvel livre. Renda estimada: {loyer} € sem mobília. Simule abaixo a sua rentabilidade.",
+      "rent-info": "Imóvel livre. Renda estimada: {loyer} € não mobilado. Simule abaixo a sua rentabilidade.",
       "doc-charges-desc": "Extrato anual · {n} €/mês",
       "doc-taxe-desc": "{n} € / ano",
       "diag-name-amiante": "Amianto",
@@ -2024,7 +2042,7 @@ var I18N = {
   es: {
     label: "ES", name: "Español",
     ui: {
-    "doc-charges": "Llamadas de gastos",
+    "doc-charges": "Gastos de comunidad",
     "doc-taxe": "Aviso del impuesto de bienes inmuebles (taxe foncière)",
     "lbl-diag-reg": "Diagnósticos reglamentarios",
     "diag-carrez": "Ley Carrez",
@@ -2047,7 +2065,7 @@ var I18N = {
     "score-secteur": "Zona y entorno",
     "score-qp": "Relación calidad-precio",
     "score-etat": "Estado general",
-    "cons-role": "Agente inmobiliario · Expertimo",
+    "cons-role": "Asesor inmobiliario · Expertimo",
     "btn-rdv": "📅 Concertar una cita",
     "btn-site": "🏠 Ver mis otros inmuebles",
     "btn-offre": "✍️ Hacer una oferta",
@@ -2075,7 +2093,7 @@ var I18N = {
     "slbl-duree": "Duración",
     "slbl-duree-sm": "Años",
     "slbl-charges": "Gastos anuales",
-    "slbl-charges-sm": "Comunidad+seguro+imp. inmuebles",
+    "slbl-charges-sm": "Gastos de comunidad+seguro+imp. inmuebles",
     "charges-detail-default": "Agua fría, limpieza y mantenimiento de zonas comunes, ascensor",
     "slbl-travaux": "Presupuesto de obras",
     "slbl-travaux-sm": "Reforma energética (DPE)",
@@ -2115,20 +2133,20 @@ var I18N = {
     "radius-lbl": "· radio de 800 m",
     "lbl-docs": "Espacio documental seguro",
     "stitle-docs": "Documentos disponibles",
-    "ssub-docs": "Indique sus datos de contacto para acceder a los documentos. Su solicitud se transmite al agente.",
+    "ssub-docs": "Indique sus datos de contacto para acceder a los documentos. Su solicitud se transmite al asesor.",
     "lbl-prenom-nom": "Nombre y apellidos",
     "btn-unlock-docs": "🔓 Acceder a los documentos",
     "doc-success-title": "✅ Acceso desbloqueado",
-    "doc-success-txt": "Su solicitud ha sido transmitida. El agente se pondrá en contacto con usted en 24 h con los documentos completos.",
+    "doc-success-txt": "Su solicitud ha sido transmitida. El asesor se pondrá en contacto con usted en 24 h con los documentos completos.",
     "doc-pv-ag": "Acta de la Junta General",
-    "doc-pv-ag-desc": "Última junta de la comunidad",
+    "doc-pv-ag-desc": "Última junta de la comunidad de propietarios",
     "doc-dispo": "🔓 Disponible",
     "doc-diag-tech": "Diagnósticos técnicos",
     "doc-diag-tech-desc": "DPE, amianto, plomo...",
     "doc-factures": "Facturas y presupuestos de obras",
     "doc-factures-desc": "Obras realizadas",
-    "doc-reglement": "Estatutos de la comunidad",
-    "doc-reglement-desc": "Documentos de la comunidad",
+    "doc-reglement": "Estatutos de la comunidad de propietarios",
+    "doc-reglement-desc": "Documentos de la comunidad de propietarios",
     "offre-progress-prefix": "Ha explorado",
     "offre-progress-suffix": " / 10 secciones",
     "offre-progress-sub": "Cuanto más explore el expediente, con más confianza podrá hacer una oferta.",
@@ -2136,13 +2154,13 @@ var I18N = {
     "step-visite": "Visita",
     "step-offre": "Oferta",
     "step-negociation": "Negociación",
-    "step-promesse": "Compromiso",
+    "step-promesse": "Promesa",
     "step-10jours": "10 días",
     "step-financement": "Financiación",
     "step-signature": "Firma",
     "lbl-offre-tunnel": "Proceso de oferta seguro",
     "stitle-offre": "Su oferta de compra",
-    "ssub-offre": "Indique su propuesta. Será transmitida al agente y al vendedor en un plazo de 24 h.",
+    "ssub-offre": "Indique su propuesta. Será transmitida al asesor y al vendedor en un plazo de 24 h.",
     "lbl-montant-offre": "Importe de su oferta (€)",
     "lbl-financement": "Forma de financiación",
     "opt-financement-bancaire": "Financiación bancaria",
@@ -2157,14 +2175,14 @@ var I18N = {
     "lbl-apres-offre": "Después de su oferta — los siguientes pasos",
     "etape1-titre": "PASO 1 · RESPUESTA DEL VENDEDOR",
     "etape1-txt": "Aceptación, rechazo o contraoferta. Plazo habitual: 2–5 días.",
-    "etape2-titre": "PASO 2 · FIRMA DEL COMPROMISO",
+    "etape2-titre": "PASO 2 · FIRMA DE LA PROMESA DE COMPRAVENTA",
     "etape2-txt": "En la notaría, 8–10 días después del acuerdo. Depósito de garantía del 5–10%.",
     "etape3-titre": "PASO 3 · 10 DÍAS DE DESISTIMIENTO",
     "etape3-txt": "Plazo legal sin penalización. Revise todos los documentos.",
     "etape4-titre": "PASO 4 · VALIDACIÓN BANCARIA",
     "etape4-txt": "Su banco dispone de unos 60 días para aprobar su préstamo.",
     "etape5-titre": "PASO 5 · ESCRITURA DEFINITIVA 🔑",
-    "etape5-txt": "Unos 3 meses después del compromiso — escritura pública y entrega de llaves.",
+    "etape5-txt": "Unos 3 meses después de la promesa de compraventa — escritura pública y entrega de llaves.",
     "lbl-votre-offre": "Su oferta",
     "marge-negociation-prefix": "Margen de negociación estimado:",
     "marge-negociation-suffix": "según el DPE y las transacciones DVF de la zona.",
@@ -2175,8 +2193,8 @@ var I18N = {
     "ai-ask-btn": "Hacer una pregunta",
     "ai-modal-title": "Asistente Privency",
     "ai-modal-available": "Disponible 24 h/24",
-    "footer-tagline": "Inmobiliaria con la experiencia de un profesional",
-    "footer-analyse-par": "Análisis realizado por Olivier LOISON · Agente Expertimo · olivier.loison@expertimo.com",
+    "footer-tagline": "Su proyecto inmobiliario, con la experiencia de un profesional",
+    "footer-analyse-par": "Análisis realizado por Olivier Loison · Asesor Expertimo · olivier.loison@expertimo.com",
     "footer-mentions": "Aviso legal",
     "footer-cgv": "Condiciones generales de venta",
     "footer-confidentialite": "Política de privacidad",
@@ -2192,7 +2210,7 @@ var I18N = {
       "offer-diff-at": "Al precio anunciado",
       "offer-missing": "Rellene al menos el importe, su nombre y su correo electrónico.",
       "offer-sent": "<p>✅ Su oferta de <strong>{montant} €</strong> ha sido transmitida. {agent} se pondrá en contacto con usted en 24 h.</p>",
-      "agent-fallback": "su agente",
+      "agent-fallback": "su asesor",
       "at-phone": " en el {tel}",
       "offer-err": "Error al enviar su solicitud. Contacte directamente con {agent}{tel}.",
       "offer-neterr": "Error de red. Contacte directamente con {agent}{tel}.",
@@ -2454,9 +2472,14 @@ function buildAiSystemPrompt(lang, ctx) {
     + "CONFIDENTIALITY — you never know, never mention and never guess: the seller's identity or contact details, any internal information of the agency or agent "
     + "(negotiation margin, minimum or floor price, private notes, mandate terms). If asked, answer that you cannot share this information and invite the visitor to make an offer "
     + "through the offer tab or to contact the advisor. The only contact you may give is the advisor's. "
+    + "When asked for the seller's phone number, e-mail or name, first say clearly that you cannot share the seller's contact details, then (and only then) give the advisor's contact. "
+    + "When asked why the owner sells or what they paid, say this is confidential seller information you cannot share (do not merely say it is missing from the sheet), and do not pivot to unrelated figures. "
     + "If a question is entirely outside real estate, politely say you specialise in real estate. "
-    + "STYLE — fluent, natural, warm text like a caring real-estate advisor. Never use markdown headings, bullet lists or bold. "
-    + "3 to 5 sentences maximum, concrete and precise, and end with a natural invitation to ask another question or to contact the advisor. "
+    + "NEUTRALITY — state facts only: never judge or praise prices, taxes or the property (no 'reasonable', 'good deal', 'attractive') and never add computed comparisons that were not requested. Never explain what a tax or charge is used for or covers (for example never say what the taxe foncière finances), and never add any information that is not in the data between <fiche> and </fiche>; a French term may only get a very short generic definition (what it is called, not what it pays for). "
+    + "TERMINOLOGY — write everything in the target language: translate French terms too (for example 'taxe foncière' = the annual French property tax, 'chaudière' = boiler, 'cave' = cellar or basement storage). In Spanish the advisor is always called 'asesor'; in European Portuguese always 'consultor'; use 'projeto' (current European Portuguese spelling), never 'projecto'. "
+    + "Keep only proper names (streets, shops, schools, people) in their original form. "
+    + "STYLE — fluent, natural, warm text like a caring real-estate advisor, in plain text only: NEVER use markdown of any kind — no asterisks or ** for bold, no # headings, no bullet lists, no numbered lists, no emojis. "
+    + "HARD LIMIT: 5 sentences maximum in total (about 80 words), even for lists such as transport, schools or shops — in that case name only the 2 or 3 nearest items and stop. Concrete and precise, and end with a short natural invitation to ask another question or to contact the advisor. "
     + "\n<fiche>\n" + ctx + "\n</fiche>";
 }
 
@@ -2903,8 +2926,8 @@ function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
   var adresse = "2 Allée du Vivier Sud - 91410 Saint Escobille";
-  var latFallback = 48.422253;
-  var lngFallback = 1.9587378;
+  var latFallback = 48.422082;
+  var lngFallback = 1.958469;
 
   function buildMap(lat, lng) {
     window._ficheCoords = {lat: lat, lng: lng};
@@ -3058,20 +3081,20 @@ var _sp_pf2       = "Beaux volumes : 202m² au sol dont garage de 45m²";
 var _sp_pf3       = "Terrain de 1073m²";
 var _sp_vigi1     = "Située dans un village de moins de 500 habitants.";
 var _sp_vigi2     = "";
-var _sp_agent     = "Olivier LOISON";
+var _sp_agent     = "Olivier Loison";
 var _sp_tel       = "0685684613";
-var _sp_pf1_en = "Bright house with dual South and West exposure";
+var _sp_pf1_en = "Bright house offering dual South and West exposure";
 var _sp_pf2_en = "Beautiful volumes: 202m² floor area including 45m² garage";
-var _sp_pf3_en = "1,073m² plot";
+var _sp_pf3_en = "1073m² plot";
 var _sp_vigi1_en = "Located in a village of fewer than 500 inhabitants.";
 var _sp_vigi2_en = "";
 var _sp_detail_en = "";
 // Contexte complet du bien pour l'assistant IA (liste blanche construite par app.html à la génération :
 // jamais de données vendeur ni de notes internes). Vide → repli sur les variables _sp_* ci-dessus.
-var _chat_ctx = "## Le bien\n- Type de bien : Maison\n- Adresse : 2 Allée du Vivier Sud - 91410 Saint Escobille\n- Surface habitable (m²) : 157\n- Nombre total de pièces : 9\n- Chambres : 7\n- Salles de bains : 1\n- Salles d'eau : 1\n- WC séparés : 2\n- Année de construction : 1996\n\n## Prix, charges et fiscalité\n- Prix de mise en vente (€) : 296200\n- Taxe foncière (€/an) : 1481\n- Loyer potentiel estimé (€/mois) : 2000\n\n## Énergie et diagnostics\n- Classe DPE : C\n- Classe GES : A\n- Diagnostic amiante — statut : Favorable\n- Diagnostic amiante — résultat : Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.\n- Diagnostic plomb (CREP) — statut : Non soumis\n- Diagnostic plomb (CREP) — résultat : Non soumis - bâtiment construit après le 1er janvier 1949.\n- Diagnostic termites — statut : Non soumis\n- Diagnostic termites — résultat : Non soumis à un arrêté préfectoral.\n- Diagnostic électricité — statut : Attention\n- Diagnostic électricité — résultat : L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt).\n- Diagnostic gaz — statut : Non soumis\n- Diagnostic gaz — résultat : Non soumis - Installation de moins de 15 ans.\n- Diagnostic assainissement — statut : Favorable\n- Diagnostic assainissement — résultat : Raccordement au réseau collectif conforme\n\n## Travaux et historique du bien\n- Informations complémentaires (copropriété, exposition, rénovations, équipements…) : 1996 : Construction en brique rouge 2000 : Aménagement des combles en 4 chambres + salle d'eau + WC 2000 : Construction du garage de 45m² Diverse informations sur le bien : Cheminée avec récupérateur de chaleur à l'étage Terrasse de 70m²exposée Sud / Ouest. Pergola bioclimatique - Piscine hors sol (qui reste). Volets électriques. Fenêtres en double vitrage avec oscillo-battants 2021. Ballon d'eau chaude installé en 2011. Plancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles. Fibre optique. Terrain de 1073m².\n\n## Construction, matériaux et chauffage\n- Toit — état : Soigné\n- Façade — état : Comme neuf\n- État général : Soigné\n\n## Équipements, extérieur et annexes\n- Parking — places extérieures : 6\n- Parking — box fermés : 1\n\n## Points forts et points de vigilance\n- Point fort 1 : Maison lumineuse offrant une double exposition Sud et Ouest\n- Point fort 2 : Beaux volumes : 202m² au sol dont garage de 45m²\n- Point fort 3 : Terrain de 1073m²\n- Point de vigilance 1 : Située dans un village de moins de 500 habitants.\n\n## Marché et analyse\n- Note globale du bien (/10) : 8.25\n- Tension locative : Très forte\n- Délai de vente moyen : 21 jours\n\n## Informations NON renseignées dans la fiche (à signaler comme telles, ne jamais deviner)\nQuartier / secteur ; Surface Carrez (m²) ; Surface du terrain (m²) ; WC ; Nombre d'étages ; Standing général ; Les + du bien ; Charges de copropriété (€/mois) ; Détail des charges ; Taxe d'habitation (€/an) ; Loyer mensuel estimé (€/mois) ; Consommation DPE (kWh/m²/an) ; Émissions GES (kgCO₂/m²/an) ; Servitudes ; Droits de superficie ; Travaux récents ; Sols — état ; Volets roulants électriques ; Chauffage — année d'installation ; Plaque de cuisson ; Autres équipements ; Parking — places intérieures ; Exposition sonore ; Services de proximité ; Voisinage ; Point de vigilance 2 ; Point de vigilance 3 ; Vigilances complémentaires ; Prix médian du secteur (€/m²)";
+var _chat_ctx = "## Le bien\n- Type de bien : Maison\n- Adresse : 2 Allée du Vivier Sud - 91410 Saint Escobille\n- Surface habitable (m²) : 157\n- Nombre total de pièces : 9\n- Chambres : 7\n- Salles de bains : 1\n- Salles d'eau : 1\n- WC séparés : 2\n- Bien en copropriété : Non\n- Année de construction : 1996\n\n## Prix, charges et fiscalité\n- Prix de mise en vente (€) : 296200\n- Taxe foncière (€/an) : 1481\n- Loyer potentiel estimé (€/mois) : 2000\n\n## Énergie et diagnostics\n- Classe DPE : C\n- Classe GES : A\n- Diagnostic amiante — statut : Favorable\n- Diagnostic amiante — résultat : Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.\n- Diagnostic plomb (CREP) — statut : Non soumis\n- Diagnostic plomb (CREP) — résultat : Non soumis - bâtiment construit après le 1er janvier 1949.\n- Diagnostic termites — statut : Non soumis\n- Diagnostic termites — résultat : Non soumis à un arrêté préfectoral.\n- Diagnostic électricité — statut : Attention\n- Diagnostic électricité — résultat : L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt).\n- Diagnostic gaz — statut : Non soumis\n- Diagnostic gaz — résultat : Non soumis - Installation de moins de 15 ans.\n- Diagnostic assainissement — statut : Favorable\n- Diagnostic assainissement — résultat : Raccordement au réseau collectif conforme\n\n## Travaux et historique du bien\n- Informations complémentaires (copropriété, exposition, rénovations, équipements…) : 1996 : Construction en brique rouge 2000 : Aménagement des combles en 4 chambres + salle d'eau + WC 2000 : Construction du garage de 45m² Diverse informations sur le bien : Cheminée avec récupérateur de chaleur à l'étage Terrasse de 70m²exposée Sud / Ouest. Pergola bioclimatique - Piscine hors sol (qui reste). Volets électriques. Fenêtres en double vitrage avec oscillo-battants 2021. Ballon d'eau chaude installé en 2011. Plancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles. Fibre optique. Terrain de 1073m².\n\n## Construction, matériaux et chauffage\n- Toit — état : Soigné\n- Façade — état : Comme neuf\n- Sols — état : À rénover\n- État général : Soigné\n\n## Équipements, extérieur et annexes\n- Parking — places extérieures : 6\n- Parking — box fermés : 1\n\n## Localisation et environnement\n- Exposition : Sud\n- Exposition sonore : Calme\n- Transports à proximité (saisis par l'agent) : Bus\n\n## Points forts et points de vigilance\n- Point fort 1 : Maison lumineuse offrant une double exposition Sud et Ouest\n- Point fort 2 : Beaux volumes : 202m² au sol dont garage de 45m²\n- Point fort 3 : Terrain de 1073m²\n- Point de vigilance 1 : Située dans un village de moins de 500 habitants.\n\n## Marché et analyse\n- Note globale du bien (/10) : 8.25\n- Tension locative : Très forte\n- Délai de vente moyen : 21 jours\n\n## Informations NON renseignées dans la fiche (à signaler comme telles, ne jamais deviner)\nQuartier / secteur ; Surface Carrez (m²) ; Surface du terrain (m²) ; WC ; Nombre d'étages ; Standing général ; Les + du bien ; Charges de copropriété (€/mois) ; Détail des charges ; Taxe d'habitation (€/an) ; Loyer mensuel estimé (€/mois) ; Consommation DPE (kWh/m²/an) ; Émissions GES (kgCO₂/m²/an) ; Servitudes ; Droits de superficie ; Travaux récents ; Volets roulants électriques ; Chauffage — année d'installation ; Plaque de cuisson ; Autres équipements ; Parking — places intérieures ; Services de proximité ; Voisinage ; Point de vigilance 2 ; Point de vigilance 3 ; Vigilances complémentaires ; Prix médian du secteur (€/m²)";
 // Coordonnées du bien (injectées à la génération) — utilisées pour les commodités du chatbot.
-var _fiche_lat = 48.422253;
-var _fiche_lng = 1.9587378;
+var _fiche_lat = 48.422082;
+var _fiche_lng = 1.958469;
 
 function spv(base) {
   if (_currentLang === 'en' && window[base + '_en']) return window[base + '_en'];
@@ -3125,6 +3148,8 @@ function sendAI() {
   }).then(function(r){ return r.json(); })
   .then(function(data){
     var reply = (data.content && data.content[0] && data.content[0].text) || aiT('apiError', {msg: data.error && data.error.message ? data.error.message : JSON.stringify(data)}, lang);
+    // Le modèle glisse parfois du markdown malgré la consigne : la bulle affiche du texte brut (pas de ** ni de #)
+    reply = String(reply).replace(/\*+/g, '').replace(/^[ \t]*#{1,6}[ \t]+/gm, '');
     loadDiv.textContent = reply;
     _aiMessages.push({role:'assistant',content:reply});
   }).catch(function(err){
@@ -3186,7 +3211,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <footer style="text-align:center;padding:24px 20px;background:#14171F;border-top:1px solid rgba(201,162,39,.15);">
   <div style="font-family:'Playfair Display',serif;font-size:18px;color:#C9A227;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
   <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;" data-i18n="footer-tagline">L'immobilier avec l'expertise d'un professionnel</div>
-  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'Work Sans',sans-serif;"><span data-i18n="footer-analyse-par">Analyse réalisée par Olivier LOISON · Mandataire Expertimo · olivier.loison@expertimo.com</span></div>
+  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'Work Sans',sans-serif;"><span data-i18n="footer-analyse-par">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</span></div>
   <div style="margin-top:10px;font-size:10px;font-family:'Work Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;" data-i18n="footer-mentions">Mentions légales</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;" data-i18n="footer-confidentialite">Politique de confidentialité</a></div>
 </footer>
 
@@ -3257,7 +3282,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     });
     var cur = 0, timer = null, paused = false;
     var dots = document.createElement('div');
-    dots.className = 'gcar-dots';
+    dots.className = 'gcar-dots' + (slides.length > 10 ? ' many' : '');
     var dotEls = slides.map(function(_, i) {
       var d = document.createElement('button');
       d.type = 'button'; d.className = 'gcar-dot'; d.setAttribute('aria-label', 'Photo ' + (i + 1));
@@ -3782,9 +3807,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 250);
 })();
 </script>
-
-
-<script>window.PRIVENCY_AGENT_ID = "79e4e432-2232-4d2c-b41d-8c7c907c4dec";</script>
 <script id="pv-skin-js">
 (function(){
   if(/[?&]classic=1/.test(location.search)){document.body.className=document.body.className.split(/\s+/).filter(function(c){return ['pv','pv4','pv-home','tone-b'].indexOf(c)<0;}).join(' ');return;}
@@ -3835,10 +3857,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function buildSlides(){
     if(slides)return;var hd=document.querySelector('.header');if(!hd)return;
     slides=document.createElement('div');slides.id='pv-slides';
-    ['photo1','photo2','photo3','photo4','photo5'].forEach(function(id){
+    for(var pn=1;pn<=20;pn++)(function(id){
       var im=document.getElementById(id),u=im&&im.getAttribute('src');if(!u)return;
       var d=document.createElement('div');d.className='s';d.style.backgroundImage='url("'+u+'")';slides.appendChild(d);
-    });
+    })('photo'+pn);
     hd.insertBefore(slides,hd.firstChild);slideIdx=0;
     if(slides.children[0])slides.children[0].classList.add('on');
   }
@@ -4041,4 +4063,7 @@ document.addEventListener('DOMContentLoaded', function() {
   sync();
 })();
 </script>
+
+
+<script>window.PRIVENCY_AGENT_ID = "79e4e432-2232-4d2c-b41d-8c7c907c4dec";</script>
 </body></html>
