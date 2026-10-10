@@ -4963,6 +4963,15 @@ function fmtNum(n) {
   for(var i=0;i<s.length;i++){if(i>0&&(s.length-i)%3===0)r+=' ';r+=s[i];}
   return r;
 }
+// Adresse web courte d'une fiche : ville-type-code (ex. longjumeau-maison-k7f3q2), sans rue ni numéro.
+function shortSlug(d) {
+  var ville = '', m = /\b\d{5}\s+([^,\n]+)/.exec(d.adresse || '');
+  if (m) ville = m[1];
+  else ville = String(d.quartier || '').split(/[,·–]|\s-\s/)[0];
+  ville = slugify(ville).replace(/^-+|-+$/g, '');
+  var type = d.type === 'maison' ? 'maison' : d.type === 'terrain' ? 'terrain' : 'appartement';
+  return (ville ? ville + '-' : '') + type + '-' + opaqueId(6);
+}
 // Identifiant aléatoire pour l'adresse web d'une fiche : aucune adresse du bien dans le lien.
 function opaqueId(n) {
   var chars = 'abcdefghijklmnopqrstuvwxyz0123456789', out = '', buf = new Uint8Array(n);
@@ -5554,7 +5563,7 @@ function generatePreview() {
 
     _lastGeneratedSlug = (_editingFiche && _editingFiche.filename)
       ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
-      : 'fiche-' + opaqueId(10) + (window._agentSuffix ? '-' + window._agentSuffix : '');
+      : shortSlug(d);
 
     // langs : {en, pt, es} → données traduites des langues réussies (vide = fiche française seule)
     var publishSingle = function(langs, failed) {
