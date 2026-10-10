@@ -5,6 +5,7 @@ const fs = require('fs'), path = require('path'), assert = require('assert');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const root = path.join(__dirname, '..');
 const TEMPLATE = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
+const MAX = 20;   // photos max par fiche (PHOTO_MAX dans app.html)
 const OLD = [1, 2, 3, 4, 5].map(n => 'https://res.cloudinary.com/dif0ikaj1/image/upload/v1/ancienne-' + n + '.jpg');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
@@ -53,17 +54,17 @@ const champs = w => [1, 2, 3, 4, 5].map(n => w.document.getElementById('bien_pho
 function generer(w) {
   const d = w.collectBienData();
   const out = w.injectData(TEMPLATE, d, null, {});
-  return { d, out, photos: [d.photo1, d.photo2, d.photo3, d.photo4, d.photo5].filter(Boolean) };
+  return { d, out, photos: Array.from({ length: MAX }, (_, i) => d['photo' + (i + 1)]).filter(Boolean) };
 }
 function verifier(w, attendues, label) {
   const { out, photos } = generer(w);
-  assert.deepStrictEqual(photos, attendues.slice(0, 5), label + ' — photos de la fiche générée');
-  assert.deepStrictEqual(champs(w), attendues.slice(0, 5).concat(['', '', '', '', '']).slice(0, 5), label + ' — champs URL');
+  assert.deepStrictEqual(photos, attendues.slice(0, MAX), label + ' — photos de la fiche générée');
+  assert.deepStrictEqual(champs(w), attendues.slice(0, 5).concat(['', '', '', '', '']).slice(0, 5), label + ' — champs URL (5 premières photos)');
   OLD.filter(u => !attendues.includes(u)).forEach(u => assert(!out.includes(u), label + ' — ancienne photo encore dans le HTML : ' + u));
-  attendues.slice(0, 5).forEach(u => assert(out.includes(u), label + ' — photo absente du HTML : ' + u));
+  attendues.slice(0, MAX).forEach(u => assert(out.includes(u), label + ' — photo absente du HTML : ' + u));
   const shown = Array.from(new JSDOM(out).window.document.querySelectorAll('.gallery img'))
     .filter(i => i.style.display !== 'none').map(i => i.getAttribute('src'));
-  assert.deepStrictEqual(shown, attendues.slice(0, 5), label + ' — galerie publiée');
+  assert.deepStrictEqual(shown, attendues.slice(0, MAX), label + ' — galerie publiée');
   console.log('OK — ' + label);
 }
 
@@ -99,7 +100,7 @@ async function main() {
   w.removePhoto(2); w.removePhoto(0); w.removePhoto(0);
   verifier(w, [], 'suppression de toutes les photos');
 
-  // 5. Ajouter plus de photos qu'avant (2 → 6) : les 5 premières, dans l'ordre.
+  // 5. Ajouter plus de photos qu'avant (2 → 6) : toutes sont dans la fiche, dans l'ordre.
   w = await load(); uploadCount = 0;
   await ouvrirFiche(w, OLD.slice(0, 2));
   await ajouter(w, 4);
@@ -257,5 +258,27 @@ async function main() {
   assert.deepStrictEqual(grille(w), attendu, 'grille à la réouverture');
   assert.deepStrictEqual(etiquettes(w), ['★ Photo principale', '2', '3', '4']);
   verifier(w, attendu, 'réouverture d\'une fiche publiée');
+
+  // 18. Jusqu'à 20 photos : 25 sélectionnées d'un coup → 20 envoyées, les 5 autres ignorées.
+  w = await load(); uploadCount = 0;
+  await ajouter(w, 25);
+  assert.strictEqual(grille(w).length, MAX, '20 photos maximum dans la grille');
+  assert.strictEqual(uploadCount, MAX, 'seules 20 photos sont envoyées');
+  verifier(w, grille(w), '20 photos dans la fiche');
+  assert.strictEqual(generer(w).photos.length, MAX);
+  await ajouter(w, 1);   // grille pleine : rien n'est ajouté
+  assert.strictEqual(grille(w).length, MAX, 'pas de 21e photo');
+  w.removePhoto(19);
+  await ajouter(w, 3);   // une seule place libre
+  assert.strictEqual(grille(w).length, MAX, 'une place libre = une photo de plus');
+  // Le gabarit publié affiche bien les 20 (carrousel : toutes les <img> avec une source).
+  const pub20 = new JSDOM(generer(w).out).window.document;
+  assert.strictEqual(Array.from(pub20.querySelectorAll('#gallery-grid img')).filter(i => i.getAttribute('src')).length, MAX, '20 images dans la galerie publiée');
+  // Réouverture : les 20 photos reviennent, y compris sans le bloc privé (photos 6 à 20 sans champ URL).
+  const d20 = generer(w).d;
+  w = await load();
+  w.injectBienData(JSON.parse(JSON.stringify(d20)));
+  await sleep(250);
+  assert.deepStrictEqual(grille(w), Array.from({ length: MAX }, (_, i) => d20['photo' + (i + 1)]), 'réouverture : les 20 photos reviennent');
 }
 main().catch(e => { console.error('ÉCHEC :', e.stack || e.message); process.exit(1); });
