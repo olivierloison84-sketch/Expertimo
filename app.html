@@ -1190,7 +1190,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
   <div class="card-body">
     <div class="photo-drop" onclick="document.getElementById('photo_input').click()">
       📁 Cliquez pour ajouter des photos (JPEG, PNG, HEIC…)
-      <br><span class="text-sm mt-8" style="display:block">Vous pouvez sélectionner plusieurs fichiers à la fois</span>
+      <br><span class="text-sm mt-8" style="display:block">Vous pouvez sélectionner plusieurs fichiers à la fois · jusqu'à 20 photos par fiche</span>
     </div>
     <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
     <div class="photo-grid" id="photo_grid" aria-describedby="photo_order_hint"></div>
@@ -3182,6 +3182,7 @@ var DEFAULT_PIECES = [
 ];
 var _dragSrc = null;
 var _photos  = [];
+var PHOTO_MAX = 20;   // nombre maximum de photos par fiche (gabarit index.html : photo1 … photo20)
 var currentType = 'appart';
 
 function makePieceRow(name) {
@@ -3320,14 +3321,21 @@ function syncPhotosFromUrlFields(keepUnlisted) {
     seen[u] = true;
   });
   var rest = (keepUnlisted ? done : done.slice(PHOTO_URL_FIELDS.length)).filter(function(p) { return !seen[p.dataUrl]; });
-  _photos = head.concat(rest, pending);
+  _photos = head.concat(rest, pending).slice(0, PHOTO_MAX);
   syncPhotoUrlFields();
   renderPhotos();
 }
 function addPhotos(input) {
   var CL_CLOUD  = 'dif0ikaj1';
   var CL_PRESET = 'privency_upload';
-  Array.from(input.files).forEach(function(f) {
+  // Maximum PHOTO_MAX photos par fiche (celles déjà envoyées + celles en cours d'envoi comptent).
+  var places = Math.max(0, PHOTO_MAX - _photos.length);
+  var choisies = Array.from(input.files);
+  if (choisies.length > places) {
+    showToast('📷 Maximum ' + PHOTO_MAX + ' photos par fiche : ' + (places > 0 ? places + ' photo' + (places > 1 ? 's' : '') + ' ajoutée' + (places > 1 ? 's' : '') + ', les autres sont ignorées.' : 'retirez-en une pour en ajouter une nouvelle.'), true);
+    choisies = choisies.slice(0, places);
+  }
+  choisies.forEach(function(f) {
     // Référence à l'entrée (et non son index) : une photo retirée pendant l'envoi décale les index.
     var entry = { dataUrl: '', caption: '', uploading: true };
     _photos.push(entry);
@@ -3846,7 +3854,9 @@ var PUBLIC_EMBED_KEYS = [
   'type','copro','etage','adresse','quartier','acheteur_prenom','acheteur_nom','annee','description',
   'surface','surfCarrez','pieces','dpe','prix','prixm2','mediane','tension','delai','loyer',
   'chargesCopro','chargesDetail','taxeFonciere','score','scorePrest','scoreSecteur','scoreQP','scoreEtat',
-  'fort1','fort2','fort3','vig1','vig2','vig3','photo1','photo2','photo3','photo4','photo5',
+  'fort1','fort2','fort3','vig1','vig2','vig3',
+  'photo1','photo2','photo3','photo4','photo5','photo6','photo7','photo8','photo9','photo10',
+  'photo11','photo12','photo13','photo14','photo15','photo16','photo17','photo18','photo19','photo20',
   'video1','video2','video3','dvf','creditDuree','creditApport','creditHaut','creditMoyen','creditBas',
   'historiqueLibre','histVenteDate','diags','renovations',
   'agentNom','agentTel','agentEmail','agentRdvUrl','agentSiteUrl','agentReseau','agentPrimary','agentAccent','agentPhoto'
@@ -4129,9 +4139,10 @@ function injectData(html, d, dEn, dX) {
     langVals(ssub, function(l, dl) { return dl.description || ''; });
   }
 
-  // Gallery images (5 photos)
+  // Gallery images (jusqu'à PHOTO_MAX photos : photo1 … photo20)
   var imgs = qa('.gallery img');
-  var photoList = [d.photo1, d.photo2, d.photo3, d.photo4, d.photo5];
+  var photoList = [];
+  for (var pn = 1; pn <= PHOTO_MAX; pn++) photoList.push(d['photo' + pn]);
   for (var pi = 0; pi < imgs.length && pi < photoList.length; pi++) {
     if (photoList[pi]) {
       imgs[pi].src = photoList[pi];
@@ -5044,7 +5055,8 @@ function collectBienData() {
   var chargesCopro=parseFloat(getV('charges_copro'))||0;
   var taxeFonciere=parseFloat(getByType('taxe_fonciere','taxe_fonciere_t'))||0;
   var ph=photoUrls();
-  var photo1=ph[0]||'', photo2=ph[1]||'', photo3=ph[2]||'', photo4=ph[3]||'', photo5=ph[4]||'';
+  var photosFiche={};
+  for (var pn=1; pn<=PHOTO_MAX; pn++) photosFiche['photo'+pn]=ph[pn-1]||'';
   var video1=getV('bien_video1_url'), video2=getV('bien_video2_url'), video3=getV('bien_video3_url');
   var fb=parseFloat(getV('bien_fourchette_basse'))||(prix?Math.round(prix*.9):0);
   var fh=parseFloat(getV('bien_fourchette_haute'))||(prix?Math.round(prix*1.1):0);
@@ -5084,7 +5096,10 @@ function collectBienData() {
     scoreEtat:     getV('bien_score_etat'),
     fort1:getV('bien_fort1'), fort2:getV('bien_fort2'), fort3:getV('bien_fort3'),
     vig1: getV('bien_vig1'),  vig2: getV('bien_vig2'),  vig3: getV('bien_vig3'),
-    photo1:photo1, photo2:photo2, photo3:photo3, photo4:photo4, photo5:photo5,
+    photo1:photosFiche.photo1, photo2:photosFiche.photo2, photo3:photosFiche.photo3, photo4:photosFiche.photo4, photo5:photosFiche.photo5,
+    photo6:photosFiche.photo6, photo7:photosFiche.photo7, photo8:photosFiche.photo8, photo9:photosFiche.photo9, photo10:photosFiche.photo10,
+    photo11:photosFiche.photo11, photo12:photosFiche.photo12, photo13:photosFiche.photo13, photo14:photosFiche.photo14, photo15:photosFiche.photo15,
+    photo16:photosFiche.photo16, photo17:photosFiche.photo17, photo18:photosFiche.photo18, photo19:photosFiche.photo19, photo20:photosFiche.photo20,
     video1:video1, video2:video2, video3:video3,
     dvf:           getDVFRows(),
     fourchetBasse: fb, fourchetHaute: fh,
@@ -6954,6 +6969,15 @@ function injectBienData(data) {
   setIfPresent('bien_photo5_url', data.photo5);
   _photos = [];
   syncPhotosFromUrlFields(true);
+  // Photos 6 à PHOTO_MAX : pas de champ URL dédié, elles rejoignent directement la grille.
+  for (var pn = PHOTO_URL_FIELDS.length + 1; pn <= PHOTO_MAX; pn++) {
+    var extraUrl = data['photo' + pn];
+    if (extraUrl && !_photos.some(function(p) { return p.dataUrl === extraUrl; })) {
+      _photos.push({ dataUrl: extraUrl, caption: '', uploading: false });
+    }
+  }
+  _photos = _photos.slice(0, PHOTO_MAX);
+  renderPhotos();
   setIfPresent('video_url', data.videoUrl);
   setIfPresent('visite_url', data.visiteUrl);
 

@@ -173,6 +173,9 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .gcar-dot{width:20px;height:20px;border:none;background:transparent;cursor:pointer;padding:0;position:relative;}
 .gcar-dot::after{content:'';position:absolute;top:50%;left:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:rgba(255,255,255,.55);transition:background .25s,transform .25s;}
 .gcar-dot.on::after{background:var(--gold);transform:scale(1.25);}
+.gcar-dots.many{gap:0;}
+.gcar-dots.many .gcar-dot{width:14px;}
+.gcar-dots.many .gcar-dot::after{width:6px;height:6px;margin:-3px 0 0 -3px;}
 @media(hover:none){.gcar-btn{opacity:.85;width:34px;height:34px;}}
 @media(prefers-reduced-motion:reduce){.gallery.gcar img,.gallery.gcar img.gc-on{transition:none;}}
 /* POINTS */
@@ -931,6 +934,21 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
     <img id="photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1778951044/TorresSalaun_OlivierLoison-OlivierReynes-14_zsnz81.jpg" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
     <img id="photo4" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
     <img id="photo5" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo6" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo7" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo8" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo9" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo10" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo11" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo12" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo13" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo14" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo15" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo16" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo17" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo18" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo19" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
+    <img id="photo20" src="" alt="5 Rue de l'Arpajonnais" onclick="openLightbox(this.src)">
   </div>
   <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption" data-fr-val="📷 Cliquez sur une photo pour l'agrandir · 3 photos disponibles" data-en-val="📷 Click on a photo to enlarge it · 3 photos available">📷 Cliquez sur une photo pour l'agrandir · 3 photos disponibles</div>
   <div id="video-links-section" style="display:none;margin-bottom:18px;">
@@ -3337,7 +3355,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     });
     var cur = 0, timer = null, paused = false;
     var dots = document.createElement('div');
-    dots.className = 'gcar-dots';
+    dots.className = 'gcar-dots' + (slides.length > 10 ? ' many' : '');
     var dotEls = slides.map(function(_, i) {
       var d = document.createElement('button');
       d.type = 'button'; d.className = 'gcar-dot'; d.setAttribute('aria-label', 'Photo ' + (i + 1));
@@ -3912,10 +3930,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function buildSlides(){
     if(slides)return;var hd=document.querySelector('.header');if(!hd)return;
     slides=document.createElement('div');slides.id='pv-slides';
-    ['photo1','photo2','photo3','photo4','photo5'].forEach(function(id){
+    for(var pn=1;pn<=20;pn++)(function(id){
       var im=document.getElementById(id),u=im&&im.getAttribute('src');if(!u)return;
       var d=document.createElement('div');d.className='s';d.style.backgroundImage='url("'+u+'")';slides.appendChild(d);
-    });
+    })('photo'+pn);
     hd.insertBefore(slides,hd.firstChild);slideIdx=0;
     if(slides.children[0])slides.children[0].classList.add('on');
   }
