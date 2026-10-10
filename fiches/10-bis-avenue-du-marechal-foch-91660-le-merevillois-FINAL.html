@@ -8,7 +8,8 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>10 bis avenue du marechal foch 91660 Le Merevillois · Espace Acheteur Privé · Expertimo</title>
+<title>Maison à Le Mérévillois · Espace acheteur privé</title>
+<meta name="pv-adr" content="10 bis avenue du marechal foch 91660 Le Merevillois · Espace Acheteur Privé · Expertimo">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&amp;family=Work+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -2869,7 +2870,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   var agentId = window.PRIVENCY_AGENT_ID || null;
   var params = new URLSearchParams(window.location.search);
   var client = params.get('client') || 'inconnu';
-  var adresse = document.title || window.location.pathname;
+  var adresse = (document.querySelector('meta[name="pv-adr"]') || {}).content || document.title || window.location.pathname;
   function track(evenement) {
     fetch(SUPABASE_URL + '/rest/v1/fiche_views', {
       method: 'POST',

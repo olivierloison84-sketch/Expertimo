@@ -4024,7 +4024,13 @@ function injectData(html, d, dEn, dX) {
   }
 
   // ── Document ──
-  doc.title = d.adresse + ' · Espace Acheteur Privé · Expertimo';
+  // Titre public (aperçu des liens SMS/WhatsApp) : jamais l'adresse. L'adresse reste dans <meta name="pv-adr"> pour les statistiques.
+  var _pvVille = ((/\b\d{5}\s+([^,\n·]+)/.exec(d.adresse || '') || [])[1] || '').trim();
+  var _pvType = d.type === 'maison' ? 'Maison' : d.type === 'terrain' ? 'Terrain' : 'Appartement';
+  doc.title = _pvType + (_pvVille ? ' à ' + _pvVille : '') + ' · Espace acheteur privé';
+  var _pvMeta = doc.querySelector('meta[name="pv-adr"]');
+  if (!_pvMeta) { _pvMeta = doc.createElement('meta'); _pvMeta.setAttribute('name', 'pv-adr'); doc.head.appendChild(_pvMeta); }
+  _pvMeta.setAttribute('content', d.adresse + ' · Espace Acheteur Privé · Expertimo');
 
   // ── Header ──
   var badge = q('.hbadge');
