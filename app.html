@@ -4963,6 +4963,13 @@ function fmtNum(n) {
   for(var i=0;i<s.length;i++){if(i>0&&(s.length-i)%3===0)r+=' ';r+=s[i];}
   return r;
 }
+// Identifiant aléatoire pour l'adresse web d'une fiche : aucune adresse du bien dans le lien.
+function opaqueId(n) {
+  var chars = 'abcdefghijklmnopqrstuvwxyz0123456789', out = '', buf = new Uint8Array(n);
+  (window.crypto || window.msCrypto).getRandomValues(buf);
+  for (var i = 0; i < n; i++) out += chars[buf[i] % chars.length];
+  return out;
+}
 function slugify(str) {
   return (str||'adresse').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,60);
 }
@@ -5547,7 +5554,7 @@ function generatePreview() {
 
     _lastGeneratedSlug = (_editingFiche && _editingFiche.filename)
       ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
-      : slugify(d.adresse) + (window._agentSuffix ? '-' + window._agentSuffix : '');
+      : 'fiche-' + opaqueId(10) + (window._agentSuffix ? '-' + window._agentSuffix : '');
 
     // langs : {en, pt, es} → données traduites des langues réussies (vide = fiche française seule)
     var publishSingle = function(langs, failed) {
@@ -5706,7 +5713,7 @@ async function pushToGitHub() {
         filename: frFilename,
         html: htmlToPublish,
         slug: _lastGeneratedSlug,
-        label: _lastGeneratedSlug.replace(/-/g, ' ')
+        label: (window._bienData && window._bienData.adresse) ? window._bienData.adresse : _lastGeneratedSlug.replace(/-/g, ' ')
       })
     });
     var resData = await r.json();
