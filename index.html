@@ -3409,7 +3409,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   var agentId = window.PRIVENCY_AGENT_ID || null;
   var params = new URLSearchParams(window.location.search);
   var client = params.get('client') || 'inconnu';
-  var adresse = document.title || window.location.pathname;
+  var adresse = (document.querySelector('meta[name="pv-adr"]') || {}).content || document.title || window.location.pathname;
   function track(evenement) {
     fetch(SUPABASE_URL + '/rest/v1/fiche_views', {
       method: 'POST',
