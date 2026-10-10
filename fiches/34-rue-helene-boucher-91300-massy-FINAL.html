@@ -133,6 +133,9 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .gcar-dot{width:20px;height:20px;border:none;background:transparent;cursor:pointer;padding:0;position:relative;}
 .gcar-dot::after{content:'';position:absolute;top:50%;left:50%;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:rgba(255,255,255,.55);transition:background .25s,transform .25s;}
 .gcar-dot.on::after{background:var(--gold);transform:scale(1.25);}
+.gcar-dots.many{gap:0;}
+.gcar-dots.many .gcar-dot{width:14px;}
+.gcar-dots.many .gcar-dot::after{width:6px;height:6px;margin:-3px 0 0 -3px;}
 @media(hover:none){.gcar-btn{opacity:.85;width:34px;height:34px;}}
 @media(prefers-reduced-motion:reduce){.gallery.gcar img,.gallery.gcar img.gc-on{transition:none;}}
 /* POINTS */
@@ -343,10 +346,6 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1957","description":"Maison 5 pièces de 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":306000,"prixm2":3825,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Maison familiale avec 4 chambres dont 3 de plain pied","fort2":"Maison familiale avec 4 chambres","fort3":"Proche toutes commodités","vig1":"Travaux à prévoir","vig2":"Petit terrain de 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1957 : Construction de la maison. 63m² avec 2 chambres\n1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.\nDébut des années 2000 : remplacement des 2 tableaux électrique\n2010 : Remplacement de toutes le fenêtres en double vitrage PVC\n2012 : Remplacement de la chaudière à gaz (De Dietrich)\n2020 : Travaux de mise en conformité du réseau d'assainissement","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"L'installation intérieure d'électricité comporte une ou des anomalies"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau conforme"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488154/lityjobsameyjiucvqjz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488174/zt5pllbhgvqybm560rkd.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488208/p99xqq347c4tw5kccaiv.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488212/ztxky50i7g3ik65mg1wa.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488211/bnzjbsctmb20i8rzgdjr.jpg","caption":"","uploading":false}]}}</script>
-<script id="expertimo-data-en" type="application/json">{"type":"maison","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1957","description":"5-room house of 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":306000,"prixm2":3825,"mediane":0,"tension":"Very high","delai":"21 days","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Family home with 4 bedrooms, 3 of which are on the ground floor","fort2":"Family home with 4 bedrooms","fort3":"Close to all amenities","vig1":"Renovation work required","vig2":"Small plot of 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1957: Construction of the house. 63m² with 2 bedrooms\n1974: Extension of the house allowing the creation of 2 additional bedrooms, thus bringing the total surface area of the house to 80m² of living space. Conversion of the attic into 2 living rooms with 2 velux skylights + roof insulation.\nEarly 2000s: Replacement of the 2 electrical panels\n2010: Replacement of all windows with PVC double glazing\n2012: Replacement of the gas boiler (De Dietrich)\n2020: Compliance work on the sewage system","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"As part of the survey, materials and products containing asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"The internal electrical installation has one or more defects"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"The installation has A2 type anomalies which must be repaired as soon as possible."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to the network compliant"}],"renovations":[],"agentNom":"Olivier LOISON","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488154/lityjobsameyjiucvqjz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488174/zt5pllbhgvqybm560rkd.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488208/p99xqq347c4tw5kccaiv.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488212/ztxky50i7g3ik65mg1wa.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1787488211/bnzjbsctmb20i8rzgdjr.jpg","caption":"","uploading":false}]}}</script>
-<script id="expertimo-data-pt" type="application/json">{"fort1":"Moradia familiar com 4 quartos dos quais 3 no rés-do-chão","fort2":"Moradia familiar com 4 quartos","fort3":"Próximo de todas as comodidades","vig1":"Obras a prever","vig2":"Pequeno terreno de 211m²","vig3":"","historiqueLibre":"1957: Construção da moradia. 63m² com 2 quartos\n1974: Ampliação da moradia permitindo a criação de 2 quartos suplementares e elevando assim a superfície total da moradia para 80m² habitáveis. Arranjo do sótão em 2 divisões de estar com 2 claraboias + isolamento da cobertura.\nInício dos anos 2000: substituição dos 2 quadros elétricos\n2010: Substituição de todas as janelas por vidros duplos em PVC\n2012: Substituição da caldeira a gás (De Dietrich)\n2020: Trabalhos de adequação da rede de saneamento","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"No âmbito da missão, foram identificados materiais e produtos contendo amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"A instalação interior de eletricidade apresenta uma ou várias anomalias"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"A instalação apresenta anomalias de tipo A2 que deverão ser reparadas com a maior brevidade."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede conforme"}]}</script>
-<script id="expertimo-data-es" type="application/json">{"fort1":"Casa familiar con 4 dormitorios, de los cuales 3 en planta baja","fort2":"Casa familiar con 4 dormitorios","fort3":"Cerca de todos los servicios","vig1":"Obras a prever","vig2":"Terreno pequeño de 211m²","vig3":"","historiqueLibre":"1957: Construcción de la casa. 63m² con 2 dormitorios\n1974: Ampliación de la casa permitiendo la creación de 2 dormitorios adicionales y elevando así la superficie total de la casa a 80m² habitables. Acondicionamiento de la buhardilla en 2 estancias con 2 velux + aislamiento del tejado.\nPrincipios de los años 2000: sustitución de los 2 cuadros eléctricos\n2010: Sustitución de todas las ventanas por doble acristalamiento PVC\n2012: Sustitución de la caldera de gas (De Dietrich)\n2020: Trabajos de adecuación a la normativa de la red de saneamiento","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"En el marco de la misión, se han detectado materiales y productos que contienen amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sometido"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sometido"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"La instalación interior de electricidad presenta una o varias anomalías"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"La instalación presenta anomalías de tipo A2 que deberán repararse lo antes posible."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red conforme"}]}</script>
 <style>
 #vr-card .vr-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);}
 #vr-card .vr-sub{font-size:12.5px;color:var(--muted);margin-top:3px;}
@@ -380,7 +379,7 @@ html,body{overflow-x:hidden;}
 #doc-picker .dp-msg.err{background:#fdecea;color:#a12622;}
 @media (max-width:640px){#doc-picker .dp-grid{grid-template-columns:1fr;}}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet">
 <style id="pv-skin">
 /* Habillage « parcours » (bleu nuit). Tout est sous body.pv / body.pv4 : ajouter ?classic=1 à l'adresse affiche l'ancien design. */
 /* MAQUETTES v2 : trois directions, chacune avec sa propre disposition des onglets.
@@ -830,6 +829,10 @@ body.pv4 .pv-recap:empty{display:none;}
 body.pv4 #ai-modal>div:first-child .pv-aiico{color:#fff!important;}
 body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22px;height:22px;}
 </style>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","copro":"non","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1957","description":"Maison 5 pièces de 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":306000,"prixm2":3825,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Maison familiale avec 4 chambres dont 3 de plain pied","fort2":"Maison familiale avec 4 chambres","fort3":"Proche toutes commodités","vig1":"Travaux à prévoir","vig2":"Petit terrain de 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651864/jbkqdxgecr2grt6rez0j.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/amrasyrkchpavqr5lbvn.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/xlq4mkw0xj3zjcmzkmap.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/xmsdlpw9bypwxxozyeyt.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/hodstvjmcqjyd8bs6sik.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651771/glnecolshfvawmjlgsbx.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/l5xgognh3rftmtruvvmm.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nkpvilor8vjrbtrc0lju.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nyrrw24wrrwsntlihlxb.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/pwh9fnl4fncnmsecci6c.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/ocdrnarcouaqqdgvucku.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/huv9oqagbvoa6w7wrpkg.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651792/jm2aviidp8820zs2m8ph.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/zjfvirdc2fyjmvdjlgx8.jpg","photo15":"","photo16":"","photo17":"","photo18":"","photo19":"","photo20":"","video1":"https://www.youtube.com/shorts/4px4WJI6iNI","video2":"","video3":"","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1957 : Construction de la maison. 63m² avec 2 chambres\n1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.\nDébut des années 2000 : remplacement des 2 tableaux électrique\n2010 : Remplacement de toutes le fenêtres en double vitrage PVC\n2012 : Remplacement de la chaudière à gaz (De Dietrich)\n2020 : Travaux de mise en conformité du réseau d'assainissement","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"L'installation intérieure d'électricité comporte une ou des anomalies"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau conforme"}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651864/jbkqdxgecr2grt6rez0j.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/amrasyrkchpavqr5lbvn.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/xlq4mkw0xj3zjcmzkmap.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/xmsdlpw9bypwxxozyeyt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/hodstvjmcqjyd8bs6sik.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651771/glnecolshfvawmjlgsbx.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/l5xgognh3rftmtruvvmm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nkpvilor8vjrbtrc0lju.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nyrrw24wrrwsntlihlxb.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/pwh9fnl4fncnmsecci6c.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/ocdrnarcouaqqdgvucku.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/huv9oqagbvoa6w7wrpkg.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651792/jm2aviidp8820zs2m8ph.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/zjfvirdc2fyjmvdjlgx8.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-en" type="application/json">{"type":"maison","copro":"non","etage":"","adresse":"34 Rue Hélène Boucher 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1957","description":"5-room house of 80 m² · DPE F","surface":80,"surfCarrez":79.62,"pieces":"5","dpe":"F","prix":306000,"prixm2":3825,"mediane":0,"tension":"Very high","delai":"21 days","loyer":1800,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1229,"score":"7.5","scorePrest":"6","scoreSecteur":"9","scoreQP":"9","scoreEtat":"6","fort1":"Family home with 4 bedrooms, 3 of which on one level","fort2":"Family home with 4 bedrooms","fort3":"Close to all amenities","vig1":"Renovation works required","vig2":"Small plot of 211m²","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651864/jbkqdxgecr2grt6rez0j.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/amrasyrkchpavqr5lbvn.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/xlq4mkw0xj3zjcmzkmap.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/xmsdlpw9bypwxxozyeyt.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/hodstvjmcqjyd8bs6sik.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651771/glnecolshfvawmjlgsbx.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/l5xgognh3rftmtruvvmm.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nkpvilor8vjrbtrc0lju.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nyrrw24wrrwsntlihlxb.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/pwh9fnl4fncnmsecci6c.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/ocdrnarcouaqqdgvucku.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/huv9oqagbvoa6w7wrpkg.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651792/jm2aviidp8820zs2m8ph.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/zjfvirdc2fyjmvdjlgx8.jpg","photo15":"","photo16":"","photo17":"","photo18":"","photo19":"","photo20":"","video1":"https://www.youtube.com/shorts/4px4WJI6iNI","video2":"","video3":"","dvf":[{"date":"Oct 2025","adresse":"8 Rue Hèlène Boucher","surface":"125","prix":412000,"prixm2":3296},{"date":"Mars 2025","adresse":"39 b Rue Appert","surface":"124","prix":420000,"prixm2":3387},{"date":"Mars 2025","adresse":"4 Rue Hèlène Boucher","surface":"63","prix":373000,"prixm2":5921},{"date":"Juin 2024","adresse":"19 Rue Hèlène Boucher","surface":"63","prix":355000,"prixm2":5635},{"date":"Février 2021","adresse":"11 Rue Hèlène Boucher","surface":"63","prix":421000,"prixm2":6683},{"date":"Sept. 2020","adresse":"18 Rue Hèlène Boucher","surface":"90","prix":458000,"prixm2":5089}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1957: Construction of the house. 63m² with 2 bedrooms\n1974: Extension of the house allowing the creation of 2 additional bedrooms, bringing the total surface area of the house to 80m² of living space. Conversion of the attic into 2 living rooms with 2 skylights + roof insulation.\nEarly 2000s: replacement of the 2 electrical panels\n2010: Replacement of all windows with PVC double glazing\n2012: Replacement of the gas boiler (De Dietrich)\n2020: Compliance work on the sanitation network","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"As part of the inspection, materials and products containing asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"The internal electrical installation has one or more anomalies"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"The installation has A2 type anomalies which must be repaired as soon as possible."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to the network compliant"}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651864/jbkqdxgecr2grt6rez0j.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/amrasyrkchpavqr5lbvn.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/xlq4mkw0xj3zjcmzkmap.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/xmsdlpw9bypwxxozyeyt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/hodstvjmcqjyd8bs6sik.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651771/glnecolshfvawmjlgsbx.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/l5xgognh3rftmtruvvmm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nkpvilor8vjrbtrc0lju.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nyrrw24wrrwsntlihlxb.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/pwh9fnl4fncnmsecci6c.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/ocdrnarcouaqqdgvucku.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/huv9oqagbvoa6w7wrpkg.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651792/jm2aviidp8820zs2m8ph.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/zjfvirdc2fyjmvdjlgx8.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-pt" type="application/json">{"fort1":"Moradia familiar com 4 quartos, dos quais 3 no rés do chão","fort2":"Moradia familiar com 4 quartos","fort3":"Próximo de todas as comodidades","vig1":"Obras a prever","vig2":"Terreno pequeno de 211m²","vig3":"","historiqueLibre":"1957: Construção da moradia. 63m² com 2 quartos\n1974: Ampliação da moradia permitindo a criação de 2 quartos adicionais e elevando assim a superfície total da moradia para 80m² habitáveis. Arranjo dos sótãos em 2 divisões com 2 claraboias + isolamento da cobertura.\nInício dos anos 2000: substituição dos 2 quadros elétricos\n2010: Substituição de todas as janelas por vidro duplo em PVC\n2012: Substituição da caldeira a gás (De Dietrich)\n2020: Trabalhos de adequação da rede de saneamento","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"No âmbito da missão, foram identificados materiais e produtos contendo amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"A instalação interior de eletricidade apresenta uma ou várias anomalias"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"A instalação apresenta anomalias de tipo A2 que deverão ser reparadas com a maior brevidade."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede conforme"}]}</script>
+<script id="expertimo-data-es" type="application/json">{"fort1":"Casa familiar con 4 dormitorios, 3 de ellos en planta baja","fort2":"Casa familiar con 4 dormitorios","fort3":"Cerca de todos los servicios","vig1":"Obras a prever","vig2":"Pequeña parcela de 211m²","vig3":"","historiqueLibre":"1957: Construcción de la casa. 63m² con 2 dormitorios\n1974: Ampliación de la casa permitiendo la creación de 2 dormitorios adicionales y elevando así la superficie total de la casa a 80m² habitables. Acondicionamiento de la buhardilla en 2 estancias con 2 claraboyas + aislamiento de la cubierta.\nPrincipio de los años 2000: sustitución de los 2 cuadros eléctricos\n2010: Sustitución de todas las ventanas por doble acristalamiento PVC\n2012: Sustitución de la caldera de gas (De Dietrich)\n2020: Obras de adecuación de la red de saneamiento a la normativa","diags":[{"icon":"🧱","name":"Amiante","status":"attention","result":"En el marco de la misión, se han identificado materiales y productos que contienen amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sujeto"},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sujeto"},{"icon":"⚡","name":"Électricité","status":"defavorable","result":"La instalación interior de electricidad presenta una o varias anomalías"},{"icon":"🔥","name":"Gaz","status":"defavorable","result":"La instalación presenta anomalías de tipo A2 que deberán ser reparadas a la mayor brevedad."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red conforme"}]}</script>
 </head>
 <body class="pv pv4 pv-home tone-b">
 
@@ -890,17 +893,32 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
     <h2 class="stitle">34 Rue Hélène Boucher 91300 Massy · 5 pièces</h2>
     <p class="ssub" data-fr-val="Maison 5 pièces de 80 m² · DPE F" data-en-val="5-room house of 80 m² · DPE F" data-pt-val="Moradia T5 de 80 m² · DPE F" data-es-val="Casa de 5 estancias de 80 m² · DPE F">Maison 5 pièces de 80 m² · DPE F</p>
     <div class="gallery" id="gallery-grid">
-    <img id="photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/fjoqfh3euybduhwzjd2l.jpg" alt="34 Rue Hélène Boucher 91300 Massy - Vue principale" class="gm" onclick="openLightbox(this.src)">
-    <img id="photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/hckpospe4q97hq2hdvab.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
-    <img id="photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/lcgorxlp5tc5xt97wgwo.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
-    <img id="photo4" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/gts0mzuodpucoiaezz7q.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
-    <img id="photo5" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1783171496/majsppparn7euyuanyma.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651864/jbkqdxgecr2grt6rez0j.jpg" alt="34 Rue Hélène Boucher 91300 Massy - Vue principale" class="gm" onclick="openLightbox(this.src)">
+    <img id="photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/amrasyrkchpavqr5lbvn.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo3" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/xlq4mkw0xj3zjcmzkmap.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo4" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/xmsdlpw9bypwxxozyeyt.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo5" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/hodstvjmcqjyd8bs6sik.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo6" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651771/glnecolshfvawmjlgsbx.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo7" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/l5xgognh3rftmtruvvmm.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo8" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nkpvilor8vjrbtrc0lju.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo9" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651765/nyrrw24wrrwsntlihlxb.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo10" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/pwh9fnl4fncnmsecci6c.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo11" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/ocdrnarcouaqqdgvucku.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo12" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651766/huv9oqagbvoa6w7wrpkg.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo13" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651792/jm2aviidp8820zs2m8ph.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo14" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791651790/zjfvirdc2fyjmvdjlgx8.jpg" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)">
+    <img id="photo15" src="" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)" style="display: none;">
+    <img id="photo16" src="" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)" style="display: none;">
+    <img id="photo17" src="" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)" style="display: none;">
+    <img id="photo18" src="" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)" style="display: none;">
+    <img id="photo19" src="" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)" style="display: none;">
+    <img id="photo20" src="" alt="34 Rue Hélène Boucher 91300 Massy" onclick="openLightbox(this.src)" style="display: none;">
   </div>
-  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption" data-fr-val="📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles" data-en-val="📷 Click on a photo to enlarge it · 5 photos available" data-pt-val="📷 Clique numa foto para a ampliar · 5 fotos disponíveis" data-es-val="📷 Haga clic en una foto para ampliarla · 5 fotos disponibles">📷 Cliquez sur une photo pour l'agrandir · 5 photos disponibles</div>
-  <div id="video-links-section" style="display:none;margin-bottom:18px;">
-    <div id="video-links-list"></div>
+  <div style="font-size:10px;color:var(--muted);margin-bottom:14px;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em;" id="gallery-caption" data-fr-val="📷 Cliquez sur une photo pour l'agrandir · 14 photos disponibles" data-en-val="📷 Click on a photo to enlarge it · 14 photos available" data-pt-val="📷 Clique numa foto para a ampliar · 14 fotos disponíveis" data-es-val="📷 Haga clic en una foto para ampliarla · 14 fotos disponibles">📷 Cliquez sur une photo pour l'agrandir · 14 photos disponibles</div>
+  <div id="video-links-section" style="display: block; margin-bottom: 18px;">
+    <div id="video-links-list"><a href="https://www.youtube.com/shorts/4px4WJI6iNI" target="_blank" rel="noopener" class="video-link-btn">▶️ Vidéo 1</a></div>
   </div>
-  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>Maison familiale avec 4 chambres dont 3 de plain pied</li><li>Maison familiale avec 4 chambres</li><li>Proche toutes commodités</li></ul><ul id="pf-list-en" style="display:none;"><li>Family home with 4 bedrooms, 3 of which are on the ground floor</li><li>Family home with 4 bedrooms</li><li>Close to all amenities</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>Travaux à prévoir</li><li>Petit terrain de 211m²</li></ul><ul id="vg-list-en" style="display:none;"><li>Renovation work required</li><li>Small plot of 211m²</li></ul></div></div><div class="score-box">
+  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>Maison familiale avec 4 chambres dont 3 de plain pied</li><li>Maison familiale avec 4 chambres</li><li>Proche toutes commodités</li></ul><ul id="pf-list-en" style="display:none;"><li>Family home with 4 bedrooms, 3 of which on one level</li><li>Family home with 4 bedrooms</li><li>Close to all amenities</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>Travaux à prévoir</li><li>Petit terrain de 211m²</li></ul><ul id="vg-list-en" style="display:none;"><li>Renovation works required</li><li>Small plot of 211m²</li></ul></div></div><div class="score-box">
   <div class="lbl" style="color:#6a6358;" data-i18n="score-title">Score Qualité du Bien</div>
   <div class="score-num">7,5</div>
   <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;margin-top:8px;" id="score-desc" data-fr-val="Score 7,5/10. DPE F. Prix à confirmer." data-en-val="Score 7,5/10. DPE F. Price to be confirmed." data-pt-val="Pontuação 7,5/10. DPE F. Preço a confirmar." data-es-val="Puntuación 7,5/10. DPE F. Precio por confirmar.">Score 7,5/10. DPE F. Prix à confirmer.</p>
@@ -913,7 +931,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -970,7 +988,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1012,7 +1030,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1033,14 +1051,14 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
       <div class="lbl" data-i18n="lbl-infos-complementaires">Informations complémentaires</div>
       <h2 class="stitle" data-i18n="tab-historique">Tout savoir sur ce bien</h2>
       <ul class="info-list" style="margin-top:13px;" id="historique-timeline-fr"><li class="info-item">1957 : Construction de la maison. 63m² avec 2 chambres</li><li class="info-item">1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture.</li><li class="info-item">Début des années 2000 : remplacement des 2 tableaux électrique</li><li class="info-item">2010 : Remplacement de toutes le fenêtres en double vitrage PVC</li><li class="info-item">2012 : Remplacement de la chaudière à gaz (De Dietrich)</li><li class="info-item">2020 : Travaux de mise en conformité du réseau d'assainissement</li></ul>
-      <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en"><li class="info-item">1957: Construction of the house. 63m² with 2 bedrooms</li><li class="info-item">1974: Extension of the house allowing the creation of 2 additional bedrooms, thus bringing the total surface area of the house to 80m² of living space. Conversion of the attic into 2 living rooms with 2 velux skylights + roof insulation.</li><li class="info-item">Early 2000s: Replacement of the 2 electrical panels</li><li class="info-item">2010: Replacement of all windows with PVC double glazing</li><li class="info-item">2012: Replacement of the gas boiler (De Dietrich)</li><li class="info-item">2020: Compliance work on the sewage system</li></ul>
+      <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en"><li class="info-item">1957: Construction of the house. 63m² with 2 bedrooms</li><li class="info-item">1974: Extension of the house allowing the creation of 2 additional bedrooms, bringing the total surface area of the house to 80m² of living space. Conversion of the attic into 2 living rooms with 2 skylights + roof insulation.</li><li class="info-item">Early 2000s: replacement of the 2 electrical panels</li><li class="info-item">2010: Replacement of all windows with PVC double glazing</li><li class="info-item">2012: Replacement of the gas boiler (De Dietrich)</li><li class="info-item">2020: Compliance work on the sanitation network</li></ul>
     </div>
   </div>
 </div>
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1062,14 +1080,14 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
       <h2 class="stitle" data-i18n="stitle-diagnostics">Diagnostics Techniques</h2>
       <p class="ssub" data-i18n="ssub-diagnostics">Résultats officiels des diagnostics réglementaires</p>
       <div class="diag-grid" id="diag-grid-fr"><div class="diag-card diag-attention"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis</div></div><div class="diag-card diag-alerte"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">L'installation intérieure d'électricité comporte une ou des anomalies</div></div><div class="diag-card diag-alerte"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Raccordement au réseau conforme</div></div></div>
-      <div class="diag-grid" id="diag-grid-en" style="display:none;"><div class="diag-card diag-attention"><div class="diag-icon">🧱</div><div class="diag-name">Asbestos</div><div class="diag-result">As part of the survey, materials and products containing asbestos were identified.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Lead (CREP)</div><div class="diag-result">Not subject</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Not subject</div></div><div class="diag-card diag-alerte"><div class="diag-icon">⚡</div><div class="diag-name">Electricity</div><div class="diag-result">The internal electrical installation has one or more defects</div></div><div class="diag-card diag-alerte"><div class="diag-icon">🔥</div><div class="diag-name">Gas</div><div class="diag-result">The installation has A2 type anomalies which must be repaired as soon as possible.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Sanitation</div><div class="diag-result">Connection to the network compliant</div></div></div>
+      <div class="diag-grid" id="diag-grid-en" style="display:none;"><div class="diag-card diag-attention"><div class="diag-icon">🧱</div><div class="diag-name">Asbestos</div><div class="diag-result">As part of the inspection, materials and products containing asbestos were identified.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Lead (CREP)</div><div class="diag-result">Not subject</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Not subject</div></div><div class="diag-card diag-alerte"><div class="diag-icon">⚡</div><div class="diag-name">Electricity</div><div class="diag-result">The internal electrical installation has one or more anomalies</div></div><div class="diag-card diag-alerte"><div class="diag-icon">🔥</div><div class="diag-name">Gas</div><div class="diag-result">The installation has A2 type anomalies which must be repaired as soon as possible.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Sanitation</div><div class="diag-result">Connection to the network compliant</div></div></div>
     </div>
   </div>
 </div>
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1176,7 +1194,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1275,7 +1293,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
   <div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
   <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier LOISON</div>
+  <div class="cons-name">Olivier Loison</div>
   <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
   <div class="cons-contact">
     <a href="tel:+33685684613">📞 0685684613</a>
@@ -1462,7 +1480,7 @@ var I18N = {
     'ai-modal-title': 'Assistant Privency',
     'ai-modal-available': 'Disponible 24h/24',
     'footer-tagline': "L'immobilier avec l'expertise d'un professionnel",
-    'footer-analyse-par': 'Analyse réalisée par Olivier LOISON · Mandataire Expertimo · olivier.loison@expertimo.com',
+    'footer-analyse-par': 'Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com',
     'footer-mentions': 'Mentions légales',
     'footer-cgv': 'CGV',
     'footer-confidentialite': 'Politique de confidentialité',
@@ -1700,7 +1718,7 @@ var I18N = {
     'ai-modal-title': 'Privency Assistant',
     'ai-modal-available': 'Available 24/7',
     'footer-tagline': 'Real estate with professional expertise',
-    'footer-analyse-par': 'Analysis by Olivier LOISON · Expertimo Agent · olivier.loison@expertimo.com',
+    'footer-analyse-par': 'Analysis by Olivier Loison · Expertimo Agent · olivier.loison@expertimo.com',
     'footer-mentions': 'Legal Notice',
     'footer-cgv': 'Terms & Conditions',
     'footer-confidentialite': 'Privacy Policy',
@@ -1786,7 +1804,7 @@ var I18N = {
   pt: {
     label: "PT", name: "Português",
     ui: {
-    "doc-charges": "Chamadas de encargos",
+    "doc-charges": "Encargos de condomínio",
     "doc-taxe": "Aviso de imposto predial (taxe foncière)",
     "lbl-diag-reg": "Diagnósticos regulamentares",
     "diag-carrez": "Lei Carrez",
@@ -1893,12 +1911,12 @@ var I18N = {
     "doc-reglement-desc": "Documentos do condomínio",
     "offre-progress-prefix": "Explorou",
     "offre-progress-suffix": " / 10 secções",
-    "offre-progress-sub": "Quanto mais explorar o dossiê, mais confiança terá para fazer uma proposta.",
+    "offre-progress-sub": "Quanto mais explorar o dossier, mais confiança terá para fazer uma proposta.",
     "lbl-processus": "Processo de aquisição",
     "step-visite": "Visita",
     "step-offre": "Proposta",
     "step-negociation": "Negociação",
-    "step-promesse": "Promessa",
+    "step-promesse": "Contrato-promessa",
     "step-10jours": "10 dias",
     "step-financement": "Financiamento",
     "step-signature": "Assinatura",
@@ -1919,14 +1937,14 @@ var I18N = {
     "lbl-apres-offre": "Depois da sua proposta — os passos seguintes",
     "etape1-titre": "PASSO 1 · RESPOSTA DO VENDEDOR",
     "etape1-txt": "Aceitação, recusa ou contraproposta. Prazo habitual: 2–5 dias.",
-    "etape2-titre": "PASSO 2 · ASSINATURA DA PROMESSA",
+    "etape2-titre": "PASSO 2 · ASSINATURA DO CONTRATO-PROMESSA DE COMPRA E VENDA",
     "etape2-txt": "No notário, 8–10 dias após o acordo. Sinal de 5–10%.",
     "etape3-titre": "PASSO 3 · 10 DIAS DE RETRATAÇÃO",
     "etape3-txt": "Prazo legal sem penalização. Verifique todos os documentos.",
     "etape4-titre": "PASSO 4 · VALIDAÇÃO BANCÁRIA",
     "etape4-txt": "O seu banco dispõe de cerca de 60 dias para aprovar o crédito.",
     "etape5-titre": "PASSO 5 · ESCRITURA DEFINITIVA 🔑",
-    "etape5-txt": "Cerca de 3 meses após a promessa — escritura e entrega das chaves.",
+    "etape5-txt": "Cerca de 3 meses após o contrato-promessa de compra e venda — escritura e entrega das chaves.",
     "lbl-votre-offre": "A sua proposta",
     "marge-negociation-prefix": "Margem de negociação estimada:",
     "marge-negociation-suffix": "com base no DPE e nas transações DVF da zona.",
@@ -1938,7 +1956,7 @@ var I18N = {
     "ai-modal-title": "Assistente Privency",
     "ai-modal-available": "Disponível 24 h/24",
     "footer-tagline": "Imobiliário com a experiência de um profissional",
-    "footer-analyse-par": "Análise realizada por Olivier LOISON · Consultor Expertimo · olivier.loison@expertimo.com",
+    "footer-analyse-par": "Análise realizada por Olivier Loison · Consultor Expertimo · olivier.loison@expertimo.com",
     "footer-mentions": "Menções legais",
     "footer-cgv": "Condições gerais de venda",
     "footer-confidentialite": "Política de privacidade",
@@ -1952,13 +1970,13 @@ var I18N = {
       "offer-diff-below": " face ao preço anunciado",
       "offer-diff-above": " acima do preço anunciado",
       "offer-diff-at": "Ao preço anunciado",
-      "offer-missing": "Preencha pelo menos o valor, o seu nome e o seu email.",
+      "offer-missing": "Preencha pelo menos o valor, o seu nome e o seu e-mail.",
       "offer-sent": "<p>✅ A sua proposta de <strong>{montant} €</strong> foi transmitida. {agent} entrará em contacto nas próximas 24 h.</p>",
       "agent-fallback": "o seu consultor",
       "at-phone": " pelo número {tel}",
       "offer-err": "Erro ao enviar o pedido. Contacte diretamente {agent}{tel}.",
       "offer-neterr": "Erro de rede. Contacte diretamente {agent}{tel}.",
-      "docs-missing": "Indique o seu nome e o seu email.",
+      "docs-missing": "Indique o seu nome e o seu e-mail.",
       "diag-not-subject": "Não sujeito a obrigação",
       "welcome-greeting": "Bem-vindo(a)",
       "welcome-buyer": "Bem-vindo(a) {name}",
@@ -1984,7 +2002,7 @@ var I18N = {
       "price-pos-below": "Preço abaixo do mercado",
       "price-pos-in": "Preço em linha com o mercado",
       "price-pos-tbc": "Preço a confirmar",
-      "rent-info": "Imóvel livre. Renda estimada: {loyer} € sem mobília. Simule abaixo a sua rentabilidade.",
+      "rent-info": "Imóvel livre. Renda estimada: {loyer} € não mobilado. Simule abaixo a sua rentabilidade.",
       "doc-charges-desc": "Extrato anual · {n} €/mês",
       "doc-taxe-desc": "{n} € / ano",
       "diag-name-amiante": "Amianto",
@@ -2024,7 +2042,7 @@ var I18N = {
   es: {
     label: "ES", name: "Español",
     ui: {
-    "doc-charges": "Llamadas de gastos",
+    "doc-charges": "Gastos de comunidad",
     "doc-taxe": "Aviso del impuesto de bienes inmuebles (taxe foncière)",
     "lbl-diag-reg": "Diagnósticos reglamentarios",
     "diag-carrez": "Ley Carrez",
@@ -2047,7 +2065,7 @@ var I18N = {
     "score-secteur": "Zona y entorno",
     "score-qp": "Relación calidad-precio",
     "score-etat": "Estado general",
-    "cons-role": "Agente inmobiliario · Expertimo",
+    "cons-role": "Asesor inmobiliario · Expertimo",
     "btn-rdv": "📅 Concertar una cita",
     "btn-site": "🏠 Ver mis otros inmuebles",
     "btn-offre": "✍️ Hacer una oferta",
@@ -2075,7 +2093,7 @@ var I18N = {
     "slbl-duree": "Duración",
     "slbl-duree-sm": "Años",
     "slbl-charges": "Gastos anuales",
-    "slbl-charges-sm": "Comunidad+seguro+imp. inmuebles",
+    "slbl-charges-sm": "Gastos de comunidad+seguro+imp. inmuebles",
     "charges-detail-default": "Agua fría, limpieza y mantenimiento de zonas comunes, ascensor",
     "slbl-travaux": "Presupuesto de obras",
     "slbl-travaux-sm": "Reforma energética (DPE)",
@@ -2115,20 +2133,20 @@ var I18N = {
     "radius-lbl": "· radio de 800 m",
     "lbl-docs": "Espacio documental seguro",
     "stitle-docs": "Documentos disponibles",
-    "ssub-docs": "Indique sus datos de contacto para acceder a los documentos. Su solicitud se transmite al agente.",
+    "ssub-docs": "Indique sus datos de contacto para acceder a los documentos. Su solicitud se transmite al asesor.",
     "lbl-prenom-nom": "Nombre y apellidos",
     "btn-unlock-docs": "🔓 Acceder a los documentos",
     "doc-success-title": "✅ Acceso desbloqueado",
-    "doc-success-txt": "Su solicitud ha sido transmitida. El agente se pondrá en contacto con usted en 24 h con los documentos completos.",
+    "doc-success-txt": "Su solicitud ha sido transmitida. El asesor se pondrá en contacto con usted en 24 h con los documentos completos.",
     "doc-pv-ag": "Acta de la Junta General",
-    "doc-pv-ag-desc": "Última junta de la comunidad",
+    "doc-pv-ag-desc": "Última junta de la comunidad de propietarios",
     "doc-dispo": "🔓 Disponible",
     "doc-diag-tech": "Diagnósticos técnicos",
     "doc-diag-tech-desc": "DPE, amianto, plomo...",
     "doc-factures": "Facturas y presupuestos de obras",
     "doc-factures-desc": "Obras realizadas",
-    "doc-reglement": "Estatutos de la comunidad",
-    "doc-reglement-desc": "Documentos de la comunidad",
+    "doc-reglement": "Estatutos de la comunidad de propietarios",
+    "doc-reglement-desc": "Documentos de la comunidad de propietarios",
     "offre-progress-prefix": "Ha explorado",
     "offre-progress-suffix": " / 10 secciones",
     "offre-progress-sub": "Cuanto más explore el expediente, con más confianza podrá hacer una oferta.",
@@ -2136,13 +2154,13 @@ var I18N = {
     "step-visite": "Visita",
     "step-offre": "Oferta",
     "step-negociation": "Negociación",
-    "step-promesse": "Compromiso",
+    "step-promesse": "Promesa",
     "step-10jours": "10 días",
     "step-financement": "Financiación",
     "step-signature": "Firma",
     "lbl-offre-tunnel": "Proceso de oferta seguro",
     "stitle-offre": "Su oferta de compra",
-    "ssub-offre": "Indique su propuesta. Será transmitida al agente y al vendedor en un plazo de 24 h.",
+    "ssub-offre": "Indique su propuesta. Será transmitida al asesor y al vendedor en un plazo de 24 h.",
     "lbl-montant-offre": "Importe de su oferta (€)",
     "lbl-financement": "Forma de financiación",
     "opt-financement-bancaire": "Financiación bancaria",
@@ -2157,14 +2175,14 @@ var I18N = {
     "lbl-apres-offre": "Después de su oferta — los siguientes pasos",
     "etape1-titre": "PASO 1 · RESPUESTA DEL VENDEDOR",
     "etape1-txt": "Aceptación, rechazo o contraoferta. Plazo habitual: 2–5 días.",
-    "etape2-titre": "PASO 2 · FIRMA DEL COMPROMISO",
+    "etape2-titre": "PASO 2 · FIRMA DE LA PROMESA DE COMPRAVENTA",
     "etape2-txt": "En la notaría, 8–10 días después del acuerdo. Depósito de garantía del 5–10%.",
     "etape3-titre": "PASO 3 · 10 DÍAS DE DESISTIMIENTO",
     "etape3-txt": "Plazo legal sin penalización. Revise todos los documentos.",
     "etape4-titre": "PASO 4 · VALIDACIÓN BANCARIA",
     "etape4-txt": "Su banco dispone de unos 60 días para aprobar su préstamo.",
     "etape5-titre": "PASO 5 · ESCRITURA DEFINITIVA 🔑",
-    "etape5-txt": "Unos 3 meses después del compromiso — escritura pública y entrega de llaves.",
+    "etape5-txt": "Unos 3 meses después de la promesa de compraventa — escritura pública y entrega de llaves.",
     "lbl-votre-offre": "Su oferta",
     "marge-negociation-prefix": "Margen de negociación estimado:",
     "marge-negociation-suffix": "según el DPE y las transacciones DVF de la zona.",
@@ -2175,8 +2193,8 @@ var I18N = {
     "ai-ask-btn": "Hacer una pregunta",
     "ai-modal-title": "Asistente Privency",
     "ai-modal-available": "Disponible 24 h/24",
-    "footer-tagline": "Inmobiliaria con la experiencia de un profesional",
-    "footer-analyse-par": "Análisis realizado por Olivier LOISON · Agente Expertimo · olivier.loison@expertimo.com",
+    "footer-tagline": "Su proyecto inmobiliario, con la experiencia de un profesional",
+    "footer-analyse-par": "Análisis realizado por Olivier Loison · Asesor Expertimo · olivier.loison@expertimo.com",
     "footer-mentions": "Aviso legal",
     "footer-cgv": "Condiciones generales de venta",
     "footer-confidentialite": "Política de privacidad",
@@ -2192,7 +2210,7 @@ var I18N = {
       "offer-diff-at": "Al precio anunciado",
       "offer-missing": "Rellene al menos el importe, su nombre y su correo electrónico.",
       "offer-sent": "<p>✅ Su oferta de <strong>{montant} €</strong> ha sido transmitida. {agent} se pondrá en contacto con usted en 24 h.</p>",
-      "agent-fallback": "su agente",
+      "agent-fallback": "su asesor",
       "at-phone": " en el {tel}",
       "offer-err": "Error al enviar su solicitud. Contacte directamente con {agent}{tel}.",
       "offer-neterr": "Error de red. Contacte directamente con {agent}{tel}.",
@@ -2454,9 +2472,14 @@ function buildAiSystemPrompt(lang, ctx) {
     + "CONFIDENTIALITY — you never know, never mention and never guess: the seller's identity or contact details, any internal information of the agency or agent "
     + "(negotiation margin, minimum or floor price, private notes, mandate terms). If asked, answer that you cannot share this information and invite the visitor to make an offer "
     + "through the offer tab or to contact the advisor. The only contact you may give is the advisor's. "
+    + "When asked for the seller's phone number, e-mail or name, first say clearly that you cannot share the seller's contact details, then (and only then) give the advisor's contact. "
+    + "When asked why the owner sells or what they paid, say this is confidential seller information you cannot share (do not merely say it is missing from the sheet), and do not pivot to unrelated figures. "
     + "If a question is entirely outside real estate, politely say you specialise in real estate. "
-    + "STYLE — fluent, natural, warm text like a caring real-estate advisor. Never use markdown headings, bullet lists or bold. "
-    + "3 to 5 sentences maximum, concrete and precise, and end with a natural invitation to ask another question or to contact the advisor. "
+    + "NEUTRALITY — state facts only: never judge or praise prices, taxes or the property (no 'reasonable', 'good deal', 'attractive') and never add computed comparisons that were not requested. Never explain what a tax or charge is used for or covers (for example never say what the taxe foncière finances), and never add any information that is not in the data between <fiche> and </fiche>; a French term may only get a very short generic definition (what it is called, not what it pays for). "
+    + "TERMINOLOGY — write everything in the target language: translate French terms too (for example 'taxe foncière' = the annual French property tax, 'chaudière' = boiler, 'cave' = cellar or basement storage). In Spanish the advisor is always called 'asesor'; in European Portuguese always 'consultor'; use 'projeto' (current European Portuguese spelling), never 'projecto'. "
+    + "Keep only proper names (streets, shops, schools, people) in their original form. "
+    + "STYLE — fluent, natural, warm text like a caring real-estate advisor, in plain text only: NEVER use markdown of any kind — no asterisks or ** for bold, no # headings, no bullet lists, no numbered lists, no emojis. "
+    + "HARD LIMIT: 5 sentences maximum in total (about 80 words), even for lists such as transport, schools or shops — in that case name only the 2 or 3 nearest items and stop. Concrete and precise, and end with a short natural invitation to ask another question or to contact the advisor. "
     + "\n<fiche>\n" + ctx + "\n</fiche>";
 }
 
@@ -2903,8 +2926,8 @@ function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
   var adresse = "34 Rue Hélène Boucher 91300 Massy";
-  var latFallback = 48.7326437;
-  var lngFallback = 2.2818384;
+  var latFallback = 48.731978;
+  var lngFallback = 2.282087;
 
   function buildMap(lat, lng) {
     window._ficheCoords = {lat: lat, lng: lng};
@@ -3058,20 +3081,20 @@ var _sp_pf2       = "Maison familiale avec 4 chambres";
 var _sp_pf3       = "Proche toutes commodités";
 var _sp_vigi1     = "Travaux à prévoir";
 var _sp_vigi2     = "Petit terrain de 211m²";
-var _sp_agent     = "Olivier LOISON";
+var _sp_agent     = "Olivier Loison";
 var _sp_tel       = "0685684613";
-var _sp_pf1_en = "Family home with 4 bedrooms, 3 of which are on the ground floor";
+var _sp_pf1_en = "Family home with 4 bedrooms, 3 of which on one level";
 var _sp_pf2_en = "Family home with 4 bedrooms";
 var _sp_pf3_en = "Close to all amenities";
-var _sp_vigi1_en = "Renovation work required";
+var _sp_vigi1_en = "Renovation works required";
 var _sp_vigi2_en = "Small plot of 211m²";
 var _sp_detail_en = "";
 // Contexte complet du bien pour l'assistant IA (liste blanche construite par app.html à la génération :
 // jamais de données vendeur ni de notes internes). Vide → repli sur les variables _sp_* ci-dessus.
-var _chat_ctx = "## Le bien\n- Type de bien : Maison\n- Adresse : 34 Rue Hélène Boucher 91300 Massy\n- Surface habitable (m²) : 80\n- Surface Carrez (m²) : 79.62\n- Surface du terrain (m²) : 211\n- Nombre total de pièces : 5\n- Chambres : 4\n- Salles d'eau : 1\n- WC séparés : 1\n- Année de construction : 1957\n- Standing général : Entrée de gamme\n\n## Prix, charges et fiscalité\n- Prix de mise en vente (€) : 306000\n- Taxe foncière (€/an) : 1229\n- Loyer potentiel estimé (€/mois) : 1800\n\n## Énergie et diagnostics\n- Classe DPE : F\n- Classe GES : F\n- Diagnostic amiante — statut : Attention\n- Diagnostic amiante — résultat : Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante.\n- Diagnostic plomb (CREP) — statut : Non soumis\n- Diagnostic plomb (CREP) — résultat : Non soumis\n- Diagnostic termites — statut : Non soumis\n- Diagnostic termites — résultat : Non soumis\n- Diagnostic électricité — statut : Défavorable\n- Diagnostic électricité — résultat : L'installation intérieure d'électricité comporte une ou des anomalies\n- Diagnostic gaz — statut : Défavorable\n- Diagnostic gaz — résultat : L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais.\n- Diagnostic assainissement — statut : Favorable\n- Diagnostic assainissement — résultat : Raccordement au réseau conforme\n\n## Travaux et historique du bien\n- Informations complémentaires (copropriété, exposition, rénovations, équipements…) : 1957 : Construction de la maison. 63m² avec 2 chambres 1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture. Début des années 2000 : remplacement des 2 tableaux électrique 2010 : Remplacement de toutes le fenêtres en double vitrage PVC 2012 : Remplacement de la chaudière à gaz (De Dietrich) 2020 : Travaux de mise en conformité du réseau d'assainissement\n\n## Construction, matériaux et chauffage\n- Toit — état : Moyen\n- Façade — état : Moyen\n- Sols — état : À rénover\n- Chauffage — année d'installation : 2012\n- État général : À rénover\n\n## Équipements, extérieur et annexes\n- Parking — box fermés : 1\n\n## Localisation et environnement\n- Exposition sonore : Calme\n- Transports à proximité (saisis par l'agent) : Bus, Métro, Train\n- Services de proximité : Ecoles, commerces et transports\n\n## Points forts et points de vigilance\n- Point fort 1 : Maison familiale avec 4 chambres dont 3 de plain pied\n- Point fort 2 : Maison familiale avec 4 chambres\n- Point fort 3 : Proche toutes commodités\n- Point de vigilance 1 : Travaux à prévoir\n- Point de vigilance 2 : Petit terrain de 211m²\n\n## Marché et analyse\n- Note globale du bien (/10) : 7.5\n- Tension locative : Très forte\n- Délai de vente moyen : 21 jours\n\n## Informations NON renseignées dans la fiche (à signaler comme telles, ne jamais deviner)\nQuartier / secteur ; Salles de bains ; WC ; Nombre d'étages ; Les + du bien ; Charges de copropriété (€/mois) ; Détail des charges ; Taxe d'habitation (€/an) ; Loyer mensuel estimé (€/mois) ; Consommation DPE (kWh/m²/an) ; Émissions GES (kgCO₂/m²/an) ; Servitudes ; Droits de superficie ; Travaux récents ; Volets roulants électriques ; Plaque de cuisson ; Autres équipements ; Parking — places intérieures ; Parking — places extérieures ; Voisinage ; Point de vigilance 3 ; Vigilances complémentaires ; Prix médian du secteur (€/m²)";
+var _chat_ctx = "## Le bien\n- Type de bien : Maison\n- Adresse : 34 Rue Hélène Boucher 91300 Massy\n- Surface habitable (m²) : 80\n- Surface Carrez (m²) : 79.62\n- Surface du terrain (m²) : 211\n- Nombre total de pièces : 5\n- Chambres : 4\n- Salles d'eau : 1\n- WC séparés : 1\n- Bien en copropriété : Non\n- Année de construction : 1957\n- Standing général : Entrée de gamme\n\n## Prix, charges et fiscalité\n- Prix de mise en vente (€) : 306000\n- Taxe foncière (€/an) : 1229\n- Loyer potentiel estimé (€/mois) : 1800\n\n## Énergie et diagnostics\n- Classe DPE : F\n- Classe GES : F\n- Diagnostic amiante — statut : Attention\n- Diagnostic amiante — résultat : Dans le cadre de la mission, il a été repéré des matériaux et produits contenant de l'amiante.\n- Diagnostic plomb (CREP) — statut : Non soumis\n- Diagnostic plomb (CREP) — résultat : Non soumis\n- Diagnostic termites — statut : Non soumis\n- Diagnostic termites — résultat : Non soumis\n- Diagnostic électricité — statut : Défavorable\n- Diagnostic électricité — résultat : L'installation intérieure d'électricité comporte une ou des anomalies\n- Diagnostic gaz — statut : Défavorable\n- Diagnostic gaz — résultat : L'installation comporte des anomalies de type A2 qui devront être réparées dans les meilleurs délais.\n- Diagnostic assainissement — statut : Favorable\n- Diagnostic assainissement — résultat : Raccordement au réseau conforme\n\n## Travaux et historique du bien\n- Informations complémentaires (copropriété, exposition, rénovations, équipements…) : 1957 : Construction de la maison. 63m² avec 2 chambres 1974 : Agrandissement de la maison permettant la création de 2 chambres supplémentaires et portant ainsi la surface totale de la maison à 80m² habitables. Aménagement des combles en 2 pièces de vie avec 2 velux + isolation de la toiture. Début des années 2000 : remplacement des 2 tableaux électrique 2010 : Remplacement de toutes le fenêtres en double vitrage PVC 2012 : Remplacement de la chaudière à gaz (De Dietrich) 2020 : Travaux de mise en conformité du réseau d'assainissement\n\n## Construction, matériaux et chauffage\n- Toit — état : Moyen\n- Façade — état : Moyen\n- Sols — état : À rénover\n- Chauffage — année d'installation : 2012\n- État général : À rénover\n\n## Équipements, extérieur et annexes\n- Parking — box fermés : 1\n\n## Localisation et environnement\n- Exposition sonore : Calme\n- Services de proximité : Ecoles, commerces et transports\n\n## Points forts et points de vigilance\n- Point fort 1 : Maison familiale avec 4 chambres dont 3 de plain pied\n- Point fort 2 : Maison familiale avec 4 chambres\n- Point fort 3 : Proche toutes commodités\n- Point de vigilance 1 : Travaux à prévoir\n- Point de vigilance 2 : Petit terrain de 211m²\n\n## Marché et analyse\n- Note globale du bien (/10) : 7.5\n- Tension locative : Très forte\n- Délai de vente moyen : 21 jours\n\n## Informations NON renseignées dans la fiche (à signaler comme telles, ne jamais deviner)\nQuartier / secteur ; Salles de bains ; WC ; Nombre d'étages ; Les + du bien ; Charges de copropriété (€/mois) ; Détail des charges ; Taxe d'habitation (€/an) ; Loyer mensuel estimé (€/mois) ; Consommation DPE (kWh/m²/an) ; Émissions GES (kgCO₂/m²/an) ; Servitudes ; Droits de superficie ; Travaux récents ; Volets roulants électriques ; Plaque de cuisson ; Autres équipements ; Parking — places intérieures ; Parking — places extérieures ; Voisinage ; Point de vigilance 3 ; Vigilances complémentaires ; Prix médian du secteur (€/m²)";
 // Coordonnées du bien (injectées à la génération) — utilisées pour les commodités du chatbot.
-var _fiche_lat = 48.7326437;
-var _fiche_lng = 2.2818384;
+var _fiche_lat = 48.731978;
+var _fiche_lng = 2.282087;
 
 function spv(base) {
   if (_currentLang === 'en' && window[base + '_en']) return window[base + '_en'];
@@ -3125,6 +3148,8 @@ function sendAI() {
   }).then(function(r){ return r.json(); })
   .then(function(data){
     var reply = (data.content && data.content[0] && data.content[0].text) || aiT('apiError', {msg: data.error && data.error.message ? data.error.message : JSON.stringify(data)}, lang);
+    // Le modèle glisse parfois du markdown malgré la consigne : la bulle affiche du texte brut (pas de ** ni de #)
+    reply = String(reply).replace(/\*+/g, '').replace(/^[ \t]*#{1,6}[ \t]+/gm, '');
     loadDiv.textContent = reply;
     _aiMessages.push({role:'assistant',content:reply});
   }).catch(function(err){
@@ -3186,7 +3211,7 @@ document.addEventListener('DOMContentLoaded', function(){
 <footer style="text-align:center;padding:24px 20px;background:#14171F;border-top:1px solid rgba(201,162,39,.15);">
   <div style="font-family:'Playfair Display',serif;font-size:18px;color:#C9A227;font-weight:300;letter-spacing:.06em;margin-bottom:4px;">Expertimo</div>
   <div style="font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#6a5a3a;" data-i18n="footer-tagline">L'immobilier avec l'expertise d'un professionnel</div>
-  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'Work Sans',sans-serif;"><span data-i18n="footer-analyse-par">Analyse réalisée par Olivier LOISON · Mandataire Expertimo · olivier.loison@expertimo.com</span></div>
+  <div style="margin-top:8px;font-size:10px;color:#4a3a20;font-family:'Work Sans',sans-serif;"><span data-i18n="footer-analyse-par">Analyse réalisée par Olivier Loison · Mandataire Expertimo · olivier.loison@expertimo.com</span></div>
   <div style="margin-top:10px;font-size:10px;font-family:'Work Sans',sans-serif;"><a href="/mentions-legales.html" style="color:#8a7550;text-decoration:none;" data-i18n="footer-mentions">Mentions légales</a> · <a href="/politique-confidentialite.html" style="color:#8a7550;text-decoration:none;" data-i18n="footer-confidentialite">Politique de confidentialité</a></div>
 </footer>
 
@@ -3257,7 +3282,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     });
     var cur = 0, timer = null, paused = false;
     var dots = document.createElement('div');
-    dots.className = 'gcar-dots';
+    dots.className = 'gcar-dots' + (slides.length > 10 ? ' many' : '');
     var dotEls = slides.map(function(_, i) {
       var d = document.createElement('button');
       d.type = 'button'; d.className = 'gcar-dot'; d.setAttribute('aria-label', 'Photo ' + (i + 1));
@@ -3782,9 +3807,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 250);
 })();
 </script>
-
-
-<script>window.PRIVENCY_AGENT_ID = "79e4e432-2232-4d2c-b41d-8c7c907c4dec";</script>
 <script id="pv-skin-js">
 (function(){
   if(/[?&]classic=1/.test(location.search)){document.body.className=document.body.className.split(/\s+/).filter(function(c){return ['pv','pv4','pv-home','tone-b'].indexOf(c)<0;}).join(' ');return;}
@@ -3835,10 +3857,10 @@ document.addEventListener('DOMContentLoaded', function() {
   function buildSlides(){
     if(slides)return;var hd=document.querySelector('.header');if(!hd)return;
     slides=document.createElement('div');slides.id='pv-slides';
-    ['photo1','photo2','photo3','photo4','photo5'].forEach(function(id){
+    for(var pn=1;pn<=20;pn++)(function(id){
       var im=document.getElementById(id),u=im&&im.getAttribute('src');if(!u)return;
       var d=document.createElement('div');d.className='s';d.style.backgroundImage='url("'+u+'")';slides.appendChild(d);
-    });
+    })('photo'+pn);
     hd.insertBefore(slides,hd.firstChild);slideIdx=0;
     if(slides.children[0])slides.children[0].classList.add('on');
   }
@@ -4041,4 +4063,7 @@ document.addEventListener('DOMContentLoaded', function() {
   sync();
 })();
 </script>
+
+
+<script>window.PRIVENCY_AGENT_ID = "79e4e432-2232-4d2c-b41d-8c7c907c4dec";</script>
 </body></html>
