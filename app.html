@@ -1183,11 +1183,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div id="photo-urls-block" style="display:none;margin-top:10px;">
         <p class="hint" style="margin-bottom:8px">Les photos chargées ci-dessus sont utilisées automatiquement. Vous pouvez aussi saisir des URLs directement.</p>
         <div class="grid-3">
-          <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url"></div>
-          <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url"></div>
-          <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url"></div>
-          <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url"></div>
-          <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url"></div>
+          <div class="form-group"><label>Photo principale</label><input type="url" id="bien_photo1_url" onchange="syncPhotosFromUrlFields(false)"></div>
+          <div class="form-group"><label>Photo 2</label><input type="url" id="bien_photo2_url" onchange="syncPhotosFromUrlFields(false)"></div>
+          <div class="form-group"><label>Photo 3</label><input type="url" id="bien_photo3_url" onchange="syncPhotosFromUrlFields(false)"></div>
+          <div class="form-group"><label>Photo 4</label><input type="url" id="bien_photo4_url" onchange="syncPhotosFromUrlFields(false)"></div>
+          <div class="form-group"><label>Photo 5</label><input type="url" id="bien_photo5_url" onchange="syncPhotosFromUrlFields(false)"></div>
         </div>
       </div>
     </div>
@@ -3276,12 +3276,43 @@ function uploadAgentPhoto(input) {
 // ═══════════════════════════════════════════════════════
 // STEP 2 — PHOTOS
 // ═══════════════════════════════════════════════════════
+// La grille (_photos) est la seule source de vérité des photos du bien. Les 5 champs
+// bien_photoN_url (bloc « URLs manuelles ») en sont le reflet : ils sont réécrits après chaque
+// ajout / retrait, et une URL saisie à la main y est reportée dans la grille.
+var PHOTO_URL_FIELDS = ['bien_photo1_url','bien_photo2_url','bien_photo3_url','bien_photo4_url','bien_photo5_url'];
+function photosPretes() { return _photos.filter(function(p) { return p && !p.uploading && p.dataUrl; }); }
+function photosEnCours() { return _photos.some(function(p) { return p && p.uploading; }); }
+function photoUrls() { return photosPretes().map(function(p) { return p.dataUrl; }); }
+function syncPhotoUrlFields() {
+  var urls = photoUrls();
+  PHOTO_URL_FIELDS.forEach(function(id, i) { var el = document.getElementById(id); if (el) el.value = urls[i] || ''; });
+}
+// Champs URL → grille. keepUnlisted : au chargement d'une fiche ou d'un brouillon, les photos de
+// la grille absentes des champs sont conservées à la suite ; en saisie manuelle, un champ modifié
+// remplace la photo qui occupait sa place.
+function syncPhotosFromUrlFields(keepUnlisted) {
+  var done = photosPretes(), pending = _photos.filter(function(p) { return p && p.uploading; });
+  var byUrl = {};
+  done.forEach(function(p) { if (!byUrl[p.dataUrl]) byUrl[p.dataUrl] = p; });
+  var head = [], seen = {};
+  PHOTO_URL_FIELDS.forEach(function(id) {
+    var u = (getV(id) || '').trim();
+    if (!u) return;
+    head.push(byUrl[u] && !seen[u] ? byUrl[u] : { dataUrl: u, caption: '', uploading: false });
+    seen[u] = true;
+  });
+  var rest = (keepUnlisted ? done : done.slice(PHOTO_URL_FIELDS.length)).filter(function(p) { return !seen[p.dataUrl]; });
+  _photos = head.concat(rest, pending);
+  syncPhotoUrlFields();
+  renderPhotos();
+}
 function addPhotos(input) {
   var CL_CLOUD  = 'dif0ikaj1';
   var CL_PRESET = 'privency_upload';
   Array.from(input.files).forEach(function(f) {
-    var idx = _photos.length;
-    _photos.push({ dataUrl: '', caption: '', uploading: true });
+    // Référence à l'entrée (et non son index) : une photo retirée pendant l'envoi décale les index.
+    var entry = { dataUrl: '', caption: '', uploading: true };
+    _photos.push(entry);
     renderPhotos();
     var fd = new FormData();
     fd.append('file', f);
@@ -3289,17 +3320,19 @@ function addPhotos(input) {
     fetch('https://api.cloudinary.com/v1_1/' + CL_CLOUD + '/image/upload', { method: 'POST', body: fd })
       .then(function(r) { return r.json(); })
       .then(function(data) {
-        _photos[idx].dataUrl    = data.secure_url || data.url || '';
-        _photos[idx].uploading  = false;
-        // Auto-fill the next empty URL field
-        var urlFields = ['bien_photo1_url','bien_photo2_url','bien_photo3_url','bien_photo4_url','bien_photo5_url'];
-        for (var i = 0; i < urlFields.length; i++) {
-          var el = document.getElementById(urlFields[i]);
-          if (el && !el.value) { el.value = _photos[idx].dataUrl; break; }
-        }
+        var url = data.secure_url || data.url || '';
+        if (!url) throw new Error('URL manquante');
+        entry.dataUrl   = url;
+        entry.uploading = false;
+        syncPhotoUrlFields();
         renderPhotos();
       })
-      .catch(function() { _photos[idx].uploading = false; renderPhotos(); });
+      .catch(function() {
+        var i = _photos.indexOf(entry);
+        if (i >= 0) _photos.splice(i, 1);
+        renderPhotos();
+        showToast('❌ Échec de l\'envoi d\'une photo, réessayez', true);
+      });
   });
   input.value = '';
 }
@@ -3316,7 +3349,7 @@ function renderPhotos() {
     grid.appendChild(div);
   }); scheduleDraftSave();
 }
-function removePhoto(i) { _photos.splice(i,1); renderPhotos(); }
+function removePhoto(i) { _photos.splice(i,1); syncPhotoUrlFields(); renderPhotos(); }
 
 // ═══════════════════════════════════════════════════════
 // STEP 2 — DVF API
@@ -4642,7 +4675,10 @@ function restoreRawFormState(d) {
     Object.keys(d).filter(function(k){return k.startsWith('dpe_');}).forEach(function(k){
       document.querySelectorAll('#page-2 .dpe-btn[data-group="'+k.replace('dpe_','')+'"]').forEach(function(b){b.classList.toggle('sel',b.dataset.letter===d[k]);});
     });
-    if(d.photos){_photos=d.photos;renderPhotos();}
+    // La grille repart de l'état restauré (jamais de celui d'une fiche ouverte avant), puis est
+    // réconciliée avec les champs URL, qui sont ce que la fiche publiée affichait.
+    _photos=(d.photos||[]).filter(function(p){return p&&p.dataUrl&&!p.uploading;});
+    syncPhotosFromUrlFields(true);
     if(d._pieces_table){
       var rows=document.querySelectorAll('#pieces_tbody tr');
       d._pieces_table.forEach(function(rowData,ri){
@@ -4725,11 +4761,8 @@ function collectBienData() {
   var annee=currentType==='maison'?getV('annee_construction_m'):currentType==='appart'?getV('annee_construction'):'';
   var chargesCopro=parseFloat(getV('charges_copro'))||0;
   var taxeFonciere=parseFloat(getByType('taxe_fonciere','taxe_fonciere_t'))||0;
-  var photo1=getV('bien_photo1_url')||(_photos[0]?_photos[0].dataUrl:'');
-  var photo2=getV('bien_photo2_url')||(_photos[1]?_photos[1].dataUrl:'');
-  var photo3=getV('bien_photo3_url')||(_photos[2]?_photos[2].dataUrl:'');
-  var photo4=getV('bien_photo4_url')||(_photos[3]?_photos[3].dataUrl:'');
-  var photo5=getV('bien_photo5_url')||(_photos[4]?_photos[4].dataUrl:'');
+  var ph=photoUrls();
+  var photo1=ph[0]||'', photo2=ph[1]||'', photo3=ph[2]||'', photo4=ph[3]||'', photo5=ph[4]||'';
   var video1=getV('bien_video1_url'), video2=getV('bien_video2_url'), video3=getV('bien_video3_url');
   var fb=parseFloat(getV('bien_fourchette_basse'))||(prix?Math.round(prix*.9):0);
   var fh=parseFloat(getV('bien_fourchette_haute'))||(prix?Math.round(prix*1.1):0);
@@ -5112,13 +5145,12 @@ function onAdresseChange(val) {
 function continuerVersGeneration() {
   var adresse=getV('adresse');
   if (!adresse){showToast('⚠️ L\'adresse du bien est obligatoire.', true);return;}
+  if (photosEnCours()){showToast('⏳ Envoi des photos en cours, patientez quelques secondes.', true);return;}
   try {
     window._bienData=collectBienData();
     saveDraftBien();
     _stepsComplete[2]=true;
-    var aucunePhoto = !getV('bien_photo1_url') && !getV('bien_photo2_url') && !getV('bien_photo3_url')
-      && !getV('bien_photo4_url') && !getV('bien_photo5_url') && !(_photos && _photos.length);
-    if (aucunePhoto) showContextTip('fiche_sans_photo');
+    if (!photoUrls().length) showContextTip('fiche_sans_photo');
     showToast('✅ Données collectées !');
     setTimeout(function(){goToStep(3);},600);
   } catch(e) { showToast('❌ Erreur : '+e.message, true); console.error(e); }
@@ -5234,6 +5266,7 @@ function switchPreviewTab(lang) {
 }
 
 function generatePreview() {
+  if (photosEnCours()) { showToast('⏳ Envoi des photos en cours, patientez quelques secondes.', true); return; }
   window._bienData = collectBienData();
   // Contexte complet du chatbot (liste blanche, sans donnée vendeur) — lu dans le formulaire de l'étape 2
   try { window._chatCtx = buildChatContext(window._bienData); } catch(e) { console.error('[buildChatContext]', e); window._chatCtx = ''; }
@@ -6637,6 +6670,8 @@ function injectBienData(data) {
   setIfPresent('bien_photo3_url', data.photo3);
   setIfPresent('bien_photo4_url', data.photo4);
   setIfPresent('bien_photo5_url', data.photo5);
+  _photos = [];
+  syncPhotosFromUrlFields(true);
   setIfPresent('video_url', data.videoUrl);
   setIfPresent('visite_url', data.visiteUrl);
 
