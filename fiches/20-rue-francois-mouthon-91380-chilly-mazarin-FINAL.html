@@ -3204,4 +3204,13 @@ document.addEventListener('DOMContentLoaded', function() {
   window._pvAddrGuard={scrub:scrub,scrubCtx:scrubCtx,rule:rule};
 })();
 </script>
+<script id="ai-chips">
+/* Assistant : les questions suggérées disparaissent dès la première question posée (elles restaient fixes sur la zone de réponse). */
+(function(){
+  var m=document.getElementById('ai-messages'),s=document.getElementById('ai-suggestions');if(!m||!s)return;
+  function sync(){var asked=!!m.querySelector('div[style*="flex-end"]');s.style.display=asked?'none':'flex';}
+  new MutationObserver(sync).observe(m,{childList:true});
+  sync();
+})();
+</script>
 </body></html>
