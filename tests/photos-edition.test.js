@@ -156,5 +156,90 @@ async function main() {
   w2.restoreRawFormState(JSON.parse(JSON.stringify(draft)));
   await sleep(250);
   verifier(w2, grille(w), 'brouillon restauré après retrait');
+
+  // ── Ordre des photos (boutons de la grille) ──
+  const vignettes = w => Array.from(w.document.querySelectorAll('#photo_grid .photo-thumb'));
+  const bouton = (w, n, label) => vignettes(w)[n].querySelector('[aria-label="' + label + '"]');
+  const cliquer = (w, n, label) => { const b = bouton(w, n, label); assert(b && !b.disabled, label + ' indisponible sur la vignette ' + (n + 1)); b.click(); };
+  const etiquettes = w => vignettes(w).map(v => (v.querySelector('.photo-rank') || {}).textContent);
+
+  // 11. Mettre la photo 3 en principale.
+  w = await load();
+  await ouvrirFiche(w, OLD);
+  assert.deepStrictEqual(etiquettes(w), ['★ Photo principale', '2', '3', '4', '5']);
+  assert(!bouton(w, 0, 'Mettre en photo principale') && bouton(w, 0, 'Déplacer avant').disabled, '1re vignette : pas de « principale » ni de « avant »');
+  assert(bouton(w, 4, 'Déplacer après').disabled, 'dernière vignette : pas de « après »');
+  cliquer(w, 2, 'Mettre en photo principale');
+  verifier(w, [OLD[2], OLD[0], OLD[1], OLD[3], OLD[4]], 'photo 3 en principale');
+  assert(vignettes(w)[0].classList.contains('is-main') && vignettes(w)[0].querySelector('img').getAttribute('src') === OLD[2], 'vignette principale');
+  const embed = JSON.parse(generer(w).out.match(/<script\b[^>]*\bid="expertimo-data"[^>]*>([\s\S]*?)<\/script>/)[1]);
+  assert.deepStrictEqual(embed._rawState.photos.map(p => p.dataUrl), [OLD[2], OLD[0], OLD[1], OLD[3], OLD[4]], 'ordre dans le bloc de données publié');
+
+  // 12. Déplacer une photo vers l'avant puis vers l'arrière.
+  w = await load();
+  await ouvrirFiche(w, OLD.slice(0, 4));
+  cliquer(w, 3, 'Déplacer avant');
+  verifier(w, [OLD[0], OLD[1], OLD[3], OLD[2]], 'déplacer avant');
+  cliquer(w, 0, 'Déplacer après');
+  verifier(w, [OLD[1], OLD[0], OLD[3], OLD[2]], 'déplacer après');
+
+  // 13. Réordonner puis retirer une photo : l'ancienne ne revient pas.
+  w = await load();
+  await ouvrirFiche(w, OLD.slice(0, 3));
+  cliquer(w, 2, 'Mettre en photo principale');
+  w.removePhoto(1);
+  verifier(w, [OLD[2], OLD[1]], 'réordonner puis retirer');
+
+  // 14. Réordonner puis ajouter une photo : elle arrive à la fin.
+  w = await load(); uploadCount = 0;
+  await ouvrirFiche(w, OLD.slice(0, 2));
+  cliquer(w, 1, 'Déplacer avant');
+  await ajouter(w, 1);
+  verifier(w, [OLD[1], OLD[0], grille(w)[2]], 'réordonner puis ajouter');
+  assert(/nouvelle-1/.test(grille(w)[2]));
+  cliquer(w, 2, 'Mettre en photo principale');
+  verifier(w, [grille(w)[0], OLD[1], OLD[0]], 'nouvelle photo en principale');
+  assert(/nouvelle-1/.test(grille(w)[0]));
+
+  // 15. Une seule photo : badge « Photo principale », aucun bouton d'ordre. Zéro photo : grille vide.
+  w = await load();
+  await ouvrirFiche(w, OLD.slice(0, 1));
+  assert.deepStrictEqual(etiquettes(w), ['★ Photo principale']);
+  assert.strictEqual(vignettes(w)[0].querySelectorAll('.photo-order button').length, 0, 'pas de bouton d\'ordre pour une seule photo');
+  w.removePhoto(0);
+  assert.strictEqual(vignettes(w).length, 0);
+  w.movePhoto(0, 1); w.setMainPhoto(0);   // sans effet, sans erreur
+  verifier(w, [], 'zéro photo');
+
+  // 16. Réordonner pendant un envoi : les photos ne se mélangent pas.
+  w = await load(); uploadCount = 0;
+  await ouvrirFiche(w, OLD.slice(0, 3));
+  uploadGate = new Promise(r => { ouvrir = r; });
+  await ajouter(w, 1);
+  assert.strictEqual(vignettes(w)[3].querySelectorAll('.photo-order button').length, 0, 'pas de bouton sur une photo en cours d\'envoi');
+  assert(bouton(w, 2, 'Déplacer après').disabled, 'la photo en cours d\'envoi ne compte pas comme voisine');
+  cliquer(w, 2, 'Mettre en photo principale');
+  cliquer(w, 1, 'Déplacer après');
+  ouvrir(); uploadGate = null; await sleep(50);
+  verifier(w, [OLD[2], OLD[1], OLD[0], grille(w)[3]], 'réordonner pendant un envoi');
+  assert(/nouvelle-1/.test(grille(w)[3]));
+
+  // 17. Rouvrir une fiche publiée après réordonnancement : l'ordre enregistré s'affiche tel quel.
+  w = await load();
+  await ouvrirFiche(w, OLD.slice(0, 4));
+  cliquer(w, 3, 'Mettre en photo principale');
+  cliquer(w, 3, 'Déplacer avant');
+  const attendu = [OLD[3], OLD[0], OLD[2], OLD[1]];
+  verifier(w, attendu, 'ordre avant republication');
+  const { d: dPub, out: outPub } = generer(w);
+  const pub = JSON.parse(outPub.match(/<script\b[^>]*\bid="expertimo-data"[^>]*>([\s\S]*?)<\/script>/)[1]);
+  const priv = w.privateFicheData(dPub);
+  w = await load();
+  w.injectBienData(pub);
+  w.restoreRawFormState(Object.assign({}, pub._rawState, priv._rawState));   // même fusion que modifierFiche
+  await sleep(250);
+  assert.deepStrictEqual(grille(w), attendu, 'grille à la réouverture');
+  assert.deepStrictEqual(etiquettes(w), ['★ Photo principale', '2', '3', '4']);
+  verifier(w, attendu, 'réouverture d\'une fiche publiée');
 }
 main().catch(e => { console.error('ÉCHEC :', e.stack || e.message); process.exit(1); });
