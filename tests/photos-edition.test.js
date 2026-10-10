@@ -157,58 +157,75 @@ async function main() {
   await sleep(250);
   verifier(w2, grille(w), 'brouillon restauré après retrait');
 
-  // ── Ordre des photos (boutons de la grille) ──
+  // ── Ordre des photos : clavier sur une vignette sélectionnée (le glisser à la souris et au doigt
+  //    est testé dans un vrai navigateur : photos-glisser.e2e.js) ──
   const vignettes = w => Array.from(w.document.querySelectorAll('#photo_grid .photo-thumb'));
-  const bouton = (w, n, label) => vignettes(w)[n].querySelector('[aria-label="' + label + '"]');
-  const cliquer = (w, n, label) => { const b = bouton(w, n, label); assert(b && !b.disabled, label + ' indisponible sur la vignette ' + (n + 1)); b.click(); };
+  const touche = (w, n, key) => {
+    const v = vignettes(w)[n];
+    assert(v.classList.contains('can-drag') && v.tabIndex === 0, 'vignette ' + (n + 1) + ' non déplaçable');
+    v.focus();
+    v.dispatchEvent(new w.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
+  };
   const etiquettes = w => vignettes(w).map(v => (v.querySelector('.photo-rank') || {}).textContent);
+  const focusSrc = w => { const a = w.document.activeElement; return a && a.querySelector && a.querySelector('img') && a.querySelector('img').getAttribute('src'); };
 
-  // 11. Mettre la photo 3 en principale.
+  // 11. Mettre la photo 3 en principale (Début).
   w = await load();
   await ouvrirFiche(w, OLD);
   assert.deepStrictEqual(etiquettes(w), ['★ Photo principale', '2', '3', '4', '5']);
-  assert(!bouton(w, 0, 'Mettre en photo principale') && bouton(w, 0, 'Déplacer avant').disabled, '1re vignette : pas de « principale » ni de « avant »');
-  assert(bouton(w, 4, 'Déplacer après').disabled, 'dernière vignette : pas de « après »');
-  cliquer(w, 2, 'Mettre en photo principale');
-  verifier(w, [OLD[2], OLD[0], OLD[1], OLD[3], OLD[4]], 'photo 3 en principale');
+  assert.strictEqual(w.document.querySelectorAll('#photo_grid .photo-order, #photo_grid .po-arrow').length, 0, 'plus de boutons ← → Principale');
+  assert.strictEqual(w.document.querySelectorAll('#photo_grid .photo-grip').length, 5, 'poignée sur chaque photo');
+  assert.notStrictEqual(w.document.getElementById('photo_order_hint').style.display, 'none', 'aide affichée');
+  touche(w, 2, 'Home');
+  verifier(w, [OLD[2], OLD[0], OLD[1], OLD[3], OLD[4]], 'photo 3 en principale (clavier)');
   assert(vignettes(w)[0].classList.contains('is-main') && vignettes(w)[0].querySelector('img').getAttribute('src') === OLD[2], 'vignette principale');
+  assert.strictEqual(focusSrc(w), OLD[2], 'la sélection suit la photo déplacée');
+  assert(/position 1, photo principale/.test(w.document.getElementById('photo_order_live').textContent), 'annonce lecteur d\'écran');
   const embed = JSON.parse(generer(w).out.match(/<script\b[^>]*\bid="expertimo-data"[^>]*>([\s\S]*?)<\/script>/)[1]);
   assert.deepStrictEqual(embed._rawState.photos.map(p => p.dataUrl), [OLD[2], OLD[0], OLD[1], OLD[3], OLD[4]], 'ordre dans le bloc de données publié');
 
-  // 12. Déplacer une photo vers l'avant puis vers l'arrière.
+  // 12. Déplacer une photo vers l'avant puis vers l'arrière (flèches), et Fin.
   w = await load();
   await ouvrirFiche(w, OLD.slice(0, 4));
-  cliquer(w, 3, 'Déplacer avant');
-  verifier(w, [OLD[0], OLD[1], OLD[3], OLD[2]], 'déplacer avant');
-  cliquer(w, 0, 'Déplacer après');
-  verifier(w, [OLD[1], OLD[0], OLD[3], OLD[2]], 'déplacer après');
+  touche(w, 3, 'ArrowLeft');
+  verifier(w, [OLD[0], OLD[1], OLD[3], OLD[2]], 'déplacer avant (←)');
+  touche(w, 0, 'ArrowRight');
+  verifier(w, [OLD[1], OLD[0], OLD[3], OLD[2]], 'déplacer après (→)');
+  touche(w, 0, 'ArrowLeft');   // déjà 1re : rien ne bouge
+  touche(w, 3, 'ArrowDown');   // déjà dernière : rien ne bouge
+  verifier(w, [OLD[1], OLD[0], OLD[3], OLD[2]], 'bords de la grille');
+  touche(w, 0, 'End');
+  verifier(w, [OLD[0], OLD[3], OLD[2], OLD[1]], 'en dernière place (Fin)');
 
   // 13. Réordonner puis retirer une photo : l'ancienne ne revient pas.
   w = await load();
   await ouvrirFiche(w, OLD.slice(0, 3));
-  cliquer(w, 2, 'Mettre en photo principale');
+  touche(w, 2, 'Home');
   w.removePhoto(1);
   verifier(w, [OLD[2], OLD[1]], 'réordonner puis retirer');
 
   // 14. Réordonner puis ajouter une photo : elle arrive à la fin.
   w = await load(); uploadCount = 0;
   await ouvrirFiche(w, OLD.slice(0, 2));
-  cliquer(w, 1, 'Déplacer avant');
+  touche(w, 1, 'ArrowUp');
   await ajouter(w, 1);
   verifier(w, [OLD[1], OLD[0], grille(w)[2]], 'réordonner puis ajouter');
   assert(/nouvelle-1/.test(grille(w)[2]));
-  cliquer(w, 2, 'Mettre en photo principale');
+  touche(w, 2, 'Home');
   verifier(w, [grille(w)[0], OLD[1], OLD[0]], 'nouvelle photo en principale');
   assert(/nouvelle-1/.test(grille(w)[0]));
 
-  // 15. Une seule photo : badge « Photo principale », aucun bouton d'ordre. Zéro photo : grille vide.
+  // 15. Une seule photo : badge seul, ni poignée ni déplacement. Zéro photo : grille vide.
   w = await load();
   await ouvrirFiche(w, OLD.slice(0, 1));
   assert.deepStrictEqual(etiquettes(w), ['★ Photo principale']);
-  assert.strictEqual(vignettes(w)[0].querySelectorAll('.photo-order button').length, 0, 'pas de bouton d\'ordre pour une seule photo');
+  const seule = vignettes(w)[0];
+  assert(!seule.classList.contains('can-drag') && !seule.hasAttribute('tabindex') && !seule.querySelector('.photo-grip'), 'une seule photo : rien à déplacer');
+  assert.strictEqual(w.document.getElementById('photo_order_hint').style.display, 'none', 'pas d\'aide inutile');
+  assert.strictEqual(w.movePhotoTo(0, 1), false);
   w.removePhoto(0);
   assert.strictEqual(vignettes(w).length, 0);
-  w.movePhoto(0, 1); w.setMainPhoto(0);   // sans effet, sans erreur
+  assert.strictEqual(w.movePhotoTo(0, 0), false);
   verifier(w, [], 'zéro photo');
 
   // 16. Réordonner pendant un envoi : les photos ne se mélangent pas.
@@ -216,10 +233,9 @@ async function main() {
   await ouvrirFiche(w, OLD.slice(0, 3));
   uploadGate = new Promise(r => { ouvrir = r; });
   await ajouter(w, 1);
-  assert.strictEqual(vignettes(w)[3].querySelectorAll('.photo-order button').length, 0, 'pas de bouton sur une photo en cours d\'envoi');
-  assert(bouton(w, 2, 'Déplacer après').disabled, 'la photo en cours d\'envoi ne compte pas comme voisine');
-  cliquer(w, 2, 'Mettre en photo principale');
-  cliquer(w, 1, 'Déplacer après');
+  assert(!vignettes(w)[3].classList.contains('can-drag'), 'une photo en cours d\'envoi ne se déplace pas');
+  touche(w, 0, 'End');   // « dernière » = dernière photo envoyée, avant celle en cours d'envoi
+  touche(w, 1, 'Home');
   ouvrir(); uploadGate = null; await sleep(50);
   verifier(w, [OLD[2], OLD[1], OLD[0], grille(w)[3]], 'réordonner pendant un envoi');
   assert(/nouvelle-1/.test(grille(w)[3]));
@@ -227,8 +243,8 @@ async function main() {
   // 17. Rouvrir une fiche publiée après réordonnancement : l'ordre enregistré s'affiche tel quel.
   w = await load();
   await ouvrirFiche(w, OLD.slice(0, 4));
-  cliquer(w, 3, 'Mettre en photo principale');
-  cliquer(w, 3, 'Déplacer avant');
+  touche(w, 3, 'Home');
+  touche(w, 3, 'ArrowLeft');
   const attendu = [OLD[3], OLD[0], OLD[2], OLD[1]];
   verifier(w, attendu, 'ordre avant republication');
   const { d: dPub, out: outPub } = generer(w);

@@ -578,17 +578,22 @@ textarea { resize: vertical; min-height: 60px; }
 .photo-thumb .photo-caption { padding:5px 8px; }
 .photo-thumb .photo-caption input { font-size:12px; padding:4px 6px; }
 .photo-thumb .del-photo { position:absolute; top:5px; right:5px; background:rgba(192,57,43,.9); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; }
-/* Ordre des photos : la 1re est la photo principale (affichée en grand sur la fiche acheteur) */
+/* Ordre des photos : la 1re est la photo principale (affichée en grand sur la fiche acheteur).
+   Glisser-déposer (souris, ou appui long au doigt) ; flèches du clavier sur une vignette sélectionnée. */
 .photo-thumb.is-main { box-shadow:0 0 0 3px var(--accent), var(--shadow); }
-.photo-thumb .photo-rank { position:absolute; top:6px; left:6px; background:rgba(255,255,255,.95); color:var(--primary); border-radius:999px; min-width:24px; height:24px; padding:0 8px; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.photo-thumb .photo-rank { position:absolute; top:6px; left:6px; background:rgba(255,255,255,.95); color:var(--primary); border-radius:999px; min-width:24px; height:24px; padding:0 8px; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; pointer-events:none; }
 .photo-thumb.is-main .photo-rank { background:var(--accent); color:#fff; }
-.photo-thumb .photo-order { display:flex; gap:6px; padding:6px 8px 0; }
-.photo-thumb .photo-order button { height:36px; border:1.5px solid var(--accent); background:#fff; color:var(--gold2); border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; touch-action:manipulation; }
-.photo-thumb .photo-order .po-arrow { flex:0 0 40px; font-size:17px; }
-.photo-thumb .photo-order .po-main { flex:1 1 auto; min-width:0; padding:0 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.photo-thumb .photo-order button:hover:not(:disabled) { background:#E9F9F1; }
-.photo-thumb .photo-order button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
-.photo-thumb .photo-order button:disabled { border-color:var(--border); color:#C4CAD3; cursor:default; }
+.photo-thumb.can-drag { background:#fff; }
+.photo-thumb.can-drag img { cursor:grab; -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; -webkit-user-drag:none; }
+.photo-thumb .photo-grip { position:absolute; top:100px; right:6px; width:24px; height:24px; border-radius:6px; background:rgba(255,255,255,.9); color:var(--muted); font-size:14px; line-height:24px; text-align:center; pointer-events:none; letter-spacing:-1px; }
+.photo-thumb.can-drag:focus { outline:none; }
+.photo-thumb.can-drag:focus-visible { box-shadow:0 0 0 3px #fff, 0 0 0 5px var(--accent), var(--shadow); }
+.photo-thumb.is-pressing { transform:scale(.97); transition:transform .3s ease; }
+.photo-thumb.is-dragging { position:fixed; z-index:9000; margin:0; pointer-events:none; transform:scale(1.05) rotate(1deg); box-shadow:0 18px 40px rgba(15,26,22,.28), 0 0 0 3px var(--accent); transition:transform .15s ease, box-shadow .15s ease; }
+.photo-thumb.is-dragging img { cursor:grabbing; }
+.photo-slot { border:2px dashed var(--accent); background:#E9F9F1; border-radius:var(--radius); }
+body.photo-drag-on, body.photo-drag-on * { cursor:grabbing !important; -webkit-user-select:none; user-select:none; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 .photo-drop { border:2px dashed var(--border); border-radius:var(--radius); padding:24px; text-align:center; cursor:pointer; color:var(--muted); transition:border-color .2s; }
 .photo-drop:hover { border-color:var(--accent); color:var(--accent); }
 .dvf-box { background:var(--primary); color:#E5E9EF; border-radius:8px; padding:20px; margin-top:16px; }
@@ -1188,7 +1193,9 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <br><span class="text-sm mt-8" style="display:block">Vous pouvez sélectionner plusieurs fichiers à la fois</span>
     </div>
     <input type="file" id="photo_input" multiple accept="image/*" style="display:none" onchange="addPhotos(this)">
-    <div class="photo-grid" id="photo_grid"></div>
+    <div class="photo-grid" id="photo_grid" aria-describedby="photo_order_hint"></div>
+    <p class="hint" id="photo_order_hint" style="display:none;margin-top:8px">Faites glisser une photo pour changer l'ordre (au doigt : appui long). La première est la photo principale de la fiche.</p>
+    <div class="sr-only" id="photo_order_live" aria-live="polite"></div>
     <div class="mt-16">
       <a href="#" onclick="event.preventDefault();var b=document.getElementById('photo-urls-block');var open=b.style.display!=='none';b.style.display=open?'none':'block';this.textContent=open?'+ Ajouter des URLs photos manuellement (optionnel)':'− Masquer les URLs manuelles';" style="font-size:13px;color:#888;text-decoration:underline;cursor:pointer;">+ Ajouter des URLs photos manuellement (optionnel)</a>
       <div id="photo-urls-block" style="display:none;margin-top:10px;">
@@ -3349,47 +3356,265 @@ function addPhotos(input) {
 }
 function escAttr(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function renderPhotos() {
+  // Pendant un glisser, le DOM de la grille appartient au déplacement : on rafraîchit au dépôt.
+  if (_photoDrag) { _photoDrag.renderPending = true; return; }
   var grid=document.getElementById('photo_grid'); if(!grid) return; grid.innerHTML='';
-  var pretes=photosPretes();
+  if (!grid._dragTouchGuard) {
+    // Écouteur non passif posé une fois pour toutes (le navigateur doit le connaître avant le
+    // toucher) : il ne bloque le défilement qu'une fois la photo soulevée par l'appui long.
+    grid.addEventListener('touchmove', function(e) { if (_photoDrag) e.preventDefault(); }, { passive: false });
+    grid._dragTouchGuard = true;
+  }
+  var pretes=photosPretes(), mobile=pretes.length>1;
+  var hint=document.getElementById('photo_order_hint'); if (hint) hint.style.display=mobile?'block':'none';
   _photos.forEach(function(p,i) {
     var div=document.createElement('div'); div.className='photo-thumb';
+    div._photo=p;
     if (p.uploading) {
       div.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:80px;color:var(--muted);font-size:12px;">⏳ Upload…</div>';
     } else {
       var rang=pretes.indexOf(p), principale=rang===0;
       if (principale) div.className+=' is-main';
-      // Boutons d'ordre dès 2 photos : « ← / → » échangent avec la voisine, « Principale » passe en 1re position.
-      var ordre=pretes.length<2?'':'<div class="photo-order">'
-        +'<button type="button" class="po-arrow" aria-label="Déplacer avant" title="Déplacer avant" onclick="movePhoto('+i+',-1)"'+(principale?' disabled':'')+'>←</button>'
-        +(principale?'<span class="po-main"></span>'
-          :'<button type="button" class="po-main" aria-label="Mettre en photo principale" title="Mettre en photo principale" onclick="setMainPhoto('+i+')">★ Principale</button>')
-        +'<button type="button" class="po-arrow" aria-label="Déplacer après" title="Déplacer après" onclick="movePhoto('+i+',1)"'+(rang===pretes.length-1?' disabled':'')+'>→</button>'
-        +'</div>';
-      div.innerHTML='<img src="'+escAttr(p.dataUrl)+'" alt="Photo '+(rang+1)+'">'
-        +'<span class="photo-rank">'+(principale?'★ Photo principale':(rang+1))+'</span>'
-        +'<button class="del-photo" aria-label="Retirer la photo" onclick="removePhoto('+i+')">✕</button>'
-        +ordre
-        +'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" oninput="_photos['+i+'].caption=this.value"></div>';
+      div.innerHTML='<img src="'+escAttr(p.dataUrl)+'" alt="Photo '+(rang+1)+'" draggable="false">'
+        +'<span class="photo-rank">'+photoRankLabel(rang)+'</span>'
+        +(mobile?'<span class="photo-grip" aria-hidden="true">⠿</span>':'')
+        +'<button type="button" class="del-photo" aria-label="Retirer la photo" onclick="removePhoto('+i+')">✕</button>'
+        +'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" aria-label="Légende de la photo '+(rang+1)+'" oninput="_photos['+i+'].caption=this.value"></div>';
+      if (mobile) {
+        div.className+=' can-drag';
+        div.tabIndex=0;
+        div.setAttribute('aria-label','Photo '+(rang+1)+' sur '+pretes.length+(principale?', photo principale':'')+'. Flèches du clavier pour la déplacer.');
+        div.addEventListener('pointerdown', photoPointerDown);
+        div.addEventListener('keydown', photoKeyDown);
+        div.addEventListener('contextmenu', function(e){ if (_photoDrag) e.preventDefault(); });
+      }
     }
     grid.appendChild(div);
   }); scheduleDraftSave();
 }
+function photoRankLabel(rang) { return rang===0 ? '★ Photo principale' : String(rang+1); }
 function removePhoto(i) { _photos.splice(i,1); syncPhotoUrlFields(); renderPhotos(); }
-// Réordonner : seules les photos envoyées bougent ; une photo en cours d'envoi garde son entrée
-// (suivie par référence dans addPhotos) et prend sa place à la fin de l'envoi.
-function movePhoto(i, dir) {
-  var p = _photos[i], pretes = photosPretes(), rang = pretes.indexOf(p);
-  var voisine = pretes[rang + dir];
-  if (rang < 0 || !voisine) return;
-  var j = _photos.indexOf(voisine);
-  _photos[i] = voisine; _photos[j] = p;
+// Réordonner. Seules les photos envoyées changent de rang ; une photo en cours d'envoi garde sa
+// place dans _photos (son entrée est suivie par référence dans addPhotos).
+function movePhotoTo(from, to) {
+  var pretes = photosPretes(), p = pretes[from];
+  if (!p || to < 0 || to >= pretes.length || to === from) return false;
+  pretes.splice(from, 1); pretes.splice(to, 0, p);
+  var k = 0;
+  _photos = _photos.map(function(q) { return (q && !q.uploading && q.dataUrl) ? pretes[k++] : q; });
   syncPhotoUrlFields(); renderPhotos();
+  return true;
 }
-function setMainPhoto(i) {
-  var p = _photos[i];
-  if (!p || p.uploading || !p.dataUrl || i === 0) return;
-  _photos.splice(i, 1); _photos.unshift(p);
-  syncPhotoUrlFields(); renderPhotos();
+function annoncerOrdrePhoto(p) {
+  var rang = photosPretes().indexOf(p), live = document.getElementById('photo_order_live');
+  if (live && rang >= 0) live.textContent = 'Photo déplacée en position ' + (rang + 1) + (rang === 0 ? ', photo principale.' : '.');
+}
+
+// Clavier : la vignette sélectionnée (Tab) se déplace avec les flèches, Début / Fin.
+function photoKeyDown(e) {
+  if (e.target !== e.currentTarget) return;   // pas depuis la légende ni le bouton ✕
+  var p = e.currentTarget._photo, pretes = photosPretes(), from = pretes.indexOf(p), to;
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') to = from - 1;
+  else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') to = from + 1;
+  else if (e.key === 'Home') to = 0;
+  else if (e.key === 'End') to = pretes.length - 1;
+  else return;
+  e.preventDefault();
+  if (!movePhotoTo(from, to)) return;
+  annoncerOrdrePhoto(p);
+  var el = Array.prototype.find.call(document.querySelectorAll('#photo_grid .photo-thumb'), function(d) { return d._photo === p; });
+  if (el) el.focus();
+}
+
+// Glisser-déposer (Pointer Events : même code pour la souris et le doigt).
+// Souris : le glisser démarre après 5 px de mouvement bouton enfoncé.
+// Doigt : appui long de 300 ms sans bouger ; un mouvement avant (défilement) ou un simple toucher
+// n'enclenche rien. Relâcher hors de la grille ou Échap annule.
+var _photoDrag = null, _photoPress = null;
+var PHOTO_LONG_PRESS_MS = 300;
+function photoPointerDown(e) {
+  if (_photoDrag || _photoPress) return;
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  if (e.target.closest('button, input, textarea, select, a')) return;
+  var el = e.currentTarget;
+  _photoPress = { el: el, id: e.pointerId, type: e.pointerType, x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, timer: null };
+  if (e.pointerType === 'mouse') {
+    e.preventDefault();   // pas de sélection de texte ni de glisser natif de l'image
+  } else {
+    el.classList.add('is-pressing');
+    _photoPress.timer = setTimeout(function() {
+      if (!_photoPress || _photoPress.el !== el) return;
+      el.classList.remove('is-pressing');
+      if (navigator.vibrate) { try { navigator.vibrate(15); } catch (err) {} }
+      photoDragStart(_photoPress.x, _photoPress.y);
+    }, PHOTO_LONG_PRESS_MS);
+  }
+  document.addEventListener('pointermove', photoPointerMove, { passive: false });
+  document.addEventListener('pointerup', photoPointerUp);
+  document.addEventListener('pointercancel', photoPointerCancel);
+}
+function photoPointerMove(e) {
+  if (_photoDrag) {
+    if (e.pointerId !== _photoDrag.id) return;
+    e.preventDefault();
+    photoDragMove(e.clientX, e.clientY);
+    return;
+  }
+  var pr = _photoPress;
+  if (!pr || e.pointerId !== pr.id) return;
+  pr.x = e.clientX; pr.y = e.clientY;
+  var dist = Math.abs(pr.x - pr.x0) + Math.abs(pr.y - pr.y0);
+  if (pr.type === 'mouse') { if (dist > 5) photoDragStart(pr.x, pr.y); }
+  else if (dist > 8) photoPressEnd();   // le doigt bouge avant l'appui long : c'est un défilement
+}
+function photoPointerUp(e) {
+  if (_photoDrag && e.pointerId === _photoDrag.id) { photoDragEnd(!photoPointInGrid(e.clientX, e.clientY)); return; }
+  if (_photoPress && e.pointerId === _photoPress.id) photoPressEnd();
+}
+function photoPointerCancel(e) {
+  if (_photoDrag && e.pointerId === _photoDrag.id) { photoDragEnd(true); return; }
+  if (_photoPress && e.pointerId === _photoPress.id) photoPressEnd();
+}
+function photoPressEnd() {
+  var pr = _photoPress; _photoPress = null;
+  if (pr) {
+    clearTimeout(pr.timer);
+    pr.el.classList.remove('is-pressing');
+  }
+  if (!_photoDrag) {
+    document.removeEventListener('pointermove', photoPointerMove);
+    document.removeEventListener('pointerup', photoPointerUp);
+    document.removeEventListener('pointercancel', photoPointerCancel);
+  }
+}
+function photoPointInGrid(x, y) {
+  var g = document.getElementById('photo_grid'); if (!g) return false;
+  var r = g.getBoundingClientRect(), m = 24;
+  return x >= r.left - m && x <= r.right + m && y >= r.top - m && y <= r.bottom + m;
+}
+function photoDragStart(x, y) {
+  var pr = _photoPress; if (!pr) return;
+  var el = pr.el, grid = el.parentNode, r = el.getBoundingClientRect();
+  var slot = document.createElement('div');
+  slot.className = 'photo-slot';
+  slot.style.height = r.height + 'px';
+  grid.insertBefore(slot, el);
+  // Une copie suit le pointeur ; la vignette d'origine reste dans la grille, masquée : le doigt
+  // garde ainsi sa cible (événements tactiles et capture du pointeur) pendant tout le glisser.
+  var ghost = el.cloneNode(true);
+  ghost._photo = el._photo;
+  ghost.removeAttribute('tabindex');
+  ghost.style.width = r.width + 'px'; ghost.style.height = r.height + 'px';
+  ghost.style.left = r.left + 'px'; ghost.style.top = r.top + 'px';
+  ghost.classList.add('is-dragging');
+  document.body.appendChild(ghost);
+  el.style.display = 'none';
+  _photoDrag = { el: el, ghost: ghost, id: pr.id, grid: grid, slot: slot, dx: x - r.left, dy: y - r.top, x: x, y: y, renderPending: false, raf: 0 };
+  document.body.classList.add('photo-drag-on');
+  document.addEventListener('keydown', photoDragKey);
+  photoAutoScroll();
+}
+function photoDragKey(e) { if (e.key === 'Escape') { e.preventDefault(); photoDragEnd(true); } }
+function photoDragMove(x, y) {
+  var d = _photoDrag; d.x = x; d.y = y;
+  d.ghost.style.left = (x - d.dx) + 'px'; d.ghost.style.top = (y - d.dy) + 'px';
+  photoPlaceSlot();
+}
+// Place le repère sous le pointeur ; les autres vignettes glissent vers leur nouvelle place (FLIP).
+function photoPlaceSlot() {
+  var d = _photoDrag, grid = d.grid, slot = d.slot, target = null, before = true;
+  if (!photoPointInGrid(d.x, d.y)) {
+    target = d.el; before = true;   // hors de la grille : le repère revient à la place d'origine
+    if (slot.nextSibling === target) return;
+  } else {
+    var sr = slot.getBoundingClientRect();
+    if (d.x >= sr.left && d.x <= sr.right && d.y >= sr.top && d.y <= sr.bottom) return;   // déjà au-dessus du repère
+    var items = Array.prototype.filter.call(grid.children, function(c) {
+      return c !== slot && c !== d.el && c._photo && !c._photo.uploading && c._photo.dataUrl && c.classList.contains('photo-thumb') && c.querySelector('img');
+    });
+    var best = null, bestD = Infinity;
+    items.forEach(function(c) {
+      var r = photoLayoutRect(c);
+      var cx = Math.max(r.left, Math.min(d.x, r.right)), cy = Math.max(r.top, Math.min(d.y, r.bottom));
+      var dist = Math.hypot(d.x - cx, d.y - cy);
+      if (dist < bestD) { bestD = dist; best = c; }
+    });
+    if (!best) return;
+    var br = photoLayoutRect(best);
+    // Grille en lignes : gauche / droite de la vignette survolée ; une seule colonne (téléphone)
+    // ou pointeur entre deux lignes : dessus / dessous.
+    var uneColonne = br.width * 2 > grid.getBoundingClientRect().width;
+    var sameRow = !uneColonne && d.y >= br.top && d.y <= br.bottom;
+    before = sameRow ? d.x < br.left + br.width / 2 : d.y < br.top + br.height / 2;
+    target = before ? best : best.nextSibling;
+    if (!before && target === d.el) target = d.el.nextSibling;   // la vignette masquée ne compte pas
+    if (target === slot || slot.nextSibling === target || (slot.nextSibling === d.el && d.el.nextSibling === target)) return;
+  }
+  var moving = Array.prototype.filter.call(grid.children, function(c) { return c !== slot && c !== d.el; });
+  var first = moving.map(function(c) { return c.getBoundingClientRect(); });
+  grid.insertBefore(slot, target || null);
+  moving.forEach(function(c, i) {
+    var r = c.getBoundingClientRect(), dx = first[i].left - r.left, dy = first[i].top - r.top;
+    if (!dx && !dy) return;
+    c.style.transition = 'none';
+    c.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+    c.getBoundingClientRect();
+    c.style.transition = 'transform .2s ease';
+    c.style.transform = '';
+  });
+  photoRelabelDuringDrag();
+}
+// Position de la vignette sans l'animation en cours (évite que le repère oscille pendant qu'elle glisse).
+function photoLayoutRect(c) {
+  var r = c.getBoundingClientRect(), t = getComputedStyle(c).transform, dx = 0, dy = 0;
+  if (t && t !== 'none' && window.DOMMatrixReadOnly) { var m = new DOMMatrixReadOnly(t); dx = m.m41; dy = m.m42; }
+  return { left: r.left - dx, right: r.right - dx, top: r.top - dy, bottom: r.bottom - dy, width: r.width, height: r.height };
+}
+// Le badge « Photo principale » et les numéros suivent l'ordre affiché pendant le glisser.
+function photoRelabelDuringDrag() {
+  var d = _photoDrag, rang = 0;
+  Array.prototype.forEach.call(d.grid.children, function(c) {
+    if (c === d.el) return;
+    var el = c === d.slot ? d.ghost : c;
+    if (!el._photo || el._photo.uploading || !el.querySelector('img')) return;
+    var badge = el.querySelector('.photo-rank');
+    if (badge) badge.textContent = photoRankLabel(rang);
+    el.classList.toggle('is-main', rang === 0);
+    rang++;
+  });
+}
+// Défilement automatique quand le pointeur approche du haut ou du bas de l'écran.
+function photoAutoScroll() {
+  var d = _photoDrag; if (!d) return;
+  var edge = 70, h = window.innerHeight, v = 0;
+  if (d.y < edge) v = -Math.ceil((edge - d.y) / 5);
+  else if (d.y > h - edge) v = Math.ceil((d.y - (h - edge)) / 5);
+  if (v) { window.scrollBy(0, v); photoPlaceSlot(); }
+  d.raf = requestAnimationFrame(photoAutoScroll);
+}
+function photoDragEnd(cancel) {
+  var d = _photoDrag; if (!d) return;
+  cancelAnimationFrame(d.raf);
+  document.removeEventListener('keydown', photoDragKey);
+  document.body.classList.remove('photo-drag-on');
+  var p = d.el._photo, order = null;
+  if (!cancel) {
+    // Nouvel ordre = ordre des vignettes à l'écran, la photo déplacée prenant la place du repère.
+    order = [];
+    Array.prototype.forEach.call(d.grid.children, function(c) {
+      if (c === d.el) return;
+      var q = c === d.slot ? p : c._photo;
+      if (q && _photos.indexOf(q) >= 0 && order.indexOf(q) < 0) order.push(q);
+    });
+    _photos.forEach(function(q) { if (order.indexOf(q) < 0) order.push(q); });   // ajoutées pendant le glisser
+  }
+  d.ghost.remove();
+  _photoDrag = null;
+  photoPressEnd();
+  var changed = order && order.some(function(q, i) { return q !== _photos[i]; });
+  if (changed) { _photos = order; syncPhotoUrlFields(); }
+  renderPhotos();
+  if (changed) annoncerOrdrePhoto(p);
 }
 
 // ═══════════════════════════════════════════════════════
