@@ -578,6 +578,17 @@ textarea { resize: vertical; min-height: 60px; }
 .photo-thumb .photo-caption { padding:5px 8px; }
 .photo-thumb .photo-caption input { font-size:12px; padding:4px 6px; }
 .photo-thumb .del-photo { position:absolute; top:5px; right:5px; background:rgba(192,57,43,.9); color:#fff; border:none; border-radius:50%; width:22px; height:22px; cursor:pointer; font-size:14px; display:flex; align-items:center; justify-content:center; }
+/* Ordre des photos : la 1re est la photo principale (affichée en grand sur la fiche acheteur) */
+.photo-thumb.is-main { box-shadow:0 0 0 3px var(--accent), var(--shadow); }
+.photo-thumb .photo-rank { position:absolute; top:6px; left:6px; background:rgba(255,255,255,.95); color:var(--primary); border-radius:999px; min-width:24px; height:24px; padding:0 8px; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.photo-thumb.is-main .photo-rank { background:var(--accent); color:#fff; }
+.photo-thumb .photo-order { display:flex; gap:6px; padding:6px 8px 0; }
+.photo-thumb .photo-order button { height:36px; border:1.5px solid var(--accent); background:#fff; color:var(--gold2); border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; touch-action:manipulation; }
+.photo-thumb .photo-order .po-arrow { flex:0 0 40px; font-size:17px; }
+.photo-thumb .photo-order .po-main { flex:1 1 auto; min-width:0; padding:0 6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.photo-thumb .photo-order button:hover:not(:disabled) { background:#E9F9F1; }
+.photo-thumb .photo-order button:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+.photo-thumb .photo-order button:disabled { border-color:var(--border); color:#C4CAD3; cursor:default; }
 .photo-drop { border:2px dashed var(--border); border-radius:var(--radius); padding:24px; text-align:center; cursor:pointer; color:var(--muted); transition:border-color .2s; }
 .photo-drop:hover { border-color:var(--accent); color:var(--accent); }
 .dvf-box { background:var(--primary); color:#E5E9EF; border-radius:8px; padding:20px; margin-top:16px; }
@@ -3339,17 +3350,47 @@ function addPhotos(input) {
 function escAttr(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function renderPhotos() {
   var grid=document.getElementById('photo_grid'); if(!grid) return; grid.innerHTML='';
+  var pretes=photosPretes();
   _photos.forEach(function(p,i) {
     var div=document.createElement('div'); div.className='photo-thumb';
     if (p.uploading) {
       div.innerHTML='<div style="display:flex;align-items:center;justify-content:center;height:80px;color:var(--muted);font-size:12px;">⏳ Upload…</div>';
     } else {
-      div.innerHTML='<img src="'+p.dataUrl+'" alt="Photo '+(i+1)+'">'+'<button class="del-photo" onclick="removePhoto('+i+')">✕</button>'+'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" oninput="_photos['+i+'].caption=this.value"></div>';
+      var rang=pretes.indexOf(p), principale=rang===0;
+      if (principale) div.className+=' is-main';
+      // Boutons d'ordre dès 2 photos : « ← / → » échangent avec la voisine, « Principale » passe en 1re position.
+      var ordre=pretes.length<2?'':'<div class="photo-order">'
+        +'<button type="button" class="po-arrow" aria-label="Déplacer avant" title="Déplacer avant" onclick="movePhoto('+i+',-1)"'+(principale?' disabled':'')+'>←</button>'
+        +(principale?'<span class="po-main"></span>'
+          :'<button type="button" class="po-main" aria-label="Mettre en photo principale" title="Mettre en photo principale" onclick="setMainPhoto('+i+')">★ Principale</button>')
+        +'<button type="button" class="po-arrow" aria-label="Déplacer après" title="Déplacer après" onclick="movePhoto('+i+',1)"'+(rang===pretes.length-1?' disabled':'')+'>→</button>'
+        +'</div>';
+      div.innerHTML='<img src="'+escAttr(p.dataUrl)+'" alt="Photo '+(rang+1)+'">'
+        +'<span class="photo-rank">'+(principale?'★ Photo principale':(rang+1))+'</span>'
+        +'<button class="del-photo" aria-label="Retirer la photo" onclick="removePhoto('+i+')">✕</button>'
+        +ordre
+        +'<div class="photo-caption"><input type="text" value="'+escAttr(p.caption)+'" placeholder="Légende…" oninput="_photos['+i+'].caption=this.value"></div>';
     }
     grid.appendChild(div);
   }); scheduleDraftSave();
 }
 function removePhoto(i) { _photos.splice(i,1); syncPhotoUrlFields(); renderPhotos(); }
+// Réordonner : seules les photos envoyées bougent ; une photo en cours d'envoi garde son entrée
+// (suivie par référence dans addPhotos) et prend sa place à la fin de l'envoi.
+function movePhoto(i, dir) {
+  var p = _photos[i], pretes = photosPretes(), rang = pretes.indexOf(p);
+  var voisine = pretes[rang + dir];
+  if (rang < 0 || !voisine) return;
+  var j = _photos.indexOf(voisine);
+  _photos[i] = voisine; _photos[j] = p;
+  syncPhotoUrlFields(); renderPhotos();
+}
+function setMainPhoto(i) {
+  var p = _photos[i];
+  if (!p || p.uploading || !p.dataUrl || i === 0) return;
+  _photos.splice(i, 1); _photos.unshift(p);
+  syncPhotoUrlFields(); renderPhotos();
+}
 
 // ═══════════════════════════════════════════════════════
 // STEP 2 — DVF API
