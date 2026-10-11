@@ -237,7 +237,7 @@ function appDom(extra) {
   const lienDuo = fdoc.querySelector('#crush .cr-url').textContent;
   assert(/^https:\/\/espace\.privency\.fr\/fiches\/x\.html\?s=[a-z0-9]{6}#crush=1\.BBBBBBBB\./.test(lienDuo) && !/client=|prenom=/.test(lienDuo), 'lien du test à deux : ' + lienDuo);
   // Personne arrivée par un lien partagé : pas de bienvenue nominative
-  assert(fdoc.documentElement.classList.contains('pv-partage') && /html\.pv-partage #welcome-msg\{display:none!important;\}/.test(html), 'lien partagé : bienvenue masquée');
+  assert(fdoc.documentElement.classList.contains('pv-partage') && /html\.pv-partage #welcome-msg#welcome-msg\{display:none!important;\}/.test(html), 'lien partagé : bienvenue masquée');
   fd.window.close();
 
   // 6. « Mes stats » : signaux lisibles, jamais de code brut
