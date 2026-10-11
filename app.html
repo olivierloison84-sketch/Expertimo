@@ -6122,6 +6122,7 @@ async function loadAnalytics() {
         if (ev === 'crush_termine') { g.crush = g.crush || []; g.crush.push({ at: row.created_at || '', d: cj || {} }); }
       }
       g.events[ev] = (g.events[ev] || 0) + 1;
+      g.evAt = g.evAt || {}; if (row.created_at && (!g.evAt[ev] || row.created_at > g.evAt[ev])) g.evAt[ev] = row.created_at;
     });
 
     // Durées de visite (table fiche_sessions) — facultatif : si indisponible, les stats restent affichées sans durée
@@ -6306,7 +6307,10 @@ function _clStats(g, now) {
   var visits = ev.fiche_ouverte || 0, minutes = (g.dureeTotal || 0) / 60;
   var sim = (ev.credit_simule || 0) > 0, offre = (ev.offre_soumise || 0) > 0;
   var docs = (g.demandes || []).length, qn = (g.questions || []).length, rt = (g.retours || []).length;
-  var score = Math.min(visits, 4) * 2 + Math.min(minutes, 15) / 1.5 + (sim ? 3 : 0) + (docs ? 4 : 0) + (qn ? 2 : 0) + (offre ? 6 : 0) + (rt ? 3 : 0);
+  // Participation (fiche acquéreur) : partage et ouverture via lien partagé ne comptent pas et ne sont jamais cités.
+  var crush = (ev.crush_termine || 0) > 0, carnet = (ev.carnet_partage || 0) > 0, vpts = (ev.visite_points || 0) > 0, coeur = (ev.mot_vendeur_coeur || 0) > 0, crit = (ev.critere_choisi || 0) > 0;
+  var score = Math.min(visits, 4) * 2 + Math.min(minutes, 15) / 1.5 + (sim ? 3 : 0) + (docs ? 4 : 0) + (qn ? 2 : 0) + (offre ? 6 : 0) + (rt ? 3 : 0)
+    + (crush ? 3 : 0) + (carnet ? 3 : 0) + (vpts ? 2 : 0) + (coeur ? 1 : 0) + (crit ? 1 : 0);
   var days = g.last ? Math.floor((now - new Date(g.last).getTime()) / DAY) : 999;
   var reasons = [];
   if (offre) reasons.push('a transmis une offre');
@@ -6316,6 +6320,11 @@ function _clStats(g, now) {
   if (docs) reasons.push('a demandé ' + g.demandes.reduce(function(s, d) { return s + d.docs.length; }, 0) + ' document(s)');
   if (qn) reasons.push('a posé ' + qn + ' question(s) à l’assistant');
   if (rt) reasons.push('retour de visite : ' + g.retours[g.retours.length - 1].reponses.map(function(c) { return (_RETOUR_LBL[c] || c).toLowerCase(); }).join(', '));
+  if (crush) { var lc = _clLast(g, 'crush_termine'); reasons.push('a fait le test' + (lc && typeof lc.d.s === 'number' ? ' (' + Math.round(lc.d.s) + ' %)' : '')); }
+  if (crit) { var lk = _clLast(g, 'critere_choisi'); reasons.push(lk && _CRITERE_LBL[lk.d.k] ? 'a choisi comme critère déterminant ' + _CRITERE_LBL[lk.d.k] : 'a choisi son critère déterminant'); }
+  if (vpts) reasons.push('a noté des points à vérifier en visite');
+  if (carnet) reasons.push('a partagé son carnet de visite');
+  if (coeur) reasons.push('a trouvé que le mot du vendeur lui parle');
   var slot = '', best = 0; Object.keys(g.hours || {}).forEach(function(k) { if (g.hours[k] > best) { best = g.hours[k]; slot = k; } });
   if (best >= 2) reasons.push('consulte plutôt ' + slot);
   return { score: score, days: days, reasons: reasons };
@@ -6333,15 +6342,49 @@ function _clBadge(g, now) {
 var _CL_ANGLES = {
   aucun: ['Prise de nouvelles', 'Je voulais simplement prendre de vos nouvelles et savoir où vous en êtes dans votre projet. Que vous ayez des questions, des hésitations ou besoin d’un avis extérieur, je suis à votre disposition : un appel de quelques minutes suffit souvent à y voir plus clair.'],
   coup_coeur: ['Revoir le bien ensemble', 'Je serais ravi de vous revoir sur place pour avancer ensemble : une seconde visite permet souvent de se projeter plus concrètement, de mesurer, de regarder les détails à tête reposée et, si vous le souhaitez, de venir avec un proche ou un artisan. Dites-moi quels jours vous conviennent et je m’organise en conséquence.'],
-  budget: ['Financement : mise en relation avec un courtier', 'Si le financement fait partie de votre réflexion, je peux vous mettre en relation avec un courtier de confiance : il chiffre votre projet précisément (apport, durée, taux, frais de notaire) et vous dit rapidement ce qui est faisable. C’est sans engagement, et cela permet d’y voir beaucoup plus clair avant de prendre une décision.'],
+  budget: ['Financement : chiffrer le projet', 'Si le financement fait partie de votre réflexion, je peux vous aider à chiffrer l’ensemble du projet (apport, frais de notaire, éventuels travaux) pour que vous sachiez précisément quel budget total prévoir. C’est sans engagement, et cela permet d’y voir beaucoup plus clair avant de prendre une décision.'],
   visite: ['Seconde visite', 'Je vous propose une seconde visite : nous prendrons le temps de revoir les pièces qui comptent pour vous, de faire un point précis sur les aspects techniques (isolation, chauffage, charges, état général) et de répondre à toutes les questions qui vous seraient venues depuis. Vous pouvez aussi venir accompagné.'],
   quartier: ['Quartier : écoles, transports, commerces', 'Le quartier compte beaucoup dans une décision, et il se juge sur place : je peux vous envoyer les informations sur les écoles, les transports, les commerces et les projets d’aménagement du secteur, et vous proposer de faire un tour à pied à l’heure qui vous intéresse (sortie d’école, soirée, week-end) pour vous faire votre propre idée.'],
   documents: ['Documents complémentaires', 'Je tiens à votre disposition tous les documents dont vous auriez besoin pour avancer sereinement : diagnostics, charges, taxe foncière, procès-verbaux d’assemblée générale, plans. Dites-moi simplement ce qui vous manque et je vous l’envoie dans la journée.'],
   prix: ['Prix : en parler franchement', 'Si le prix fait partie de votre réflexion, n’hésitez pas à m’en parler franchement : je connais bien les ventes récentes du secteur et je peux vous expliquer comment il a été fixé. Si vous avez une idée précise de ce qui vous semblerait juste, je transmettrai volontiers votre point de vue au vendeur : mieux vaut en discuter que rester sur un doute.'],
   travaux: ['Travaux : contact artisan', 'Concernant les travaux éventuels, je peux vous mettre en contact avec un artisan de confiance pour établir un chiffrage réaliste, voire passer sur place avec vous. Avoir un ordre de grandeur précis permet de décider sereinement, et de calibrer au mieux une éventuelle offre.'],
   offre: ['Offre transmise : accusé de réception', 'Je reviens vers vous au sujet de l’offre que vous avez transmise : je l’ai bien reçue et je la porte auprès du vendeur dans les meilleurs délais. Je vous tiens informé dès que j’ai sa réponse. D’ici là, si vous souhaitez la compléter (conditions, délai, financement) ou en discuter, appelez-moi : nous pouvons la peaufiner ensemble pour maximiser ses chances.'],
-  docs_demandes: ['Documents demandés : je vous les prépare', 'Vous avez demandé des documents sur ce bien : je les rassemble et je vous les envoie très vite. Si d’autres pièces vous seraient utiles pour avancer (diagnostics, charges, procès-verbaux d’assemblée générale, plans), dites-le-moi, je m’en occupe.']
+  docs_demandes: ['Documents demandés : je vous les prépare', 'Vous avez demandé des documents sur ce bien : je les rassemble et je vous les envoie très vite. Si d’autres pièces vous seraient utiles pour avancer (diagnostics, charges, procès-verbaux d’assemblée générale, plans), dites-le-moi, je m’en occupe.'],
+  // Signaux de participation (fiche acquéreur) : uniquement ce que l'acquéreur a fait ou envoyé lui-même.
+  crush_match: ['Test : bon match, proposer une visite', 'Votre résultat est très encourageant : le bien correspond à ce que vous recherchez sur l’essentiel. Le mieux est de le vérifier sur place. Je peux vous proposer une visite cette semaine, et nous regarderons ensemble les quelques points à vérifier qui sont ressortis du test.'],
+  crush_verifier: ['Test : lever les points à vérifier', 'Le test fait ressortir quelques points à vérifier. Je préfère vous en parler franchement plutôt que de vous laisser avec un doute : je peux vous donner des éléments précis sur chacun d’eux. Et si ce bien ne correspond pas assez à vos critères, je vous proposerai d’autres biens plus proches de ce que vous cherchez.'],
+  crush_duo: ['Test à deux : préparer la visite', 'Le test fait à deux montre que vous êtes d’accord sur l’essentiel, avec quelques points à en discuter. Je vous propose une visite à deux, pour que chacun se fasse son avis sur place, et je prépare des éléments sur les points où vos avis diffèrent.'],
+  critere: ['Critère déterminant : adapter la suite', 'Vous avez indiqué que {critere} compte avant tout pour vous. C’est ce que je regarderai en priorité avec vous : je peux vous donner les éléments précis sur ce point et, si ce bien ne vous convient pas sur ce critère, vous proposer d’autres biens qui y répondent mieux.'],
+  visite_points: ['Visite préparée : points à vérifier', 'Vous avez noté des points que vous souhaitez vérifier lors de la visite : {points}. Je les prépare : vous aurez les réponses et les documents correspondants, et nous les passerons en revue sur place.'],
+  carnet: ['Carnet partagé : seconde visite', 'Merci pour vos retours de visite. Ce qui vous a plu ({coups}) est un bon signe. Je vous propose une seconde visite pour revoir ces points et regarder à tête reposée ceux qui vous posent question.'],
+  coeur: ['Ça me parle : poursuivre', 'Les propriétaires tiennent à ce bien, et le mot qu’ils ont laissé semble vous avoir parlé. Je serais ravi de vous le faire visiter pour que vous puissiez juger par vous-même si vous vous y projetez.'],
+  // Suggéré après un partage ou une ouverture via lien partagé, sans jamais le dire (ni ici, ni dans l'intro).
+  partage: ['Visite à plusieurs', 'Si vous souhaitez venir à plusieurs, ou avec un proche, n’hésitez pas : je peux caler la visite sur les disponibilités de chacun, y compris en fin de journée ou le week-end.']
 };
+// Libellés en minuscules des coups de cœur du carnet (variable {coups}).
+var _COUPS_LBL = { lumiere: 'lumière', volumes: 'volumes', cuisine: 'cuisine', salle_bain: 'salle de bains', calme: 'calme', jardin: 'jardin', exterieur: 'extérieur', vue: 'vue', rangements: 'rangements', etat: 'état général', quartier: 'quartier' };
+// « a, b et c »
+function _clListe(a) { a = (a || []).filter(Boolean); return a.length < 2 ? (a[0] || '') : a.slice(0, -1).join(', ') + ' et ' + a[a.length - 1]; }
+// Données les plus récentes d'un événement de participation (null si absent).
+function _clLast(g, ev) {
+  var list = (g.payloads && g.payloads[ev]) || [];
+  return list.length ? list.slice().sort(function(a, b) { return (b.at || '').localeCompare(a.at || ''); })[0] : null;
+}
+// Variante du test crush à suggérer d'après le dernier test envoyé : à deux > bon match (≥ 85 % sans point à vérifier) > points à vérifier.
+function _clCrushKey(d) {
+  d = d || {};
+  if (d.m === 'duo') return 'crush_duo';
+  return (typeof d.s === 'number' && d.s >= 85 && !(d.w || []).length) ? 'crush_match' : 'crush_verifier';
+}
+// Variables des messages : critère, points de visite, coups de cœur (toujours d'après ce que l'acquéreur a envoyé).
+function _clVars(g) {
+  var cr = _clLast(g, 'critere_choisi'), vp = _clLast(g, 'visite_points'), ca = _clLast(g, 'carnet_partage');
+  return {
+    critere: (cr && _CRITERE_LBL[cr.d.k]) || '',
+    points: _clListe(((vp && vp.d.k) || []).map(function(x) { return _VISITE_LBL[String(x).replace(/\d+$/, '')] || ''; })),
+    coups: _clListe(((ca && ca.d.c) || []).map(function(x) { return _COUPS_LBL[x] || ''; }))
+  };
+}
 // Angle suggéré : d'après ce que l'acquéreur a dit lui-même (retour de visite) ou envoyé explicitement à l'agent (offre, demande de documents) ; sinon aucun.
 // Jamais d'après ce qu'il a simplement lu ou simulé : le message ne doit pas trahir le suivi. L'agent peut choisir un autre angle.
 function clSuggestAngle(g) {
@@ -6354,6 +6397,17 @@ function clSuggestAngle(g) {
   if (last.indexOf('financement') !== -1) return 'budget';
   if (last.indexOf('quartier') !== -1) return 'quartier';
   if (last.indexOf('coup_coeur') !== -1) return 'coup_coeur';
+  // Signaux de participation : le plus récent gagne ; à date égale, l'ordre de la liste départage.
+  var at = g.evAt || {}, cands = [];
+  function cand(key, when) { if (when) cands.push({ key: key, at: when, rang: cands.length }); }
+  var cr = _clLast(g, 'crush_termine');
+  cand('carnet', at.carnet_partage);
+  cand('visite_points', at.visite_points);
+  if (cr) cand(_clCrushKey(cr.d), cr.at || at.crush_termine);
+  cand('critere', at.critere_choisi);
+  cand('coeur', at.mot_vendeur_coeur);
+  cand('partage', [at.fiche_partagee, at.ouverture_partage].filter(Boolean).sort().pop());
+  if (cands.length) return cands.sort(function(x, y) { return (y.at || '').localeCompare(x.at || '') || x.rang - y.rang; })[0].key;
   return 'aucun';
 }
 function clBuildMessage(g, silent, angle) {
@@ -6368,8 +6422,16 @@ function clBuildMessage(g, silent, angle) {
   var key = _CL_ANGLES[angle] ? angle : clSuggestAngle(g);
   var intro = key === 'offre' ? 'Merci pour votre intérêt pour le bien ' + bien + '.'
     : key === 'docs_demandes' ? 'Merci pour votre intérêt pour le bien ' + bien + '.'
+    : key.indexOf('crush_') === 0 ? 'Merci d’avoir pris le temps de faire le test sur le bien ' + bien + '.'
+    : ['critere', 'visite_points', 'carnet', 'coeur'].indexOf(key) !== -1 ? 'Merci pour vos retours sur le bien ' + bien + '.'
     : 'Avez-vous pu avancer dans votre réflexion sur le bien ' + bien + ' ?';
-  return hello + intro + '\n\n' + _CL_ANGLES[key][1] + '\n\nN’hésitez pas à me répondre par message ou à m’appeler quand cela vous arrange.' + sign;
+  // Variables ; si l'acquéreur n'a rien précisé, la phrase reste correcte sans elles.
+  var v = _clVars(g);
+  var corps = _CL_ANGLES[key][1]
+    .replace('{critere}', v.critere || 'ce critère')
+    .replace(' : {points}.', v.points ? ' : ' + v.points + '.' : '.')
+    .replace(' ({coups})', v.coups ? ' (' + v.coups + ')' : '');
+  return hello + intro + '\n\n' + corps + '\n\nN’hésitez pas à me répondre par message ou à m’appeler quand cela vous arrange.' + sign;
 }
 function clMessageDialog(key, silent) {
   var g = _analyticsGroups.filter(function(x) { return x.key === key; })[0]; if (!g) return;
@@ -6379,7 +6441,7 @@ function clMessageDialog(key, silent) {
   var card = document.createElement('div'); card.className = 'card'; card.style.cssText = 'max-width:560px;width:92%;margin:0;max-height:90vh;overflow:auto;';
   var head = document.createElement('div'); head.className = 'card-header'; head.textContent = '💬 Message pour ' + g.client;
   var body = document.createElement('div'); body.className = 'card-body';
-  var hint = document.createElement('div'); hint.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;'; hint.textContent = 'Message proposé : modifiez-le librement ou écrivez le vôtre directement dans la zone ci-dessous. Il ne cite jamais les rubriques consultées : l’angle suggéré ne vient que de ce que l’acquéreur vous a dit ou envoyé lui-même (retour de visite, offre, demande de documents). Vous l’envoyez vous-même.'; body.appendChild(hint);
+  var hint = document.createElement('div'); hint.style.cssText = 'font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5;'; hint.textContent = 'Message proposé : modifiez-le librement ou écrivez le vôtre directement dans la zone ci-dessous. Il ne cite jamais les rubriques consultées : l’angle suggéré ne vient que de ce que l’acquéreur vous a dit ou envoyé lui-même (retour de visite, offre, demande de documents, test, carnet, choix faits sur la fiche). Vous l’envoyez vous-même.'; body.appendChild(hint);
   var sel = null;
   if (!silent) {
     sel = document.createElement('select'); sel.id = 'cl-angle'; sel.style.cssText = 'width:100%;margin-bottom:8px;font-size:13px;';

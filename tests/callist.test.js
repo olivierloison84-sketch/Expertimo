@@ -60,7 +60,7 @@ assert(w._clAddr('Longjumeau (91160) · Espace Acheteur Privé · Expertimo') ==
   w.clMessageDialog(w._analyticsGroups.find(g => g.client === 'Marie Dupont').key, false);
   assert(d.getElementById('cl-angle').value === 'aucun' && d.getElementById('cl-copy') && d.getElementById('cl-sms'), 'fenêtre du message');
   assert(d.getElementById('cl-reset'), 'bouton texte d\'origine'); d.getElementById('cl-text').value = 'Mon texte à moi'; d.getElementById('cl-reset').click(); assert(/Bonjour Marie/.test(d.getElementById('cl-text').value), 'réinitialisation'); d.getElementById('cl-text').value = 'Mon texte à moi'; assert(d.getElementById('cl-text').readOnly === false && d.getElementById('cl-text').value === 'Mon texte à moi', 'texte librement modifiable');
-  d.getElementById('cl-angle').value = 'budget'; d.getElementById('cl-angle').onchange(); assert(/courtier/.test(d.getElementById('cl-text').value), 'angle choisi par l\'agent');
+  d.getElementById('cl-angle').value = 'budget'; d.getElementById('cl-angle').onchange(); assert(/budget total/.test(d.getElementById('cl-text').value) && !/courtier|taux/.test(d.getElementById('cl-text').value), 'angle choisi par l\'agent');
   d.getElementById('cl-overlay').remove();
   // stats : retour affiché ; suppression et purge incluent fiche_retours
   const tb = d.getElementById('analytics-tbody').textContent; assert(/Retour de visite/.test(tb) && /Le prix, Les travaux à prévoir/.test(tb), 'retour affiché dans le tableau');

@@ -132,6 +132,9 @@ function appDom(extra) {
     assert.strictEqual(fdoc.querySelectorAll('#pv-visite .pv-opt').length, allPoints.length);
     assert.strictEqual(fdoc.querySelectorAll('#pv-carnet .pv-chip').length, allChips.length);
     assert.strictEqual(fdoc.querySelectorAll('#pv-critere .pv-chip').length, 6);
+    const INFO = { fr: 'Votre agent verra ce choix pour mieux vous accompagner.', en: 'Your advisor will see this choice to support you better.', pt: 'O seu consultor verá esta escolha para o acompanhar melhor.', es: 'Su asesor verá esta elección para acompañarle mejor.' }[l];
+    ['pv-visite', 'pv-critere', 'pv-mot'].forEach(id => assert.strictEqual((fdoc.querySelector('#' + id + ' .pv-agent') || {}).textContent, INFO, l + ' : information agent sous ' + id));
+    assert(!fdoc.querySelector('#pv-carnet .pv-agent'), 'carnet : rien d\'ajouté (bouton d\'envoi explicite)');
   }
   fw.applyLang('fr');
   assert(/Phrase FR\./.test(fdoc.getElementById('pv-mot').textContent)); fw.applyLang('en'); assert(/Phrase EN\./.test(fdoc.getElementById('pv-mot').textContent));
