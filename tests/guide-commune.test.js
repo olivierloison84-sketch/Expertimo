@@ -57,11 +57,15 @@ function monde(opts = {}) {
     if (u.host === 'api.anthropic.com') {
       const corps = JSON.parse(init.body), entree = JSON.parse(corps.messages[0].content);
       const out = {};
+      // IA simulée : une phrase reprise de la source (fidèle) + des pièges qui doivent être retirés
+      const PIEGES = { transports: ' L\'autoroute A6 traverse la commune. Un cadre de vie idyllique.', patrimoine: ' Le pont des Templiers date de 1438.',
+        parcs: ' Ce dernier abrite une ludothèque installée dans l\'ancien château Nativelle.', equipements: ' La commune accueille un tribunal d\'instance.',
+        economie: ' La commune comptait 21 000 habitants en 2021. Le siège français d\'Intersport s\'y trouve.', culture: ' Un festival de jazz a lieu chaque mois de mai.' };
       Object.keys(entree.rubriques).forEach(k => {
-        const dt = (entree.rubriques[k].datatourisme || []).join(', ');
-        out[k] = 'Texte factuel sur la rubrique ' + k + ', tiré des sources fournies.' + (dt ? ' Lieux cités : ' + dt + '.' : '')
-          + (k === 'transports' ? ' La commune est desservie par le tram-train T12. Un cadre de vie idyllique.' : '')
-          + (k === 'economie' ? ' Plusieurs zones d\'activités accueillent des entreprises. La commune comptait 21 000 habitants en 2021, avec un revenu médian de 24 000 euros.' : '');
+        const wpTxt = entree.rubriques[k].wikipedia || '';
+        const fidele = (wpTxt.match(/[^.!?\n]+[.!?]/g) || []).map(x => x.trim()).find(x => !/habitants|revenu|euros/.test(x)) || '';
+        const dt = (entree.rubriques[k].datatourisme || []).map(x => x.nom + ' figure parmi les lieux.').join(' ');
+        out[k] = (fidele + ' ' + dt).trim() + (PIEGES[k] || '');
       });
       out.economie_inventee = 'Ne doit pas apparaître.';
       if (!entree.rubriques.parcs) out.parcs = 'Rubrique inventée sans donnée.';
@@ -105,7 +109,7 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
   const ia = w.appels.filter(a => a.hote === 'api.anthropic.com');
   assert.strictEqual(ia.length, 1, 'une seule rédaction');
   const corpsIa = JSON.parse(ia[0].init.body);
-  assert.strictEqual(corpsIa.model, 'claude-haiku-5-5', 'modèle par défaut : Haiku 5.5');
+  assert.strictEqual(corpsIa.model, 'claude-sonnet-5-5', 'modèle par défaut : Sonnet 5.5');
   assert(!JSON.stringify(corpsIa.messages).includes('Salon d\'automne'), 'les événements ne passent pas par l\'IA');
   assert(!/Démographie|21 000 habitants/.test(corpsIa.messages[0].content), 'section Démographie jamais transmise');
   assert(ia[0].init.headers['x-api-key'] === KEY_IA && w.appels.filter(a => a.hote === 'api.datatourisme.fr').every(a => a.init.headers['X-API-Key'] === KEY_DT), 'clés en en-tête uniquement');
@@ -137,8 +141,8 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
   assert(r.body.guide && !w2.appels.some(a => a.hote === 'api.datatourisme.fr') && !r.body.guide.rubriques.some(x => x.cle === 'parcs'), 'sans clé DATAtourisme : Wikipédia seul');
   w2 = monde({ dtPanne: true }); r = await appel(w2, '91345', 'Longjumeau'); assert(r.code === 200 && r.body.guide, 'DATAtourisme en panne : sans erreur');
   // ── modèle configurable
-  w2 = monde({ env: { GUIDE_COMMUNE_MODEL: 'claude-sonnet-5-5' } }); await appel(w2, '91345', 'Longjumeau');
-  assert.strictEqual(JSON.parse(w2.appels.find(a => a.hote === 'api.anthropic.com').init.body).model, 'claude-sonnet-5-5');
+  w2 = monde({ env: { GUIDE_COMMUNE_MODEL: 'claude-haiku-5-5' } }); await appel(w2, '91345', 'Longjumeau');
+  assert.strictEqual(JSON.parse(w2.appels.find(a => a.hote === 'api.anthropic.com').init.body).model, 'claude-haiku-5-5', 'GUIDE_COMMUNE_MODEL change le modèle');
   // ── code INSEE ambigu sur Wikidata, commune inconnue : rien n'est inventé, aucun appel IA
   w2 = monde({ wikidataAmbigu: true, env: { DATATOURISME_API_KEY: '' } }); r = await appel(w2, '91345', 'Longjumeau');
   assert(r.body.guide === null && !w2.appels.some(a => a.hote === 'api.anthropic.com') && !w2.table.size, 'ambigu : pas de guide, pas d\'IA, pas de cache');
@@ -146,6 +150,44 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
   assert(r.body.guide === null && !w2.appels.some(a => a.hote === 'api.anthropic.com'), 'commune sans donnée : pas de guide');
   // ── clé IA absente : pas de guide, pas d'erreur
   w2 = monde({ env: { ANTHROPIC_API_KEY: '' } }); r = await appel(w2, '91345', 'Longjumeau'); assert(r.code === 200 && r.body.guide === null);
+  // ── pièges retirés du guide de Longjumeau (fidélité, en code)
+  {
+    const tout = g.rubriques.map(x => x.texte).join(' ');
+    ['A6', 'Templiers', 'ludothèque', 'tribunal', 'Intersport', 'habitants', 'idyllique'].forEach(m => assert(!tout.includes(m), 'piège retiré : ' + m + ' dans « ' + tout + ' »'));
+    assert(/T12/.test(tr.texte) && /Nativelle figure parmi les lieux/.test(parcs.texte) && /Saint-Martin/.test(pat.texte), 'faits sourcés conservés');
+  }
+  // ── fidélité : source simulée avec pièges (nom propre absent, date absente, « traverse » quand la source dit « évite »)
+  {
+    const { filtrerFidele, verifierPhrase, SYSTEME } = route._interne;
+    const source = 'L\'autoroute A6 évite Longjumeau par le nord. La RN20 contourne le centre par l\'ouest. L\'église Saint-Martin date du XIIIe siècle. Le vieux pont de Balizy, du XIIIe siècle, est un monument historique. Le château Nativelle accueille l\'hôtel de ville.';
+    const texte = 'L\'autoroute A6 traverse partiellement la commune. La RN20 contourne le centre par l\'ouest. Le théâtre Adolphe Adam accueille des spectacles. L\'église Saint-Martin est classée depuis 1910. Le vieux pont de Balizy, du XIIIe siècle, est un monument historique. Une ludothèque est installée dans le château Nativelle. Un marché se tient le mercredi. L\'église Saint-Martin date du XIVe siècle.';
+    const r2 = filtrerFidele(texte, source, 'Longjumeau');
+    assert.strictEqual(r2.texte, 'La RN20 contourne le centre par l\'ouest. Le vieux pont de Balizy, du XIIIe siècle, est un monument historique.', 'seules les phrases sourcées restent : ' + r2.texte);
+    const motifs = r2.retirees.map(x => x.motif).join(' | ');
+    assert(/relation absente de la source : travers/.test(motifs), '« traverse » alors que la source dit « évite » : ' + motifs);
+    assert(/nom propre absent de la source : Adolphe/.test(motifs), 'nom propre absent');
+    assert(/nombre absent de la source : 1910/.test(motifs), 'date absente');
+    assert(/relation absente de la source : install/.test(motifs), 'relation « installé dans » absente');
+    assert(/fait qui vieillit|périodicité absente/.test(motifs), 'marché / mercredi');
+    assert(/siècle absent de la source : XIV/.test(motifs), 'siècle absent');
+    assert.strictEqual(r2.retirees.length, 6);
+    // phrases non sourcées supprimées, rubrique vide
+    assert.strictEqual(filtrerFidele('Un festival de jazz a lieu chaque mois de mai. Le stade Frédéric-Langrenay accueille les clubs.', 'La commune possède un théâtre.', 'Longjumeau').texte, '', 'rien de sourcé : rubrique vide');
+    assert(verifierPhrase('Longjumeau est desservie par le tram-train T12.', 'La commune est desservie par la ligne de tram-train T12.\nLongjumeau').ok, 'reformulation fidèle gardée');
+    assert(!verifierPhrase('La commune accueille un commissariat de police.', 'La commune accueille un commissariat de police.').ok, 'service public réorganisable : jamais écrit');
+    assert(/EXTRACTIF/.test(SYSTEME) && /installé dans/.test(SYSTEME) && /chaque mois de mai/.test(SYSTEME) && /fusionne/.test(SYSTEME), 'consignes extractives');
+    // rubrique entièrement non sourcée par l'IA : elle n'apparaît pas
+    const w3 = monde({ env: { DATATOURISME_API_KEY: '' } });
+    const f0 = w3.deps.fetch;
+    w3.deps.fetch = async (u, i) => /anthropic/.test(u) ? { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify({ rubriques: { presentation: 'Longjumeau est une commune française située dans le département de l\'Essonne, au sud de Paris, traversée par l\'Yvette.', transports: 'L\'autoroute A6 traverse la ville. La gare TGV relie Paris en dix minutes.', economie: 'Le siège d\'Intersport est installé ici.' } }) }] }) } : f0(u, i);
+    const r3 = await appel(w3, '91345', 'Longjumeau');
+    assert.deepStrictEqual(r3.body.guide.rubriques.map(x => x.cle), ['presentation'], 'rubriques sans phrase sourcée : absentes');
+  }
+  // ── DATAtourisme : seuls le nom et la catégorie sont transmis à l'IA
+  {
+    const entreeDt = JSON.parse(JSON.parse(ia[0].init.body).messages[0].content).rubriques.parcs.datatourisme;
+    assert.deepStrictEqual(entreeDt, [{ nom: 'Parc Nativelle', categorie: 'parc ou jardin' }], 'nom + catégorie : ' + JSON.stringify(entreeDt));
+  }
   // ── découpage Wikipédia et filtre des chiffres datés
   const sec = route._interne.sectionsWikipedia(COMMUNES['91345'].extrait);
   assert(!sec.culture && /T12/.test(sec.transports) && /centre hospitalier/.test(sec.equipements) && !/21 000/.test(JSON.stringify(sec)), 'sections associées aux rubriques, démographie exclue');
@@ -179,6 +221,7 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
   let etat = win.guideEtat();
   assert(etat && etat.insee === '91345' && etat.rubriques.length === 6, 'guide chargé dans la fiche en cours');
   assert.strictEqual(doc.querySelectorAll('#guide-commune-editeur .gc-rub').length, 6, 'une zone par rubrique');
+  assert.strictEqual((doc.querySelector('#guide-commune-editeur .gc-avertissement') || {}).textContent, 'Texte généré à partir de sources publiques. Relisez-le avant publication.', 'message à l\'agent au-dessus du guide');
   const nbApi = apiAppels.filter(u => /guide-commune/.test(u)).length;
   await win.guideCommuneDemander(cf(feat({}), '12 rue Basse 91160 Longjumeau'));
   assert.strictEqual(apiAppels.filter(u => /guide-commune/.test(u)).length, nbApi, 'même commune : pas de nouvel appel (modifications conservées)');

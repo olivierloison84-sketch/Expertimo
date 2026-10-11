@@ -4746,7 +4746,8 @@ function guideCommuneRendre() {
   if (!g) { box.innerHTML = ''; return; }
   var e = function(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
   var src = function(l) { return (l || []).map(function(x) { return '<a href="' + e(x.url) + '" target="_blank" rel="noopener">' + e(x.titre) + '</a>' + (x.licence ? ' (' + e(x.licence) + ')' : ''); }).join(' · '); };
-  var h = g.rubriques.map(function(r, i) {
+  var h = '<p class="gc-avertissement" role="note" style="margin:8px 0 0;padding:8px 10px;border-radius:8px;background:#FFF8EC;border:1px solid #F1D9AE;color:#8A5A12;font-size:13px;font-weight:600;">Texte généré à partir de sources publiques. Relisez-le avant publication.</p>';
+  h += g.rubriques.map(function(r, i) {
     return '<div class="gc-rub" data-i="' + i + '" style="border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px;' + (r.masque ? 'opacity:.55;' : '') + '">'
       + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><b>' + e(r.titre) + '</b>'
       + '<label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="gc-masque"' + (r.masque ? ' checked' : '') + ' style="width:auto;"> Masquer sur cette fiche</label></div>'
