@@ -422,7 +422,7 @@ body.pv .rc.dk{background:var(--cream)!important;}
 body.pv .rc.dk .rcl{color:var(--gold2)!important;}body.pv .rc.dk .rcv{color:var(--ink)!important;}
 body.pv .pstep.curr .picon{background:var(--pv-cta)!important;}
 body.pv .pstep.curr .plbl{color:var(--gold2)!important;}
-body.pv .btndark,body.pv #budget button[onclick*="calcBudget"]{background:var(--pv-cta)!important;color:var(--pv-on)!important;}
+body.pv .btndark{background:var(--pv-cta)!important;color:var(--pv-on)!important;}
 body.pv #vr-card .vr-chip[aria-pressed="true"]{background:var(--pv-cta);color:var(--pv-on);}
 body.pv .pfooter{background:var(--cream)!important;color:var(--ink)!important;border:1px solid var(--border);}
 body.pv .pfooter p{color:var(--muted)!important;font-weight:400!important;}
@@ -440,9 +440,9 @@ body.pv .rail-ind{display:none!important;}
 body.pv .rail-progress{display:none!important;}
 
 
-/* ═════════ MAQUETTE 4 · PHOTO PLEIN ÉCRAN + SOMMAIRE DES 10 ONGLETS ═════════
-   Accueil : la photo du bien, puis les 10 sections toutes visibles en tuiles.
-   Dans une section : barre « ← Sommaire · titre · n/10 » et bouton Continuer. */
+/* ═════════ MAQUETTE 4 · PHOTO PLEIN ÉCRAN + SOMMAIRE DES 8 ONGLETS ═════════
+   Accueil : la photo du bien, puis les 8 sections toutes visibles en tuiles.
+   Dans une section : barre « ← Sommaire · titre · n/8 » et bouton Continuer. */
 body.pv4{--bg:#FAF8F3;--card:#fff;--ink:#15171C;--gold:#8F6B14;--gold2:#6E510C;--cream:#F4ECD8;--muted:#5F5B50;--border:#E8E0CC;--vert:#2F7A4F;--pv-accent:#C9A227;--pv-accent2:#E6CB6E;--pv-cta:#15171C;--pv-on:#FBF7EC;--pv-font:'Plus Jakarta Sans','Work Sans',sans-serif;--pv-display:'Plus Jakarta Sans','Work Sans',sans-serif;}
 #pv-home-head,#pv-bar,#pv-next{display:none;}
 
@@ -472,7 +472,7 @@ body.pv4.pv-home #pv-home-head{display:block;max-width:1100px;margin:0 auto;padd
 body.pv4.pv-home .layout-shell{display:flex;flex-direction:column;max-width:1100px;align-items:stretch;gap:0;}
 body.pv4.pv-home .container{display:none!important;}
 body.pv4.pv-home .rail{position:static;width:100%;display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:12px 16px 110px;}
-@media(min-width:700px){body.pv4.pv-home .rail{grid-template-columns:repeat(5,1fr);}}
+@media(min-width:700px){body.pv4.pv-home .rail{grid-template-columns:repeat(4,1fr);}}
 body.pv4.pv-home .rail button{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:4px;width:auto;min-height:112px;padding:14px;border-radius:18px!important;border:1px solid var(--border);background:#fff!important;text-align:left;white-space:normal;color:var(--ink);box-shadow:0 1px 2px rgba(18,32,26,.04);}
 body.pv4.pv-home .rail button:hover{border-color:var(--pv-accent);box-shadow:0 6px 20px color-mix(in srgb,var(--pv-accent) 28%,transparent);}
 body.pv4.pv-home .rail-dot{display:flex!important;align-items:center;justify-content:center;width:42px!important;height:42px!important;border-radius:13px;background:var(--cream);color:var(--gold2);margin-bottom:8px;}
@@ -725,22 +725,9 @@ body.pv4 #ai-btn svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:1
 body.pv4 #ai-btn>span[data-i18n]{max-width:0;overflow:hidden;white-space:nowrap;opacity:0;font:700 13px var(--pv-font);letter-spacing:0;transition:max-width .3s,opacity .2s,margin .3s;}
 body.pv4 #ai-btn:hover>span[data-i18n],body.pv4 #ai-btn.pv-ai-open>span[data-i18n]{max-width:220px;opacity:1;margin-left:9px;}
 body.pv4.pv-tab #ai-btn{bottom:18px!important;right:16px!important;}
-body.pv4.pv-tab.pv-sim #ai-btn{bottom:92px!important;}
 body.pv4.pv-home #ai-btn,body.pv4.pv-assistant #ai-btn{display:none!important;}
 /* questions proposées lisibles */
 body.pv4 #ai-suggestions button{background:#fff!important;color:var(--ink)!important;border:1.5px solid var(--pv-accent)!important;font-size:12.5px!important;font-weight:600!important;padding:8px 13px!important;line-height:1.3;text-align:left;}
-/* simulateur : résultats toujours visibles */
-body.pv4 #sub-rentabilite .rg{position:sticky;bottom:10px;z-index:60;background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 26px rgba(15,23,40,.16);overflow:hidden;}
-body.pv4 #sub-rentabilite .rc{padding:9px 8px;}
-body.pv4 #sub-rentabilite .rcv{font-size:15px!important;}
-body.pv4 #sub-rentabilite .rcs{display:none;}
-@media(max-width:700px){
-  body.pv4 #sub-rentabilite .rg{position:fixed;left:0;right:0;bottom:0;border-radius:16px 16px 0 0;border-width:1px 0 0;grid-template-columns:repeat(5,1fr)!important;}
-  body.pv4 #sub-rentabilite .rc{padding:8px 3px;text-align:center;}
-  body.pv4 #sub-rentabilite .rcl{font-size:7.5px!important;letter-spacing:.02em;}
-  body.pv4 #sub-rentabilite .rcv{font-size:11.5px!important;}
-  body.pv4.pv-sim{padding-bottom:84px;}
-}
 /* ordinateur : bienvenue en haut à gauche, langues sous Privency */
 .pv-wsub{display:none;}
 @media(min-width:701px){
@@ -750,7 +737,6 @@ body.pv4 #sub-rentabilite .rcs{display:none;}
   body.pv4 #lang-toggle{top:50px!important;left:auto!important;right:24px!important;display:grid!important;grid-template-columns:repeat(2,auto);border-radius:16px!important;}
 }
 @media(min-width:701px){body.pv4 #welcome-msg[style*="block"]{overflow:visible!important;padding-left:2px!important;}}
-body.pv4 #sub-rentabilite .rg{grid-template-columns:repeat(5,1fr)!important;}
 
 /* ═════════ v12 : bouton de fin de section plein, langues sous Privency (aussi sur téléphone), sous-titre de bienvenue ═════════ */
 .pv-end button{background:var(--pv-accent)!important;color:#fff!important;border:none!important;padding:13px 24px!important;font-size:14px!important;box-shadow:0 6px 16px rgba(15,23,40,.18);}
@@ -830,8 +816,8 @@ body.pv4 .pv-recap:empty{display:none;}
 body.pv4 #ai-modal>div:first-child .pv-aiico{color:#fff!important;}
 body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22px;height:22px;}
 </style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","copro":"oui","etage":"4","adresse":"50 Avenue Saint Marc 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1969","description":"Appartement 5 pièces de 106 m² · 4 · DPE D","surface":106,"surfCarrez":0,"pieces":"5","dpe":"D","prix":275000,"prixm2":2594,"mediane":0,"tension":"","delai":"","loyer":1500,"chargesCopro":522,"chargesDetail":"Les charges de copropriété comprennent : eau froide, eau chaude, chauffage collectif au gaz, ascenseur, entretien des parties communes","taxeFonciere":1872,"score":"8.25","scorePrest":"9","scoreSecteur":"7","scoreQP":"8","scoreEtat":"9","fort1":"Refait à neuf","fort2":"Dernier étage avec ascenseur","fort3":"2 Balcons et 1 cave","vig1":"Quelques nuisances sonores : appartement donne sur rue passante","vig2":"Charges de copropriété : 522€/mois","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/prt4m4li2dardczv53m4.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/fxkf6xribmdzwmamotxq.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/tcrzbzq39jpcp8tplldh.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a1mclxaenjbmbdbxusno.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/ewlldtrzwwczui1nsgps.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/rt5runc89mzf3yk2ahog.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/w5r2dqdsvoespnsvq2gn.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/rhmqwlzgfd4uc7pklq4a.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/lcas0bebx2gfpyeejvtq.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/waugp3oga1jj5movcfga.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/t4scdlco3plfvnybkyb4.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/qdk9uqmm2wc3ollphntk.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650454/t6belfvdtq23cvjmpy62.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/bpd5zcwwoot4ew5xldy4.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a6vlvgrbytakgqa61fcz.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/xintulrnfgg6vecxirpk.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/u7eyrdzv1tyj54knqxbl.jpg","photo18":"","photo19":"","photo20":"","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"3 Square Jean Bouin","surface":"119.01","prix":300000,"prixm2":2521},{"date":"11/2025","adresse":"5 Allée De Norvège","surface":"105","prix":270000,"prixm2":2571},{"date":"09/2025","adresse":"1 Allée Marcel Cerdan","surface":"102.83","prix":256000,"prixm2":2490},{"date":"07/2025","adresse":"1 Square Yves Du Manoir","surface":"107.82","prix":284250,"prixm2":2636},{"date":"05/2025","adresse":"50 Avenue Saint Marc ","surface":"106.1","prix":260000,"prixm2":2451},{"date":"09/2024","adresse":"1 Allee Du Quebec","surface":"119","prix":330000,"prixm2":2773}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"Résidence de 1970.\nImmeuble de 4 étages avec ascenseur.\nCave.\n\n Appartement 5 pièces traversant, dernier étage\n\nAu 4e et dernier étage avec ascenseur, entièrement rénové (sols, peintures, électricité neufs), très lumineux grâce à sa double exposition.\n\nSéjour 17,85 m² + balcon 6 m²\nSalle à manger 14,44 m² (4e chambre possible)\nCuisine indépendante équipée\n3 chambres, dont une avec balcon 4 m²\nSalle de bains + salle d'eau, 2 WC séparés\nCave + parking collectif\nChauffage/eau chaude collectifs, fibre optique\nÀ 200 m des écoles, 600 m des commerces, 500 m de la gare Massy-Opéra (futur Grand Paris Express ligne 18), proche bus et hôpital.\n\nCopropriété 120 lots, charges 6 264 €/an, aucun travaux à prévoir.\n\nIdéal famille ou investissement locatif en colocation. Rare sur le secteur.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/prt4m4li2dardczv53m4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/fxkf6xribmdzwmamotxq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/tcrzbzq39jpcp8tplldh.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a1mclxaenjbmbdbxusno.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/ewlldtrzwwczui1nsgps.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/rt5runc89mzf3yk2ahog.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/w5r2dqdsvoespnsvq2gn.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/rhmqwlzgfd4uc7pklq4a.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/lcas0bebx2gfpyeejvtq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/waugp3oga1jj5movcfga.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/t4scdlco3plfvnybkyb4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/qdk9uqmm2wc3ollphntk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650454/t6belfvdtq23cvjmpy62.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/bpd5zcwwoot4ew5xldy4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a6vlvgrbytakgqa61fcz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/xintulrnfgg6vecxirpk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/u7eyrdzv1tyj54knqxbl.jpg","caption":"","uploading":false}]}}</script>
-<script id="expertimo-data-en" type="application/json">{"type":"appart","copro":"oui","etage":"4","adresse":"50 Avenue Saint Marc 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1969","description":"5-room apartment of 106 m² · 4 · DPE D","surface":106,"surfCarrez":0,"pieces":"5","dpe":"D","prix":275000,"prixm2":2594,"mediane":0,"tension":"","delai":"","loyer":1500,"chargesCopro":522,"chargesDetail":"Service charges include: cold water, hot water, collective gas heating, lift, maintenance of common areas","taxeFonciere":1872,"score":"8.25","scorePrest":"9","scoreSecteur":"7","scoreQP":"8","scoreEtat":"9","fort1":"Fully renovated","fort2":"Top floor with lift","fort3":"2 balconies and 1 cellar","vig1":"Some noise nuisance: apartment overlooks a busy street","vig2":"Service charges: €522/month","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/prt4m4li2dardczv53m4.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/fxkf6xribmdzwmamotxq.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/tcrzbzq39jpcp8tplldh.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a1mclxaenjbmbdbxusno.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/ewlldtrzwwczui1nsgps.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/rt5runc89mzf3yk2ahog.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/w5r2dqdsvoespnsvq2gn.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/rhmqwlzgfd4uc7pklq4a.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/lcas0bebx2gfpyeejvtq.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/waugp3oga1jj5movcfga.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/t4scdlco3plfvnybkyb4.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/qdk9uqmm2wc3ollphntk.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650454/t6belfvdtq23cvjmpy62.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/bpd5zcwwoot4ew5xldy4.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a6vlvgrbytakgqa61fcz.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/xintulrnfgg6vecxirpk.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/u7eyrdzv1tyj54knqxbl.jpg","photo18":"","photo19":"","photo20":"","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"3 Square Jean Bouin","surface":"119.01","prix":300000,"prixm2":2521},{"date":"11/2025","adresse":"5 Allée De Norvège","surface":"105","prix":270000,"prixm2":2571},{"date":"09/2025","adresse":"1 Allée Marcel Cerdan","surface":"102.83","prix":256000,"prixm2":2490},{"date":"07/2025","adresse":"1 Square Yves Du Manoir","surface":"107.82","prix":284250,"prixm2":2636},{"date":"05/2025","adresse":"50 Avenue Saint Marc ","surface":"106.1","prix":260000,"prixm2":2451},{"date":"09/2024","adresse":"1 Allee Du Quebec","surface":"119","prix":330000,"prixm2":2773}],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"1970 residence.\n4-storey building with lift.\nCellar.\n\n5-room through apartment, top floor\n\nOn the 4th and top floor with lift, entirely renovated (new flooring, paintwork, electrics), very bright thanks to its dual aspect.\n\nLiving room 17.85 m² + 6 m² balcony\nDining room 14.44 m² (possible 4th bedroom)\nIndependent fitted kitchen\n3 bedrooms, one with 4 m² balcony\nBathroom + shower room, 2 separate WC\nCellar + collective parking\nCollective heating/hot water, fibre optic\n200 m from schools, 600 m from shops, 500 m from Massy-Opéra station (future Grand Paris Express line 18), close to buses and hospital.\n\n120-lot co-ownership, €6,264/year charges, no works planned.\n\nIdeal for families or rental investment as flat-share. Rare in the area.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the survey, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order."},{"icon":"⚡","name":"Électricité","status":"attention","result":"The internal electrical installation contains anomalies for which action is recommended in order to eliminate the hazard(s) they present."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to collective network compliant."}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/prt4m4li2dardczv53m4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/fxkf6xribmdzwmamotxq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/tcrzbzq39jpcp8tplldh.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a1mclxaenjbmbdbxusno.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/ewlldtrzwwczui1nsgps.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/rt5runc89mzf3yk2ahog.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/w5r2dqdsvoespnsvq2gn.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/rhmqwlzgfd4uc7pklq4a.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/lcas0bebx2gfpyeejvtq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/waugp3oga1jj5movcfga.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/t4scdlco3plfvnybkyb4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/qdk9uqmm2wc3ollphntk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650454/t6belfvdtq23cvjmpy62.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/bpd5zcwwoot4ew5xldy4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a6vlvgrbytakgqa61fcz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/xintulrnfgg6vecxirpk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/u7eyrdzv1tyj54knqxbl.jpg","caption":"","uploading":false}]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","copro":"oui","etage":"4","adresse":"50 Avenue Saint Marc 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1969","description":"Appartement 5 pièces de 106 m² · 4 · DPE D","surface":106,"surfCarrez":0,"pieces":"5","dpe":"D","prix":275000,"prixm2":2594,"mediane":0,"tension":"","delai":"","loyer":1500,"chargesCopro":522,"chargesDetail":"Les charges de copropriété comprennent : eau froide, eau chaude, chauffage collectif au gaz, ascenseur, entretien des parties communes","taxeFonciere":1872,"score":"8.25","scorePrest":"9","scoreSecteur":"7","scoreQP":"8","scoreEtat":"9","fort1":"Refait à neuf","fort2":"Dernier étage avec ascenseur","fort3":"2 Balcons et 1 cave","vig1":"Quelques nuisances sonores : appartement donne sur rue passante","vig2":"Charges de copropriété : 522€/mois","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/prt4m4li2dardczv53m4.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/fxkf6xribmdzwmamotxq.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/tcrzbzq39jpcp8tplldh.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a1mclxaenjbmbdbxusno.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/ewlldtrzwwczui1nsgps.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/rt5runc89mzf3yk2ahog.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/w5r2dqdsvoespnsvq2gn.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/rhmqwlzgfd4uc7pklq4a.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/lcas0bebx2gfpyeejvtq.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/waugp3oga1jj5movcfga.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/t4scdlco3plfvnybkyb4.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/qdk9uqmm2wc3ollphntk.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650454/t6belfvdtq23cvjmpy62.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/bpd5zcwwoot4ew5xldy4.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a6vlvgrbytakgqa61fcz.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/xintulrnfgg6vecxirpk.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/u7eyrdzv1tyj54knqxbl.jpg","photo18":"","photo19":"","photo20":"","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"3 Square Jean Bouin","surface":"119.01","prix":300000,"prixm2":2521},{"date":"11/2025","adresse":"5 Allée De Norvège","surface":"105","prix":270000,"prixm2":2571},{"date":"09/2025","adresse":"1 Allée Marcel Cerdan","surface":"102.83","prix":256000,"prixm2":2490},{"date":"07/2025","adresse":"1 Square Yves Du Manoir","surface":"107.82","prix":284250,"prixm2":2636},{"date":"05/2025","adresse":"50 Avenue Saint Marc ","surface":"106.1","prix":260000,"prixm2":2451},{"date":"09/2024","adresse":"1 Allee Du Quebec","surface":"119","prix":330000,"prixm2":2773}],"historiqueLibre":"Résidence de 1970.\nImmeuble de 4 étages avec ascenseur.\nCave.\n\n Appartement 5 pièces traversant, dernier étage\n\nAu 4e et dernier étage avec ascenseur, entièrement rénové (sols, peintures, électricité neufs), très lumineux grâce à sa double exposition.\n\nSéjour 17,85 m² + balcon 6 m²\nSalle à manger 14,44 m² (4e chambre possible)\nCuisine indépendante équipée\n3 chambres, dont une avec balcon 4 m²\nSalle de bains + salle d'eau, 2 WC séparés\nCave + parking collectif\nChauffage/eau chaude collectifs, fibre optique\nÀ 200 m des écoles, 600 m des commerces, 500 m de la gare Massy-Opéra (futur Grand Paris Express ligne 18), proche bus et hôpital.\n\nCopropriété 120 lots, charges 6 264 €/an, aucun travaux à prévoir.\n\nIdéal famille ou investissement locatif en colocation. Rare sur le secteur.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme."}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/prt4m4li2dardczv53m4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/fxkf6xribmdzwmamotxq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/tcrzbzq39jpcp8tplldh.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a1mclxaenjbmbdbxusno.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/ewlldtrzwwczui1nsgps.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/rt5runc89mzf3yk2ahog.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/w5r2dqdsvoespnsvq2gn.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/rhmqwlzgfd4uc7pklq4a.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/lcas0bebx2gfpyeejvtq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/waugp3oga1jj5movcfga.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/t4scdlco3plfvnybkyb4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/qdk9uqmm2wc3ollphntk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650454/t6belfvdtq23cvjmpy62.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/bpd5zcwwoot4ew5xldy4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a6vlvgrbytakgqa61fcz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/xintulrnfgg6vecxirpk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/u7eyrdzv1tyj54knqxbl.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-en" type="application/json">{"type":"appart","copro":"oui","etage":"4","adresse":"50 Avenue Saint Marc 91300 Massy","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1969","description":"5-room apartment of 106 m² · 4 · DPE D","surface":106,"surfCarrez":0,"pieces":"5","dpe":"D","prix":275000,"prixm2":2594,"mediane":0,"tension":"","delai":"","loyer":1500,"chargesCopro":522,"chargesDetail":"Service charges include: cold water, hot water, collective gas heating, lift, maintenance of common areas","taxeFonciere":1872,"score":"8.25","scorePrest":"9","scoreSecteur":"7","scoreQP":"8","scoreEtat":"9","fort1":"Fully renovated","fort2":"Top floor with lift","fort3":"2 balconies and 1 cellar","vig1":"Some noise nuisance: apartment overlooks a busy street","vig2":"Service charges: €522/month","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/prt4m4li2dardczv53m4.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/fxkf6xribmdzwmamotxq.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/tcrzbzq39jpcp8tplldh.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a1mclxaenjbmbdbxusno.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/ewlldtrzwwczui1nsgps.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/rt5runc89mzf3yk2ahog.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/w5r2dqdsvoespnsvq2gn.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/rhmqwlzgfd4uc7pklq4a.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/lcas0bebx2gfpyeejvtq.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/waugp3oga1jj5movcfga.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/t4scdlco3plfvnybkyb4.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/qdk9uqmm2wc3ollphntk.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650454/t6belfvdtq23cvjmpy62.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/bpd5zcwwoot4ew5xldy4.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a6vlvgrbytakgqa61fcz.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/xintulrnfgg6vecxirpk.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/u7eyrdzv1tyj54knqxbl.jpg","photo18":"","photo19":"","photo20":"","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"3 Square Jean Bouin","surface":"119.01","prix":300000,"prixm2":2521},{"date":"11/2025","adresse":"5 Allée De Norvège","surface":"105","prix":270000,"prixm2":2571},{"date":"09/2025","adresse":"1 Allée Marcel Cerdan","surface":"102.83","prix":256000,"prixm2":2490},{"date":"07/2025","adresse":"1 Square Yves Du Manoir","surface":"107.82","prix":284250,"prixm2":2636},{"date":"05/2025","adresse":"50 Avenue Saint Marc ","surface":"106.1","prix":260000,"prixm2":2451},{"date":"09/2024","adresse":"1 Allee Du Quebec","surface":"119","prix":330000,"prixm2":2773}],"historiqueLibre":"1970 residence.\n4-storey building with lift.\nCellar.\n\n5-room through apartment, top floor\n\nOn the 4th and top floor with lift, entirely renovated (new flooring, paintwork, electrics), very bright thanks to its dual aspect.\n\nLiving room 17.85 m² + 6 m² balcony\nDining room 14.44 m² (possible 4th bedroom)\nIndependent fitted kitchen\n3 bedrooms, one with 4 m² balcony\nBathroom + shower room, 2 separate WC\nCellar + collective parking\nCollective heating/hot water, fibre optic\n200 m from schools, 600 m from shops, 500 m from Massy-Opéra station (future Grand Paris Express line 18), close to buses and hospital.\n\n120-lot co-ownership, €6,264/year charges, no works planned.\n\nIdeal for families or rental investment as flat-share. Rare in the area.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"As part of the survey, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order."},{"icon":"⚡","name":"Électricité","status":"attention","result":"The internal electrical installation contains anomalies for which action is recommended in order to eliminate the hazard(s) they present."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to collective network compliant."}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/prt4m4li2dardczv53m4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/fxkf6xribmdzwmamotxq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650413/tcrzbzq39jpcp8tplldh.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a1mclxaenjbmbdbxusno.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/ewlldtrzwwczui1nsgps.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/rt5runc89mzf3yk2ahog.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650450/w5r2dqdsvoespnsvq2gn.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/rhmqwlzgfd4uc7pklq4a.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/lcas0bebx2gfpyeejvtq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/waugp3oga1jj5movcfga.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/t4scdlco3plfvnybkyb4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/qdk9uqmm2wc3ollphntk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650454/t6belfvdtq23cvjmpy62.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650456/bpd5zcwwoot4ew5xldy4.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650449/a6vlvgrbytakgqa61fcz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650448/xintulrnfgg6vecxirpk.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791650451/u7eyrdzv1tyj54knqxbl.jpg","caption":"","uploading":false}]}}</script>
 <script id="expertimo-data-pt" type="application/json">{"fort1":"Totalmente renovado","fort2":"Último andar com elevador","fort3":"2 Varandas e 1 arrecadação","vig1":"Algumas perturbações sonoras: apartamento dá para rua movimentada","vig2":"Encargos de condomínio: 522€/mês","vig3":"","historiqueLibre":"Residência de 1970.\nEdifício de 4 andares com elevador.\nArrecadação.\n\n Apartamento T5 atravessante, último andar\n\nNo 4.º e último andar com elevador, totalmente renovado (pavimentos, pinturas, eletricidade novos), muito luminoso graças à sua dupla exposição.\n\nSala de estar 17,85 m² + varanda 6 m²\nSala de jantar 14,44 m² (possível 4.º quarto)\nCozinha independente equipada\n3 quartos, um deles com varanda 4 m²\nCasa de banho + casa de duche, 2 WC separados\nArrecadação + estacionamento coletivo\nAquecimento/água quente coletivos, fibra ótica\nA 200 m das escolas, 600 m dos comércios, 500 m da estação Massy-Opéra (futura linha 18 do Grand Paris Express), próximo de autocarros e hospital.\n\nCondomínio 120 lotes, encargos 6 264 €/ano, nenhumas obras a prever.\n\nIdeal para família ou investimento para arrendamento em regime de coabitação. Raro no sector.","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram identificados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito - edifício construído após 1 de janeiro de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a decreto prefeitoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"A instalação interior de eletricidade apresenta anomalias para as quais se recomenda agir a fim de eliminar os perigos que apresenta(m)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Não sujeito - Instalação com menos de 15 anos."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede coletiva conforme."}]}</script>
 <script id="expertimo-data-es" type="application/json">{"fort1":"Completamente renovado","fort2":"Última planta con ascensor","fort3":"2 balcones y 1 trastero","vig1":"Algunas molestias sonoras: el piso da a una calle transitada","vig2":"Gastos de comunidad: 522€/mes","vig3":"","historiqueLibre":"Residencia de 1970.\nEdificio de 4 plantas con ascensor.\nTrastero.\n\nPiso de 5 habitaciones exterior, última planta\n\nEn la 4ª y última planta con ascensor, completamente renovado (suelos, pintura, electricidad nuevos), muy luminoso gracias a su doble orientación.\n\nSalón 17,85 m² + balcón 6 m²\nComedor 14,44 m² (posible 4ª habitación)\nCocina independiente equipada\n3 habitaciones, una de ellas con balcón 4 m²\nCuarto de baño + aseo con ducha, 2 WC separados\nTrastero + aparcamiento comunitario\nCalefacción/agua caliente colectivos, fibra óptica\nA 200 m de colegios, 600 m de comercios, 500 m de la estación Massy-Opéra (futuro Grand Paris Express línea 18), cerca de autobuses y hospital.\n\nComunidad de propietarios 120 lotes, gastos 6 264 €/año, ningún trabajo previsto.\n\nIdeal para familia o inversión en alquiler compartido. Poco frecuente en el sector.","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la misión, no se han detectado materiales y productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sujeto - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sujeto a decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"La instalación interior de electricidad presenta anomalías para las cuales se recomienda actuar con el fin de eliminar los peligros que presenta(n)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"No sujeto - Instalación de menos de 15 años."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme."}]}</script>
 </head>
@@ -870,13 +856,11 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 
 <div class="layout-shell">
 <nav class="rail" id="main-nav">
-  <div class="rail-progress"><span id="rail-progress-count">1</span><span data-i18n="rail-progress-suffix"> / 10 sections explorées</span></div>
+  <div class="rail-progress"><span id="rail-progress-count">1</span><span data-i18n="rail-progress-suffix"> / 8 sections explorées</span></div>
   <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label" data-i18n="tab-bien">Le Bien</span></button>
   <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label" data-i18n="tab-marche">Ventes comparables</span></button>
-  <button data-tab="rentabilite" onclick="showTab('rentabilite',this)"><span class="rail-dot">💰</span><span class="rail-label" data-i18n="tab-rentabilite">Simulateur investisseur</span></button>
   <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label" data-i18n="tab-historique">Tout savoir sur ce bien</span></button>
   <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
-  <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label" data-i18n="tab-budget">Mon Budget</span></button>
   <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label" data-i18n="tab-quartier">Carte interactive</span></button>
   <button data-tab="documents" onclick="showTab('documents',this)"><span class="rail-dot">📁</span><span class="rail-label">Documents</span></button>
   <button data-tab="assistant" onclick="showTab('assistant',this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
@@ -1001,48 +985,6 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 </div>
 </section>
 
-<!-- ═══════════ ONGLET : RENTABILITÉ ═══════════ -->
-<section id="rentabilite" class="tab">
-<div class="pg">
-<div>
-  <div id="sub-rentabilite">
-    <div class="card">
-      <div class="lbl" data-i18n="lbl-simulateur">Simulateur investisseur temps réel</div>
-      <h2 class="stitle" data-i18n="stitle-simulateur">Simulateur investisseur interactif</h2>
-      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info" data-fr-val="Bien libre. Loyer estimé : 1 500 € nu. Simulez votre rentabilité ci-dessous." data-en-val="Vacant property. Estimated rent: 1 500 € unfurnished. Simulate your returns below." data-pt-val="Imóvel livre. Renda estimada: 1 500 € sem mobília. Simule abaixo a sua rentabilidade." data-es-val="Inmueble libre. Alquiler estimado: 1 500 € sin amueblar. Simule a continuación su rentabilidad.">Bien libre. Loyer estimé : 1 500 € nu. Simulez votre rentabilité ci-dessous.</div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-prix-achat">Prix d'achat</span><small data-i18n="slbl-prix-achat-sm">Votre offre</small></div><input type="range" id="prix" min="247500" max="302500" value="275000" step="500" oninput="calc()"><div class="sval" id="v-prix">275 000 €</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-loyer-simule">Loyer simulé</span><small data-i18n="slbl-loyer-simule-sm">Post-rénovation</small></div><input type="range" id="loyer" min="750" max="3750" value="1500" step="10" oninput="calc()"><div class="sval" id="v-loyer">1500 €</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-apport">Apport</span><small data-i18n="slbl-apport-sm">% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-taux">Taux crédit</span><small data-i18n="slbl-taux-sm">Oct. 2025 : 3,22%</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-duree">Durée</span><small data-i18n="slbl-duree-sm">Années</small></div><input type="range" id="duree" min="5" max="25" value="20" step="1" oninput="calc()"><div class="sval" id="v-duree">20 ans</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-charges">Charges ann.</span><small data-i18n="slbl-charges-sm">Copro+assur+TF</small></div><input type="range" id="charges" min="500" max="16272" value="8136" step="50" oninput="calc()"><div class="sval" id="v-charges">8136 €</div></div>
-      <div style="font-size:11px;color:var(--muted);margin:-9px 0 11px 162px;font-weight:300;" data-i18n="charges-detail-default">Eau froide, nettoyage et entretien des parties communes, ascenseur</div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-travaux">Budget travaux</span><small data-i18n="slbl-travaux-sm">Rénovation DPE</small></div><input type="range" id="travaux" min="0" max="20000" value="0" step="500" oninput="calc()"><div class="sval" id="v-travaux">0 €</div></div>
-    </div>
-    <div class="rg">
-      <div class="rc"><div class="rcl" data-i18n="rcl-prix-achat">Prix d'achat</div><div class="rcv mono" style="font-size:22px;" id="r-prix">—</div></div>
-      <div class="rc"><div class="rcl" data-i18n="rcl-notaire">Frais notaire</div><div class="rcv mono" style="font-size:22px;" id="r-notaire">—</div><div class="rcs">≈ 7,5%</div></div>
-      <div class="rc dk"><div class="rcl" data-i18n="rcl-apport-requis">Apport requis</div><div class="rcv mono" style="font-size:22px;" id="r-apport">—</div></div>
-      <div class="rc"><div class="rcl" data-i18n="rcl-rendement">Rendement brut</div><div class="rcv" style="font-size:22px;" id="r-brut">—</div></div>
-      <div class="rc"><div class="rcl" data-i18n="rcl-mensualite">Mensualité crédit</div><div class="rcv" style="font-size:22px;" id="r-mens">—</div></div>
-    </div>
-  </div>
-</div>
-<div><div class="cons-card">
-  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
-  <div class="cons-avatar" style="display: none;">OL</div>
-  <div class="cons-name">Olivier Loison</div>
-  <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Expertimo</div>
-  <div class="cons-contact">
-    <a href="tel:+33685684613">📞 0685684613</a>
-    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
-  </div>
-  <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
-  <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-</div></div>
-</div>
-</section>
-
 <!-- ═══════════ ONGLET : HISTORIQUE ═══════════ -->
 <section id="historique" class="tab">
 <div class="pg">
@@ -1097,44 +1039,6 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
   <a href="(calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv">📅 Prendre rendez-vous</a><a class="btn-rdv" href="https://www.reseau-expertimo.fr/1883-mandataire/1" target="_blank" rel="noopener" data-i18n="btn-site">🏠 Voir mes autres biens</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
 </div></div>
-</div>
-</section>
-
-<!-- ═══════════ ONGLET : MON BUDGET ═══════════ -->
-<section id="budget" class="tab">
-<div class="pg">
-  <div class="card">
-    <div class="lbl" data-i18n="lbl-simulateur-perso">Simulateur personnel</div>
-    <h2 class="stitle" data-i18n="stitle-budget">Ce bien est-il fait pour vous ?</h2>
-    <p class="ssub" data-i18n="ssub-budget">Entrez votre situation pour le savoir en 30 secondes</p>
-    <div class="f2" style="margin-top:20px;">
-      <div><label class="lbl" data-i18n="lbl-prix-vente">Prix de vente (€)</label>
-      <input type="number" class="field" id="bgt-prix" min="0" step="1000"></div>
-      <div>
-        <label class="lbl" data-i18n="lbl-revenu">Revenu net mensuel du foyer (€)</label>
-        <input type="number" class="field" id="bgt-revenu" placeholder="3500" min="0">
-      </div>
-      <div>
-        <label class="lbl" data-i18n="lbl-apport-dispo">Apport disponible (€)</label>
-        <input type="number" class="field" id="bgt-apport" placeholder="30000" min="0">
-      </div>
-      <div>
-        <label class="lbl" data-i18n="lbl-duree-credit">Durée du crédit souhaitée</label>
-        <select class="field" id="bgt-duree">
-          <option value="15" data-i18n="opt-15ans">15 ans</option>
-          <option value="20" selected="" data-i18n="opt-20ans">20 ans</option>
-          <option value="25" data-i18n="opt-25ans">25 ans</option>
-        </select>
-      </div>
-      <div>
-        <label class="lbl" data-i18n="lbl-taux-budget">Taux du crédit (%)</label>
-        <input type="number" class="field" id="bgt-taux" min="0.5" max="8" step="0.05" value="3.4">
-      </div>
-    </div>
-    <button onclick="calcBudget()" style="margin-top:20px;padding:12px 28px;background:var(--dark);color:var(--gold);border:none;border-radius:99px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;" data-i18n="btn-calc-budget">Calculer mon accessibilité</button>
-    <div id="bgt-result" style="margin-top:24px;display:none;"></div>
-    <p style="margin-top:24px;font-size:10px;color:var(--muted);line-height:1.6;font-weight:300;border-top:1px solid var(--border);padding-top:16px;" data-i18n="disclaimer-budget">⚠️ Cette simulation est fournie à titre indicatif uniquement, sur la base des taux moyens du marché et des règles bancaires courantes. Elle ne constitue pas un accord de financement, une offre de prêt, ni un engagement d'un établissement bancaire. Les résultats dépendent de votre situation personnelle complète (revenus, charges, historique bancaire). Seul un établissement de crédit agréé peut vous délivrer une offre de prêt valable. Consultez votre banquier ou un courtier pour une analyse personnalisée.</p>
-  </div>
 </div>
 </section>
 
@@ -1233,7 +1137,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
   <div class="vr-note" id="vr-note"></div>
 </div>
 <div class="card" style="background:var(--cream);border:1px solid var(--gold);margin-bottom:16px;">
-    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;"><span data-i18n="offre-progress-prefix">Vous avez exploré</span> <span id="offre-progress-count">1</span><span data-i18n="offre-progress-suffix"> / 10 sections</span></div>
+    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;"><span data-i18n="offre-progress-prefix">Vous avez exploré</span> <span id="offre-progress-count">1</span><span data-i18n="offre-progress-suffix"> / 8 sections</span></div>
     <div style="font-size:12.5px;color:var(--muted);" data-i18n="offre-progress-sub">Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.</div>
   </div>
   <div class="card">
@@ -1309,7 +1213,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 
 <div class="pfooter">
   <h2><span data-i18n="footer-title">Espace Acheteur Privé</span><br><span style="color:var(--gold);font-style:italic;" data-i18n="footer-subtitle">une expérience immobilière nouvelle génération</span></h2>
-  <p data-i18n="footer-desc">Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.</p>
+  <p data-i18n="footer-desc">Analyse patrimoniale, données DVF réelles et assistant IA — tout ce qu'il vous faut pour décider en confiance.</p>
 </div>
 
 </div>
@@ -1338,12 +1242,10 @@ var I18N = {
     'hbadge': 'Espace Acheteur Privé · Expertimo',
     'price-label': 'Prix affiché',
     'price-meta': "Frais d'agence inclus · Données temps réel",
-    'rail-progress-suffix': ' / 10 sections explorées',
+    'rail-progress-suffix': ' / 8 sections explorées',
     'tab-bien': 'Le Bien',
     'tab-marche': 'Ventes comparables',
-    'tab-rentabilite': 'Simulateur investisseur',
     'tab-historique': 'Tout savoir sur ce bien',
-    'tab-budget': 'Mon Budget',
     'tab-quartier': 'Carte interactive',
     'tab-offre': 'Faire une offre',
     'lbl-le-bien': 'Le bien',
@@ -1367,44 +1269,9 @@ var I18N = {
     'comparables-title': '📊 Positionnement prix',
     'comparables-justification': 'Le prix de présentation a été établi sur la base des transactions récentes du secteur et des caractéristiques propres au bien.',
     'lbl-dpe-reglementation': 'DPE & réglementation',
-    'lbl-simulateur': 'Simulateur investisseur temps réel',
-    'stitle-simulateur': 'Simulateur investisseur interactif',
-    'slbl-prix-achat': "Prix d'achat",
-    'slbl-prix-achat-sm': 'Votre offre',
-    'slbl-loyer-simule': 'Loyer simulé',
-    'slbl-loyer-simule-sm': 'Post-rénovation',
-    'slbl-apport': 'Apport',
-    'slbl-apport-sm': '% du coût total',
-    'slbl-taux': 'Taux crédit',
-    'slbl-taux-sm': 'Oct. 2025 : 3,22%',
-    'slbl-duree': 'Durée',
-    'slbl-duree-sm': 'Années',
-    'slbl-charges': 'Charges ann.',
-    'slbl-charges-sm': 'Copro+assur+TF',
-    'charges-detail-default': 'Eau froide, nettoyage et entretien des parties communes, ascenseur',
-    'slbl-travaux': 'Budget travaux',
-    'slbl-travaux-sm': 'Rénovation DPE',
-    'rcl-prix-achat': "Prix d'achat",
-    'rcl-notaire': 'Frais notaire',
-    'rcl-apport-requis': 'Apport requis',
-    'rcl-rendement': 'Rendement brut',
-    'rcl-mensualite': 'Mensualité crédit',
     'lbl-infos-complementaires': 'Informations complémentaires',
     'stitle-diagnostics': 'Diagnostics Techniques',
     'ssub-diagnostics': 'Résultats officiels des diagnostics réglementaires',
-    'lbl-simulateur-perso': 'Simulateur personnel',
-    'stitle-budget': 'Ce bien est-il fait pour vous ?',
-    'ssub-budget': 'Entrez votre situation pour le savoir en 30 secondes',
-    'lbl-prix-vente': 'Prix de vente (€)',
-    'lbl-revenu': 'Revenu net mensuel du foyer (€)',
-    'lbl-apport-dispo': 'Apport disponible (€)',
-    'lbl-duree-credit': 'Durée du crédit souhaitée',
-    'lbl-taux-budget': 'Taux du crédit (%)',
-    'opt-15ans': '15 ans',
-    'opt-20ans': '20 ans',
-    'opt-25ans': '25 ans',
-    'btn-calc-budget': 'Calculer mon accessibilité',
-    'disclaimer-budget': "⚠️ Cette simulation est fournie à titre indicatif uniquement, sur la base des taux moyens du marché et des règles bancaires courantes. Elle ne constitue pas un accord de financement, une offre de prêt, ni un engagement d'un établissement bancaire. Les résultats dépendent de votre situation personnelle complète (revenus, charges, historique bancaire). Seul un établissement de crédit agréé peut vous délivrer une offre de prêt valable. Consultez votre banquier ou un courtier pour une analyse personnalisée.",
     'lbl-quartier': 'Vie du quartier',
     'stitle-quartier': 'Carte du quartier',
     'ssub-quartier': 'Transports, commerces, écoles et espaces verts dans un rayon de 800m',
@@ -1435,7 +1302,7 @@ var I18N = {
     'doc-reglement': 'Règlement copropriété',
     'doc-reglement-desc': 'Documents de la copro',
     'offre-progress-prefix': 'Vous avez exploré',
-    'offre-progress-suffix': ' / 10 sections',
+    'offre-progress-suffix': ' / 8 sections',
     'offre-progress-sub': 'Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.',
     'lbl-processus': "Processus d'acquisition",
     'step-visite': 'Visite',
@@ -1475,7 +1342,7 @@ var I18N = {
     'marge-negociation-suffix': 'selon le DPE et les DVF du secteur.',
     'footer-title': 'Espace Acheteur Privé',
     'footer-subtitle': 'une expérience immobilière nouvelle génération',
-    'footer-desc': "Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.",
+    'footer-desc': "Analyse patrimoniale, données DVF réelles et assistant IA — tout ce qu'il vous faut pour décider en confiance.",
     'ai-bubble': 'Une question sur ce bien ? Je suis là 👋',
     'ai-ask-btn': 'Poser une question',
     'ai-modal-title': 'Assistant Privency',
@@ -1491,7 +1358,6 @@ var I18N = {
     'placeholder-offer-msg': "Présentez votre projet... Un message sincère rassure le vendeur."
     },
     msg: {
-      "years-suffix": " ans",
       "offer-diff-below": " vs prix affiché",
       "offer-diff-above": " au-dessus du prix affiché",
       "offer-diff-at": "Au prix affiché",
@@ -1505,20 +1371,6 @@ var I18N = {
       "diag-not-subject": "Non soumis à obligation",
       "welcome-greeting": "Bienvenue",
       "welcome-buyer": "Bienvenue {name}",
-      "bgt-basis": "Simulation basée sur un prix de {prix} et un taux de {taux}%.",
-      "bgt-monthly": "Mensualité estimée",
-      "bgt-debt": "Taux d'endettement",
-      "bgt-max": "Budget max accessible",
-      "bgt-effort": "Effort total",
-      "bgt-effort-sm": "(crédit + charges)",
-      "bgt-effort-sub": "À titre informatif",
-      "bgt-note": "Simulation basée sur un apport minimum de 10% du coût total (frais de notaire compris), règle appliquée par la majorité des banques. Certaines banques financent jusqu'à 110% du prix (sans apport), mais cette pratique reste de plus en plus rare.",
-      "bgt-need-income": "Veuillez renseigner votre revenu mensuel.",
-      "bgt-ok-title": "✅ Ce bien est accessible pour vous",
-      "bgt-cond-title": "⚠️ Accessible sous conditions",
-      "bgt-cond-text": "Taux d'endettement {taux}% — certaines banques acceptent jusqu'à 38% selon votre profil. Votre budget max estimé : {max}.",
-      "bgt-ko-title": "❌ Hors budget pour ce bien",
-      "bgt-ko-text": "Avec un revenu de {revenu} €/mois et un apport de {apport} €, votre budget max est estimé à <strong>{max} €</strong> vs {prix} € pour ce bien.",
       "gallery-caption-one": "📷 Cliquez sur une photo pour l'agrandir · {n} photo disponible",
       "gallery-caption-other": "📷 Cliquez sur une photo pour l'agrandir · {n} photos disponibles",
       "score-desc": "Score {score}/10{dpe}. {pos}.",
@@ -1527,7 +1379,6 @@ var I18N = {
       "price-pos-below": "Prix sous le marché",
       "price-pos-in": "Prix dans le marché",
       "price-pos-tbc": "Prix à confirmer",
-      "rent-info": "Bien libre. Loyer estimé : {loyer} € nu. Simulez votre rentabilité ci-dessous.",
       "doc-charges-desc": "Relevé annuel · {n} €/mois",
       "doc-taxe-desc": "{n} € / an",
       "diag-name-amiante": "Amiante",
@@ -1576,12 +1427,10 @@ var I18N = {
     'hbadge': 'Private Buyer Portal · Expertimo',
     'price-label': 'Listed price',
     'price-meta': 'Agency fees included · Real-time data',
-    'rail-progress-suffix': ' / 10 sections explored',
+    'rail-progress-suffix': ' / 8 sections explored',
     'tab-bien': 'The Property',
     'tab-marche': 'Comparable Sales',
-    'tab-rentabilite': 'Investor Simulator',
     'tab-historique': 'Everything About This Property',
-    'tab-budget': 'My Budget',
     'tab-quartier': 'Interactive Map',
     'tab-offre': 'Make an Offer',
     'lbl-le-bien': 'The property',
@@ -1605,44 +1454,9 @@ var I18N = {
     'comparables-title': '📊 Price Positioning',
     'comparables-justification': "The listed price was established based on recent transactions in the area and the property's specific characteristics.",
     'lbl-dpe-reglementation': 'DPE & regulations',
-    'lbl-simulateur': 'Real-time investor simulator',
-    'stitle-simulateur': 'Interactive investor simulator',
-    'slbl-prix-achat': 'Purchase price',
-    'slbl-prix-achat-sm': 'Your offer',
-    'slbl-loyer-simule': 'Simulated rent',
-    'slbl-loyer-simule-sm': 'Post-renovation',
-    'slbl-apport': 'Down payment',
-    'slbl-apport-sm': '% of total cost',
-    'slbl-taux': 'Interest rate',
-    'slbl-taux-sm': 'Oct. 2025: 3.22%',
-    'slbl-duree': 'Duration',
-    'slbl-duree-sm': 'Years',
-    'slbl-charges': 'Annual charges',
-    'slbl-charges-sm': 'HOA+insurance+property tax',
-    'charges-detail-default': 'Cold water, cleaning and maintenance of common areas, elevator',
-    'slbl-travaux': 'Renovation budget',
-    'slbl-travaux-sm': 'DPE renovation',
-    'rcl-prix-achat': 'Purchase price',
-    'rcl-notaire': 'Notary fees',
-    'rcl-apport-requis': 'Required down payment',
-    'rcl-rendement': 'Gross yield',
-    'rcl-mensualite': 'Monthly payment',
     'lbl-infos-complementaires': 'Additional information',
     'stitle-diagnostics': 'Technical Diagnostics',
     'ssub-diagnostics': 'Official results of regulatory diagnostics',
-    'lbl-simulateur-perso': 'Personal simulator',
-    'stitle-budget': 'Is this property right for you?',
-    'ssub-budget': 'Enter your situation to find out in 30 seconds',
-    'lbl-prix-vente': 'Sale price (€)',
-    'lbl-revenu': 'Net monthly household income (€)',
-    'lbl-apport-dispo': 'Available down payment (€)',
-    'lbl-duree-credit': 'Desired loan term',
-    'lbl-taux-budget': 'Loan interest rate (%)',
-    'opt-15ans': '15 years',
-    'opt-20ans': '20 years',
-    'opt-25ans': '25 years',
-    'btn-calc-budget': 'Calculate my affordability',
-    'disclaimer-budget': '⚠️ This simulation is provided for indicative purposes only, based on average market rates and standard banking rules. It does not constitute a financing agreement, loan offer, or commitment from any banking institution. Results depend on your complete personal situation (income, expenses, credit history). Only an authorized lending institution can issue a valid loan offer. Consult your banker or a broker for a personalized analysis.',
     'lbl-quartier': 'Neighborhood life',
     'stitle-quartier': 'Neighborhood map',
     'ssub-quartier': 'Transport, shops, schools and green spaces within 800m',
@@ -1673,7 +1487,7 @@ var I18N = {
     'doc-reglement': 'Condominium Bylaws',
     'doc-reglement-desc': 'HOA documents',
     'offre-progress-prefix': "You've explored",
-    'offre-progress-suffix': ' / 10 sections',
+    'offre-progress-suffix': ' / 8 sections',
     'offre-progress-sub': "The more you explore this file, the more confident you'll feel making an offer.",
     'lbl-processus': 'Acquisition process',
     'step-visite': 'Viewing',
@@ -1713,7 +1527,7 @@ var I18N = {
     'marge-negociation-suffix': 'based on DPE and local DVF data.',
     'footer-title': 'Private Buyer Portal',
     'footer-subtitle': 'a new generation real estate experience',
-    'footer-desc': 'Property analysis, real DVF data, interactive simulator and AI assistant — everything you need to decide with confidence.',
+    'footer-desc': 'Property analysis, real DVF data and AI assistant — everything you need to decide with confidence.',
     'ai-bubble': "Have a question about this property? I'm here 👋",
     'ai-ask-btn': 'Ask a Question',
     'ai-modal-title': 'Privency Assistant',
@@ -1729,7 +1543,6 @@ var I18N = {
     'placeholder-offer-msg': 'Introduce your project... A sincere message reassures the seller.'
     },
     msg: {
-      "years-suffix": " years",
       "offer-diff-below": " vs listed price",
       "offer-diff-above": " above listed price",
       "offer-diff-at": "At listed price",
@@ -1743,20 +1556,6 @@ var I18N = {
       "diag-not-subject": "Not subject to requirement",
       "welcome-greeting": "Welcome",
       "welcome-buyer": "Welcome {name}",
-      "bgt-basis": "Simulation based on a price of {prix} and a rate of {taux}%.",
-      "bgt-monthly": "Estimated monthly payment",
-      "bgt-debt": "Debt ratio",
-      "bgt-max": "Max affordable budget",
-      "bgt-effort": "Total effort",
-      "bgt-effort-sm": "(loan + charges)",
-      "bgt-effort-sub": "For informational purposes",
-      "bgt-note": "Simulation based on a minimum down payment of 10% of total cost (notary fees included), a rule applied by most banks. Some banks finance up to 110% of the price (no down payment), but this practice is becoming increasingly rare.",
-      "bgt-need-income": "Please enter your monthly income.",
-      "bgt-ok-title": "✅ This property is affordable for you",
-      "bgt-cond-title": "⚠️ Affordable under conditions",
-      "bgt-cond-text": "Debt ratio {taux}% — some banks accept up to 38% depending on your profile. Your estimated max budget: {max}.",
-      "bgt-ko-title": "❌ Outside your budget for this property",
-      "bgt-ko-text": "With an income of {revenu} €/month and a down payment of {apport} €, your estimated max budget is <strong>{max} €</strong> vs {prix} € for this property.",
       "gallery-caption-one": "📷 Click on a photo to enlarge it · {n} photo available",
       "gallery-caption-other": "📷 Click on a photo to enlarge it · {n} photos available",
       "score-desc": "Score {score}/10{dpe}. {pos}.",
@@ -1765,7 +1564,6 @@ var I18N = {
       "price-pos-below": "Price below the market",
       "price-pos-in": "Price in line with the market",
       "price-pos-tbc": "Price to be confirmed",
-      "rent-info": "Vacant property. Estimated rent: {loyer} € unfurnished. Simulate your returns below.",
       "doc-charges-desc": "Annual statement · {n} €/month",
       "doc-taxe-desc": "{n} € / year",
       "diag-name-amiante": "Asbestos",
@@ -1814,12 +1612,10 @@ var I18N = {
     "hbadge": "Espaço Comprador Privado · Expertimo",
     "price-label": "Preço anunciado",
     "price-meta": "Comissão de agência incluída · Dados em tempo real",
-    "rail-progress-suffix": " / 10 secções exploradas",
+    "rail-progress-suffix": " / 8 secções exploradas",
     "tab-bien": "O Imóvel",
     "tab-marche": "Vendas comparáveis",
-    "tab-rentabilite": "Simulador de investimento",
     "tab-historique": "Tudo sobre este imóvel",
-    "tab-budget": "O meu orçamento",
     "tab-quartier": "Mapa interativo",
     "tab-offre": "Fazer uma proposta",
     "lbl-le-bien": "O imóvel",
@@ -1843,44 +1639,9 @@ var I18N = {
     "comparables-title": "📊 Posicionamento de preço",
     "comparables-justification": "O preço de apresentação foi definido com base nas transações recentes da zona e nas características próprias do imóvel.",
     "lbl-dpe-reglementation": "DPE e regulamentação",
-    "lbl-simulateur": "Simulador de investimento em tempo real",
-    "stitle-simulateur": "Simulador de investimento interativo",
-    "slbl-prix-achat": "Preço de compra",
-    "slbl-prix-achat-sm": "A sua proposta",
-    "slbl-loyer-simule": "Renda simulada",
-    "slbl-loyer-simule-sm": "Após obras",
-    "slbl-apport": "Entrada",
-    "slbl-apport-sm": "% do custo total",
-    "slbl-taux": "Taxa do crédito",
-    "slbl-taux-sm": "Out. 2025: 3,22%",
-    "slbl-duree": "Duração",
-    "slbl-duree-sm": "Anos",
-    "slbl-charges": "Encargos anuais",
-    "slbl-charges-sm": "Cond.+seguro+imposto predial",
-    "charges-detail-default": "Água fria, limpeza e manutenção das partes comuns, elevador",
-    "slbl-travaux": "Orçamento de obras",
-    "slbl-travaux-sm": "Renovação energética (DPE)",
-    "rcl-prix-achat": "Preço de compra",
-    "rcl-notaire": "Custos notariais",
-    "rcl-apport-requis": "Entrada necessária",
-    "rcl-rendement": "Rendimento bruto",
-    "rcl-mensualite": "Prestação do crédito",
     "lbl-infos-complementaires": "Informações complementares",
     "stitle-diagnostics": "Diagnósticos técnicos",
     "ssub-diagnostics": "Resultados oficiais dos diagnósticos regulamentares",
-    "lbl-simulateur-perso": "Simulador pessoal",
-    "stitle-budget": "Este imóvel é feito para si?",
-    "ssub-budget": "Indique a sua situação e descubra em 30 segundos",
-    "lbl-prix-vente": "Preço de venda (€)",
-    "lbl-revenu": "Rendimento líquido mensal do agregado (€)",
-    "lbl-apport-dispo": "Entrada disponível (€)",
-    "lbl-duree-credit": "Duração do crédito pretendida",
-    "lbl-taux-budget": "Taxa do crédito (%)",
-    "opt-15ans": "15 anos",
-    "opt-20ans": "20 anos",
-    "opt-25ans": "25 anos",
-    "btn-calc-budget": "Calcular a minha capacidade",
-    "disclaimer-budget": "⚠️ Esta simulação é fornecida a título meramente indicativo, com base nas taxas médias de mercado e nas regras bancárias correntes. Não constitui um acordo de financiamento, uma oferta de crédito nem um compromisso de qualquer instituição bancária. Os resultados dependem da sua situação pessoal completa (rendimentos, encargos, historial bancário). Apenas uma instituição de crédito autorizada pode emitir uma oferta de crédito válida. Consulte o seu banco ou um intermediário de crédito para uma análise personalizada.",
     "lbl-quartier": "Vida do bairro",
     "stitle-quartier": "Mapa do bairro",
     "ssub-quartier": "Transportes, comércios, escolas e espaços verdes num raio de 800 m",
@@ -1911,7 +1672,7 @@ var I18N = {
     "doc-reglement": "Regulamento do condomínio",
     "doc-reglement-desc": "Documentos do condomínio",
     "offre-progress-prefix": "Explorou",
-    "offre-progress-suffix": " / 10 secções",
+    "offre-progress-suffix": " / 8 secções",
     "offre-progress-sub": "Quanto mais explorar o dossier, mais confiança terá para fazer uma proposta.",
     "lbl-processus": "Processo de aquisição",
     "step-visite": "Visita",
@@ -1951,7 +1712,7 @@ var I18N = {
     "marge-negociation-suffix": "com base no DPE e nas transações DVF da zona.",
     "footer-title": "Espaço Comprador Privado",
     "footer-subtitle": "uma experiência imobiliária de nova geração",
-    "footer-desc": "Análise patrimonial, dados DVF reais, simulador interativo e assistente de IA — tudo o que precisa para decidir com confiança.",
+    "footer-desc": "Análise patrimonial, dados DVF reais e assistente de IA — tudo o que precisa para decidir com confiança.",
     "ai-bubble": "Tem uma pergunta sobre este imóvel? Estou aqui 👋",
     "ai-ask-btn": "Fazer uma pergunta",
     "ai-modal-title": "Assistente Privency",
@@ -1967,7 +1728,6 @@ var I18N = {
     "placeholder-offer-msg": "Apresente o seu projeto... Uma mensagem sincera tranquiliza o vendedor."
     },
     msg: {
-      "years-suffix": " anos",
       "offer-diff-below": " face ao preço anunciado",
       "offer-diff-above": " acima do preço anunciado",
       "offer-diff-at": "Ao preço anunciado",
@@ -1981,20 +1741,6 @@ var I18N = {
       "diag-not-subject": "Não sujeito a obrigação",
       "welcome-greeting": "Bem-vindo(a)",
       "welcome-buyer": "Bem-vindo(a) {name}",
-      "bgt-basis": "Simulação baseada num preço de {prix} e numa taxa de {taux}%.",
-      "bgt-monthly": "Prestação estimada",
-      "bgt-debt": "Taxa de esforço",
-      "bgt-max": "Orçamento máximo acessível",
-      "bgt-effort": "Esforço total",
-      "bgt-effort-sm": "(crédito + encargos)",
-      "bgt-effort-sub": "A título informativo",
-      "bgt-note": "Simulação baseada numa entrada mínima de 10% do custo total (custos notariais incluídos), regra aplicada pela maioria dos bancos. Alguns bancos financiam até 110% do preço (sem entrada), mas esta prática é cada vez mais rara.",
-      "bgt-need-income": "Indique o seu rendimento mensal.",
-      "bgt-ok-title": "✅ Este imóvel é acessível para si",
-      "bgt-cond-title": "⚠️ Acessível sob condições",
-      "bgt-cond-text": "Taxa de esforço de {taux}% — alguns bancos aceitam até 38% consoante o seu perfil. O seu orçamento máximo estimado: {max}.",
-      "bgt-ko-title": "❌ Fora do orçamento para este imóvel",
-      "bgt-ko-text": "Com um rendimento de {revenu} €/mês e uma entrada de {apport} €, o seu orçamento máximo estimado é de <strong>{max} €</strong> face a {prix} € para este imóvel.",
       "gallery-caption-one": "📷 Clique numa foto para a ampliar · {n} foto disponível",
       "gallery-caption-other": "📷 Clique numa foto para a ampliar · {n} fotos disponíveis",
       "score-desc": "Pontuação {score}/10{dpe}. {pos}.",
@@ -2003,7 +1749,6 @@ var I18N = {
       "price-pos-below": "Preço abaixo do mercado",
       "price-pos-in": "Preço em linha com o mercado",
       "price-pos-tbc": "Preço a confirmar",
-      "rent-info": "Imóvel livre. Renda estimada: {loyer} € não mobilado. Simule abaixo a sua rentabilidade.",
       "doc-charges-desc": "Extrato anual · {n} €/mês",
       "doc-taxe-desc": "{n} € / ano",
       "diag-name-amiante": "Amianto",
@@ -2052,12 +1797,10 @@ var I18N = {
     "hbadge": "Espacio Comprador Privado · Expertimo",
     "price-label": "Precio anunciado",
     "price-meta": "Honorarios de agencia incluidos · Datos en tiempo real",
-    "rail-progress-suffix": " / 10 secciones exploradas",
+    "rail-progress-suffix": " / 8 secciones exploradas",
     "tab-bien": "La vivienda",
     "tab-marche": "Ventas comparables",
-    "tab-rentabilite": "Simulador de inversión",
     "tab-historique": "Todo sobre esta vivienda",
-    "tab-budget": "Mi presupuesto",
     "tab-quartier": "Mapa interactivo",
     "tab-offre": "Hacer una oferta",
     "lbl-le-bien": "La vivienda",
@@ -2081,44 +1824,9 @@ var I18N = {
     "comparables-title": "📊 Posicionamiento de precio",
     "comparables-justification": "El precio de presentación se ha establecido a partir de las transacciones recientes de la zona y de las características propias de la vivienda.",
     "lbl-dpe-reglementation": "DPE y normativa",
-    "lbl-simulateur": "Simulador de inversión en tiempo real",
-    "stitle-simulateur": "Simulador de inversión interactivo",
-    "slbl-prix-achat": "Precio de compra",
-    "slbl-prix-achat-sm": "Su oferta",
-    "slbl-loyer-simule": "Alquiler simulado",
-    "slbl-loyer-simule-sm": "Tras la reforma",
-    "slbl-apport": "Entrada",
-    "slbl-apport-sm": "% del coste total",
-    "slbl-taux": "Tipo del préstamo",
-    "slbl-taux-sm": "Oct. 2025: 3,22%",
-    "slbl-duree": "Duración",
-    "slbl-duree-sm": "Años",
-    "slbl-charges": "Gastos anuales",
-    "slbl-charges-sm": "Gastos de comunidad+seguro+imp. inmuebles",
-    "charges-detail-default": "Agua fría, limpieza y mantenimiento de zonas comunes, ascensor",
-    "slbl-travaux": "Presupuesto de obras",
-    "slbl-travaux-sm": "Reforma energética (DPE)",
-    "rcl-prix-achat": "Precio de compra",
-    "rcl-notaire": "Gastos notariales",
-    "rcl-apport-requis": "Entrada necesaria",
-    "rcl-rendement": "Rentabilidad bruta",
-    "rcl-mensualite": "Cuota del préstamo",
     "lbl-infos-complementaires": "Información complementaria",
     "stitle-diagnostics": "Diagnósticos técnicos",
     "ssub-diagnostics": "Resultados oficiales de los diagnósticos reglamentarios",
-    "lbl-simulateur-perso": "Simulador personal",
-    "stitle-budget": "¿Es esta vivienda para usted?",
-    "ssub-budget": "Indique su situación y lo sabrá en 30 segundos",
-    "lbl-prix-vente": "Precio de venta (€)",
-    "lbl-revenu": "Ingresos netos mensuales del hogar (€)",
-    "lbl-apport-dispo": "Entrada disponible (€)",
-    "lbl-duree-credit": "Duración del préstamo deseada",
-    "lbl-taux-budget": "Tipo del préstamo (%)",
-    "opt-15ans": "15 años",
-    "opt-20ans": "20 años",
-    "opt-25ans": "25 años",
-    "btn-calc-budget": "Calcular mi capacidad",
-    "disclaimer-budget": "⚠️ Esta simulación se ofrece únicamente a título indicativo, sobre la base de los tipos medios de mercado y de las reglas bancarias habituales. No constituye un acuerdo de financiación, una oferta de préstamo ni un compromiso de ninguna entidad bancaria. Los resultados dependen de su situación personal completa (ingresos, gastos, historial bancario). Solo una entidad de crédito autorizada puede emitir una oferta de préstamo válida. Consulte con su banco o con un intermediario de crédito para un análisis personalizado.",
     "lbl-quartier": "Vida del barrio",
     "stitle-quartier": "Mapa del barrio",
     "ssub-quartier": "Transportes, comercios, colegios y zonas verdes en un radio de 800 m",
@@ -2149,7 +1857,7 @@ var I18N = {
     "doc-reglement": "Estatutos de la comunidad de propietarios",
     "doc-reglement-desc": "Documentos de la comunidad de propietarios",
     "offre-progress-prefix": "Ha explorado",
-    "offre-progress-suffix": " / 10 secciones",
+    "offre-progress-suffix": " / 8 secciones",
     "offre-progress-sub": "Cuanto más explore el expediente, con más confianza podrá hacer una oferta.",
     "lbl-processus": "Proceso de adquisición",
     "step-visite": "Visita",
@@ -2189,7 +1897,7 @@ var I18N = {
     "marge-negociation-suffix": "según el DPE y las transacciones DVF de la zona.",
     "footer-title": "Espacio Comprador Privado",
     "footer-subtitle": "una experiencia inmobiliaria de nueva generación",
-    "footer-desc": "Análisis patrimonial, datos DVF reales, simulador interactivo y asistente de IA: todo lo que necesita para decidir con confianza.",
+    "footer-desc": "Análisis patrimonial, datos DVF reales y asistente de IA: todo lo que necesita para decidir con confianza.",
     "ai-bubble": "¿Tiene una pregunta sobre esta vivienda? Estoy aquí 👋",
     "ai-ask-btn": "Hacer una pregunta",
     "ai-modal-title": "Asistente Privency",
@@ -2205,7 +1913,6 @@ var I18N = {
     "placeholder-offer-msg": "Presente su proyecto... Un mensaje sincero tranquiliza al vendedor."
     },
     msg: {
-      "years-suffix": " años",
       "offer-diff-below": " respecto al precio anunciado",
       "offer-diff-above": " por encima del precio anunciado",
       "offer-diff-at": "Al precio anunciado",
@@ -2219,20 +1926,6 @@ var I18N = {
       "diag-not-subject": "No sujeto a obligación",
       "welcome-greeting": "Bienvenido/a",
       "welcome-buyer": "Bienvenido/a {name}",
-      "bgt-basis": "Simulación basada en un precio de {prix} y un tipo del {taux}%.",
-      "bgt-monthly": "Cuota mensual estimada",
-      "bgt-debt": "Tasa de endeudamiento",
-      "bgt-max": "Presupuesto máximo accesible",
-      "bgt-effort": "Esfuerzo total",
-      "bgt-effort-sm": "(préstamo + gastos)",
-      "bgt-effort-sub": "A título informativo",
-      "bgt-note": "Simulación basada en una entrada mínima del 10% del coste total (gastos notariales incluidos), regla aplicada por la mayoría de los bancos. Algunos bancos financian hasta el 110% del precio (sin entrada), pero esta práctica es cada vez menos frecuente.",
-      "bgt-need-income": "Indique sus ingresos mensuales.",
-      "bgt-ok-title": "✅ Esta vivienda es accesible para usted",
-      "bgt-cond-title": "⚠️ Accesible bajo condiciones",
-      "bgt-cond-text": "Tasa de endeudamiento del {taux}% — algunos bancos aceptan hasta el 38% según su perfil. Su presupuesto máximo estimado: {max}.",
-      "bgt-ko-title": "❌ Fuera de presupuesto para esta vivienda",
-      "bgt-ko-text": "Con unos ingresos de {revenu} €/mes y una entrada de {apport} €, su presupuesto máximo estimado es de <strong>{max} €</strong> frente a {prix} € de esta vivienda.",
       "gallery-caption-one": "📷 Haga clic en una foto para ampliarla · {n} foto disponible",
       "gallery-caption-other": "📷 Haga clic en una foto para ampliarla · {n} fotos disponibles",
       "score-desc": "Puntuación {score}/10{dpe}. {pos}.",
@@ -2241,7 +1934,6 @@ var I18N = {
       "price-pos-below": "Precio por debajo del mercado",
       "price-pos-in": "Precio en línea con el mercado",
       "price-pos-tbc": "Precio por confirmar",
-      "rent-info": "Inmueble libre. Alquiler estimado: {loyer} € sin amueblar. Simule a continuación su rentabilidad.",
       "doc-charges-desc": "Extracto anual · {n} €/mes",
       "doc-taxe-desc": "{n} € / año",
       "diag-name-amiante": "Amianto",
@@ -2614,14 +2306,12 @@ function showTab(id, btn) {
 }
 
 function showTabById(id) {
-  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, offre: 9};
-  var navBtns = document.querySelectorAll('#main-nav button');
-  showTab(id, navBtns[navMap[id]]);
+  showTab(id, document.querySelector('#main-nav button[data-tab="' + id + '"]'));
 }
 
 // ═══ COMPAT: showSub2 redirects to main tabs ═══
 function showSub2(id) {
-  var tabMap = {marche: 'marche', rentabilite: 'rentabilite', patrimoine: 'historique', diagnostics: 'diagnostics'};
+  var tabMap = {marche: 'marche', patrimoine: 'historique', diagnostics: 'diagnostics'};
   showTabById(tabMap[id] || id);
   if (id === 'patrimoine') { setTimeout(function(){ try{ calcProjection(); }catch(e){} }, 100); }
 }
@@ -2642,12 +2332,6 @@ document.addEventListener('keydown', function(e) {
 // ═══ UTILS ═══
 function fmt(n) { return Math.round(n).toLocaleString('fr-FR') + ' €'; }
 function fmtPct(n) { return n.toFixed(2).replace('.', ',') + ' %'; }
-function mensualite(cap, ta, da) {
-  var r = ta / 100 / 12;
-  var n = da * 12;
-  if (r === 0) return cap / n;
-  return cap * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
-}
 
 // ═══ CALCULATEUR RENTABILITÉ ═══
 function calcProjection() {
@@ -2692,53 +2376,7 @@ function calcProjection() {
   } catch(e) { console.error('[calcProjection]', e); }
 }
 
-function calc() {
-  if(typeof gtag!=='undefined') gtag('event','simulation_credit',{client:clientId});
-  try { _calc(); calcProjection(); } catch(e) { console.error('[calc]', e); }
-}
-function _calc() {
-  var prix = parseFloat(document.getElementById('prix').value);
-  var loyer = parseFloat(document.getElementById('loyer').value);
-  var ap = parseFloat(document.getElementById('apport').value);
-  var tx = parseFloat(document.getElementById('taux').value);
-  var du = parseFloat(document.getElementById('duree').value);
-  var ch = parseFloat(document.getElementById('charges').value);
-  var tv = parseFloat(document.getElementById('travaux').value);
 
-  document.getElementById('v-prix').textContent = fmt(prix);
-  document.getElementById('v-loyer').textContent = loyer + ' €';
-  document.getElementById('v-apport').textContent = ap + '%';
-  document.getElementById('v-taux').textContent = tx.toFixed(2).replace('.', ',') + '%';
-  document.getElementById('v-duree').textContent = du + tr('years-suffix');
-  document.getElementById('v-charges').textContent = ch + ' €';
-  document.getElementById('v-travaux').textContent = fmt(tv);
-
-  var not = prix * 0.075;
-  var tot = prix + not + tv;
-  var apE = tot * ap / 100;
-  var emp = tot - apE;
-  var mens = mensualite(emp, tx, du);
-  var brut = (loyer * 12 / prix * 100);
-  var cf = loyer - mens - ch / 12;
-  var cfAnnuel = cf * 12;
-  var rnet = (apE > 0) ? (cfAnnuel / apE * 100) : ((loyer * 12 - ch) / tot * 100);
-
-  var elBrut = document.getElementById('r-brut'); if (elBrut) elBrut.textContent = fmtPct(brut);
-  var elCf = document.getElementById('r-cf'); if (elCf) elCf.textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + ' €';
-  var elMens = document.getElementById('r-mens'); if (elMens) elMens.textContent = Math.round(mens) + ' €';
-  var elRprix = document.getElementById('r-prix'); if (elRprix) elRprix.textContent = fmt(prix);
-  var elNot = document.getElementById('r-notaire'); if (elNot) elNot.textContent = fmt(not);
-  var elAp = document.getElementById('r-apport'); if (elAp) elAp.textContent = fmt(apE);
-
-  var hRnet = document.getElementById('h-rnet');
-  var hCf = document.getElementById('h-cf');
-  if (hRnet) hRnet.textContent = fmtPct(rnet);
-  if (hCf) hCf.textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + '€';
-
-}
-
-// ═══ FINANCEMENT (stub — éléments remplacés par Mon Budget) ═══
-function calcBank() { /* éléments de financement remplacés par l'onglet Mon Budget */ }
 
 // ═══ OFFRE ═══
 function updateOffer() {
@@ -2844,82 +2482,8 @@ function unlockDocs() {
   }).catch(function(){});
 }
 
-// ═══ INIT — loyer slider initialisé depuis _sp_loyer ═══
+// Loyer estimé (repli du contexte de l'assistant IA)
 var _sp_loyer = "1500";
-(function() {
-  var loyerSlider = document.getElementById('loyer');
-  if (loyerSlider && _sp_loyer && parseFloat(_sp_loyer) > 0) {
-    var loyerVal = parseFloat(_sp_loyer);
-    loyerSlider.value = loyerVal;
-    loyerSlider.min   = Math.round(loyerVal * 0.5);
-    loyerSlider.max   = Math.round(loyerVal * 2.5);
-    var vLoyer = document.getElementById('v-loyer');
-    if (vLoyer) vLoyer.textContent = loyerVal + ' €';
-  }
-})();
-calc();
-calcBank();
-
-// ═══ MON BUDGET ═══
-document.addEventListener('DOMContentLoaded', function() {
-  var bgtPrix = document.getElementById('bgt-prix');
-  if (bgtPrix && !bgtPrix.value) {
-    bgtPrix.value = parseFloat("275 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
-  }
-});
-function calcBudget() {
-  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
-  var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
-  var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
-  var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
-  var bgtPrixEl = document.getElementById('bgt-prix');
-  var bgtPrixVal = bgtPrixEl ? parseFloat(bgtPrixEl.value) || 0 : 0;
-  var prixBien = bgtPrixVal > 0 ? bgtPrixVal : (parseFloat("275 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0);
-  var fraisNotaire = prixBien * 0.075;
-  var coutTotal = prixBien + fraisNotaire;
-  var capital = Math.max(0, coutTotal - apport);
-  var bgtTauxEl = document.getElementById('bgt-taux');
-  var bgtTauxVal = bgtTauxEl ? parseFloat(bgtTauxEl.value) : NaN;
-  var tauxAnnuel = (bgtTauxVal >= 0.5 && bgtTauxVal <= 8) ? bgtTauxVal : 3.4;
-  var tauxMensuel = tauxAnnuel / 100 / 12;
-  var n = duree * 12;
-  var mens = capital > 0 ? capital * tauxMensuel / (1 - Math.pow(1 + tauxMensuel, -n)) : 0;
-  var charges = parseFloat("522") || 0;
-  var effortTotal = mens + charges;
-  var tauxEndettement = revenu > 0 ? (mens / revenu * 100) : 999;
-  var apportMinimum = coutTotal * 0.10;
-  var apportRestant = apport - apportMinimum;
-  var mensMax = revenu * 0.33;
-  var capitalMax = mensMax > 0 ? mensMax * (1 - Math.pow(1 + tauxMensuel, -n)) / tauxMensuel : 0;
-  var budgetMax = capitalMax + apport - fraisNotaire;
-  var res = document.getElementById('bgt-result');
-  res.style.display = 'block';
-  var tauxLigneTxt = tauxAnnuel.toFixed(2);
-  if (_currentLang !== 'en') tauxLigneTxt = tauxLigneTxt.replace('.', ',');
-  var nb = function(n) { return Math.round(n).toLocaleString('fr-FR'); };
-  var prixLigne = '<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">' + tr('bgt-basis', {prix: fmt(prixBien), taux: tauxLigneTxt}) + '</p>';
-  var html = '';
-  var infoLigne = '<div class="rc"><div class="rcl">' + tr('bgt-monthly') + '</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
-    + '<div class="rc"><div class="rcl">' + tr('bgt-debt') + '</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
-    + '<div class="rc"><div class="rcl">' + tr('bgt-max') + '</div><div class="rcv mono">' + fmt(Math.max(0, budgetMax)) + '</div></div>'
-    + '<div class="rc"><div class="rcl">' + tr('bgt-effort') + ' <small style="font-size:9px;color:var(--muted);">' + tr('bgt-effort-sm') + '</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">' + tr('bgt-effort-sub') + '</div></div>'
-    + '<p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5;">' + tr('bgt-note') + '</p>';
-  var bgtBox = function(bg, bar, titleColor, title, body) {
-    return '<div class="alert" style="background:' + bg + ';border-left:3px solid ' + bar + ';padding:16px;border-radius:11px;"><h4 style="color:' + titleColor + ';font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">' + title + '</h4>' + body + '</div>';
-  };
-  if (revenu === 0) {
-    html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;">' + tr('bgt-need-income') + '</div>';
-  } else if (tauxEndettement <= 33) {
-    html = bgtBox('#f0faf0', '#4caf50', '#2e7d32', tr('bgt-ok-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>');
-  } else if (tauxEndettement <= 38 || budgetMax >= prixBien) {
-    html = bgtBox('#fff8e1', '#ff9800', '#e65100', tr('bgt-cond-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-      + '<p style="font-size:12px;color:#e65100;margin-top:10px;">' + tr('bgt-cond-text', {taux: tauxEndettement.toFixed(1), max: fmt(Math.max(0, budgetMax))}) + '</p>');
-  } else {
-    html = bgtBox('#fff0f0', '#f44336', '#c62828', tr('bgt-ko-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-      + '<p style="font-size:12px;color:#c62828;margin-top:10px;">' + tr('bgt-ko-text', {revenu: nb(revenu), apport: nb(apport), max: nb(Math.max(0, budgetMax)), prix: nb(prixBien)}) + '</p>');
-  }
-  res.innerHTML = (revenu === 0 ? '' : prixLigne) + html;
-}
 
 // ═══ CARTE QUARTIER ═══
 var _mapInit = false;
@@ -3168,12 +2732,6 @@ document.querySelectorAll('.diag-result').forEach(function(el) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    ['prix','loyer','apport','taux','duree','charges','travaux'].forEach(function(id){
-        var el = document.getElementById(id);
-        if (el) el.addEventListener('input', calc);
-    });
-    try{ calc(); }catch(e){ console.error('[init calc]', e); }
-    try{ calcBank(); }catch(e){ console.error('[init calcBank]', e); }
     setTimeout(function(){ try{ calcProjection(); }catch(e){ console.error('[init calcProjection]', e); } }, 500);
     // Masquer lignes DVF vides
     document.querySelectorAll('.dvf-row').forEach(function(row) {
@@ -3711,11 +3269,6 @@ function applyLang(lang) {
   // Rafraîchit les blocs calculés dynamiquement (dépendent de _currentLang)
   if (typeof renderDpeInfo === 'function') renderDpeInfo(lang);
   if (typeof renderWelcomeParam === 'function') renderWelcomeParam(lang);
-  try { calc(); } catch(e) {}
-  var bgtResult = document.getElementById('bgt-result');
-  if (bgtResult && bgtResult.style.display !== 'none' && bgtResult.innerHTML.trim()) {
-    try { calcBudget(); } catch(e) {}
-  }
   try { updateOffer(); } catch(e) {}
 
   // L'assistant IA a déjà démarré une conversation dans l'ancienne langue :
@@ -3811,8 +3364,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <script id="pv-skin-js">
 (function(){
   if(/[?&]classic=1/.test(location.search)){document.body.className=document.body.className.split(/\s+/).filter(function(c){return ['pv','pv4','pv-home','tone-b'].indexOf(c)<0;}).join(' ');return;}
-  var SEQ=['bien','historique','quartier','marche','diagnostics','documents','budget','rentabilite','assistant','offre'];
-  var DESC={bien:'Photos, score, points forts',historique:'Chronologie et projection du bien',quartier:'Transports, commerces, écoles',marche:'Les ventes réelles autour du bien',diagnostics:'DPE, amiante, électricité…',documents:'Demandez les pièces du dossier',budget:'Ce bien est-il fait pour vous ?',rentabilite:'Simulateur investisseur',assistant:'Posez vos questions',offre:'Faire une offre en ligne'};
+  var SEQ=['bien','historique','quartier','marche','diagnostics','documents','assistant','offre'];
+  var DESC={bien:'Photos, score, points forts',historique:'Chronologie et projection du bien',quartier:'Transports, commerces, écoles',marche:'Les ventes réelles autour du bien',diagnostics:'DPE, amiante, électricité…',documents:'Demandez les pièces du dossier',assistant:'Posez vos questions',offre:'Faire une offre en ligne'};
   var mode=4,state='home',seen={},tone='b';
   var P={
     bien:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
@@ -3821,8 +3374,6 @@ document.addEventListener('DOMContentLoaded', function() {
     marche:'<path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-7"/>',
     diagnostics:'<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
     documents:'<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>',
-    budget:'<path d="M3 7a2 2 0 0 1 2-2h13v4"/><path d="M3 7v11a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-9a1 1 0 0 0-1-1H5a2 2 0 0 1-2-2z"/><circle cx="16.5" cy="14.5" r="1" fill="currentColor"/>',
-    rentabilite:'<path d="M19 5 5 19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>',
     assistant:'<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M19 15l.7 1.8 1.8.7-1.8.7L19 20l-.7-1.8-1.8-.7 1.8-.7z"/>',
     offre:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>'
   };
@@ -3846,7 +3397,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function label(id){var b=btnFor(id),l=b&&b.querySelector('.rail-label');return l?l.textContent.trim():id;}
   var shell=document.querySelector('.layout-shell');
   var head=document.createElement('div');head.id='pv-home-head';
-  head.innerHTML='<h2>Votre visite en 10 étapes</h2><p>Touchez une étape pour l\'ouvrir. Les 10 sections sont toutes ici, dans l\'ordre que nous vous conseillons.</p><div class="bar"><i></i></div><div class="bar-l"></div>';
+  head.innerHTML='<h2>Votre visite en '+SEQ.length+' étapes</h2><p>Touchez une étape pour l\'ouvrir. Les '+SEQ.length+' sections sont toutes ici, dans l\'ordre que nous vous conseillons.</p><div class="bar"><i></i></div><div class="bar-l"></div>';
   shell.parentNode.insertBefore(head,shell);
   var bar=document.createElement('div');bar.id='pv-bar';
   bar.innerHTML='<div class="row"><button type="button" class="back">← Sommaire</button><span class="ico"></span><span class="ttl"></span><span class="cnt"></span><button type="button" class="nv prev" aria-label="Section précédente">‹</button><button type="button" class="nv next" aria-label="Section suivante">›</button></div><div class="bar"><i></i></div>';
@@ -3897,7 +3448,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var nl=idx<SEQ.length-1?'Section suivante : '+label(SEQ[idx+1])+' →':'Retour au sommaire ↺';
     [].forEach.call(document.querySelectorAll('.pv-end button'),function(e){e.textContent=nl;});
     bar.querySelector('.prev').disabled=idx<=0;
-    var cl=document.body.classList;cl.toggle('pv-assistant',mode===4&&state==='tab'&&id==='assistant');cl.toggle('pv-sim',mode===4&&state==='tab'&&id==='rentabilite');
+    var cl=document.body.classList;cl.toggle('pv-assistant',mode===4&&state==='tab'&&id==='assistant');
   }
   function setState(s){var was=state;state=s;if(s==='tab')setTimeout(aiPeek,600);var c=document.body.classList;c.toggle('pv-home',mode===4&&s==='home');c.toggle('pv-tab',mode===4&&s==='tab');refresh();if(mode===4&&s==='home'&&was!=='home'){setTimeout(animatePrice,60);var w=document.getElementById('welcome-msg');if(w&&w.style.display==='block'){w.classList.remove('pv-wel');void w.offsetWidth;w.classList.add('pv-wel');}}}
   var nav=document.getElementById('main-nav');

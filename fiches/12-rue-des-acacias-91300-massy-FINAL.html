@@ -344,7 +344,7 @@ html,body{overflow-x:hidden;}
 .ptrack{min-width:0;}
 .pg > div{min-width:0;}
 </style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"3","adresse":"12 rue des Acacias, 91300 Massy","quartier":"Massy centre","acheteur_prenom":"","acheteur_nom":"","annee":"1998","description":"Appartement 4 pièces de 78 m² · 3 · DPE D","surface":78,"surfCarrez":0,"pieces":"4","dpe":"D","prix":315000,"prixm2":4038,"mediane":0,"tension":"","delai":"","loyer":0,"chargesCopro":190,"chargesDetail":"","taxeFonciere":1150,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Séjour double exposé sud","fort2":"Proche RER B","fort3":"Cave et place de parking incluses","vig1":"","vig2":"","vig3":"","photo1":"","photo2":"","photo3":"","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[],"creditDuree":20,"creditApport":10,"creditHaut":5,"creditMoyen":3.4,"creditBas":2.5,"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Sophie Martin","agentTel":"06 12 34 56 78","agentEmail":"sophie.martin@agence-exemple.fr","agentRdvUrl":"","agentSiteUrl":"","agentReseau":"Agence Exemple","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"","_rawState":{"photos":[]}}</script>
+<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"appart","etage":"3","adresse":"12 rue des Acacias, 91300 Massy","quartier":"Massy centre","acheteur_prenom":"","acheteur_nom":"","annee":"1998","description":"Appartement 4 pièces de 78 m² · 3 · DPE D","surface":78,"surfCarrez":0,"pieces":"4","dpe":"D","prix":315000,"prixm2":4038,"mediane":0,"tension":"","delai":"","loyer":0,"chargesCopro":190,"chargesDetail":"","taxeFonciere":1150,"score":"","scorePrest":"","scoreSecteur":"","scoreQP":"","scoreEtat":"","fort1":"Séjour double exposé sud","fort2":"Proche RER B","fort3":"Cave et place de parking incluses","vig1":"","vig2":"","vig3":"","photo1":"","photo2":"","photo3":"","photo4":"","photo5":"","video1":"","video2":"","video3":"","dvf":[],"historiqueLibre":"","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"","result":""},{"icon":"🔬","name":"Plomb (CREP)","status":"","result":""},{"icon":"🪲","name":"Termites","status":"","result":""},{"icon":"⚡","name":"Électricité","status":"","result":""},{"icon":"🔥","name":"Gaz","status":"","result":""},{"icon":"💧","name":"Assainissement","status":"","result":""}],"renovations":[],"agentNom":"Sophie Martin","agentTel":"06 12 34 56 78","agentEmail":"sophie.martin@agence-exemple.fr","agentRdvUrl":"","agentSiteUrl":"","agentReseau":"Agence Exemple","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"","_rawState":{"photos":[]}}</script>
 
 <style>
 #vr-card .vr-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);}
@@ -415,13 +415,11 @@ html,body{overflow-x:hidden;}
 
 <div class="layout-shell">
 <nav class="rail" id="main-nav">
-  <div class="rail-progress"><span id="rail-progress-count">1</span><span data-i18n="rail-progress-suffix"> / 10 sections explorées</span></div>
+  <div class="rail-progress"><span id="rail-progress-count">1</span><span data-i18n="rail-progress-suffix"> / 8 sections explorées</span></div>
   <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label" data-i18n="tab-bien">Le Bien</span></button>
   <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label" data-i18n="tab-marche">Ventes comparables</span></button>
-  <button data-tab="rentabilite" onclick="showTab('rentabilite',this)" style="display: none;"><span class="rail-dot">💰</span><span class="rail-label" data-i18n="tab-rentabilite">Simulateur investisseur</span></button>
   <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label" data-i18n="tab-historique">Tout savoir sur ce bien</span></button>
   <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
-  <button data-tab="budget" onclick="showTab('budget',this)"><span class="rail-dot">💰</span><span class="rail-label" data-i18n="tab-budget">Mon Budget</span></button>
   <button data-tab="quartier" onclick="showTab('quartier',this);initMapQuartier()"><span class="rail-dot">🗺️</span><span class="rail-label" data-i18n="tab-quartier">Carte interactive</span></button>
   <button data-tab="documents" onclick="showTab('documents',this)"><span class="rail-dot">📁</span><span class="rail-label">Documents</span></button>
   <button data-tab="assistant" onclick="showTab('assistant',this)"><span class="rail-dot">🤖</span><span class="rail-label">Assistant</span></button>
@@ -531,48 +529,6 @@ html,body{overflow-x:hidden;}
 </div>
 </section>
 
-<!-- ═══════════ ONGLET : RENTABILITÉ ═══════════ -->
-<section id="rentabilite" class="tab" style="display: none;">
-<div class="pg">
-<div>
-  <div id="sub-rentabilite">
-    <div class="card">
-      <div class="lbl" data-i18n="lbl-simulateur">Simulateur investisseur temps réel</div>
-      <h2 class="stitle" data-i18n="stitle-simulateur">Simulateur investisseur interactif</h2>
-      <div style="background:var(--cream);border-radius:8px;padding:9px 13px;margin-bottom:14px;font-size:11px;color:var(--muted);" id="renta-loyer-info" data-fr-val="Bien libre. Loyer estimé : 1 300 € nu / 1 400 € meublé. Simulez votre rentabilité ci-dessous." data-en-val="Vacant property. Estimated rent: 1 300 € unfurnished / 1 400 € furnished. Simulate your returns below.">Bien libre. Loyer estimé : 1 300 € nu / 1 400 € meublé. Simulez votre rentabilité ci-dessous.</div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-prix-achat">Prix d'achat</span><small data-i18n="slbl-prix-achat-sm">Votre offre</small></div><input type="range" id="prix" min="283500" max="346500" value="315000" step="500" oninput="calc()"><div class="sval" id="v-prix">315 000 €</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-loyer-simule">Loyer simulé</span><small data-i18n="slbl-loyer-simule-sm">Post-rénovation</small></div><input type="range" id="loyer" min="300" max="5000" value="1300" step="10" oninput="calc()"><div class="sval" id="v-loyer">1300 €</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-apport">Apport</span><small data-i18n="slbl-apport-sm">% du coût total</small></div><input type="range" id="apport" min="0" max="100" value="10" step="5" oninput="calc()"><div class="sval" id="v-apport">10%</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-taux">Taux crédit</span><small data-i18n="slbl-taux-sm">Oct. 2025 : 3,22%</small></div><input type="range" id="taux" min="2.5" max="5.0" value="3.4" step="0.1" oninput="calc()"><div class="sval" id="v-taux">3,40%</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-duree">Durée</span><small data-i18n="slbl-duree-sm">Années</small></div><input type="range" id="duree" min="5" max="25" value="20" step="1" oninput="calc()"><div class="sval" id="v-duree">20 ans</div></div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-charges">Charges ann.</span><small data-i18n="slbl-charges-sm">Copro+assur+TF</small></div><input type="range" id="charges" min="500" max="9436" value="3430" step="50" oninput="calc()"><div class="sval" id="v-charges">3430 €</div></div>
-      <div style="font-size:11px;color:var(--muted);margin:-9px 0 11px 162px;font-weight:300;" data-i18n="charges-detail-default">Eau froide, nettoyage et entretien des parties communes, ascenseur</div>
-      <div class="srow"><div class="slbl"><span data-i18n="slbl-travaux">Budget travaux</span><small data-i18n="slbl-travaux-sm">Rénovation DPE</small></div><input type="range" id="travaux" min="0" max="20000" value="0" step="500" oninput="calc()"><div class="sval" id="v-travaux">0 €</div></div>
-    </div>
-    <div class="rg">
-      <div class="rc"><div class="rcl" data-i18n="rcl-prix-achat">Prix d'achat</div><div class="rcv mono" style="font-size:22px;" id="r-prix">—</div></div>
-      <div class="rc"><div class="rcl" data-i18n="rcl-notaire">Frais notaire</div><div class="rcv mono" style="font-size:22px;" id="r-notaire">—</div><div class="rcs">≈ 7,5%</div></div>
-      <div class="rc dk"><div class="rcl" data-i18n="rcl-apport-requis">Apport requis</div><div class="rcv mono" style="font-size:22px;" id="r-apport">—</div></div>
-      <div class="rc"><div class="rcl" data-i18n="rcl-rendement">Rendement brut</div><div class="rcv" style="font-size:22px;" id="r-brut">—</div></div>
-      <div class="rc"><div class="rcl" data-i18n="rcl-mensualite">Mensualité crédit</div><div class="rcv" style="font-size:22px;" id="r-mens">—</div></div>
-    </div>
-  </div>
-</div>
-<div><div class="cons-card">
-  <img id="agent-photo" src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:none" alt="">
-  <div class="cons-avatar">SM</div>
-  <div class="cons-name">Sophie Martin</div>
-  <div class="cons-role" data-i18n="cons-role">Mandataire immobilier · Agence Exemple</div>
-  <div class="cons-contact">
-    <a href="tel:+33612345678">📞 06 12 34 56 78</a>
-    <a href="mailto:sophie.martin@agence-exemple.fr">✉️ sophie.martin@agence-exemple.fr</a>
-  </div>
-  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
-  <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
-</div></div>
-</div>
-</section>
-
 <!-- ═══════════ ONGLET : HISTORIQUE ═══════════ -->
 <section id="historique" class="tab">
 <div class="pg">
@@ -628,44 +584,6 @@ html,body{overflow-x:hidden;}
   <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv" data-i18n="btn-rdv" style="display: none;">📅 Prendre rendez-vous</a>
   <button onclick="showTabById('offre')" class="btn-offre" data-i18n="btn-offre">✍️ Faire une offre</button>
 </div></div>
-</div>
-</section>
-
-<!-- ═══════════ ONGLET : MON BUDGET ═══════════ -->
-<section id="budget" class="tab">
-<div class="pg">
-  <div class="card">
-    <div class="lbl" data-i18n="lbl-simulateur-perso">Simulateur personnel</div>
-    <h2 class="stitle" data-i18n="stitle-budget">Ce bien est-il fait pour vous ?</h2>
-    <p class="ssub" data-i18n="ssub-budget">Entrez votre situation pour le savoir en 30 secondes</p>
-    <div class="f2" style="margin-top:20px;">
-      <div><label class="lbl" data-i18n="lbl-prix-vente">Prix de vente (€)</label>
-      <input type="number" class="field" id="bgt-prix" min="0" step="1000"></div>
-      <div>
-        <label class="lbl" data-i18n="lbl-revenu">Revenu net mensuel du foyer (€)</label>
-        <input type="number" class="field" id="bgt-revenu" placeholder="3500" min="0">
-      </div>
-      <div>
-        <label class="lbl" data-i18n="lbl-apport-dispo">Apport disponible (€)</label>
-        <input type="number" class="field" id="bgt-apport" placeholder="30000" min="0">
-      </div>
-      <div>
-        <label class="lbl" data-i18n="lbl-duree-credit">Durée du crédit souhaitée</label>
-        <select class="field" id="bgt-duree">
-          <option value="15" data-i18n="opt-15ans">15 ans</option>
-          <option value="20" selected="" data-i18n="opt-20ans">20 ans</option>
-          <option value="25" data-i18n="opt-25ans">25 ans</option>
-        </select>
-      </div>
-      <div>
-        <label class="lbl" data-i18n="lbl-taux-budget">Taux du crédit (%)</label>
-        <input type="number" class="field" id="bgt-taux" min="0.5" max="8" step="0.05" value="3.4">
-      </div>
-    </div>
-    <button onclick="calcBudget()" style="margin-top:20px;padding:12px 28px;background:var(--dark);color:var(--gold);border:none;border-radius:99px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;" data-i18n="btn-calc-budget">Calculer mon accessibilité</button>
-    <div id="bgt-result" style="margin-top:24px;display:none;"></div>
-    <p style="margin-top:24px;font-size:10px;color:var(--muted);line-height:1.6;font-weight:300;border-top:1px solid var(--border);padding-top:16px;" data-i18n="disclaimer-budget">⚠️ Cette simulation est fournie à titre indicatif uniquement, sur la base des taux moyens du marché et des règles bancaires courantes. Elle ne constitue pas un accord de financement, une offre de prêt, ni un engagement d'un établissement bancaire. Les résultats dépendent de votre situation personnelle complète (revenus, charges, historique bancaire). Seul un établissement de crédit agréé peut vous délivrer une offre de prêt valable. Consultez votre banquier ou un courtier pour une analyse personnalisée.</p>
-  </div>
 </div>
 </section>
 
@@ -764,7 +682,7 @@ html,body{overflow-x:hidden;}
   <div class="vr-note" id="vr-note"></div>
 </div>
 <div class="card" style="background:var(--cream);border:1px solid var(--gold);margin-bottom:16px;">
-    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;"><span data-i18n="offre-progress-prefix">Vous avez exploré</span> <span id="offre-progress-count">1</span><span data-i18n="offre-progress-suffix"> / 10 sections</span></div>
+    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;"><span data-i18n="offre-progress-prefix">Vous avez exploré</span> <span id="offre-progress-count">1</span><span data-i18n="offre-progress-suffix"> / 8 sections</span></div>
     <div style="font-size:12.5px;color:var(--muted);" data-i18n="offre-progress-sub">Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.</div>
   </div>
   <div class="card">
@@ -842,7 +760,7 @@ html,body{overflow-x:hidden;}
 
 <div class="pfooter">
   <h2><span data-i18n="footer-title">Espace Acheteur Privé</span><br><span style="color:var(--gold);font-style:italic;" data-i18n="footer-subtitle">une expérience immobilière nouvelle génération</span></h2>
-  <p data-i18n="footer-desc">Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.</p>
+  <p data-i18n="footer-desc">Analyse patrimoniale, données DVF réelles et assistant IA — tout ce qu'il vous faut pour décider en confiance.</p>
 </div>
 
 </div>
@@ -871,12 +789,10 @@ var I18N = {
     'hbadge': 'Espace Acheteur Privé · Agence Exemple',
     'price-label': 'Prix affiché',
     'price-meta': "Frais d'agence inclus · Données temps réel",
-    'rail-progress-suffix': ' / 10 sections explorées',
+    'rail-progress-suffix': ' / 8 sections explorées',
     'tab-bien': 'Le Bien',
     'tab-marche': 'Ventes comparables',
-    'tab-rentabilite': 'Simulateur investisseur',
     'tab-historique': 'Tout savoir sur ce bien',
-    'tab-budget': 'Mon Budget',
     'tab-quartier': 'Carte interactive',
     'tab-offre': 'Faire une offre',
     'lbl-le-bien': 'Le bien',
@@ -900,44 +816,9 @@ var I18N = {
     'comparables-title': '📊 Positionnement prix',
     'comparables-justification': 'Le prix de présentation a été établi sur la base des transactions récentes du secteur et des caractéristiques propres au bien.',
     'lbl-dpe-reglementation': 'DPE & réglementation',
-    'lbl-simulateur': 'Simulateur investisseur temps réel',
-    'stitle-simulateur': 'Simulateur investisseur interactif',
-    'slbl-prix-achat': "Prix d'achat",
-    'slbl-prix-achat-sm': 'Votre offre',
-    'slbl-loyer-simule': 'Loyer simulé',
-    'slbl-loyer-simule-sm': 'Post-rénovation',
-    'slbl-apport': 'Apport',
-    'slbl-apport-sm': '% du coût total',
-    'slbl-taux': 'Taux crédit',
-    'slbl-taux-sm': 'Oct. 2025 : 3,22%',
-    'slbl-duree': 'Durée',
-    'slbl-duree-sm': 'Années',
-    'slbl-charges': 'Charges ann.',
-    'slbl-charges-sm': 'Copro+assur+TF',
-    'charges-detail-default': 'Eau froide, nettoyage et entretien des parties communes, ascenseur',
-    'slbl-travaux': 'Budget travaux',
-    'slbl-travaux-sm': 'Rénovation DPE',
-    'rcl-prix-achat': "Prix d'achat",
-    'rcl-notaire': 'Frais notaire',
-    'rcl-apport-requis': 'Apport requis',
-    'rcl-rendement': 'Rendement brut',
-    'rcl-mensualite': 'Mensualité crédit',
     'lbl-infos-complementaires': 'Informations complémentaires',
     'stitle-diagnostics': 'Diagnostics Techniques',
     'ssub-diagnostics': 'Résultats officiels des diagnostics réglementaires',
-    'lbl-simulateur-perso': 'Simulateur personnel',
-    'stitle-budget': 'Ce bien est-il fait pour vous ?',
-    'ssub-budget': 'Entrez votre situation pour le savoir en 30 secondes',
-    'lbl-prix-vente': 'Prix de vente (€)',
-    'lbl-revenu': 'Revenu net mensuel du foyer (€)',
-    'lbl-apport-dispo': 'Apport disponible (€)',
-    'lbl-duree-credit': 'Durée du crédit souhaitée',
-    'lbl-taux-budget': 'Taux du crédit (%)',
-    'opt-15ans': '15 ans',
-    'opt-20ans': '20 ans',
-    'opt-25ans': '25 ans',
-    'btn-calc-budget': 'Calculer mon accessibilité',
-    'disclaimer-budget': "⚠️ Cette simulation est fournie à titre indicatif uniquement, sur la base des taux moyens du marché et des règles bancaires courantes. Elle ne constitue pas un accord de financement, une offre de prêt, ni un engagement d'un établissement bancaire. Les résultats dépendent de votre situation personnelle complète (revenus, charges, historique bancaire). Seul un établissement de crédit agréé peut vous délivrer une offre de prêt valable. Consultez votre banquier ou un courtier pour une analyse personnalisée.",
     'lbl-quartier': 'Vie du quartier',
     'stitle-quartier': 'Carte du quartier',
     'ssub-quartier': 'Transports, commerces, écoles et espaces verts dans un rayon de 800m',
@@ -968,7 +849,7 @@ var I18N = {
     'doc-reglement': 'Règlement copropriété',
     'doc-reglement-desc': 'Documents de la copro',
     'offre-progress-prefix': 'Vous avez exploré',
-    'offre-progress-suffix': ' / 10 sections',
+    'offre-progress-suffix': ' / 8 sections',
     'offre-progress-sub': 'Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.',
     'lbl-processus': "Processus d'acquisition",
     'step-visite': 'Visite',
@@ -1008,7 +889,7 @@ var I18N = {
     'marge-negociation-suffix': 'selon le DPE et les DVF du secteur.',
     'footer-title': 'Espace Acheteur Privé',
     'footer-subtitle': 'une expérience immobilière nouvelle génération',
-    'footer-desc': "Analyse patrimoniale, données DVF réelles, simulateur interactif et assistant IA — tout ce qu'il vous faut pour décider en confiance.",
+    'footer-desc': "Analyse patrimoniale, données DVF réelles et assistant IA — tout ce qu'il vous faut pour décider en confiance.",
     'ai-bubble': 'Une question sur ce bien ? Je suis là 👋',
     'ai-ask-btn': 'Poser une question',
     'ai-modal-title': 'Assistant Privency',
@@ -1024,7 +905,6 @@ var I18N = {
     'placeholder-offer-msg': "Présentez votre projet... Un message sincère rassure le vendeur."
     },
     msg: {
-      "years-suffix": " ans",
       "offer-diff-below": " vs prix affiché",
       "offer-diff-above": " au-dessus du prix affiché",
       "offer-diff-at": "Au prix affiché",
@@ -1038,20 +918,6 @@ var I18N = {
       "diag-not-subject": "Non soumis à obligation",
       "welcome-greeting": "Bienvenue",
       "welcome-buyer": "Bienvenue {name}",
-      "bgt-basis": "Simulation basée sur un prix de {prix} et un taux de {taux}%.",
-      "bgt-monthly": "Mensualité estimée",
-      "bgt-debt": "Taux d'endettement",
-      "bgt-max": "Budget max accessible",
-      "bgt-effort": "Effort total",
-      "bgt-effort-sm": "(crédit + charges)",
-      "bgt-effort-sub": "À titre informatif",
-      "bgt-note": "Simulation basée sur un apport minimum de 10% du coût total (frais de notaire compris), règle appliquée par la majorité des banques. Certaines banques financent jusqu'à 110% du prix (sans apport), mais cette pratique reste de plus en plus rare.",
-      "bgt-need-income": "Veuillez renseigner votre revenu mensuel.",
-      "bgt-ok-title": "✅ Ce bien est accessible pour vous",
-      "bgt-cond-title": "⚠️ Accessible sous conditions",
-      "bgt-cond-text": "Taux d'endettement {taux}% — certaines banques acceptent jusqu'à 38% selon votre profil. Votre budget max estimé : {max}.",
-      "bgt-ko-title": "❌ Hors budget pour ce bien",
-      "bgt-ko-text": "Avec un revenu de {revenu} €/mois et un apport de {apport} €, votre budget max est estimé à <strong>{max} €</strong> vs {prix} € pour ce bien.",
       "gallery-caption-one": "📷 Cliquez sur une photo pour l'agrandir · {n} photo disponible",
       "gallery-caption-other": "📷 Cliquez sur une photo pour l'agrandir · {n} photos disponibles",
       "score-desc": "Score {score}/10{dpe}. {pos}.",
@@ -1060,7 +926,6 @@ var I18N = {
       "price-pos-below": "Prix sous le marché",
       "price-pos-in": "Prix dans le marché",
       "price-pos-tbc": "Prix à confirmer",
-      "rent-info": "Bien libre. Loyer estimé : {loyer} € nu. Simulez votre rentabilité ci-dessous.",
       "doc-charges-desc": "Relevé annuel · {n} €/mois",
       "doc-taxe-desc": "{n} € / an",
       "diag-name-amiante": "Amiante",
@@ -1109,12 +974,10 @@ var I18N = {
     'hbadge': 'Private Buyer Portal · Agence Exemple',
     'price-label': 'Listed price',
     'price-meta': 'Agency fees included · Real-time data',
-    'rail-progress-suffix': ' / 10 sections explored',
+    'rail-progress-suffix': ' / 8 sections explored',
     'tab-bien': 'The Property',
     'tab-marche': 'Comparable Sales',
-    'tab-rentabilite': 'Investor Simulator',
     'tab-historique': 'Everything About This Property',
-    'tab-budget': 'My Budget',
     'tab-quartier': 'Interactive Map',
     'tab-offre': 'Make an Offer',
     'lbl-le-bien': 'The property',
@@ -1138,44 +1001,9 @@ var I18N = {
     'comparables-title': '📊 Price Positioning',
     'comparables-justification': "The listed price was established based on recent transactions in the area and the property's specific characteristics.",
     'lbl-dpe-reglementation': 'DPE & regulations',
-    'lbl-simulateur': 'Real-time investor simulator',
-    'stitle-simulateur': 'Interactive investor simulator',
-    'slbl-prix-achat': 'Purchase price',
-    'slbl-prix-achat-sm': 'Your offer',
-    'slbl-loyer-simule': 'Simulated rent',
-    'slbl-loyer-simule-sm': 'Post-renovation',
-    'slbl-apport': 'Down payment',
-    'slbl-apport-sm': '% of total cost',
-    'slbl-taux': 'Interest rate',
-    'slbl-taux-sm': 'Oct. 2025: 3.22%',
-    'slbl-duree': 'Duration',
-    'slbl-duree-sm': 'Years',
-    'slbl-charges': 'Annual charges',
-    'slbl-charges-sm': 'HOA+insurance+property tax',
-    'charges-detail-default': 'Cold water, cleaning and maintenance of common areas, elevator',
-    'slbl-travaux': 'Renovation budget',
-    'slbl-travaux-sm': 'DPE renovation',
-    'rcl-prix-achat': 'Purchase price',
-    'rcl-notaire': 'Notary fees',
-    'rcl-apport-requis': 'Required down payment',
-    'rcl-rendement': 'Gross yield',
-    'rcl-mensualite': 'Monthly payment',
     'lbl-infos-complementaires': 'Additional information',
     'stitle-diagnostics': 'Technical Diagnostics',
     'ssub-diagnostics': 'Official results of regulatory diagnostics',
-    'lbl-simulateur-perso': 'Personal simulator',
-    'stitle-budget': 'Is this property right for you?',
-    'ssub-budget': 'Enter your situation to find out in 30 seconds',
-    'lbl-prix-vente': 'Sale price (€)',
-    'lbl-revenu': 'Net monthly household income (€)',
-    'lbl-apport-dispo': 'Available down payment (€)',
-    'lbl-duree-credit': 'Desired loan term',
-    'lbl-taux-budget': 'Loan interest rate (%)',
-    'opt-15ans': '15 years',
-    'opt-20ans': '20 years',
-    'opt-25ans': '25 years',
-    'btn-calc-budget': 'Calculate my affordability',
-    'disclaimer-budget': '⚠️ This simulation is provided for indicative purposes only, based on average market rates and standard banking rules. It does not constitute a financing agreement, loan offer, or commitment from any banking institution. Results depend on your complete personal situation (income, expenses, credit history). Only an authorized lending institution can issue a valid loan offer. Consult your banker or a broker for a personalized analysis.',
     'lbl-quartier': 'Neighborhood life',
     'stitle-quartier': 'Neighborhood map',
     'ssub-quartier': 'Transport, shops, schools and green spaces within 800m',
@@ -1206,7 +1034,7 @@ var I18N = {
     'doc-reglement': 'Condominium Bylaws',
     'doc-reglement-desc': 'HOA documents',
     'offre-progress-prefix': "You've explored",
-    'offre-progress-suffix': ' / 10 sections',
+    'offre-progress-suffix': ' / 8 sections',
     'offre-progress-sub': "The more you explore this file, the more confident you'll feel making an offer.",
     'lbl-processus': 'Acquisition process',
     'step-visite': 'Viewing',
@@ -1246,7 +1074,7 @@ var I18N = {
     'marge-negociation-suffix': 'based on DPE and local DVF data.',
     'footer-title': 'Private Buyer Portal',
     'footer-subtitle': 'a new generation real estate experience',
-    'footer-desc': 'Property analysis, real DVF data, interactive simulator and AI assistant — everything you need to decide with confidence.',
+    'footer-desc': 'Property analysis, real DVF data and AI assistant — everything you need to decide with confidence.',
     'ai-bubble': "Have a question about this property? I'm here 👋",
     'ai-ask-btn': 'Ask a Question',
     'ai-modal-title': 'Privency Assistant',
@@ -1262,7 +1090,6 @@ var I18N = {
     'placeholder-offer-msg': 'Introduce your project... A sincere message reassures the seller.'
     },
     msg: {
-      "years-suffix": " years",
       "offer-diff-below": " vs listed price",
       "offer-diff-above": " above listed price",
       "offer-diff-at": "At listed price",
@@ -1276,20 +1103,6 @@ var I18N = {
       "diag-not-subject": "Not subject to requirement",
       "welcome-greeting": "Welcome",
       "welcome-buyer": "Welcome {name}",
-      "bgt-basis": "Simulation based on a price of {prix} and a rate of {taux}%.",
-      "bgt-monthly": "Estimated monthly payment",
-      "bgt-debt": "Debt ratio",
-      "bgt-max": "Max affordable budget",
-      "bgt-effort": "Total effort",
-      "bgt-effort-sm": "(loan + charges)",
-      "bgt-effort-sub": "For informational purposes",
-      "bgt-note": "Simulation based on a minimum down payment of 10% of total cost (notary fees included), a rule applied by most banks. Some banks finance up to 110% of the price (no down payment), but this practice is becoming increasingly rare.",
-      "bgt-need-income": "Please enter your monthly income.",
-      "bgt-ok-title": "✅ This property is affordable for you",
-      "bgt-cond-title": "⚠️ Affordable under conditions",
-      "bgt-cond-text": "Debt ratio {taux}% — some banks accept up to 38% depending on your profile. Your estimated max budget: {max}.",
-      "bgt-ko-title": "❌ Outside your budget for this property",
-      "bgt-ko-text": "With an income of {revenu} €/month and a down payment of {apport} €, your estimated max budget is <strong>{max} €</strong> vs {prix} € for this property.",
       "gallery-caption-one": "📷 Click on a photo to enlarge it · {n} photo available",
       "gallery-caption-other": "📷 Click on a photo to enlarge it · {n} photos available",
       "score-desc": "Score {score}/10{dpe}. {pos}.",
@@ -1298,7 +1111,6 @@ var I18N = {
       "price-pos-below": "Price below the market",
       "price-pos-in": "Price in line with the market",
       "price-pos-tbc": "Price to be confirmed",
-      "rent-info": "Vacant property. Estimated rent: {loyer} € unfurnished. Simulate your returns below.",
       "doc-charges-desc": "Annual statement · {n} €/month",
       "doc-taxe-desc": "{n} € / year",
       "diag-name-amiante": "Asbestos",
@@ -1347,12 +1159,10 @@ var I18N = {
     "hbadge": "Espaço Comprador Privado · Agence Exemple",
     "price-label": "Preço anunciado",
     "price-meta": "Comissão de agência incluída · Dados em tempo real",
-    "rail-progress-suffix": " / 10 secções exploradas",
+    "rail-progress-suffix": " / 8 secções exploradas",
     "tab-bien": "O Imóvel",
     "tab-marche": "Vendas comparáveis",
-    "tab-rentabilite": "Simulador de investimento",
     "tab-historique": "Tudo sobre este imóvel",
-    "tab-budget": "O meu orçamento",
     "tab-quartier": "Mapa interativo",
     "tab-offre": "Fazer uma proposta",
     "lbl-le-bien": "O imóvel",
@@ -1376,44 +1186,9 @@ var I18N = {
     "comparables-title": "📊 Posicionamento de preço",
     "comparables-justification": "O preço de apresentação foi definido com base nas transações recentes da zona e nas características próprias do imóvel.",
     "lbl-dpe-reglementation": "DPE e regulamentação",
-    "lbl-simulateur": "Simulador de investimento em tempo real",
-    "stitle-simulateur": "Simulador de investimento interativo",
-    "slbl-prix-achat": "Preço de compra",
-    "slbl-prix-achat-sm": "A sua proposta",
-    "slbl-loyer-simule": "Renda simulada",
-    "slbl-loyer-simule-sm": "Após obras",
-    "slbl-apport": "Entrada",
-    "slbl-apport-sm": "% do custo total",
-    "slbl-taux": "Taxa do crédito",
-    "slbl-taux-sm": "Out. 2025: 3,22%",
-    "slbl-duree": "Duração",
-    "slbl-duree-sm": "Anos",
-    "slbl-charges": "Encargos anuais",
-    "slbl-charges-sm": "Cond.+seguro+imposto predial",
-    "charges-detail-default": "Água fria, limpeza e manutenção das partes comuns, elevador",
-    "slbl-travaux": "Orçamento de obras",
-    "slbl-travaux-sm": "Renovação energética (DPE)",
-    "rcl-prix-achat": "Preço de compra",
-    "rcl-notaire": "Custos notariais",
-    "rcl-apport-requis": "Entrada necessária",
-    "rcl-rendement": "Rendimento bruto",
-    "rcl-mensualite": "Prestação do crédito",
     "lbl-infos-complementaires": "Informações complementares",
     "stitle-diagnostics": "Diagnósticos técnicos",
     "ssub-diagnostics": "Resultados oficiais dos diagnósticos regulamentares",
-    "lbl-simulateur-perso": "Simulador pessoal",
-    "stitle-budget": "Este imóvel é feito para si?",
-    "ssub-budget": "Indique a sua situação e descubra em 30 segundos",
-    "lbl-prix-vente": "Preço de venda (€)",
-    "lbl-revenu": "Rendimento líquido mensal do agregado (€)",
-    "lbl-apport-dispo": "Entrada disponível (€)",
-    "lbl-duree-credit": "Duração do crédito pretendida",
-    "lbl-taux-budget": "Taxa do crédito (%)",
-    "opt-15ans": "15 anos",
-    "opt-20ans": "20 anos",
-    "opt-25ans": "25 anos",
-    "btn-calc-budget": "Calcular a minha capacidade",
-    "disclaimer-budget": "⚠️ Esta simulação é fornecida a título meramente indicativo, com base nas taxas médias de mercado e nas regras bancárias correntes. Não constitui um acordo de financiamento, uma oferta de crédito nem um compromisso de qualquer instituição bancária. Os resultados dependem da sua situação pessoal completa (rendimentos, encargos, historial bancário). Apenas uma instituição de crédito autorizada pode emitir uma oferta de crédito válida. Consulte o seu banco ou um intermediário de crédito para uma análise personalizada.",
     "lbl-quartier": "Vida do bairro",
     "stitle-quartier": "Mapa do bairro",
     "ssub-quartier": "Transportes, comércios, escolas e espaços verdes num raio de 800 m",
@@ -1444,7 +1219,7 @@ var I18N = {
     "doc-reglement": "Regulamento do condomínio",
     "doc-reglement-desc": "Documentos do condomínio",
     "offre-progress-prefix": "Explorou",
-    "offre-progress-suffix": " / 10 secções",
+    "offre-progress-suffix": " / 8 secções",
     "offre-progress-sub": "Quanto mais explorar o dossier, mais confiança terá para fazer uma proposta.",
     "lbl-processus": "Processo de aquisição",
     "step-visite": "Visita",
@@ -1484,7 +1259,7 @@ var I18N = {
     "marge-negociation-suffix": "com base no DPE e nas transações DVF da zona.",
     "footer-title": "Espaço Comprador Privado",
     "footer-subtitle": "uma experiência imobiliária de nova geração",
-    "footer-desc": "Análise patrimonial, dados DVF reais, simulador interativo e assistente de IA — tudo o que precisa para decidir com confiança.",
+    "footer-desc": "Análise patrimonial, dados DVF reais e assistente de IA — tudo o que precisa para decidir com confiança.",
     "ai-bubble": "Tem uma pergunta sobre este imóvel? Estou aqui 👋",
     "ai-ask-btn": "Fazer uma pergunta",
     "ai-modal-title": "Assistente Privency",
@@ -1500,7 +1275,6 @@ var I18N = {
     "placeholder-offer-msg": "Apresente o seu projeto... Uma mensagem sincera tranquiliza o vendedor."
     },
     msg: {
-      "years-suffix": " anos",
       "offer-diff-below": " face ao preço anunciado",
       "offer-diff-above": " acima do preço anunciado",
       "offer-diff-at": "Ao preço anunciado",
@@ -1514,20 +1288,6 @@ var I18N = {
       "diag-not-subject": "Não sujeito a obrigação",
       "welcome-greeting": "Bem-vindo(a)",
       "welcome-buyer": "Bem-vindo(a) {name}",
-      "bgt-basis": "Simulação baseada num preço de {prix} e numa taxa de {taux}%.",
-      "bgt-monthly": "Prestação estimada",
-      "bgt-debt": "Taxa de esforço",
-      "bgt-max": "Orçamento máximo acessível",
-      "bgt-effort": "Esforço total",
-      "bgt-effort-sm": "(crédito + encargos)",
-      "bgt-effort-sub": "A título informativo",
-      "bgt-note": "Simulação baseada numa entrada mínima de 10% do custo total (custos notariais incluídos), regra aplicada pela maioria dos bancos. Alguns bancos financiam até 110% do preço (sem entrada), mas esta prática é cada vez mais rara.",
-      "bgt-need-income": "Indique o seu rendimento mensal.",
-      "bgt-ok-title": "✅ Este imóvel é acessível para si",
-      "bgt-cond-title": "⚠️ Acessível sob condições",
-      "bgt-cond-text": "Taxa de esforço de {taux}% — alguns bancos aceitam até 38% consoante o seu perfil. O seu orçamento máximo estimado: {max}.",
-      "bgt-ko-title": "❌ Fora do orçamento para este imóvel",
-      "bgt-ko-text": "Com um rendimento de {revenu} €/mês e uma entrada de {apport} €, o seu orçamento máximo estimado é de <strong>{max} €</strong> face a {prix} € para este imóvel.",
       "gallery-caption-one": "📷 Clique numa foto para a ampliar · {n} foto disponível",
       "gallery-caption-other": "📷 Clique numa foto para a ampliar · {n} fotos disponíveis",
       "score-desc": "Pontuação {score}/10{dpe}. {pos}.",
@@ -1536,7 +1296,6 @@ var I18N = {
       "price-pos-below": "Preço abaixo do mercado",
       "price-pos-in": "Preço em linha com o mercado",
       "price-pos-tbc": "Preço a confirmar",
-      "rent-info": "Imóvel livre. Renda estimada: {loyer} € não mobilado. Simule abaixo a sua rentabilidade.",
       "doc-charges-desc": "Extrato anual · {n} €/mês",
       "doc-taxe-desc": "{n} € / ano",
       "diag-name-amiante": "Amianto",
@@ -1585,12 +1344,10 @@ var I18N = {
     "hbadge": "Espacio Comprador Privado · Agence Exemple",
     "price-label": "Precio anunciado",
     "price-meta": "Honorarios de agencia incluidos · Datos en tiempo real",
-    "rail-progress-suffix": " / 10 secciones exploradas",
+    "rail-progress-suffix": " / 8 secciones exploradas",
     "tab-bien": "La vivienda",
     "tab-marche": "Ventas comparables",
-    "tab-rentabilite": "Simulador de inversión",
     "tab-historique": "Todo sobre esta vivienda",
-    "tab-budget": "Mi presupuesto",
     "tab-quartier": "Mapa interactivo",
     "tab-offre": "Hacer una oferta",
     "lbl-le-bien": "La vivienda",
@@ -1614,44 +1371,9 @@ var I18N = {
     "comparables-title": "📊 Posicionamiento de precio",
     "comparables-justification": "El precio de presentación se ha establecido a partir de las transacciones recientes de la zona y de las características propias de la vivienda.",
     "lbl-dpe-reglementation": "DPE y normativa",
-    "lbl-simulateur": "Simulador de inversión en tiempo real",
-    "stitle-simulateur": "Simulador de inversión interactivo",
-    "slbl-prix-achat": "Precio de compra",
-    "slbl-prix-achat-sm": "Su oferta",
-    "slbl-loyer-simule": "Alquiler simulado",
-    "slbl-loyer-simule-sm": "Tras la reforma",
-    "slbl-apport": "Entrada",
-    "slbl-apport-sm": "% del coste total",
-    "slbl-taux": "Tipo del préstamo",
-    "slbl-taux-sm": "Oct. 2025: 3,22%",
-    "slbl-duree": "Duración",
-    "slbl-duree-sm": "Años",
-    "slbl-charges": "Gastos anuales",
-    "slbl-charges-sm": "Gastos de comunidad+seguro+imp. inmuebles",
-    "charges-detail-default": "Agua fría, limpieza y mantenimiento de zonas comunes, ascensor",
-    "slbl-travaux": "Presupuesto de obras",
-    "slbl-travaux-sm": "Reforma energética (DPE)",
-    "rcl-prix-achat": "Precio de compra",
-    "rcl-notaire": "Gastos notariales",
-    "rcl-apport-requis": "Entrada necesaria",
-    "rcl-rendement": "Rentabilidad bruta",
-    "rcl-mensualite": "Cuota del préstamo",
     "lbl-infos-complementaires": "Información complementaria",
     "stitle-diagnostics": "Diagnósticos técnicos",
     "ssub-diagnostics": "Resultados oficiales de los diagnósticos reglamentarios",
-    "lbl-simulateur-perso": "Simulador personal",
-    "stitle-budget": "¿Es esta vivienda para usted?",
-    "ssub-budget": "Indique su situación y lo sabrá en 30 segundos",
-    "lbl-prix-vente": "Precio de venta (€)",
-    "lbl-revenu": "Ingresos netos mensuales del hogar (€)",
-    "lbl-apport-dispo": "Entrada disponible (€)",
-    "lbl-duree-credit": "Duración del préstamo deseada",
-    "lbl-taux-budget": "Tipo del préstamo (%)",
-    "opt-15ans": "15 años",
-    "opt-20ans": "20 años",
-    "opt-25ans": "25 años",
-    "btn-calc-budget": "Calcular mi capacidad",
-    "disclaimer-budget": "⚠️ Esta simulación se ofrece únicamente a título indicativo, sobre la base de los tipos medios de mercado y de las reglas bancarias habituales. No constituye un acuerdo de financiación, una oferta de préstamo ni un compromiso de ninguna entidad bancaria. Los resultados dependen de su situación personal completa (ingresos, gastos, historial bancario). Solo una entidad de crédito autorizada puede emitir una oferta de préstamo válida. Consulte con su banco o con un intermediario de crédito para un análisis personalizado.",
     "lbl-quartier": "Vida del barrio",
     "stitle-quartier": "Mapa del barrio",
     "ssub-quartier": "Transportes, comercios, colegios y zonas verdes en un radio de 800 m",
@@ -1682,7 +1404,7 @@ var I18N = {
     "doc-reglement": "Estatutos de la comunidad de propietarios",
     "doc-reglement-desc": "Documentos de la comunidad de propietarios",
     "offre-progress-prefix": "Ha explorado",
-    "offre-progress-suffix": " / 10 secciones",
+    "offre-progress-suffix": " / 8 secciones",
     "offre-progress-sub": "Cuanto más explore el expediente, con más confianza podrá hacer una oferta.",
     "lbl-processus": "Proceso de adquisición",
     "step-visite": "Visita",
@@ -1722,7 +1444,7 @@ var I18N = {
     "marge-negociation-suffix": "según el DPE y las transacciones DVF de la zona.",
     "footer-title": "Espacio Comprador Privado",
     "footer-subtitle": "una experiencia inmobiliaria de nueva generación",
-    "footer-desc": "Análisis patrimonial, datos DVF reales, simulador interactivo y asistente de IA: todo lo que necesita para decidir con confianza.",
+    "footer-desc": "Análisis patrimonial, datos DVF reales y asistente de IA: todo lo que necesita para decidir con confianza.",
     "ai-bubble": "¿Tiene una pregunta sobre esta vivienda? Estoy aquí 👋",
     "ai-ask-btn": "Hacer una pregunta",
     "ai-modal-title": "Asistente Privency",
@@ -1738,7 +1460,6 @@ var I18N = {
     "placeholder-offer-msg": "Presente su proyecto... Un mensaje sincero tranquiliza al vendedor."
     },
     msg: {
-      "years-suffix": " años",
       "offer-diff-below": " respecto al precio anunciado",
       "offer-diff-above": " por encima del precio anunciado",
       "offer-diff-at": "Al precio anunciado",
@@ -1752,20 +1473,6 @@ var I18N = {
       "diag-not-subject": "No sujeto a obligación",
       "welcome-greeting": "Bienvenido/a",
       "welcome-buyer": "Bienvenido/a {name}",
-      "bgt-basis": "Simulación basada en un precio de {prix} y un tipo del {taux}%.",
-      "bgt-monthly": "Cuota mensual estimada",
-      "bgt-debt": "Tasa de endeudamiento",
-      "bgt-max": "Presupuesto máximo accesible",
-      "bgt-effort": "Esfuerzo total",
-      "bgt-effort-sm": "(préstamo + gastos)",
-      "bgt-effort-sub": "A título informativo",
-      "bgt-note": "Simulación basada en una entrada mínima del 10% del coste total (gastos notariales incluidos), regla aplicada por la mayoría de los bancos. Algunos bancos financian hasta el 110% del precio (sin entrada), pero esta práctica es cada vez menos frecuente.",
-      "bgt-need-income": "Indique sus ingresos mensuales.",
-      "bgt-ok-title": "✅ Esta vivienda es accesible para usted",
-      "bgt-cond-title": "⚠️ Accesible bajo condiciones",
-      "bgt-cond-text": "Tasa de endeudamiento del {taux}% — algunos bancos aceptan hasta el 38% según su perfil. Su presupuesto máximo estimado: {max}.",
-      "bgt-ko-title": "❌ Fuera de presupuesto para esta vivienda",
-      "bgt-ko-text": "Con unos ingresos de {revenu} €/mes y una entrada de {apport} €, su presupuesto máximo estimado es de <strong>{max} €</strong> frente a {prix} € de esta vivienda.",
       "gallery-caption-one": "📷 Haga clic en una foto para ampliarla · {n} foto disponible",
       "gallery-caption-other": "📷 Haga clic en una foto para ampliarla · {n} fotos disponibles",
       "score-desc": "Puntuación {score}/10{dpe}. {pos}.",
@@ -1774,7 +1481,6 @@ var I18N = {
       "price-pos-below": "Precio por debajo del mercado",
       "price-pos-in": "Precio en línea con el mercado",
       "price-pos-tbc": "Precio por confirmar",
-      "rent-info": "Inmueble libre. Alquiler estimado: {loyer} € sin amueblar. Simule a continuación su rentabilidad.",
       "doc-charges-desc": "Extracto anual · {n} €/mes",
       "doc-taxe-desc": "{n} € / año",
       "diag-name-amiante": "Amianto",
@@ -2147,14 +1853,12 @@ function showTab(id, btn) {
 }
 
 function showTabById(id) {
-  var navMap = {bien: 0, marche: 1, rentabilite: 2, historique: 3, diagnostics: 4, budget: 5, quartier: 6, documents: 7, offre: 9};
-  var navBtns = document.querySelectorAll('#main-nav button');
-  showTab(id, navBtns[navMap[id]]);
+  showTab(id, document.querySelector('#main-nav button[data-tab="' + id + '"]'));
 }
 
 // ═══ COMPAT: showSub2 redirects to main tabs ═══
 function showSub2(id) {
-  var tabMap = {marche: 'marche', rentabilite: 'rentabilite', patrimoine: 'historique', diagnostics: 'diagnostics'};
+  var tabMap = {marche: 'marche', patrimoine: 'historique', diagnostics: 'diagnostics'};
   showTabById(tabMap[id] || id);
   if (id === 'patrimoine') { setTimeout(function(){ try{ calcProjection(); }catch(e){} }, 100); }
 }
@@ -2175,12 +1879,6 @@ document.addEventListener('keydown', function(e) {
 // ═══ UTILS ═══
 function fmt(n) { return Math.round(n).toLocaleString('fr-FR') + ' €'; }
 function fmtPct(n) { return n.toFixed(2).replace('.', ',') + ' %'; }
-function mensualite(cap, ta, da) {
-  var r = ta / 100 / 12;
-  var n = da * 12;
-  if (r === 0) return cap / n;
-  return cap * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
-}
 
 // ═══ CALCULATEUR RENTABILITÉ ═══
 function calcProjection() {
@@ -2225,53 +1923,7 @@ function calcProjection() {
   } catch(e) { console.error('[calcProjection]', e); }
 }
 
-function calc() {
-  if(typeof gtag!=='undefined') gtag('event','simulation_credit',{client:clientId});
-  try { _calc(); calcProjection(); } catch(e) { console.error('[calc]', e); }
-}
-function _calc() {
-  var prix = parseFloat(document.getElementById('prix').value);
-  var loyer = parseFloat(document.getElementById('loyer').value);
-  var ap = parseFloat(document.getElementById('apport').value);
-  var tx = parseFloat(document.getElementById('taux').value);
-  var du = parseFloat(document.getElementById('duree').value);
-  var ch = parseFloat(document.getElementById('charges').value);
-  var tv = parseFloat(document.getElementById('travaux').value);
 
-  document.getElementById('v-prix').textContent = fmt(prix);
-  document.getElementById('v-loyer').textContent = loyer + ' €';
-  document.getElementById('v-apport').textContent = ap + '%';
-  document.getElementById('v-taux').textContent = tx.toFixed(2).replace('.', ',') + '%';
-  document.getElementById('v-duree').textContent = du + tr('years-suffix');
-  document.getElementById('v-charges').textContent = ch + ' €';
-  document.getElementById('v-travaux').textContent = fmt(tv);
-
-  var not = prix * 0.075;
-  var tot = prix + not + tv;
-  var apE = tot * ap / 100;
-  var emp = tot - apE;
-  var mens = mensualite(emp, tx, du);
-  var brut = (loyer * 12 / prix * 100);
-  var cf = loyer - mens - ch / 12;
-  var cfAnnuel = cf * 12;
-  var rnet = (apE > 0) ? (cfAnnuel / apE * 100) : ((loyer * 12 - ch) / tot * 100);
-
-  var elBrut = document.getElementById('r-brut'); if (elBrut) elBrut.textContent = fmtPct(brut);
-  var elCf = document.getElementById('r-cf'); if (elCf) elCf.textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + ' €';
-  var elMens = document.getElementById('r-mens'); if (elMens) elMens.textContent = Math.round(mens) + ' €';
-  var elRprix = document.getElementById('r-prix'); if (elRprix) elRprix.textContent = fmt(prix);
-  var elNot = document.getElementById('r-notaire'); if (elNot) elNot.textContent = fmt(not);
-  var elAp = document.getElementById('r-apport'); if (elAp) elAp.textContent = fmt(apE);
-
-  var hRnet = document.getElementById('h-rnet');
-  var hCf = document.getElementById('h-cf');
-  if (hRnet) hRnet.textContent = fmtPct(rnet);
-  if (hCf) hCf.textContent = (cf >= 0 ? '+' : '') + Math.round(cf) + '€';
-
-}
-
-// ═══ FINANCEMENT (stub — éléments remplacés par Mon Budget) ═══
-function calcBank() { /* éléments de financement remplacés par l'onglet Mon Budget */ }
 
 // ═══ OFFRE ═══
 function updateOffer() {
@@ -2377,82 +2029,8 @@ function unlockDocs() {
   }).catch(function(){});
 }
 
-// ═══ INIT — loyer slider initialisé depuis _sp_loyer ═══
+// Loyer estimé (repli du contexte de l'assistant IA)
 var _sp_loyer = "1300";
-(function() {
-  var loyerSlider = document.getElementById('loyer');
-  if (loyerSlider && _sp_loyer && parseFloat(_sp_loyer) > 0) {
-    var loyerVal = parseFloat(_sp_loyer);
-    loyerSlider.value = loyerVal;
-    loyerSlider.min   = Math.round(loyerVal * 0.5);
-    loyerSlider.max   = Math.round(loyerVal * 2.5);
-    var vLoyer = document.getElementById('v-loyer');
-    if (vLoyer) vLoyer.textContent = loyerVal + ' €';
-  }
-})();
-calc();
-calcBank();
-
-// ═══ MON BUDGET ═══
-document.addEventListener('DOMContentLoaded', function() {
-  var bgtPrix = document.getElementById('bgt-prix');
-  if (bgtPrix && !bgtPrix.value) {
-    bgtPrix.value = parseFloat("315 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0;
-  }
-});
-function calcBudget() {
-  try { if (window.privencyTrack) window.privencyTrack('credit_simule'); } catch (e) {}
-  var revenu = parseFloat(document.getElementById('bgt-revenu').value) || 0;
-  var apport = parseFloat(document.getElementById('bgt-apport').value) || 0;
-  var duree = parseInt(document.getElementById('bgt-duree').value) || 20;
-  var bgtPrixEl = document.getElementById('bgt-prix');
-  var bgtPrixVal = bgtPrixEl ? parseFloat(bgtPrixEl.value) || 0 : 0;
-  var prixBien = bgtPrixVal > 0 ? bgtPrixVal : (parseFloat("315 000".replace(/\s/g,'').replace(/[^0-9.]/g,'')) || 0);
-  var fraisNotaire = prixBien * 0.075;
-  var coutTotal = prixBien + fraisNotaire;
-  var capital = Math.max(0, coutTotal - apport);
-  var bgtTauxEl = document.getElementById('bgt-taux');
-  var bgtTauxVal = bgtTauxEl ? parseFloat(bgtTauxEl.value) : NaN;
-  var tauxAnnuel = (bgtTauxVal >= 0.5 && bgtTauxVal <= 8) ? bgtTauxVal : 3.4;
-  var tauxMensuel = tauxAnnuel / 100 / 12;
-  var n = duree * 12;
-  var mens = capital > 0 ? capital * tauxMensuel / (1 - Math.pow(1 + tauxMensuel, -n)) : 0;
-  var charges = parseFloat("190") || 0;
-  var effortTotal = mens + charges;
-  var tauxEndettement = revenu > 0 ? (mens / revenu * 100) : 999;
-  var apportMinimum = coutTotal * 0.10;
-  var apportRestant = apport - apportMinimum;
-  var mensMax = revenu * 0.33;
-  var capitalMax = mensMax > 0 ? mensMax * (1 - Math.pow(1 + tauxMensuel, -n)) / tauxMensuel : 0;
-  var budgetMax = capitalMax + apport - fraisNotaire;
-  var res = document.getElementById('bgt-result');
-  res.style.display = 'block';
-  var tauxLigneTxt = tauxAnnuel.toFixed(2);
-  if (_currentLang !== 'en') tauxLigneTxt = tauxLigneTxt.replace('.', ',');
-  var nb = function(n) { return Math.round(n).toLocaleString('fr-FR'); };
-  var prixLigne = '<p style="font-size:11px;color:var(--muted);margin-bottom:10px;">' + tr('bgt-basis', {prix: fmt(prixBien), taux: tauxLigneTxt}) + '</p>';
-  var html = '';
-  var infoLigne = '<div class="rc"><div class="rcl">' + tr('bgt-monthly') + '</div><div class="rcv mono" style="font-size:20px;">' + fmt(mens) + '</div></div>'
-    + '<div class="rc"><div class="rcl">' + tr('bgt-debt') + '</div><div class="rcv" style="font-size:20px;">' + tauxEndettement.toFixed(1) + '%</div></div>'
-    + '<div class="rc"><div class="rcl">' + tr('bgt-max') + '</div><div class="rcv mono">' + fmt(Math.max(0, budgetMax)) + '</div></div>'
-    + '<div class="rc"><div class="rcl">' + tr('bgt-effort') + ' <small style="font-size:9px;color:var(--muted);">' + tr('bgt-effort-sm') + '</small></div><div class="rcv mono">' + fmt(effortTotal) + '</div><div class="rcs">' + tr('bgt-effort-sub') + '</div></div>'
-    + '<p style="font-size:10px;color:var(--muted);margin-top:10px;line-height:1.5;">' + tr('bgt-note') + '</p>';
-  var bgtBox = function(bg, bar, titleColor, title, body) {
-    return '<div class="alert" style="background:' + bg + ';border-left:3px solid ' + bar + ';padding:16px;border-radius:11px;"><h4 style="color:' + titleColor + ';font-family:\'IBM Plex Mono\',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px;">' + title + '</h4>' + body + '</div>';
-  };
-  if (revenu === 0) {
-    html = '<div class="alert" style="background:#fff8e1;border-left:3px solid #ff9800;">' + tr('bgt-need-income') + '</div>';
-  } else if (tauxEndettement <= 33) {
-    html = bgtBox('#f0faf0', '#4caf50', '#2e7d32', tr('bgt-ok-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>');
-  } else if (tauxEndettement <= 38 || budgetMax >= prixBien) {
-    html = bgtBox('#fff8e1', '#ff9800', '#e65100', tr('bgt-cond-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-      + '<p style="font-size:12px;color:#e65100;margin-top:10px;">' + tr('bgt-cond-text', {taux: tauxEndettement.toFixed(1), max: fmt(Math.max(0, budgetMax))}) + '</p>');
-  } else {
-    html = bgtBox('#fff0f0', '#f44336', '#c62828', tr('bgt-ko-title'), '<div class="f2" style="margin-top:12px;">' + infoLigne + '</div>'
-      + '<p style="font-size:12px;color:#c62828;margin-top:10px;">' + tr('bgt-ko-text', {revenu: nb(revenu), apport: nb(apport), max: nb(Math.max(0, budgetMax)), prix: nb(prixBien)}) + '</p>');
-  }
-  res.innerHTML = (revenu === 0 ? '' : prixLigne) + html;
-}
 
 // ═══ CARTE QUARTIER ═══
 var _mapInit = false;
@@ -2700,12 +2278,6 @@ document.querySelectorAll('.diag-result').forEach(function(el) {
 
 <script>
 document.addEventListener('DOMContentLoaded', function(){
-    ['prix','loyer','apport','taux','duree','charges','travaux'].forEach(function(id){
-        var el = document.getElementById(id);
-        if (el) el.addEventListener('input', calc);
-    });
-    try{ calc(); }catch(e){ console.error('[init calc]', e); }
-    try{ calcBank(); }catch(e){ console.error('[init calcBank]', e); }
     setTimeout(function(){ try{ calcProjection(); }catch(e){ console.error('[init calcProjection]', e); } }, 500);
     // Masquer lignes DVF vides
     document.querySelectorAll('.dvf-row').forEach(function(row) {
@@ -3243,11 +2815,6 @@ function applyLang(lang) {
   // Rafraîchit les blocs calculés dynamiquement (dépendent de _currentLang)
   if (typeof renderDpeInfo === 'function') renderDpeInfo(lang);
   if (typeof renderWelcomeParam === 'function') renderWelcomeParam(lang);
-  try { calc(); } catch(e) {}
-  var bgtResult = document.getElementById('bgt-result');
-  if (bgtResult && bgtResult.style.display !== 'none' && bgtResult.innerHTML.trim()) {
-    try { calcBudget(); } catch(e) {}
-  }
   try { updateOffer(); } catch(e) {}
 
   // L'assistant IA a déjà démarré une conversation dans l'ancienne langue :
