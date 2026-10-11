@@ -16,7 +16,7 @@ function btn(href, label) {
   return '<p style="margin:18px 0;"><a href="' + esc(href) + '" style="display:inline-block;background:#0E9F6E;color:#ffffff;text-decoration:none;padding:11px 18px;border-radius:8px;font-weight:600;">' + esc(label) + '</a></p>';
 }
 
-// Alertes instantanées : seulement ce qui mérite d'interrompre l'agent (voir supabase-notifications-v2.sql).
+// Alertes instantanées : seulement ce qui mérite d'interrompre l'agent (voir supabase-notifications-v2.sql et supabase-notifications-participation.sql).
 const ALERTE = {
   offre: (c) => ['💶 Une offre vient d’être transmise', c + ' vient de transmettre une offre sur la fiche.', 'Une offre se traite vite : ouvrez Privency pour la consulter et rappelez l’acquéreur.'],
   tres_chaud: (c, d) => ['🔥 ' + c + ' est un acquéreur très chaud', c + ' vient de passer au niveau « très chaud »' + (d ? ' : ' + d + '.' : '.'), 'C’est le bon moment pour l’appeler ou lui envoyer un message : le bouton « Message adapté » de Mes stats vous prépare un texte.'],
@@ -24,7 +24,69 @@ const ALERTE = {
   retour_visite: (c) => ['🗣️ ' + c + ' a donné son retour de visite', c + ' vient de donner son retour de visite : ouvrez Mes stats pour voir ce qui compte pour lui.', 'Son retour vous indique le meilleur angle pour le rappeler.']
 };
 const GERER = '<p style="font-size:12px;color:#667085;margin:0;">Vous recevez cette alerte car vous l’avez activée. Pour la désactiver ou la régler : ouvrez Privency, onglet Mes stats, rubrique « Notifications ».</p>';
+// Alertes « participation » : l'acquéreur envoie lui-même son match (test crush) ou son carnet de visite.
+// Libellés repris de la fiche (onglet « Le test ») et de Mes stats ; un code inconnu n'est jamais affiché.
+const CRUSH_Q = ['weekend', 'quotidien', 'interieur', 'travaux', 'rangement', 'quartier', 'energie', 'avenir'];
+const CRUSH_FORT = { weekend: ['Pour ses week-ends dehors', 'Un vrai cocon'], quotidien: ['Tout à pied', 'La voiture sans stress'], interieur: ['De la lumière', 'Du calme'],
+  travaux: ['Prêt à vivre', 'De quoi personnaliser'], rangement: ['De la place pour ranger', 'Une taille à sa mesure'], quartier: ['Un quartier vivant', 'Un quartier paisible'],
+  energie: ['Un logement sobre', ''], avenir: ['Un secteur où s’installer', 'Un bien qui garde ses options'] };
+const CRUSH_VERIF = { bruit: 'l’environnement sonore (signalé bruyant)', vis_a_vis: 'le vis-à-vis', expo_nord: 'la luminosité (exposition nord)', rdc: 'la luminosité (rez-de-chaussée)',
+  travaux: 'les travaux signalés', stationnement: 'le stationnement', acces_pied: 'les trajets du quotidien (peu de transports et commerces à pied)',
+  peu_commerces: 'les commerces à proximité', dpe: 'la performance énergétique (DPE)', mutation: 'les projets du secteur (environnement en mutation)' };
+const COUPS = { lumiere: 'lumière', volumes: 'volumes', cuisine: 'cuisine', salle_bain: 'salle de bains', calme: 'calme', jardin: 'jardin', exterieur: 'extérieur', vue: 'vue', rangements: 'rangements', etat: 'état général', quartier: 'quartier' };
+const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+function anonyme(n) { return ['', 'inconnu', 'anonyme'].indexOf(String(n == null ? '' : n).trim().toLowerCase()) !== -1; }
+function parseDetail(s) { try { const j = JSON.parse(String(s || '')); return j && typeof j === 'object' && !Array.isArray(j) ? j : {}; } catch (e) { return {}; } }
+function pct(n) { const x = Number(n); return Number.isFinite(x) && x >= 0 && x <= 100 ? Math.round(x) : null; }
+function liste(arr) { return arr.length > 1 ? arr.slice(0, -1).join(', ') + ' et ' + arr[arr.length - 1] : (arr[0] || ''); }
+function ul(items) { return '<ul style="margin:0 0 6px;padding-left:18px;">' + items.map(x => '<li>' + esc(x) + '</li>').join('') + '</ul>'; }
+// Lien vers Mes stats, sur la ligne de l'acquéreur (et son message adapté quand il est identifié).
+export function lienStats(client, bienAdresse) {
+  const q = ['vue=stats'];
+  if (client) q.push('acq=' + encodeURIComponent(String(client).slice(0, 200)));
+  if (bienAdresse) q.push('bien=' + encodeURIComponent(String(bienAdresse).slice(0, 300)));
+  return APP_URL + '/app.html?' + q.join('&');
+}
+function buildParticipation(a) {
+  const p = parseDetail(a.detail);
+  const identifie = !anonyme(a.client_nom);
+  // prénom saisi dans le test (pour le carnet, « n » contient les notes)
+  const saisi = a.type !== 'crush' ? '' : clean(p.n, 60).replace(/[^\p{L}\p{N} .'’&-]/gu, '').trim();
+  const who = saisi || (identifie ? clean(a.client_nom, 60) : '');
+  const bien = clean(a.bien, 120) || 'fiche';
+  let title, h = '';
+  if (a.type === 'crush') {
+    const duo = p.m === 'duo', s = pct(p.s), rep = typeof p.a === 'string' ? p.a : '';
+    title = duo ? '💘 ' + (who ? who + (who.indexOf('&') !== -1 ? ' ont fait' : ' a fait') : 'Deux acquéreurs ont fait') + ' le test à deux' + (s != null ? ' : ' + s + ' % en commun' : '')
+                : '💘 ' + (who || 'Un acquéreur') + ' a envoyé son match' + (s != null ? ' : ' + s + ' %' : '');
+    let mode = duo ? 'Test « Le crush » fait à deux' : 'Test « Le crush » fait seul';
+    if (duo) { const s1 = pct(p.s1), s2 = pct(p.s2), acc = Number(p.acc);
+      const det = []; if (s1 != null && s2 != null) det.push(s1 + ' % et ' + s2 + ' % chacun'); if (Number.isInteger(acc) && acc >= 0 && acc <= 8) det.push('d’accord sur ' + acc + ' critère' + (acc > 1 ? 's' : '') + ' sur 8');
+      if (det.length) mode += ' (' + det.join(', ') + ')'; }
+    const forts = (Array.isArray(p.c) ? p.c : []).filter(q => own(CRUSH_FORT, q)).slice(0, 3)
+      .map(q => CRUSH_FORT[q][rep.charAt(CRUSH_Q.indexOf(q)) === 'B' ? 1 : 0]).filter(Boolean);
+    const verif = (Array.isArray(p.w) ? p.w : []).filter(k => own(CRUSH_VERIF, k)).map(k => CRUSH_VERIF[k]);
+    h += '<p style="margin:0 0 10px;">' + esc(mode) + (s != null ? ' : <b>' + s + ' %</b>' + (duo ? ' en commun' : '') : '') + '.</p>';
+    h += '<p style="margin:0 0 4px;font-weight:700;">' + (duo ? 'Ce qui les réunit' : 'Ses 3 critères les plus forts') + '</p>' + (forts.length ? ul(forts) : '<p style="margin:0 0 6px;color:#667085;">Aucun critère fort retenu par le test.</p>');
+    h += '<p style="margin:8px 0 4px;font-weight:700;">Points à vérifier pendant la visite</p>' + (verif.length ? ul(verif) : '<p style="margin:0 0 6px;color:#667085;">Aucun point particulier signalé par le test.</p>');
+  } else {
+    title = '📒 ' + (who || 'Un acquéreur') + ' a partagé son carnet de visite';
+    const coups = (Array.isArray(p.c) ? p.c : []).filter(k => own(COUPS, k)).map(k => COUPS[k]);
+    const notes = typeof p.n === 'string' ? p.n.replace(/\s+/g, ' ').trim().slice(0, 300) : '', ph = Number(p.ph);
+    h += '<p style="margin:0 0 10px;">Ce qui a plu pendant la visite : <b>' + esc(coups.length ? liste(coups) : 'non précisé') + '</b>.</p>';
+    if (notes) h += '<p style="margin:0 0 10px;">Ses notes : « ' + esc(notes) + ' »</p>';
+    if (Number.isInteger(ph) && ph > 0 && ph < 100) h += '<p style="margin:0 0 10px;color:#667085;">' + ph + ' photo' + (ph > 1 ? 's' : '') + ' prise' + (ph > 1 ? 's' : '') + ' pendant la visite (restée' + (ph > 1 ? 's' : '') + ' sur son téléphone).</p>';
+  }
+  const hint = identifie ? 'Dans Mes stats, le bouton « Message adapté » vous propose un texte qui part de ce que l’acquéreur vous a envoyé : modifiez-le librement avant de l’envoyer.'
+                         : 'L’acquéreur a ouvert la fiche sans lien personnalisé : retrouvez son envoi dans Mes stats (ligne « inconnu »).';
+  return {
+    subject: clean(title, 120),
+    html: wrap('<p style="font-size:18px;font-weight:700;margin:0 0 8px;">' + esc(title) + '</p><p style="margin:0 0 12px;color:#667085;">Bien : ' + esc(bien) + '</p>' + h
+      + '<p style="margin:12px 0 0;">' + esc(hint) + '</p>' + btn(lienStats(a.client_nom ? String(a.client_nom).trim() : '', a.bien_adresse), identifie ? 'Ouvrir Mes stats et le message adapté' : 'Ouvrir Mes stats') + GERER)
+  };
+}
 export function buildAlerte(a) {
+  if (a && (a.type === 'crush' || a.type === 'carnet')) return buildParticipation(a);
   const f = ALERTE[a.type]; if (!f) return null;
   const who = clean(a.client_nom, 60) || 'Un acquéreur';
   const [title, text, hint] = f(who, clean(a.detail, 200));

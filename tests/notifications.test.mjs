@@ -67,3 +67,31 @@ assert.strictEqual(esc(`<a href="x">&'`), '&lt;a href=&quot;x&quot;&gt;&amp;&#39
   d = deps({ digests: [{ token: tok, email: 'v@x.fr' }], rapport: rap }); const dr2 = d.db.rpc; d.db.rpc = async (fn, a) => fn === 'vendeur_proprio' ? { data: 'Graziella Horrelbecke' } : dr2(fn, a);
   await handle(req('digest'), d); assert(/Bonjour Graziella Horrelbecke,/.test(d.sent[0].html), 'handler : nom du propriétaire repris'); }
 console.log('OK notifications');
+// ── alertes « participation » : match du test crush, carnet de visite
+{
+  const { lienStats } = await import('../supabase/functions/notifications/format.js');
+  const solo = buildAlerte({ type: 'crush', client_nom: 'Olivier Loison', bien: '42 Bd du Docteur Cathelin', bien_adresse: '42 Boulevard · Expertimo',
+    detail: JSON.stringify({ v: 1, m: 'solo', s: 89, c: ['quotidien', 'interieur', 'travaux'], w: ['dpe'], a: 'AAAABBAA', n: 'Olivier' }) });
+  const txt = solo.html.replace(/<[^>]+>/g, ' ');
+  assert(/Olivier a envoyé son match : 89 %/.test(solo.subject), 'crush solo : sujet ' + solo.subject);
+  assert(/fait seul/.test(txt) && /Tout à pied/.test(txt) && /De la lumière/.test(txt) && /Prêt à vivre/.test(txt) && /performance énergétique \(DPE\)/.test(txt) && /42 Bd du Docteur Cathelin/.test(txt), 'crush solo : critères forts et point à vérifier : ' + txt);
+  assert(solo.html.includes(lienStats('Olivier Loison', '42 Boulevard · Expertimo').replace(/&/g, '&amp;')) && /acq=Olivier%20Loison/.test(solo.html) && /Message adapté/.test(txt) && /Notifications/.test(txt), 'crush solo : lien Mes stats + message adapté');
+  const duo = buildAlerte({ type: 'crush', client_nom: 'Olivier Loison', bien: 'B', detail: JSON.stringify({ v: 1, m: 'duo', s: 97, s1: 96, s2: 98, acc: 7, c: ['weekend', 'quotidien', 'interieur'], w: [], a: 'BBABABBA', a2: 'BBAAABBA', n: 'Chacha & Chachou' }) });
+  const dt = duo.html.replace(/<[^>]+>/g, ' ');
+  assert(/Chacha &amp; Chachou ont fait le test à deux : 97 % en commun/.test(esc(duo.subject)) && /96 % et 98 % chacun/.test(dt) && /7 critères sur 8/.test(dt) && /Un vrai cocon/.test(dt) && /La voiture sans stress/.test(dt) && /Aucun point particulier/.test(dt), 'crush duo : ' + duo.subject + ' | ' + dt);
+  const anon = buildAlerte({ type: 'crush', client_nom: 'inconnu', bien: 'B', bien_adresse: 'Adr', detail: JSON.stringify({ m: 'solo', s: 93, c: ['quotidien'], w: [], a: 'BBABABBB' }) });
+  assert(/^💘 Un acquéreur a envoyé son match : 93 %$/.test(anon.subject) && /sans lien personnalisé/.test(anon.html) && !/Ouvrir Mes stats et le message adapté/.test(anon.html) && /acq=inconnu/.test(anon.html) && /La voiture sans stress/.test(anon.html), 'crush anonyme : ' + anon.subject);
+  const pir = buildAlerte({ type: 'crush', client_nom: 'X', bien: 'B', detail: JSON.stringify({ m: 'solo', s: 'abc', c: ['constructor', '<b>x</b>'], w: ['__proto__', 'toString'], n: '<img src=x>\r\nBcc: a@b.c' }) });
+  assert(!/<img|<b>x|constructor|__proto__|toString|\r|\n/.test(pir.subject + pir.html.replace(/<(p|ul|li|a|b|div|\/[a-z]+)( [^>]*)?>/g, '')) && /a envoyé son match$/.test(pir.subject), 'crush : données forgées ignorées ou échappées : ' + pir.subject);
+  assert(buildAlerte({ type: 'crush', client_nom: 'Léa', bien: 'B', detail: '{pas du json' }).subject === '💘 Léa a envoyé son match', 'crush : JSON invalide toléré');
+  const car = buildAlerte({ type: 'carnet', client_nom: 'Léa', bien: 'B', detail: JSON.stringify({ c: ['lumiere', 'volumes', 'inconnu_x'], ph: 3, n: 'Belle cuisine <b>ouverte</b>' }) });
+  const ct = car.html.replace(/<[^>]+>/g, ' ');
+  assert(/Léa a partagé son carnet de visite/.test(car.subject) && /lumière et volumes/.test(ct) && /Belle cuisine &lt;b&gt;ouverte/.test(car.html) && /3 photos prises/.test(ct) && !/inconnu_x/.test(ct), 'carnet : ' + car.subject + ' | ' + ct);
+  for (const t of ['visite', 'critere', 'fiche_partagee', 'ouverture_partage', 'partage', 'mot_vendeur']) assert.strictEqual(buildAlerte({ type: t, client_nom: 'Léa', detail: '{}' }), null, 'aucune alerte pour ' + t);
+  for (const m of [solo, duo, anon, car]) assert(!/partag(é|e) la fiche|lien partagé|ouverture via/i.test(m.subject + m.html), 'jamais de mention du partage de la fiche');
+  // le handler transmet bien_adresse et marque l'alerte envoyée
+  const dd = deps({ alertes: [{ agent_user_id: 'u1', agent_email: 'o@x.fr', cle: 'part:/fiches/a.html|olivier loison|1', type: 'crush', client_nom: 'Olivier Loison', bien: 'B', bien_adresse: 'Adr B', detail: '{"m":"solo","s":80}' }] });
+  const rr2 = await (await handle(req('alertes'), dd)).json();
+  assert(rr2.sent === 1 && /bien=Adr%20B/.test(dd.sent[0].html) && dd.rpcs.some(x => x[0] === 'notif_alerte_marque' && x[1].p_cle === 'part:/fiches/a.html|olivier loison|1'), 'handler : alerte crush envoyée et marquée');
+}
+console.log('OK alertes participation');

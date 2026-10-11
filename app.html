@@ -3083,6 +3083,27 @@ goToStep = function(n) {
   if (n === 5) showContextTip('scoring_premiere_consultation');
 };
 
+// Lien des e-mails d'alerte : app.html?vue=stats&acq=…&bien=… ouvre Mes stats sur la ligne de l'acquéreur (et son message adapté s'il est identifié).
+var _deepStats = null;
+(function() {
+  var q = new URLSearchParams(window.location.search);
+  if (q.get('vue') !== 'stats') return;
+  _deepStats = { acq: (q.get('acq') || '').slice(0, 200), bien: (q.get('bien') || '').slice(0, 300) };
+  history.replaceState(null, '', window.location.pathname);
+  var go = function() { goToStep(5); };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else setTimeout(go, 0);
+})();
+function _openDeepStats() {
+  var d = _deepStats; _deepStats = null;
+  if (!d || !d.acq) return;
+  var key = d.acq + '|||' + (d.bien || '—');
+  var g = _analyticsGroups.filter(function(x) { return x.key === key; })[0]; if (!g) return;
+  var cb = Array.prototype.filter.call(document.querySelectorAll('.analytics-cb'), function(x) { return x.dataset.key === key; })[0];
+  if (cb && cb.scrollIntoView) { try { cb.scrollIntoView({ block: 'center' }); } catch (e) {} }
+  var msg = Array.prototype.filter.call(document.querySelectorAll('.cl-msg'), function(x) { return x.dataset.key === key; })[0];
+  if (msg) clMessageDialog(key, !!msg.dataset.silent);
+}
+
 // ═══════════════════════════════════════════════════════
 // STEP 2 — DATA ARRAYS
 // ═══════════════════════════════════════════════════════
@@ -6222,6 +6243,7 @@ async function loadAnalytics() {
     status.style.display = 'none';
     loadAlertePref();
     renderAnalytics();
+    if (_deepStats) _openDeepStats();
   } catch(err) {
     status.textContent = '❌ Erreur chargement : ' + err.message;
   }
