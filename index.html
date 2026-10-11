@@ -4324,7 +4324,7 @@ document.addEventListener('DOMContentLoaded', function() {
       shareSubject: 'Un bien à regarder ensemble', copy: 'Copier le lien', copied: 'Lien copié !', email: 'E-mail', close: 'Fermer',
       critTitle: 'Ce qui compte vraiment pour moi', critSub: 'Un seul choix : votre conseiller saura sur quoi insister.', critPre: 'Pré-sélectionné d\'après vos réponses au test.', critOk: 'C\'est bien ça', critDone: 'Noté, votre conseiller en tiendra compte.',
       crit: { calme: 'Le calme', lumiere: 'La lumière', transports: 'Les transports', exterieur: 'L\'extérieur', energie: 'L\'énergie', quartier: 'Le quartier' },
-      motTitle: 'Le mot du vendeur', motLike: 'Ça me parle', motLiked: 'Merci, c\'est noté !'
+      agentSees: 'Votre agent verra ce choix pour mieux vous accompagner.', motTitle: 'Le mot du vendeur', motLike: 'Ça me parle', motLiked: 'Merci, c\'est noté !'
     },
     en: {
       visTitle: 'My visit in 3 questions', visSub: 'Choose up to 3 points to check during the visit: your advisor will prepare the answers.',
@@ -4344,7 +4344,7 @@ document.addEventListener('DOMContentLoaded', function() {
       shareSubject: 'A property to look at together', copy: 'Copy link', copied: 'Link copied!', email: 'Email', close: 'Close',
       critTitle: 'What really matters to me', critSub: 'Just one choice: your advisor will know what to focus on.', critPre: 'Pre-selected from your test answers.', critOk: 'That\'s right', critDone: 'Noted, your advisor will take it into account.',
       crit: { calme: 'Peace and quiet', lumiere: 'Light', transports: 'Transport', exterieur: 'Outdoor space', energie: 'Energy', quartier: 'The neighbourhood' },
-      motTitle: 'A word from the seller', motLike: 'This speaks to me', motLiked: 'Thank you, noted!'
+      agentSees: 'Your advisor will see this choice to support you better.', motTitle: 'A word from the seller', motLike: 'This speaks to me', motLiked: 'Thank you, noted!'
     },
     pt: {
       visTitle: 'A minha visita em 3 perguntas', visSub: 'Escolha até 3 pontos a verificar durante a visita: o seu consultor preparará as respostas.',
@@ -4364,7 +4364,7 @@ document.addEventListener('DOMContentLoaded', function() {
       shareSubject: 'Um imóvel para vermos juntos', copy: 'Copiar a ligação', copied: 'Ligação copiada!', email: 'E-mail', close: 'Fechar',
       critTitle: 'O que realmente conta para mim', critSub: 'Uma só escolha: o seu consultor saberá em que insistir.', critPre: 'Pré-selecionado a partir das suas respostas ao teste.', critOk: 'É isso mesmo', critDone: 'Anotado, o seu consultor terá isso em conta.',
       crit: { calme: 'A tranquilidade', lumiere: 'A luz', transports: 'Os transportes', exterieur: 'O exterior', energie: 'A energia', quartier: 'A zona' },
-      motTitle: 'A palavra do vendedor', motLike: 'Identifico-me', motLiked: 'Obrigado, anotado!'
+      agentSees: 'O seu consultor verá esta escolha para o acompanhar melhor.', motTitle: 'A palavra do vendedor', motLike: 'Identifico-me', motLiked: 'Obrigado, anotado!'
     },
     es: {
       visTitle: 'Mi visita en 3 preguntas', visSub: 'Elija hasta 3 puntos a comprobar durante la visita: su asesor preparará las respuestas.',
@@ -4384,7 +4384,7 @@ document.addEventListener('DOMContentLoaded', function() {
       shareSubject: 'Una vivienda para ver juntos', copy: 'Copiar el enlace', copied: '¡Enlace copiado!', email: 'Correo', close: 'Cerrar',
       critTitle: 'Lo que de verdad me importa', critSub: 'Una sola elección: su asesor sabrá en qué insistir.', critPre: 'Preseleccionado según sus respuestas al test.', critOk: 'Es eso', critDone: 'Anotado, su asesor lo tendrá en cuenta.',
       crit: { calme: 'La tranquilidad', lumiere: 'La luz', transports: 'El transporte', exterieur: 'El exterior', energie: 'La energía', quartier: 'El barrio' },
-      motTitle: 'Unas palabras del vendedor', motLike: 'Me identifico', motLiked: '¡Gracias, anotado!'
+      agentSees: 'Su asesor verá esta elección para acompañarle mejor.', motTitle: 'Unas palabras del vendedor', motLike: 'Me identifico', motLiked: '¡Gracias, anotado!'
     }
   };
   function L() { return (typeof _currentLang === 'string' && T[_currentLang]) ? _currentLang : 'fr'; }
@@ -4427,7 +4427,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }).join('') + '</div><div class="pv-row"><span class="pv-count">' + vis.sel.length + ' / 3</span><button type="button" class="pv-btn" data-pv="vis-send"' + (vis.sel.length ? '' : ' disabled') + '>' + esc(t('visSend')) + '</button></div>'
         + (visMsg ? '<p class="pv-msg">' + esc(visMsg) + '</p>' : '');
     }
-    box.innerHTML = h;
+    box.innerHTML = h + '<p class="pv-note pv-agent">' + esc(t('agentSees')) + '</p>';
   }
 
   // ── 2. Carnet de visite (navigateur de l'acheteur ; envoyé seulement sur « Partager avec mon agent ») ──
@@ -4531,7 +4531,7 @@ document.addEventListener('DOMContentLoaded', function() {
     return '<div class="pv-crit"><p class="pv-h">' + esc(t('critTitle')) + '</p><p class="pv-sub">' + esc(t('critSub')) + '</p><div class="pv-chips">'
       + CRIT.map(function(k) { var on = cur === k; return '<button type="button" class="pv-chip' + (on ? ' on' : '') + '" aria-pressed="' + on + '" data-pv="crit" data-id="' + k + '">' + esc(t('crit.' + k)) + '</button>'; }).join('') + '</div>'
       + (!confirmed && !crit.k && pre ? '<p class="pv-note">' + esc(t('critPre')) + '</p><button type="button" class="pv-btn pv-sec" data-pv="crit-ok" data-id="' + pre + '">' + esc(t('critOk')) + '</button>' : '')
-      + (confirmed ? '<p class="pv-msg">' + esc(t('critDone')) + '</p>' : '') + '</div>';
+      + (confirmed ? '<p class="pv-msg">' + esc(t('critDone')) + '</p>' : '') + '<p class="pv-note pv-agent">' + esc(t('agentSees')) + '</p></div>';
   }
   function chooseCrit(k) {
     if (CRIT.indexOf(k) === -1) return;
@@ -4559,7 +4559,8 @@ document.addEventListener('DOMContentLoaded', function() {
     box.innerHTML = '<div class="lbl">' + esc(t('motTitle')) + '</div>'
       + (list.length ? '<ul class="pv-quote">' + list.map(function(x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '')
       + (libre ? '<p class="pv-libre">« ' + esc(libre) + ' »</p>' : '')
-      + '<button type="button" class="pv-heart' + (liked ? ' on' : '') + '" data-pv="mot-like" aria-pressed="' + liked + '">' + ico(I.heart) + '<span>' + esc(liked ? t('motLiked') : t('motLike')) + '</span></button>';
+      + '<button type="button" class="pv-heart' + (liked ? ' on' : '') + '" data-pv="mot-like" aria-pressed="' + liked + '">' + ico(I.heart) + '<span>' + esc(liked ? t('motLiked') : t('motLike')) + '</span></button>'
+      + '<p class="pv-note pv-agent">' + esc(t('agentSees')) + '</p>';
   }
 
   function renderShareTop() { var b = $('pv-share-top'); if (b) b.innerHTML = ico(I.share) + '<span>' + esc(t('shareBtn')) + '</span>'; }
