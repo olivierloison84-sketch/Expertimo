@@ -29,8 +29,13 @@ async function load(f, sendOk = true) {
     d.querySelectorAll('.tab').forEach(t => t.dispatchEvent(new w.MouseEvent('click', { bubbles: true })));
     assert.strictEqual(events.length, before, f + ' : un clic dans la page ne doit rien enregistrer');
     assert(!events.includes('offre_soumise') && !events.includes('credit_simule'), f + ' : faux événements');
-    try { w.calcBudget(); } catch (e) {}
-    assert.strictEqual(events.filter(e => e === 'credit_simule').length, 1, f + ' : credit_simule');
+    // Fiches publiées avant le retrait de « Mon Budget » : la simulation compte encore ; le gabarit n'a plus de simulateur.
+    if (typeof w.calcBudget === 'function') {
+      try { w.calcBudget(); } catch (e) {}
+      assert.strictEqual(events.filter(e => e === 'credit_simule').length, 1, f + ' : credit_simule');
+    } else {
+      assert(f !== 'index.html' || (!d.getElementById('budget') && !d.getElementById('rentabilite')), f + ' : onglets Budget/Simulateur encore présents');
+    }
     ['offer-nom', 'offer-email'].forEach(id => { const el = d.getElementById(id); if (el) el.value = ''; });
     try { w.submitOffer(); } catch (e) {}
     assert(!events.includes('offre_soumise'), f + ' : offre incomplète comptée');

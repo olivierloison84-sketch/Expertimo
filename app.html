@@ -633,8 +633,6 @@ body.photo-drag-on, body.photo-drag-on * { cursor:grabbing !important; -webkit-u
 .diag-form-grid:first-of-type { border-top:none; }
 .diag-form-head { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
 .diag-form-label { font-size:13px; font-weight:600; color:var(--text); }
-/* Credit preview */
-#credit-preview-step2 { margin-top:8px; font-size:12px; color:var(--muted); background:var(--light); padding:10px 12px; border-radius:var(--radius); display:none; line-height:1.8; }
 .leaflet-div-icon-clean { background: none !important; border: none !important; }
 
 /* ═══════════════════════════════════════
@@ -1365,15 +1363,6 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <div class="form-group"><label>Fourchette milieu (€)</label><input type="number" id="bien_fourchette_milieu" data-internal="1"></div>
       <div class="form-group"><label>Fourchette haute (€)</label><input type="number" id="bien_fourchette_haute"></div>
     </div>
-    <div class="section-title">Simulation crédit</div>
-    <div class="grid-4">
-      <div class="form-group"><label>Durée (ans)</label><input type="number" id="bien_credit_duree" min="5" max="30" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Apport (%)</label><input type="number" id="bien_credit_apport" min="0" max="100" step="5" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux haut (%)</label><input type="number" id="bien_credit_taux_haut" step="0.1" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux moyen (%)</label><input type="number" id="bien_credit_taux_moyen" step="0.1" oninput="calcCreditStep2()"></div>
-      <div class="form-group"><label>Taux bas (%)</label><input type="number" id="bien_credit_taux_bas" step="0.1" oninput="calcCreditStep2()"></div>
-    </div>
-    <div id="credit-preview-step2"></div>
   </div>
 </div>
 <!-- ── Financement & Relogement ── -->
@@ -2134,7 +2123,7 @@ var _ONBOARDING_SLIDES = [
   { icon: '🏠', title: 'Saisie du bien',
     text: 'Importez une annonce existante en collant son texte, ou remplissez les informations du bien vous-même. Seuls les champs essentiels sont nécessaires.' },
   { icon: '⚡', title: 'Génération automatique',
-    text: 'En un clic, Privency compile les ventes comparables (DVF), le DPE, un simulateur de crédit et une carte interactive dans une fiche prête à partager.' },
+    text: 'En un clic, Privency compile les ventes comparables (DVF), le DPE et une carte interactive dans une fiche prête à partager.' },
   { icon: '🚀', title: 'Publication en un lien',
     text: 'Publiez la fiche en ligne et obtenez un lien unique à envoyer directement à votre acheteur. Il pourra la consulter et poser ses questions au chatbot 24h/24.' }
 ];
@@ -2310,7 +2299,7 @@ var _CONTEXT_TIPS = {
   fiche_sans_photo:
     'Cette fiche n\'a pas encore de photo — les fiches avec photo génèrent bien plus de visites.',
   premiere_fiche_publiee:
-    'Bravo, votre première fiche est en ligne ! Testez le simulateur de financement dessus.',
+    'Bravo, votre première fiche est en ligne ! Ouvrez-la pour la découvrir comme votre acheteur.',
   profil_incomplet_24h:
     'Complétez votre profil : c\'est ce qui rassure les acheteurs sur votre identité.',
   lien_expertimo_manquant:
@@ -3798,7 +3787,6 @@ var GEN_MSG = {
     "price-pos-below": "Price below the market",
     "price-pos-in": "Price in line with the market",
     "price-pos-tbc": "Price to be confirmed",
-    "rent-info": "Vacant property. Estimated rent: {loyer} € unfurnished. Simulate your returns below.",
     "doc-charges-desc": "Annual statement · {n} €/month",
     "doc-taxe-desc": "{n} € / year",
     "offer-listed": "Listed price: {prix} €"
@@ -3813,7 +3801,6 @@ var GEN_MSG = {
     "price-pos-below": "Preço abaixo do mercado",
     "price-pos-in": "Preço em linha com o mercado",
     "price-pos-tbc": "Preço a confirmar",
-    "rent-info": "Imóvel livre. Renda estimada: {loyer} € sem mobília. Simule abaixo a sua rentabilidade.",
     "doc-charges-desc": "Extrato anual · {n} €/mês",
     "doc-taxe-desc": "{n} € / ano",
     "offer-listed": "Preço anunciado: {prix} €"
@@ -3828,7 +3815,6 @@ var GEN_MSG = {
     "price-pos-below": "Precio por debajo del mercado",
     "price-pos-in": "Precio en línea con el mercado",
     "price-pos-tbc": "Precio por confirmar",
-    "rent-info": "Inmueble libre. Alquiler estimado: {loyer} € sin amueblar. Simule a continuación su rentabilidad.",
     "doc-charges-desc": "Extracto anual · {n} €/mes",
     "doc-taxe-desc": "{n} € / año",
     "offer-listed": "Precio anunciado: {prix} €"
@@ -3857,7 +3843,7 @@ var PUBLIC_EMBED_KEYS = [
   'fort1','fort2','fort3','vig1','vig2','vig3',
   'photo1','photo2','photo3','photo4','photo5','photo6','photo7','photo8','photo9','photo10',
   'photo11','photo12','photo13','photo14','photo15','photo16','photo17','photo18','photo19','photo20',
-  'video1','video2','video3','dvf','creditDuree','creditApport','creditHaut','creditMoyen','creditBas',
+  'video1','video2','video3','dvf',
   'historiqueLibre','histVenteDate','diags','renovations',
   'agentNom','agentTel','agentEmail','agentRdvUrl','agentSiteUrl','agentReseau','agentPrimary','agentAccent','agentPhoto'
 ];
@@ -3882,7 +3868,6 @@ function injectData(html, d, dEn, dX) {
   dX = dX || {};   // {pt, es} : données traduites des autres langues (facultatif)
   var prixFmt = fmtNum(d.prix);                         // "260 000" — used for JS string matching
   var chargesCopro = Math.round(d.chargesCopro);
-  var chargesAnnuelles = chargesCopro * 12 + Math.round(d.taxeFonciere);
 
   // ── PHASE 1 : JS string replacements BEFORE DOM parsing ──
   // Replace hardcoded strings that live inside <script> blocks.
@@ -3956,14 +3941,9 @@ function injectData(html, d, dEn, dX) {
     html = replaceSp(html, '_sp_detail_en', dEn.chargesDetail || '');
   }
 
-  // Loyer slider — replace hardcoded 1300 in template JS. Uniquement si l'agent a
-  // renseigné un loyer : sans valeur fiable, l'onglet Simulateur investisseur est
-  // masqué plus bas (Phase 2), inutile de substituer quoi que ce soit ici.
+  // Loyer estimé (repli du contexte de l'assistant IA) — uniquement si l'agent l'a renseigné.
   if (d.loyer > 0) {
     html = replaceSp(html, '_sp_loyer', String(Math.round(d.loyer)));
-    html = srep(html, 'value="1300"', 'value="' + Math.round(d.loyer) + '"');
-    html = srep(html, "value='1300'", "value='" + Math.round(d.loyer) + "'");
-    html = srep(html, "setAttribute('value', 1300)", "setAttribute('value', " + Math.round(d.loyer) + ')');
   }
 
   // Address (the template may have it as literal string in JS)
@@ -3988,11 +3968,6 @@ function injectData(html, d, dEn, dX) {
   html = srep(html, "'260 000'", "'" + prixFmt + "'");
   // Payload du formulaire d'offre (prix_affiche: "260 000 €") — le symbole € fait partie de la chaîne
   html = srep(html, '"260 000 €"', '"' + prixFmt + ' €"');
-
-  // Charges in calcBudget: parseFloat("253")
-  if (chargesCopro > 0) {
-    html = srep(html, 'parseFloat("253")', 'parseFloat("' + chargesCopro + '")');
-  }
 
 
   if (d.agentPhoto) {
@@ -4319,51 +4294,6 @@ function injectData(html, d, dEn, dX) {
     loibox.innerHTML = sc.toLocaleString('fr-FR') + ' m² × ~2,80 m ≈ <strong>' + vol + ' m³</strong> → conforme au seuil légal de 20 m³. À confirmer par géomètre.';
   }
 
-  // Loyer info
-  var loyerInfo = id('renta-loyer-info');
-  if (loyerInfo && d.loyer) {
-    var loyerInfoFr = 'Bien libre. Loyer estimé : ' + fmtNum(d.loyer) + ' € nu. Simulez votre rentabilité ci-dessous.';
-    loyerInfo.textContent = loyerInfoFr;
-    loyerInfo.setAttribute('data-fr-val', loyerInfoFr);
-    langVals(loyerInfo, function(l) { return gm(l, 'rent-info', {loyer: fmtNum(d.loyer)}); });
-  }
-
-  // Sliders — critical: sets initial values so template's calc() runs correctly on load
-  var pSlider = id('prix');
-  if (pSlider) {
-    var pMin = d.fourchetBasse || Math.round(d.prix * 0.6);
-    var pMax = d.fourchetHaute || Math.round(d.prix * 1.1);
-    pSlider.setAttribute('min', pMin);
-    pSlider.setAttribute('max', pMax);
-    pSlider.setAttribute('value', d.prix);
-    var vPrix = id('v-prix');
-    if (vPrix) vPrix.textContent = prixFmt + ' €';
-  }
-  var lSlider = id('loyer');
-  if (lSlider && d.loyer > 0) {
-    var loyerVal = Math.round(d.loyer);
-    lSlider.setAttribute('value', loyerVal);
-    lSlider.setAttribute('min', Math.round(loyerVal * 0.5));
-    lSlider.setAttribute('max', Math.round(loyerVal * 2.5));
-    var vLoyer = id('v-loyer');
-    if (vLoyer) vLoyer.textContent = loyerVal + ' €';
-  }
-  // Sans loyer fiable renseigné par l'agent, le simulateur investisseur n'a aucune
-  // donnée à présenter — masque entièrement l'onglet (bouton de nav + section).
-  if (!(d.loyer > 0)) {
-    var rentaTabBtn = q('[data-tab="rentabilite"]');
-    if (rentaTabBtn) rentaTabBtn.style.display = 'none';
-    var rentaSection = id('rentabilite');
-    if (rentaSection) rentaSection.style.display = 'none';
-  }
-  var cSlider = id('charges');
-  if (cSlider) {
-    cSlider.setAttribute('max', Math.max(chargesAnnuelles * 2, 9436));
-    cSlider.setAttribute('value', chargesAnnuelles);
-    var vCharges = id('v-charges');
-    if (vCharges) vCharges.textContent = chargesAnnuelles + ' €';
-  }
-
   // Liste d'infos complémentaires — full rebuild from form data
   function infoItemHtml(label, desc) {
     return '<li class="info-item">' + (label ? '<b>' + esc(label) + '</b> — ' : '') + esc(desc) + '</li>';
@@ -4642,26 +4572,13 @@ function getDVFEditRows() {
 }
 
 // ═══════════════════════════════════════════════════════
-// STEP 2 — CREDIT
+// STEP 2 — CHAMPS PAR TYPE DE BIEN
 // ═══════════════════════════════════════════════════════
 // Valeur du champ correspondant au type de bien sélectionné : Terrain a ses propres
 // champs (…_t), Appartement/Maison partagent les champs de base. Un champ masqué
 // resté rempli après un changement de type ne doit jamais l'emporter.
 function getByType(baseId, terrainId) {
   return getV(currentType === 'terrain' ? terrainId : baseId);
-}
-
-function calcCreditStep2() {
-  var prix=parseFloat(getByType('prix_vente','prix_vente_t'))||0;
-  var el=document.getElementById('credit-preview-step2');
-  if (!prix||!el){if(el)el.style.display='none';return;}
-  var duree=parseInt(getV('bien_credit_duree'))||20, apport=parseFloat(getV('bien_credit_apport'))||10;
-  var t1=parseFloat(getV('bien_credit_taux_haut'))||5, t2=parseFloat(getV('bien_credit_taux_moyen'))||3.4, t3=parseFloat(getV('bien_credit_taux_bas'))||2.5;
-  var capital=prix*1.075*(1-apport/100);
-  function mens(cap,taux,an){var r=taux/100/12,n=an*12;return r===0?cap/n:cap*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);}
-  function row(taux,m){return taux.toFixed(2)+'% → <strong>'+fmtNum(Math.round(m))+' €/mois</strong> · coût : '+fmtNum(Math.round(m*duree*12-capital))+' €';}
-  el.style.display='block';
-  el.innerHTML='<strong>Capital : '+fmtNum(Math.round(capital))+' € sur '+duree+' ans (apport '+apport+'%)</strong><br>'+row(t1,mens(capital,t1,duree))+'<br>'+row(t2,mens(capital,t2,duree))+'<br>'+row(t3,mens(capital,t3,duree));
 }
 
 // ═══════════════════════════════════════════════════════
@@ -5109,11 +5026,6 @@ function collectBienData() {
     video1:video1, video2:video2, video3:video3,
     dvf:           getDVFRows(),
     fourchetBasse: fb, fourchetHaute: fh,
-    creditDuree:   parseInt(getV('bien_credit_duree'))||20,
-    creditApport:  parseFloat(getV('bien_credit_apport'))||10,
-    creditHaut:    parseFloat(getV('bien_credit_taux_haut'))||5,
-    creditMoyen:   parseFloat(getV('bien_credit_taux_moyen'))||3.4,
-    creditBas:     parseFloat(getV('bien_credit_taux_bas'))||2.5,
     historiqueLibre: getV('historique_libre'),
     histVenteDate: getV('hist_vente_date')||'2025',
     diags:[
@@ -5155,7 +5067,7 @@ function collectBienData() {
 //   • carte « Financement & Relogement » (dette, banque, budget de relogement du vendeur)
 //   • « Notes internes / dossier mandat » : seuls les champs qui décrivent le bien (travaux, surface du
 //     terrain, DPE/GES chiffrés, services, voisinage…) sont repris ; les autres sont exclus
-//   • marge de négociation / fourchette de prix, paramètres de simulation, prénom/nom de l'acheteur
+//   • marge de négociation / fourchette de prix, prénom/nom de l'acheteur
 // Une dernière passe (scrubChatText) retire tout e-mail, téléphone et toute valeur d'identité saisie
 // (vendeur, acheteur) qui aurait été recopiée dans un champ libre.
 // ═══════════════════════════════════════════════════════
@@ -6946,14 +6858,9 @@ function injectBienData(data) {
   setIfPresent('bien_tension', data.tension);
   setIfPresent('bien_delai', data.delai);
 
-  // Fourchette & crédit
+  // Fourchette
   setIfPresent('bien_fourchette_basse', data.fourchetBasse);
   setIfPresent('bien_fourchette_haute', data.fourchetHaute);
-  setIfPresent('bien_credit_duree', data.creditDuree);
-  setIfPresent('bien_credit_apport', data.creditApport);
-  setIfPresent('bien_credit_taux_haut', data.creditHaut);
-  setIfPresent('bien_credit_taux_moyen', data.creditMoyen);
-  setIfPresent('bien_credit_taux_bas', data.creditBas);
 
   // Historique & documents
   // Ne jamais écraser un texte déjà saisi par l'agent
@@ -7468,8 +7375,7 @@ function initInternalNotesSection() {
   [
     ['Cuisine', 3, 'Équipements'],
     ['Points de vigilance / Points faibles', 2, 'Équipements'],
-    ['Marché & Fourchette de prix', 2, 'Analyse & Scores (fiche acheteur)'],
-    ['Simulation crédit', 2, 'Analyse & Scores (fiche acheteur)']
+    ['Marché & Fourchette de prix', 2, 'Analyse & Scores (fiche acheteur)']
   ].forEach(function(spec) {
     captureSectionSiblings(spec[0], spec[1]).forEach(function(el) { addToGroup(spec[2], el); });
   });
