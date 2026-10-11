@@ -94,7 +94,7 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
   let r = await appel(w, '91345', 'Longjumeau');
   assert.strictEqual(r.code, 200, JSON.stringify(r.body));
   const g = r.body.guide, cles = g.rubriques.map(x => x.cle);
-  assert.deepStrictEqual(cles, ['presentation', 'transports', 'patrimoine', 'parcs', 'equipements', 'economie'], 'rubriques avec données : ' + cles);
+  assert.deepStrictEqual(cles, ['presentation', 'transports', 'equipements', 'parcs', 'patrimoine', 'economie'], 'rubriques avec données (transports, écoles et commerces d\'abord) : ' + cles);
   assert(!cles.includes('culture'), 'rubrique sans donnée (culture) : non écrite');
   assert(!g.rubriques.some(x => /inventée|Ne doit pas/.test(x.texte)), 'rubrique inventée par l\'IA écartée');
   const eco = g.rubriques.find(x => x.cle === 'economie'), tr = g.rubriques.find(x => x.cle === 'transports');
@@ -183,6 +183,54 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
     const r3 = await appel(w3, '91345', 'Longjumeau');
     assert.deepStrictEqual(r3.body.guide.rubriques.map(x => x.cle), ['presentation'], 'rubriques sans phrase sourcée : absentes');
   }
+  // ── format : 3 ou 4 phrases courtes, 450 caractères au plus par rubrique
+  {
+    const { formater, MAX_CAR_TEXTE, SYSTEME } = route._interne;
+    assert.strictEqual(MAX_CAR_TEXTE, 450);
+    g.rubriques.forEach(x => { assert(x.texte.length <= 450, x.cle + ' : ' + x.texte.length + ' caractères'); assert((x.texte.match(/[.!?](\s|$)/g) || []).length <= 4, x.cle + ' : plus de 4 phrases'); });
+    const six = ['Phrase un assez longue pour compter dans le total de la rubrique, avec des mots.', 'Phrase deux.', 'Phrase trois.', 'Phrase quatre.', 'Phrase cinq.', 'Phrase six.'];
+    assert.deepStrictEqual(formater(six), six.slice(0, 4), '4 phrases au plus');
+    const longues = Array.from({ length: 4 }, (_, i) => 'Phrase ' + i + ' ' + 'x'.repeat(140) + '.');
+    const f = formater(longues); assert(f.length === 2 && f.join(' ').length <= 450, 'coupé en phrases entières sous 450 caractères');
+    assert(/450 caractères/.test(SYSTEME) && /3 ou 4 phrases courtes/.test(SYSTEME) && /écoles \(écoles, collège, lycée\)/.test(SYSTEME) && /transports/.test(SYSTEME), 'consignes de format et de priorité');
+    assert(/effectifs/.test(SYSTEME) && /capacités de salles/.test(SYSTEME) && /académie, canton/.test(SYSTEME) && /noms d'entreprises/.test(SYSTEME) && /sièges sociaux/.test(SYSTEME), 'nouveaux interdits dans la consigne');
+    // l'IA renvoie 6 phrases fidèles et longues : la rubrique est ramenée à 4 phrases / 450 caractères
+    const src6 = 'La commune est desservie par la ligne de tram-train T12 (gares de Longjumeau et de Chilly-Mazarin) et par plusieurs lignes de bus. La route nationale 20 la traverse.';
+    const w4 = monde({ env: { DATATOURISME_API_KEY: '' } }), f4 = w4.deps.fetch;
+    w4.deps.fetch = async (u, i) => /anthropic/.test(u) ? { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify({ rubriques: { transports: Array(6).fill(src6.split('. ')[0] + '.').map((x, k) => k % 2 ? 'La route nationale 20 la traverse.' : x).join(' ') } }) }] }) } : f4(u, i);
+    const r4 = await appel(w4, '91345', 'Longjumeau'), t4 = r4.body.guide.rubriques.find(x => x.cle === 'transports').texte;
+    assert(t4.length <= 450 && (t4.match(/\./g) || []).length <= 4, 'rubrique tronquée en phrases entières : ' + t4.length);
+  }
+  // ── interdits : effectifs, exploitations, capacités, rattachement administratif, entreprises — même présents dans la source
+  {
+    const { verifierPhrase } = route._interne;
+    const S = 'L\'usine Safran emploie 1 200 salariés. La commune compte 12 exploitations agricoles. Le théâtre Adolphe-Adam dispose d\'une salle de 400 places. La commune est rattachée à l\'académie de Versailles et au canton de Longjumeau. Le siège social de Safran est à Massy. Un magasin Intersport est implanté dans la zone. Le centre commercial Carrefour est au nord. Le collège Paul-Langevin et le lycée Jacques-Prévert accueillent les élèves. La zone d\'activités de la Croix-Blanche regroupe des commerces. Le collège compte 600 élèves.';
+    const cas = [
+      ['L\'usine Safran emploie 1 200 salariés.', 'economie', /effectif|entreprise/],
+      ['La commune compte 12 exploitations agricoles.', 'economie', /exploitations/],
+      ['Le théâtre Adolphe-Adam dispose d\'une salle de 400 places.', 'culture', /capacité/],
+      ['La commune est rattachée à l\'académie de Versailles et au canton de Longjumeau.', 'presentation', /rattachement administratif/],
+      ['Le siège social de Safran est à Massy.', 'economie', /entreprise/],
+      ['Un magasin Intersport est implanté dans la zone.', 'equipements', /marque : Intersport/],
+      ['Le centre commercial Carrefour est au nord.', 'economie', /marque : Carrefour/],
+      ['Le collège compte 600 élèves.', 'equipements', /effectif/]
+    ];
+    for (const [p, cle, motif] of cas) { const v = verifierPhrase(p, S, cle, 'Longjumeau'); assert(!v.ok && motif.test(v.motif), p + ' → ' + JSON.stringify(v)); }
+    assert(verifierPhrase('Le collège Paul-Langevin et le lycée Jacques-Prévert accueillent les élèves.', S, 'equipements', 'Longjumeau').ok, 'noms d\'établissements scolaires gardés');
+    assert(verifierPhrase('La zone d\'activités de la Croix-Blanche regroupe des commerces.', S, 'economie', 'Longjumeau').ok, 'nom de zone gardé');
+  }
+  // ── vérifiabilité : extrait exact de la source enregistré par rubrique (et dans le cache)
+  {
+    const wpTexte = COMMUNES['91345'].extrait;
+    g.rubriques.forEach(x => {
+      assert(typeof x.extrait === 'string' && x.extrait.length > 0, x.cle + ' : extrait présent');
+      (x.extrait.match(/« ([^»]+) »/g) || []).map(m => m.slice(2, -2)).forEach(m => assert(wpTexte.includes(m) || /^(Église Saint-Martin|Parc Nativelle) \(/.test(m), x.cle + ' : extrait recopié tel quel de la source : ' + m));
+    });
+    assert.strictEqual(tr.extrait, '« La commune est desservie par la ligne de tram-train T12 (gares de Longjumeau et de Chilly-Mazarin) et par plusieurs lignes de bus. »', 'extrait transports : ' + tr.extrait);
+    assert(/« Parc Nativelle \(parc ou jardin\) »/.test(parcs.extrait), 'extrait DATAtourisme : nom et catégorie');
+    assert.deepStrictEqual(w.table.get('91345').rubriques.map(x => x.extrait), g.rubriques.map(x => x.extrait), 'extraits enregistrés dans le cache');
+    assert(!/A6|Intersport|1438/.test(g.rubriques.map(x => x.extrait).join(' ')), 'pas d\'extrait pour une phrase retirée');
+  }
   // ── DATAtourisme : seuls le nom et la catégorie sont transmis à l'IA
   {
     const entreeDt = JSON.parse(JSON.parse(ia[0].init.body).messages[0].content).rubriques.parcs.datatourisme;
@@ -222,6 +270,15 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
   assert(etat && etat.insee === '91345' && etat.rubriques.length === 6, 'guide chargé dans la fiche en cours');
   assert.strictEqual(doc.querySelectorAll('#guide-commune-editeur .gc-rub').length, 6, 'une zone par rubrique');
   assert.strictEqual((doc.querySelector('#guide-commune-editeur .gc-avertissement') || {}).textContent, 'Texte généré à partir de sources publiques. Relisez-le avant publication.', 'message à l\'agent au-dessus du guide');
+  {
+    const lien = doc.querySelectorAll('#guide-commune-editeur .gc-rub')[1].querySelector('.gc-voir-extrait'), boite = () => doc.querySelectorAll('#guide-commune-editeur .gc-rub')[1].querySelector('.gc-extrait');
+    assert(lien && lien.textContent === 'Voir l\'extrait source' && boite().hidden, 'lien « Voir l\'extrait source » sous la rubrique, extrait replié');
+    lien.click();
+    assert(!boite().hidden && boite().textContent === tr.extrait, 'clic : l\'extrait source s\'affiche');
+    assert.strictEqual(doc.querySelectorAll('#guide-commune-editeur .gc-rub')[1].querySelector('.gc-voir-extrait').textContent, 'Masquer l\'extrait source');
+    doc.querySelectorAll('#guide-commune-editeur .gc-rub')[1].querySelector('.gc-voir-extrait').click(); assert(boite().hidden, 'second clic : replié');
+    assert.strictEqual(doc.querySelectorAll('#guide-commune-editeur .gc-voir-extrait').length, 6, 'un lien par rubrique');
+  }
   const nbApi = apiAppels.filter(u => /guide-commune/.test(u)).length;
   await win.guideCommuneDemander(cf(feat({}), '12 rue Basse 91160 Longjumeau'));
   assert.strictEqual(apiAppels.filter(u => /guide-commune/.test(u)).length, nbApi, 'même commune : pas de nouvel appel (modifications conservées)');
@@ -236,6 +293,7 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
   assert.strictEqual(apiAppels.filter(u => /guide-commune/.test(u)).length, nbApi, 'aucun appel serveur pour une modification');
   const d = win.collectBienData();
   assert(d.guideCommune && d.guideCommune.rubriques[5].masque, 'données de la fiche : guide avec les choix de l\'agent');
+  assert(d.guideCommune.rubriques.every(x => !('extrait' in x)) && win.guideEtat().rubriques[1].extrait, 'extraits gardés dans l\'éditeur, jamais publiés dans la fiche');
   assert(win.collectRawFormState().guide_commune_json, 'conservé dans le brouillon / « Modifier »');
   // rendu dans la fiche générée
   const tpl = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
@@ -244,7 +302,7 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
   assert(box && box.style.display !== 'none', 'bloc affiché');
   assert.strictEqual(fdoc.getElementById('guide-commune-titre').textContent, 'Vivre à Longjumeau');
   const titres = [...box.querySelectorAll('.gc-t')].map(x => x.textContent);
-  assert.deepStrictEqual(titres, ['La commune', 'Transports', 'Patrimoine', 'Parcs et espaces verts', 'Équipements et services', 'Événements à venir'], 'rubrique masquée absente, rubrique vide absente : ' + titres);
+  assert.deepStrictEqual(titres, ['La commune', 'Transports', 'Écoles, commerces et équipements', 'Parcs et espaces verts', 'Patrimoine', 'Événements à venir'], 'rubrique masquée absente, rubrique vide absente : ' + titres);
   assert(/Texte revu par l'agent/.test(box.textContent), 'texte modifié par l\'agent sur sa fiche');
   assert([...box.querySelectorAll('.gc-src a')].some(a => a.href === 'https://fr.wikipedia.org/wiki/Longjumeau') && /CC BY-SA 4\.0/.test(box.textContent) && /DATAtourisme/.test(box.textContent), 'sources citées');
   assert.strictEqual(box.querySelector('.gc-ev').getAttribute('data-fin'), '2026-11-03', 'événement à venir avec sa date de fin');

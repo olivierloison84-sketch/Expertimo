@@ -5,7 +5,7 @@
 create table if not exists public.guide_commune (
   insee      text primary key check (insee ~ '^([0-9]{5}|2[AB][0-9]{3})$'),
   commune    text not null,
-  rubriques  jsonb not null default '[]'::jsonb,   -- [{cle, titre, texte, sources: [{type, titre, url, licence?}]}]
+  rubriques  jsonb not null default '[]'::jsonb,   -- [{cle, titre, texte, sources: [{type, titre, url, licence?}], extrait}] (extrait : passage exact de la source)
   modele     text,
   genere_le  timestamptz not null default now()
 );

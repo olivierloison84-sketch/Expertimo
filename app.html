@@ -4373,7 +4373,7 @@ function injectData(html, d, dEn, dX) {
       evenements: { fr: 'Événements à venir', en: 'Upcoming events', pt: 'Próximos eventos', es: 'Próximos eventos' },
       presentation: { fr: 'La commune', en: 'The town', pt: 'O município', es: 'El municipio' }, transports: { fr: 'Transports', en: 'Transport', pt: 'Transportes', es: 'Transporte' },
       patrimoine: { fr: 'Patrimoine', en: 'Heritage', pt: 'Património', es: 'Patrimonio' }, parcs: { fr: 'Parcs et espaces verts', en: 'Parks and green spaces', pt: 'Parques e espaços verdes', es: 'Parques y zonas verdes' },
-      culture: { fr: 'Culture et loisirs', en: 'Culture and leisure', pt: 'Cultura e lazer', es: 'Cultura y ocio' }, equipements: { fr: 'Équipements et services', en: 'Amenities and services', pt: 'Equipamentos e serviços', es: 'Equipamientos y servicios' },
+      culture: { fr: 'Culture et loisirs', en: 'Culture and leisure', pt: 'Cultura e lazer', es: 'Cultura y ocio' }, equipements: { fr: 'Écoles, commerces et équipements', en: 'Schools, shops and amenities', pt: 'Escolas, comércio e equipamentos', es: 'Escuelas, comercios y equipamientos' },
       economie: { fr: 'Économie', en: 'Economy', pt: 'Economia', es: 'Economía' } };
     var gc = d.guideCommune, gcRubs = gc && Array.isArray(gc.rubriques) ? gc.rubriques.filter(function(r) { return r && !r.masque && String(r.texte || '').trim(); }) : [];
     var gcEvs = gc && !gc.evenementsMasques && gc.evenements && Array.isArray(gc.evenements.liste) ? gc.evenements.liste : [];
@@ -4708,15 +4708,17 @@ function communeFiable(feat, adresse) {
   else if (normAdresse(adresse).indexOf(normAdresse(nom)) === -1) return null;
   return { insee: insee, nom: nom };
 }
-var _guideEnCours = null;
+var _guideEnCours = null, _gcExtraitsOuverts = {};
 function guideEtat() { try { var v = getV('guide_commune_json'); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
 function guideEnregistrer(g) { var ta = document.getElementById('guide_commune_json'); if (!ta) return; ta.value = g ? JSON.stringify(g) : ''; scheduleDraftSave(); }
+// Dans la fiche publiée : le guide sans les extraits de source (réservés au contrôle par l'agent dans l'éditeur)
+function guidePourFiche() { var g = guideEtat(); if (!g || !Array.isArray(g.rubriques)) return g; return Object.assign({}, g, { rubriques: g.rubriques.map(function(r) { var c = Object.assign({}, r); delete c.extrait; return c; }) }); }
 function guideStatut(t) { var e = document.getElementById('guide-commune-statut'); if (e && t) e.textContent = t; }
 // Réponse du serveur → état de la fiche (texte d'origine gardé à part pour « Rétablir »)
 function guideDepuisServeur(j) {
   var g = j && j.guide; if (!g || !Array.isArray(g.rubriques)) return null;
   return { insee: g.insee, commune: g.commune, genere_le: g.genere_le || null, modele: g.modele || null,
-    rubriques: g.rubriques.map(function(r) { return { cle: r.cle, titre: r.titre, texte: r.texte, texte_origine: r.texte, masque: false, sources: r.sources || [] }; }),
+    rubriques: g.rubriques.map(function(r) { return { cle: r.cle, titre: r.titre, texte: r.texte, texte_origine: r.texte, masque: false, sources: r.sources || [], extrait: typeof r.extrait === 'string' ? r.extrait : '' }; }),
     evenements: j.evenements && Array.isArray(j.evenements.liste) ? { liste: j.evenements.liste, source: j.evenements.source || null } : null, evenementsMasques: false };
 }
 async function guideCommuneDemander(c) {
@@ -4748,11 +4750,15 @@ function guideCommuneRendre() {
   var src = function(l) { return (l || []).map(function(x) { return '<a href="' + e(x.url) + '" target="_blank" rel="noopener">' + e(x.titre) + '</a>' + (x.licence ? ' (' + e(x.licence) + ')' : ''); }).join(' · '); };
   var h = '<p class="gc-avertissement" role="note" style="margin:8px 0 0;padding:8px 10px;border-radius:8px;background:#FFF8EC;border:1px solid #F1D9AE;color:#8A5A12;font-size:13px;font-weight:600;">Texte généré à partir de sources publiques. Relisez-le avant publication.</p>';
   h += g.rubriques.map(function(r, i) {
+    var ouvert = !!_gcExtraitsOuverts[r.cle];
     return '<div class="gc-rub" data-i="' + i + '" style="border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px;' + (r.masque ? 'opacity:.55;' : '') + '">'
       + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><b>' + e(r.titre) + '</b>'
       + '<label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="gc-masque"' + (r.masque ? ' checked' : '') + ' style="width:auto;"> Masquer sur cette fiche</label></div>'
       + '<textarea class="gc-texte" style="min-height:70px;margin-top:6px;"' + (r.masque ? ' disabled' : '') + '>' + e(r.texte) + '</textarea>'
-      + '<div class="hint" style="margin-top:4px;">Source : ' + src(r.sources) + (r.texte !== r.texte_origine ? ' · <button type="button" class="btn btn-sm btn-outline gc-retablir">Rétablir le texte d\'origine</button>' : '') + '</div></div>';
+      + '<div class="hint" style="margin-top:4px;">Source : ' + src(r.sources) + (r.texte !== r.texte_origine ? ' · <button type="button" class="btn btn-sm btn-outline gc-retablir">Rétablir le texte d\'origine</button>' : '') + '</div>'
+      + (r.extrait ? '<a href="#" role="button" class="gc-voir-extrait" aria-expanded="' + (ouvert ? 'true' : 'false') + '" style="display:inline-block;margin-top:4px;font-size:12px;">' + (ouvert ? 'Masquer l\'extrait source' : 'Voir l\'extrait source') + '</a>'
+        + '<div class="gc-extrait"' + (ouvert ? '' : ' hidden') + ' style="margin-top:4px;padding:8px 10px;border-left:3px solid var(--border);background:var(--bg,#f7f7f7);font-size:12px;white-space:pre-line;">' + e(r.extrait) + '</div>' : '')
+      + '</div>';
   }).join('');
   var ev = g.evenements && g.evenements.liste && g.evenements.liste.length ? g.evenements.liste : [];
   if (ev.length) h += '<div class="gc-ev" style="border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px;' + (g.evenementsMasques ? 'opacity:.55;' : '') + '"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><b>Événements à venir</b>'
@@ -4775,6 +4781,13 @@ document.addEventListener('change', function(ev) {
   else if (t.classList.contains('gc-texte')) { guideCommuneRendre(); return; }
   else return;
   guideEnregistrer(g); guideCommuneRendre();
+});
+// « Voir l'extrait source » : passage exact de la source sous la rubrique, pour contrôler le texte d'un coup d'œil
+document.addEventListener('click', function(ev) {
+  var t = ev.target; if (!t || !t.classList || !t.classList.contains('gc-voir-extrait')) return;
+  ev.preventDefault();
+  var g = guideEtat(), r = g && g.rubriques[+t.closest('.gc-rub').getAttribute('data-i')]; if (!r) return;
+  _gcExtraitsOuverts[r.cle] = !_gcExtraitsOuverts[r.cle]; guideCommuneRendre();
 });
 document.addEventListener('click', function(ev) {
   var t = ev.target; if (!t || !t.classList || !t.classList.contains('gc-retablir')) return;
@@ -5220,7 +5233,7 @@ function collectBienData() {
     dvf:           getDVFRows(),
     fourchetBasse: fb, fourchetHaute: fh,
     historiqueLibre: getV('historique_libre'),
-    guideCommune: guideEtat(),
+    guideCommune: guidePourFiche(),
     histVenteDate: getV('hist_vente_date')||'2025',
     diags:[
       {icon:'🧱',name:'Amiante',        status:getV('diag_amiante_status'),     result:getV('diag_amiante_result')},
