@@ -951,6 +951,16 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
 @media(max-width:700px){body.pv4 .header .pv-share-top{display:flex;margin:10px auto 6px;}}
 @media(max-width:360px){#pv-share-sheet .pv-sh-grid{grid-template-columns:repeat(2,1fr);}.pv-photos{grid-template-columns:repeat(3,minmax(0,1fr));}}
 </style>
+<style>
+/* Guide « Vivre à [ville] » (rubrique « Tout savoir sur ce bien ») */
+#guide-commune{margin-top:14px;}
+#guide-commune .gc-rub{margin-top:14px;}
+#guide-commune .gc-t{font-size:15px;font-weight:700;margin:0 0 4px;color:var(--ink);}
+#guide-commune .gc-x{font-size:14px;line-height:1.6;margin:0;color:var(--ink);}
+#guide-commune .gc-src{font-size:12px;color:var(--muted);margin:4px 0 0;}
+#guide-commune .gc-src a{color:inherit;text-decoration:underline;}
+#guide-commune .gc-evl{margin:4px 0 0;padding-left:18px;font-size:14px;line-height:1.6;color:var(--ink);}
+</style>
 </head>
 <body class="pv pv4 pv-home tone-b">
 
@@ -1161,6 +1171,11 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
       </ul>
       <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en">
       </ul>
+    </div>
+    <!-- Guide « Vivre à [ville] » : rempli à la génération (rubriques non vides et non masquées), sinon caché -->
+    <div class="card" id="guide-commune" style="display:none;">
+      <div class="lbl" id="guide-commune-titre">Vivre à</div>
+      <div id="guide-commune-rubriques"></div>
     </div>
   </div>
 </div>
@@ -4960,6 +4975,19 @@ document.addEventListener('DOMContentLoaded', function() {
   function sync(){var asked=!!m.querySelector('div[style*="flex-end"]');s.style.display=asked?'none':'flex';}
   new MutationObserver(sync).observe(m,{childList:true});
   sync();
+})();
+</script>
+<script>
+// Guide de la commune : les événements passés disparaissent d'eux-mêmes (et le bloc s'il n'en reste aucun)
+(function() {
+  function maj() {
+    var auj = new Date().toISOString().slice(0, 10);
+    [].forEach.call(document.querySelectorAll('#guide-commune .gc-ev'), function(li) { var f = li.getAttribute('data-fin'); if (f && f < auj) li.style.display = 'none'; });
+    [].forEach.call(document.querySelectorAll('#guide-commune .gc-evs'), function(b) { if (![].some.call(b.querySelectorAll('.gc-ev'), function(li) { return li.style.display !== 'none'; })) b.style.display = 'none'; });
+    var g = document.getElementById('guide-commune');
+    if (g && g.style.display !== 'none' && ![].some.call(g.querySelectorAll('.gc-rub'), function(b) { return b.style.display !== 'none'; })) g.style.display = 'none';
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', maj); else maj();
 })();
 </script>
 </body>

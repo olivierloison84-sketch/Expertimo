@@ -1227,6 +1227,12 @@ details[open] summary .chevron { transform: rotate(90deg); }
       <textarea id="historique_libre" style="min-height:140px"></textarea>
       <p class="hint">Saisissez chaque information sur une ligne. Ce texte apparaîtra dans la section « Tout savoir sur ce bien » de la fiche acheteur.</p>
     </div>
+    <div id="guide-commune-bloc" class="mt-16">
+      <div class="section-title">🏙️ Vivre à <span id="guide-commune-nom">la commune</span></div>
+      <p class="hint" id="guide-commune-statut">Ce guide se remplit automatiquement à partir de l'adresse du bien (Wikipédia, DATAtourisme). Vous pouvez modifier ou masquer chaque rubrique : vos changements ne valent que pour cette fiche.</p>
+      <div id="guide-commune-editeur"></div>
+      <textarea id="guide_commune_json" hidden></textarea>
+    </div>
     <div class="section-title mt-16">🔨 Travaux &amp; Rénovations réalisés</div>
     <p style="font-size:12px;color:var(--muted);margin-bottom:8px">Ces travaux apparaîtront dans la chronologie de la fiche acheteur.</p>
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
@@ -4359,6 +4365,56 @@ function injectData(html, d, dEn, dX) {
   }
   var timeline = id('historique-timeline-fr');
   if (timeline) timeline.innerHTML = timelineHtml(d.historiqueLibre);
+
+  // Guide « Vivre à [ville] » : rubriques non masquées et non vides seulement ; sources citées ; événements à venir
+  var gcBox = id('guide-commune');
+  if (gcBox) {
+    var GC_T = { titre: { fr: 'Vivre à ', en: 'Living in ', pt: 'Viver em ', es: 'Vivir en ' }, source: { fr: 'Source : ', en: 'Source: ', pt: 'Fonte: ', es: 'Fuente: ' },
+      evenements: { fr: 'Événements à venir', en: 'Upcoming events', pt: 'Próximos eventos', es: 'Próximos eventos' },
+      presentation: { fr: 'La commune', en: 'The town', pt: 'O município', es: 'El municipio' }, transports: { fr: 'Transports', en: 'Transport', pt: 'Transportes', es: 'Transporte' },
+      patrimoine: { fr: 'Patrimoine', en: 'Heritage', pt: 'Património', es: 'Patrimonio' }, parcs: { fr: 'Parcs et espaces verts', en: 'Parks and green spaces', pt: 'Parques e espaços verdes', es: 'Parques y zonas verdes' },
+      culture: { fr: 'Culture et loisirs', en: 'Culture and leisure', pt: 'Cultura e lazer', es: 'Cultura y ocio' }, equipements: { fr: 'Équipements et services', en: 'Amenities and services', pt: 'Equipamentos e serviços', es: 'Equipamientos y servicios' },
+      economie: { fr: 'Économie', en: 'Economy', pt: 'Economia', es: 'Economía' } };
+    var gc = d.guideCommune, gcRubs = gc && Array.isArray(gc.rubriques) ? gc.rubriques.filter(function(r) { return r && !r.masque && String(r.texte || '').trim(); }) : [];
+    var gcEvs = gc && !gc.evenementsMasques && gc.evenements && Array.isArray(gc.evenements.liste) ? gc.evenements.liste : [];
+    var gcVal = function(el, map) { el.textContent = map.fr; el.setAttribute('data-fr-val', map.fr); langVals(el, function(l) { return map[l] || map.fr; }); };
+    var gcTexte = function(dl, cle) { var g2 = dl && dl.guideCommune, r2 = g2 && (g2.rubriques || []).filter(function(x) { return x.cle === cle; })[0]; return r2 && String(r2.texte || '').trim() ? r2.texte : null; };
+    var gcList = id('guide-commune-rubriques'); if (gcList) gcList.innerHTML = '';
+    if (gcList && (gcRubs.length || gcEvs.length)) {
+      var gcTitre = id('guide-commune-titre');
+      if (gcTitre) gcVal(gcTitre, { fr: GC_T.titre.fr + gc.commune, en: GC_T.titre.en + gc.commune, pt: GC_T.titre.pt + gc.commune, es: GC_T.titre.es + gc.commune });
+      var gcSrc = function(liste) {
+        var p = doc.createElement('p'); p.className = 'gc-src';
+        var lb = doc.createElement('span'); gcVal(lb, GC_T.source); p.appendChild(lb);
+        (liste || []).forEach(function(x, k) {
+          if (k) p.appendChild(doc.createTextNode(' · '));
+          var a = doc.createElement('a'); a.href = /^https:\/\//.test(x.url || '') ? x.url : '#'; a.target = '_blank'; a.rel = 'noopener'; a.textContent = x.titre || x.url; p.appendChild(a);
+          if (x.licence) p.appendChild(doc.createTextNode(' (' + x.licence + ')'));
+        });
+        return p;
+      };
+      gcRubs.forEach(function(r) {
+        var bloc = doc.createElement('div'); bloc.className = 'gc-rub';
+        var h = doc.createElement('h3'); h.className = 'gc-t'; gcVal(h, GC_T[r.cle] || { fr: r.titre }); bloc.appendChild(h);
+        var t = doc.createElement('p'); t.className = 'gc-x'; t.textContent = r.texte; t.setAttribute('data-fr-val', r.texte);
+        langVals(t, function(l, dl) { return gcTexte(dl, r.cle) || r.texte; }); bloc.appendChild(t);
+        bloc.appendChild(gcSrc(r.sources)); gcList.appendChild(bloc);
+      });
+      if (gcEvs.length) {
+        var eb = doc.createElement('div'); eb.className = 'gc-rub gc-evs';
+        var eh = doc.createElement('h3'); eh.className = 'gc-t'; gcVal(eh, GC_T.evenements); eb.appendChild(eh);
+        var ul = doc.createElement('ul'); ul.className = 'gc-evl';
+        gcEvs.forEach(function(x) {
+          var li = doc.createElement('li'); li.className = 'gc-ev'; li.setAttribute('data-fin', String(x.fin || '').slice(0, 10));
+          var dt = function(s2) { var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s2 || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : ''; };
+          li.textContent = x.nom + ' — ' + (x.debut && x.debut !== x.fin ? dt(x.debut) + ' → ' + dt(x.fin) : dt(x.fin));
+          ul.appendChild(li);
+        });
+        eb.appendChild(ul); eb.appendChild(gcSrc(gc.evenements.source ? [gc.evenements.source] : [])); gcList.appendChild(eb);
+      }
+      gcBox.style.display = '';
+    } else gcBox.style.display = 'none';
+  }
   if (dEn) {
     var timelineEn = id('historique-timeline-en');
     if (timelineEn) timelineEn.innerHTML = timelineHtml(dEn.historiqueLibre);
@@ -4639,6 +4695,92 @@ function normAdresse(s) {
     .toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
+// ── Guide « Vivre à [ville] » ──
+// Commune fiable seulement si le géocodage IGN est sûr et cohérent avec l'adresse saisie (code postal, ou nom de la
+// commune s'il n'y a pas de code postal). Sinon : pas de guide.
+function communeFiable(feat, adresse) {
+  var p = feat && feat.properties; if (!p) return null;
+  var insee = String(p.citycode || '').toUpperCase(), nom = String(p.city || '').trim(), cp = String(p.postcode || '');
+  if (!/^(\d{5}|2[AB]\d{3})$/.test(insee) || !nom) return null;
+  if (!(typeof p.score === 'number' && p.score >= 0.6)) return null;
+  var m = String(adresse || '').match(/\b(\d{5})\b/);
+  if (m) { if (cp && m[1] !== cp) return null; }
+  else if (normAdresse(adresse).indexOf(normAdresse(nom)) === -1) return null;
+  return { insee: insee, nom: nom };
+}
+var _guideEnCours = null;
+function guideEtat() { try { var v = getV('guide_commune_json'); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+function guideEnregistrer(g) { var ta = document.getElementById('guide_commune_json'); if (!ta) return; ta.value = g ? JSON.stringify(g) : ''; scheduleDraftSave(); }
+function guideStatut(t) { var e = document.getElementById('guide-commune-statut'); if (e && t) e.textContent = t; }
+// Réponse du serveur → état de la fiche (texte d'origine gardé à part pour « Rétablir »)
+function guideDepuisServeur(j) {
+  var g = j && j.guide; if (!g || !Array.isArray(g.rubriques)) return null;
+  return { insee: g.insee, commune: g.commune, genere_le: g.genere_le || null, modele: g.modele || null,
+    rubriques: g.rubriques.map(function(r) { return { cle: r.cle, titre: r.titre, texte: r.texte, texte_origine: r.texte, masque: false, sources: r.sources || [] }; }),
+    evenements: j.evenements && Array.isArray(j.evenements.liste) ? { liste: j.evenements.liste, source: j.evenements.source || null } : null, evenementsMasques: false };
+}
+async function guideCommuneDemander(c) {
+  if (!c) { if (!guideEtat()) guideStatut('Commune non identifiée avec certitude à partir de l\'adresse : pas de guide « Vivre à ».'); return; }
+  var actuel = guideEtat();
+  if (actuel && actuel.insee === c.insee) return;   // déjà là, avec les éventuelles modifications de l'agent
+  if (_guideEnCours === c.insee) return;
+  _guideEnCours = c.insee;
+  guideStatut('⏳ Recherche des informations sur ' + c.nom + '…');
+  try {
+    var s = await window.privencyAuth.auth.getSession(), session = s && s.data && s.data.session;
+    if (!session || !session.access_token) throw new Error('session');
+    var r = await fetch(PRIVENCY_API_BASE + '/api/guide-commune', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + session.access_token }, body: JSON.stringify({ insee: c.insee, commune: c.nom }) });
+    var j = await r.json().catch(function() { return null; });
+    if (_guideEnCours !== c.insee) return;   // l'adresse a changé entre-temps
+    var g = r.ok ? guideDepuisServeur(j) : null;
+    guideEnregistrer(g);   // une autre commune auparavant : son guide est retiré
+    guideCommuneRendre();
+    guideStatut(g ? 'Guide prérempli pour ' + g.commune + '. Modifiez ou masquez chaque rubrique si besoin : cela ne vaut que pour cette fiche.' : 'Pas d\'information disponible pour ' + c.nom + ' : la rubrique n\'apparaîtra pas sur la fiche.');
+  } catch (e) { guideStatut('Le guide de la commune n\'a pas pu être chargé (la fiche reste complète sans lui).'); }
+  finally { if (_guideEnCours === c.insee) _guideEnCours = null; }
+}
+function guideCommuneRendre() {
+  var box = document.getElementById('guide-commune-editeur'); if (!box) return;
+  var g = guideEtat(), nomEl = document.getElementById('guide-commune-nom');
+  if (nomEl) nomEl.textContent = g ? g.commune : 'la commune';
+  if (!g) { box.innerHTML = ''; return; }
+  var e = function(x) { return String(x == null ? '' : x).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var src = function(l) { return (l || []).map(function(x) { return '<a href="' + e(x.url) + '" target="_blank" rel="noopener">' + e(x.titre) + '</a>' + (x.licence ? ' (' + e(x.licence) + ')' : ''); }).join(' · '); };
+  var h = g.rubriques.map(function(r, i) {
+    return '<div class="gc-rub" data-i="' + i + '" style="border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px;' + (r.masque ? 'opacity:.55;' : '') + '">'
+      + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><b>' + e(r.titre) + '</b>'
+      + '<label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="gc-masque"' + (r.masque ? ' checked' : '') + ' style="width:auto;"> Masquer sur cette fiche</label></div>'
+      + '<textarea class="gc-texte" style="min-height:70px;margin-top:6px;"' + (r.masque ? ' disabled' : '') + '>' + e(r.texte) + '</textarea>'
+      + '<div class="hint" style="margin-top:4px;">Source : ' + src(r.sources) + (r.texte !== r.texte_origine ? ' · <button type="button" class="btn btn-sm btn-outline gc-retablir">Rétablir le texte d\'origine</button>' : '') + '</div></div>';
+  }).join('');
+  var ev = g.evenements && g.evenements.liste && g.evenements.liste.length ? g.evenements.liste : [];
+  if (ev.length) h += '<div class="gc-ev" style="border:1px solid var(--border);border-radius:8px;padding:10px;margin-top:8px;' + (g.evenementsMasques ? 'opacity:.55;' : '') + '"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;"><b>Événements à venir</b>'
+    + '<label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer;"><input type="checkbox" class="gc-ev-masque"' + (g.evenementsMasques ? ' checked' : '') + ' style="width:auto;"> Masquer sur cette fiche</label></div>'
+    + '<ul style="margin:6px 0 0;padding-left:18px;font-size:13px;">' + ev.map(function(x) { return '<li>' + e(x.nom) + ' <span style="color:var(--muted);">(' + e(x.debut && x.debut !== x.fin ? x.debut + ' → ' + x.fin : x.fin) + ')</span></li>'; }).join('') + '</ul>'
+    + '<div class="hint" style="margin-top:4px;">Source : ' + src(g.evenements.source ? [g.evenements.source] : []) + ' — récupérés automatiquement, les événements passés disparaissent d\'eux-mêmes de la fiche.</div></div>';
+  box.innerHTML = h;
+}
+// Modifications de l'agent : uniquement dans l'état de la fiche (jamais dans le cache commun)
+document.addEventListener('input', function(ev) {
+  var t = ev.target; if (!t || !t.classList || !t.classList.contains('gc-texte')) return;
+  var g = guideEtat(), i = +t.closest('.gc-rub').getAttribute('data-i'); if (!g || !g.rubriques[i]) return;
+  g.rubriques[i].texte = t.value.slice(0, 2000); var ta = document.getElementById('guide_commune_json'); if (ta) ta.value = JSON.stringify(g);
+});
+document.addEventListener('change', function(ev) {
+  var t = ev.target; if (!t || !t.classList) return;
+  var g = guideEtat(); if (!g) return;
+  if (t.classList.contains('gc-masque')) { g.rubriques[+t.closest('.gc-rub').getAttribute('data-i')].masque = !!t.checked; }
+  else if (t.classList.contains('gc-ev-masque')) { g.evenementsMasques = !!t.checked; }
+  else if (t.classList.contains('gc-texte')) { guideCommuneRendre(); return; }
+  else return;
+  guideEnregistrer(g); guideCommuneRendre();
+});
+document.addEventListener('click', function(ev) {
+  var t = ev.target; if (!t || !t.classList || !t.classList.contains('gc-retablir')) return;
+  var g = guideEtat(), i = +t.closest('.gc-rub').getAttribute('data-i'); if (!g || !g.rubriques[i]) return;
+  g.rubriques[i].texte = g.rubriques[i].texte_origine; guideEnregistrer(g); guideCommuneRendre();
+});
+
 function initFicheMap() {
   var adresse=getV('adresse');
   if (!adresse){showToast("Entrez d'abord l'adresse",true);return;}
@@ -4658,6 +4800,7 @@ function initFicheMap() {
       window._geoY=feat.properties.y;
       window._geoCityCode=feat.properties.citycode;
       window._geoCityName=feat.properties.city;
+      try { guideCommuneDemander(communeFiable(feat, adresse)); } catch (e) {}
       if (normAdresse(label)!==normAdresse(adresse)) {
         setV('adresse',label); window._adresse=label; adresse=label;
         showToast('Adresse corrigée : '+label);
@@ -4926,6 +5069,7 @@ function restoreRawFormState(d) {
     _photos=(d.photos||[]).filter(function(p){return p&&p.dataUrl&&!p.uploading;});
     syncPhotosFromUrlFields(true);
     try { refreshMotVendeur(); } catch (e) {}
+    try { guideCommuneRendre(); } catch (e) {}
     if(d._pieces_table){
       var rows=document.querySelectorAll('#pieces_tbody tr');
       d._pieces_table.forEach(function(rowData,ri){
@@ -5075,6 +5219,7 @@ function collectBienData() {
     dvf:           getDVFRows(),
     fourchetBasse: fb, fourchetHaute: fh,
     historiqueLibre: getV('historique_libre'),
+    guideCommune: guideEtat(),
     histVenteDate: getV('hist_vente_date')||'2025',
     diags:[
       {icon:'🧱',name:'Amiante',        status:getV('diag_amiante_status'),     result:getV('diag_amiante_result')},
@@ -5594,6 +5739,7 @@ function onAdresseChange(val) {
         window._geoY = feat.properties.y;
         window._geoCityCode = feat.properties.citycode;
         window._geoCityName = feat.properties.city;
+        try { guideCommuneDemander(communeFiable(feat, val)); } catch (e) {}
         if (_ficheMap) _ficheMap.setView([lat, lng], 15);
       })
       .catch(function() {});
@@ -5660,7 +5806,8 @@ async function translateFicheFields(d, lang) {
     delai:           d.delai || '',
     description:     d.description || '',
     diags:       (d.diags || []).map(function(diag) { return { result: diag.result || '' }; }),
-    renovations: (d.renovations || []).map(function(r) { return { desc: r.desc || '' }; })
+    renovations: (d.renovations || []).map(function(r) { return { desc: r.desc || '' }; }),
+    guide: (d.guideCommune && Array.isArray(d.guideCommune.rubriques) ? d.guideCommune.rubriques : []).map(function(r) { return { texte: (r && !r.masque && r.texte) || '' }; })
   };
   var res = await fetch(PRIVENCY_API_BASE + '/api/translate-fiche', {
     method: 'POST',
@@ -5687,6 +5834,12 @@ function buildBienDataLang(d, translated) {
       var t = translated.diags[i];
       return Object.assign({}, diag, (t && typeof t.result === 'string') ? { result: t.result } : {});
     });
+  }
+  if (d.guideCommune && Array.isArray(d.guideCommune.rubriques) && Array.isArray(translated.guide)) {
+    dEn.guideCommune = Object.assign({}, d.guideCommune, { rubriques: d.guideCommune.rubriques.map(function(r, i) {
+      var t = translated.guide[i];
+      return Object.assign({}, r, (t && typeof t.texte === 'string' && t.texte.trim()) ? { texte: t.texte } : {});
+    }) });
   }
   if (Array.isArray(d.renovations) && Array.isArray(translated.renovations)) {
     dEn.renovations = d.renovations.map(function(r, i) {
