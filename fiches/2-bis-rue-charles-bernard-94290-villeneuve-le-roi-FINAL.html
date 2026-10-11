@@ -359,6 +359,136 @@ html,body{overflow-x:hidden;}
 #doc-picker .dp-msg.ok{background:#e9f9f1;color:#0a6f4d;}
 #doc-picker .dp-msg.err{background:#fdecea;color:#a12622;}
 @media (max-width:640px){#doc-picker .dp-grid{grid-template-columns:1fr;}}
+/* ═════════ CRUSH IMMOBILIER (onglet « Le test ») — téléphone d'abord, couleurs du thème ═════════ */
+#crush .cr-wrap{max-width:640px;margin-top:6px;}
+#crush .cr-lead{font-weight:700;font-size:17px;line-height:1.35;color:var(--ink);margin:0 0 8px;}
+#crush .cr-home p{font-size:14px;line-height:1.55;color:var(--muted);margin:0 0 12px;}
+#crush .cr-home .cr-lead{color:var(--ink);}
+#crush .cr-actions{display:flex;flex-direction:column;gap:10px;margin:16px 0;}
+#crush .cr-btn{width:100%;border:none;border-radius:14px;padding:15px 18px;background:var(--gold);color:#fff;font:700 15px var(--pv-font,'Work Sans',sans-serif);cursor:pointer;}
+#crush .cr-btn.cr-sec{background:#fff;color:var(--ink);border:1.5px solid var(--border);}
+#crush .cr-btn:focus-visible,#crush .cr-choice:focus-visible,#crush .cr-link:focus-visible{outline:3px solid var(--pv-accent2,var(--gold));outline-offset:2px;}
+#crush .cr-link{background:none;border:none;color:var(--gold);font:600 13.5px var(--pv-font,'Work Sans',sans-serif);cursor:pointer;padding:6px 0;text-decoration:underline;text-underline-offset:3px;}
+#crush .cr-safe{display:flex;gap:10px;align-items:flex-start;background:var(--cream);border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.45;color:var(--ink);}
+#crush .cr-safe .cr-ico{flex:none;width:20px;height:20px;color:var(--gold);}
+#crush .cr-ico{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
+#crush .cr-input,#crush .cr-send input{display:block;width:100%;box-sizing:border-box;border:1.5px solid var(--border);border-radius:12px;padding:12px 14px;font:500 15px var(--pv-font,'Work Sans',sans-serif);margin:0 0 10px;background:#fff;color:var(--ink);}
+#crush .cr-prog{margin-bottom:14px;}
+#crush .cr-prog-t{display:flex;justify-content:space-between;align-items:center;font:600 12.5px 'IBM Plex Mono',monospace;color:var(--muted);min-height:28px;}
+#crush .cr-bar{height:6px;border-radius:99px;background:var(--cream);overflow:hidden;margin-top:4px;}
+#crush .cr-bar i{display:block;height:100%;background:var(--pv-fill,var(--gold));border-radius:99px;transition:width .3s;}
+#crush .cr-theme{font:700 11px var(--pv-font,'Work Sans',sans-serif);letter-spacing:.14em;text-transform:uppercase;color:var(--gold);}
+#crush .cr-qtheme{display:block;margin:0 0 12px;font-size:12px;}
+#crush .cr-who{font-weight:700;font-size:14px;color:var(--ink);margin:0 0 8px;}
+#crush .cr-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#crush .cr-choice{display:flex;flex-direction:column;align-items:flex-start;gap:6px;min-height:178px;padding:16px 14px;border-radius:18px;border:1.5px solid var(--border);background:#fff;text-align:left;cursor:pointer;color:var(--ink);font-family:var(--pv-font,'Work Sans',sans-serif);transition:border-color .15s,background .15s,transform .1s;}
+#crush .cr-choice .cr-ico{width:44px;height:44px;padding:9px;box-sizing:border-box;border-radius:13px;background:var(--cream);color:var(--gold);margin-bottom:6px;}
+#crush .cr-choice b{font-size:16px;line-height:1.25;}
+#crush .cr-choice span{font-size:13px;line-height:1.45;color:var(--muted);}
+#crush .cr-choice:hover{border-color:var(--pv-accent,var(--gold));}
+#crush .cr-choice:active{transform:scale(.98);}
+#crush .cr-choice.on{border-color:var(--gold);background:var(--cream);}
+#crush .cr-muted{font-size:13px;color:var(--muted);line-height:1.5;margin:10px 0 0;}
+#crush .cr-center{text-align:center;margin-top:14px;}
+#crush .cr-hero{background:var(--pv-fill,#0F2747);background-color:#0F2747;color:#fff;border-radius:22px;padding:22px 18px;text-align:center;margin-bottom:14px;}
+#crush .cr-hero p{margin:8px 0 0;font-weight:600;font-size:15px;color:#fff;}
+#crush .cr-hero small{display:block;margin-top:4px;font-size:12px;opacity:.8;}
+#crush .cr-ring-w{position:relative;width:150px;height:150px;margin:0 auto;}
+#crush .cr-ring{width:150px;height:150px;transform:rotate(-90deg);}
+#crush .cr-ring-bg{fill:none;stroke:rgba(255,255,255,.18);stroke-width:10;}
+#crush .cr-ring-fg{fill:none;stroke:#fff;stroke-width:10;stroke-linecap:round;transition:stroke-dashoffset .8s ease;}
+#crush .cr-ring-v{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+#crush .cr-ring-v b{font:800 34px var(--pv-display,var(--pv-font,'Work Sans',sans-serif));letter-spacing:-.02em;}
+#crush .cr-ring-v span{font-size:12px;opacity:.85;}
+#crush .cr-duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+#crush .cr-duo div{background:rgba(255,255,255,.1);border-radius:14px;padding:10px;}
+#crush .cr-duo b{display:block;font-size:22px;font-weight:800;}
+#crush .cr-duo span{font-size:12.5px;opacity:.9;word-break:break-word;}
+#crush .cr-card{border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:12px;background:#fff;}
+#crush .cr-card h3{font:800 15px var(--pv-display,var(--pv-font,'Work Sans',sans-serif));margin:0 0 10px;color:var(--ink);}
+#crush .cr-card.cr-amber{background:#FFF8EC;border-color:#F1D9AE;}
+#crush .cr-card.cr-amber h3{color:#8A5A12;}
+#crush .cr-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+#crush .cr-list li{display:flex;flex-direction:column;gap:2px;padding-left:14px;border-left:3px solid var(--gold);font-size:13.5px;line-height:1.45;color:var(--ink);}
+#crush .cr-amber .cr-list li{border-left-color:#D9A24A;}
+#crush .cr-list li span{color:var(--muted);}
+#crush .cr-amber .cr-list li span{color:#5E4510;}
+#crush .cr-how{margin:4px 0 14px;}
+#crush .cr-how summary{cursor:pointer;color:var(--gold);font-weight:600;font-size:13.5px;text-decoration:underline;text-underline-offset:3px;padding:6px 0;}
+#crush .cr-how p{font-size:13px;line-height:1.55;color:var(--muted);}
+#crush .cr-crits{display:flex;flex-direction:column;gap:8px;}
+#crush .cr-crit{border:1px solid var(--border);border-radius:12px;padding:10px 12px;background:#fff;}
+#crush .cr-crit-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+#crush .cr-crit-b{font-size:12.5px;line-height:1.5;color:var(--muted);margin-top:4px;}
+#crush .cr-crit-b b{color:var(--ink);font-weight:600;}
+#crush .cr-pill{font:700 11px var(--pv-font,'Work Sans',sans-serif);border-radius:99px;padding:3px 9px;background:var(--cream);color:var(--ink);white-space:nowrap;}
+#crush .cr-pill.cr-n100{background:#E3F2EA;color:#1F6B45;}
+#crush .cr-pill.cr-n70{background:var(--cream);color:var(--gold);}
+#crush .cr-pill.cr-n40{background:#FCEBD5;color:#8A5A12;}
+#crush .cr-pill.cr-nnone{background:#F1F1F1;color:#6B6B6B;}
+#crush .cr-send{border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:6px;}
+#crush .cr-send label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink);}
+#crush .cr-sent{background:#E3F2EA;color:#1F6B45;border-radius:14px;padding:12px 14px;font-size:13.5px;font-weight:600;margin:10px 0;}
+#crush .cr-url{font-weight:400;font-size:12px;word-break:break-all;}
+#crush .cr-err{color:#A33;font-size:13px;margin:8px 0 0;}
+@media(max-width:340px){#crush .cr-choices{grid-template-columns:1fr;}#crush .cr-choice{min-height:0;}}
+@media(min-width:701px){#crush .cr-actions{flex-direction:row;}#crush .cr-actions .cr-btn{flex:1;}}
+@media(prefers-reduced-motion:reduce){#crush .cr-ring-fg,#crush .cr-bar i,#crush .cr-choice{transition:none;}}
+/* ═════════ PARTICIPATION ACHETEUR (ma visite, carnet, partage, critère, mot du vendeur) — couleurs du thème ═════════ */
+.pv-card .pv-sub,.pv-crit .pv-sub,#pv-share-sheet .pv-sub{display:block;font-size:13px;line-height:1.5;color:var(--muted);margin:4px 0 12px;}
+.pv-h{display:block;font-weight:700;font-size:13.5px;color:var(--ink);margin:14px 0 8px;}
+.pv-pico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.pv-opts{display:flex;flex-direction:column;gap:8px;}
+.pv-opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;font:500 14px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);cursor:pointer;}
+.pv-opt.on{border-color:var(--gold);background:var(--cream);}
+.pv-box{display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;border-radius:7px;border:1.5px solid var(--border);background:#fff;color:#fff;}
+.pv-opt.on .pv-box{background:var(--gold);border-color:var(--gold);}
+.pv-opt.on .pv-box .pv-pico{width:14px;height:14px;stroke-width:2.4;}
+.pv-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;flex-wrap:wrap;}
+.pv-count{font:600 12.5px 'IBM Plex Mono',monospace;color:var(--muted);}
+.pv-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:14px;padding:13px 18px;background:var(--gold);color:#fff;font:700 14px var(--pv-font,'Work Sans',sans-serif);cursor:pointer;margin-top:10px;}
+.pv-btn:disabled{opacity:.45;cursor:default;}
+.pv-btn.pv-sec{background:#fff;color:var(--ink);border:1.5px solid var(--border);}
+.pv-btn:focus-visible,.pv-opt:focus-visible,.pv-chip:focus-visible,.pv-sh:focus-visible,.pv-heart:focus-visible,.pv-share-top:focus-visible{outline:3px solid var(--pv-accent2,var(--gold));outline-offset:2px;}
+.pv-msg{font-size:13px;color:var(--vert,#2F7A4F);margin:10px 0 0;line-height:1.45;}
+.pv-note{font-size:12px;color:var(--muted);line-height:1.45;margin:10px 0 0;}
+.pv-check{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.pv-check li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink);}
+.pv-check .pv-pico{color:var(--vert,#2F7A4F);margin-top:1px;}
+.pv-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.pv-chip{border:1.5px solid var(--border);background:#fff;border-radius:99px;padding:9px 14px;font:600 13px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);cursor:pointer;}
+.pv-chip.on{background:var(--gold);border-color:var(--gold);color:#fff;}
+.pv-text{display:block;width:100%;box-sizing:border-box;min-height:84px;border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;font:500 14px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);background:#fff;resize:vertical;}
+.pv-photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+.pv-ph{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--cream);}
+.pv-ph img{width:100%;height:100%;object-fit:cover;display:block;}
+.pv-ph button{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(15,23,40,.7);color:#fff;font-size:16px;line-height:1;cursor:pointer;}
+.pv-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1.5px dashed var(--border);background:#fff;color:var(--gold);font-size:11.5px;text-align:center;padding:4px;cursor:pointer;}
+.pv-add .pv-pico{width:22px;height:22px;}
+.pv-crit{margin-top:4px;}
+.pv-share-end{width:100%;margin-top:14px;}
+.pv-quote{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.pv-quote li{font-size:15px;line-height:1.5;color:var(--ink);padding-left:14px;border-left:3px solid var(--gold);}
+.pv-libre{font-size:14.5px;line-height:1.55;font-style:italic;color:var(--ink);margin:10px 0 0;}
+.pv-heart{display:inline-flex;align-items:center;gap:8px;margin-top:14px;border:1.5px solid var(--border);background:#fff;border-radius:99px;padding:9px 16px;font:600 13.5px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);cursor:pointer;}
+.pv-heart.on{border-color:#C0465A;color:#A3364A;background:#FCEEF1;}
+.pv-heart.on .pv-pico{fill:currentColor;}
+.pv-share-top{display:inline-flex;align-items:center;gap:7px;margin-top:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.95);color:var(--ink);border-radius:99px;padding:8px 15px;font:700 13px var(--pv-font,'Work Sans',sans-serif);cursor:pointer;}
+#pv-share-sheet{position:fixed;inset:0;z-index:2000;background:rgba(10,18,32,.45);display:none;align-items:flex-end;justify-content:center;}
+#pv-share-sheet.open{display:flex;}
+#pv-share-sheet .pv-sheet{background:#fff;width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(10,18,32,.25);}
+#pv-share-sheet .pv-sheet-h{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:16px;color:var(--ink);}
+#pv-share-sheet .pv-sheet-h button{border:none;background:var(--cream);width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer;color:var(--ink);}
+#pv-share-sheet .pv-sh-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;}
+#pv-share-sheet .pv-sh{display:flex;flex-direction:column;align-items:center;gap:6px;border:1.5px solid var(--border);background:#fff;border-radius:14px;padding:12px 4px;font:600 12px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);cursor:pointer;}
+#pv-share-sheet .pv-sh .pv-pico{width:24px;height:24px;color:var(--gold);}
+@media(min-width:701px){#pv-share-sheet{align-items:center;}#pv-share-sheet .pv-sheet{border-radius:22px;}}
+@media(max-width:700px){body.pv4 .header .pv-share-top{display:flex;margin:10px auto 6px;}}
+/* Ancien design : boutons et résultat du test aux couleurs de la fiche (encre et or) */
+body:not(.pv4) #crush .cr-btn,body:not(.pv4) .pv-btn,body:not(.pv4) .pv-chip.on{background:var(--dark,#14171F);color:var(--gold);border-color:var(--dark,#14171F);}
+body:not(.pv4) #crush .cr-btn.cr-sec,body:not(.pv4) .pv-btn.pv-sec{background:#fff;color:var(--ink);border-color:var(--border);}
+body:not(.pv4) #crush .cr-hero{background:var(--dark,#14171F);}
+body:not(.pv4) #crush .cr-ring-fg{stroke:var(--gold);}
 </style>
 </head>
 <body>
@@ -379,6 +509,7 @@ html,body{overflow-x:hidden;}
       <div class="hbadge">Espace Acheteur Privé · Expertimo</div>
       <h1 class="htitle">2 Bis Rue Charles Bernard 94290 Villeneuve Le Roi<br><span style="color:var(--gold);font-style:italic;"></span></h1>
       <p class="hsub">Maison 5 pièces de 65 m² · DPE G</p>
+      <button type="button" id="pv-share-top" class="pv-share-top" onclick="pvOpenShare()">Partager</button>
     </div>
     <div class="price-card">
       <div class="plabel">Prix affiché</div>
@@ -393,8 +524,9 @@ html,body{overflow-x:hidden;}
 
 <div class="layout-shell">
 <nav class="rail" id="main-nav">
-  <div class="rail-progress"><span id="rail-progress-count">1</span> / 8 sections explorées</div>
+  <div class="rail-progress"><span id="rail-progress-count">1</span> / 9 sections explorées</div>
   <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label">Le Bien</span></button>
+  <button data-tab="crush" onclick="showTab('crush',this)"><span class="rail-dot">💘</span><span class="rail-label" data-i18n="tab-crush">Le test</span></button>
   <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label">Ventes comparables</span></button>
   <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label">Tout savoir sur ce bien</span></button>
   <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
@@ -410,6 +542,7 @@ html,body{overflow-x:hidden;}
 <section id="bien" class="tab active">
 <div class="pg">
 <div>
+  <div class="card pv-card" id="pv-mot" style="display:none;"></div>
   <div class="card">
     <div class="lbl">Le bien</div>
     <h2 class="stitle">2 Bis Rue Charles Bernard 94290 Villeneuve Le Roi · 5 pièces</h2>
@@ -431,6 +564,7 @@ html,body{overflow-x:hidden;}
   <div class="sline"><span>Rapport qualité/prix</span><div><strong>9/10</strong><div class="sbar"><div class="sbar-fill" style="width: 90%;"></div></div></div></div>
   <div class="sline"><span>État général</span><div><strong>7/10</strong><div class="sbar"><div class="sbar-fill" style="width: 70%;"></div></div></div></div>
 </div>
+  <div class="card pv-card" id="pv-critere"></div>
 </div>
 <div><div class="cons-card">
   <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
@@ -446,6 +580,31 @@ html,body{overflow-x:hidden;}
 </div></div>
 </div>
 </div></section>
+
+<!-- ═══════════ ONGLET : CRUSH IMMOBILIER (LE TEST) ═══════════ -->
+<section id="crush" class="tab">
+<div class="pg">
+<div>
+  <div class="card">
+    <div class="lbl" data-i18n="lbl-crush">Crush immobilier</div>
+    <h2 class="stitle" data-i18n="stitle-crush">Ce bien est-il fait pour vous ?</h2>
+    <div id="crush-root" aria-live="polite"></div>
+  </div>
+</div>
+<div><div class="cons-card">
+  <img id="agent-photo" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg" style="width:80px;height:80px;border-radius:50%;object-fit:cover;object-position:top center;border:2px solid var(--gold);display:block;margin:0 auto 12px auto;" alt="">
+  <div class="cons-avatar" style="display: none;">OL</div>
+  <div class="cons-name">Olivier Loison</div>
+  <div class="cons-role">Mandataire immobilier · Expertimo</div>
+  <div class="cons-contact">
+    <a href="tel:+33685684613">📞 06 85 68 46 13</a>
+    <a href="mailto:olivier.loison@expertimo.com">✉️ olivier.loison@expertimo.com</a>
+  </div>
+  <a href="https://calendar.app.google/rA5ZAXbzTyvopKbQ7" target="_blank" rel="noopener" class="btn-rdv">📅 Prendre rendez-vous</a>
+  <button onclick="showTabById('offre')" class="btn-offre">✍️ Faire une offre</button>
+</div></div>
+</div>
+</section>
 
 <!-- ═══════════ ONGLET 2 : ANALYSE ═══════════ -->
 <!-- ═══════════ ONGLET : MARCHÉ ═══════════ -->
@@ -644,6 +803,8 @@ html,body{overflow-x:hidden;}
 <section id="offre" class="tab">
 <div class="pg">
 <div>
+  <div class="card pv-card" id="pv-visite"></div>
+  <div class="card pv-card" id="pv-carnet"></div>
   <div class="card" id="vr-card">
   <div class="lbl" id="vr-lbl">Votre retour de visite</div>
   <div class="vr-title" id="vr-title"></div>
@@ -654,7 +815,7 @@ html,body{overflow-x:hidden;}
   <div class="vr-note" id="vr-note"></div>
 </div>
 <div class="card" style="background:var(--cream);border:1px solid var(--gold);margin-bottom:16px;">
-    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;">Vous avez exploré <span id="offre-progress-count">1</span> / 8 sections</div>
+    <div style="font-family:'Playfair Display',serif;font-size:15px;color:var(--gold2);margin-bottom:4px;">Vous avez exploré <span id="offre-progress-count">1</span> / 9 sections</div>
     <div style="font-size:12.5px;color:var(--muted);">Plus vous explorez le dossier, plus vous êtes prête à faire une offre en confiance.</div>
   </div>
   <div class="card">
@@ -1542,6 +1703,802 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     } catch (e) {}
   };
 })();</script>
+<script id="crush-data" type="application/json">{"type":"maison","surface":65,"terrain":null,"pieces":5,"chambres":null,"etage":null,"ext":{},"expo":[],"sonore":null,"transports":[],"parking":null,"annexes":[],"dpe":"G","chauffage":[],"equip":[],"scores":{"etat":7,"prest":7,"secteur":8},"vigilances":[],"dvf":{"n":6}}</script>
+<script id="crush-calc">
+// ═══ CRUSH IMMOBILIER : calcul du score (fonction pure, sans DOM ni réseau, testée par tests/crush.test.js) ═══
+// Chaque réponse (A/B) est comparée à une donnée réelle de la fiche : forte = 100, partielle = 70, faible = 40.
+// Donnée absente → critère ignoré (jamais de valeur inventée). Moyenne ramenée entre 60 et 98 %.
+(function(root) {
+  var QUESTIONS = ['weekend', 'quotidien', 'interieur', 'travaux', 'rangement', 'quartier', 'energie', 'avenir'];
+  var TRAVAUX = ['Travaux importants à prévoir', 'Toit / toiture à refaire', 'Fenêtres à changer', 'Chauffage vétuste', 'Électricité à mettre aux normes', 'Isolation thermique insuffisante'];
+  var ANNEXES = ['Cave', 'Cave à vin', 'Grenier', 'Sous-sol', 'Local de rangement', 'Combles', 'Dépendances'];
+  var ENR = ['Photovoltaïque', 'Solaire thermique'];
+
+  function num(x) { var n = typeof x === 'number' ? x : parseFloat(String(x == null ? '' : x).replace(',', '.')); return isFinite(n) && n > 0 ? n : null; }
+  function count(x) { var n = parseInt(x, 10); return isFinite(n) && n >= 0 ? n : null; }
+  function list(x) { return Array.isArray(x) ? x.filter(function(v) { return typeof v === 'string' && v.trim(); }) : []; }
+  function has(arr, v) { return arr.indexOf(v) !== -1; }
+  function etageNum(e) {
+    if (e == null || e === '') return null;
+    var s = String(e).toLowerCase();
+    if (/rdc|rez|ground|jardin/.test(s)) return 0;
+    var m = s.match(/\d+/); return m ? parseInt(m[0], 10) : null;
+  }
+  function up(n) { return n === 40 ? 70 : 100; }
+
+  // Normalise les données de la fiche (bloc crush-data) : tout ce qui manque devient null.
+  function norm(b) {
+    b = b || {};
+    var ext = {}, raw = b.ext && typeof b.ext === 'object' ? b.ext : {};
+    Object.keys(raw).forEach(function(k) {
+      var v = raw[k], key = k.toLowerCase();
+      var kk = /jardin|pelouse|garden/.test(key) ? 'jardin' : /terrasse/.test(key) ? 'terrasse' : /balcon/.test(key) ? 'balcon' : /v[ée]randa/.test(key) ? 'veranda' : /piscine/.test(key) ? 'piscine' : /vue/.test(key) ? 'vue' : null;
+      if (!kk || v === false || v == null) return;
+      var m2 = num(v);
+      ext[kk] = Math.max(ext[kk] === true ? 0 : (ext[kk] || 0), m2 || 0) || true;
+    });
+    var sc = b.scores || {};
+    var poi = b.poi && typeof b.poi === 'object' ? { transport: count(b.poi.transport) || 0, commerce: count(b.poi.commerce) || 0, vert: count(b.poi.vert) || 0 } : null;
+    var dvf = b.dvf || {};
+    return {
+      type: b.type === 'maison' || b.type === 'terrain' ? b.type : (b.type ? 'appart' : null),
+      surface: num(b.surface), terrain: num(b.terrain), pieces: count(b.pieces) || null, etage: etageNum(b.etage),
+      ext: ext, expo: list(b.expo), sonore: ['Calme', 'Normal', 'Bruyant'].indexOf(b.sonore) !== -1 ? b.sonore : null,
+      transports: list(b.transports), parking: count(b.parking), annexes: list(b.annexes).filter(function(a) { return has(ANNEXES, a); }),
+      dpe: /^[A-G]$/.test(String(b.dpe || '').toUpperCase()) ? String(b.dpe).toUpperCase() : null,
+      enr: list(b.equip).filter(function(e) { return has(ENR, e); }).concat(has(list(b.chauffage), 'PAC') ? ['PAC'] : []),
+      etat: num(sc.etat), prest: num(sc.prest), secteur: num(sc.secteur),
+      vig: list(b.vigilances), poi: poi,
+      dvfN: count(dvf.n)
+    };
+  }
+
+  // Un critère : { q, a, note (100/70/40 ou null), data: [{k: code, v: valeurs}], weak: {k, v} ou null }
+  function crit(q, a, b) {
+    var r = { q: q, a: a, note: null, data: [], weak: null };
+    function d(k, v) { r.data.push({ k: k, v: v || {} }); }
+    var extKeys = Object.keys(b.ext).filter(function(k) { return k !== 'vue'; });
+    var travaux = b.vig.filter(function(v) { return has(TRAVAUX, v); });
+    var bruitVig = has(b.vig, 'Nuisances sonores'), visavis = has(b.vig, 'Vis-à-vis direct');
+    var size = b.surface != null ? (b.surface >= 80 ? 100 : b.surface >= 50 ? 70 : 40) : b.pieces != null ? (b.pieces >= 4 ? 100 : b.pieces === 3 ? 70 : 40) : null;
+    var sizeData = { surface: b.surface, pieces: b.pieces };
+
+    if (q === 'weekend') {
+      if (a === 'A') {
+        if (extKeys.length || b.terrain) {
+          var big = (b.ext.jardin) || (b.terrain && b.terrain >= 100) || b.ext.piscine || (typeof b.ext.terrasse === 'number' && b.ext.terrasse >= 15);
+          r.note = big ? 100 : 70; d('ext', { ext: b.ext, terrain: b.terrain });
+        } else if (b.poi) { r.note = b.poi.vert > 0 ? 70 : 40; d('parc', { n: b.poi.vert }); }
+      } else if (size != null) { r.note = size; d('surface', sizeData); }
+    }
+    else if (q === 'quotidien') {
+      if (a === 'A') {
+        if (b.poi) {
+          var cats = (b.poi.transport > 0) + (b.poi.commerce > 0) + (b.poi.vert > 0);
+          r.note = cats === 3 ? 100 : cats === 2 ? 70 : 40; d('poi', b.poi);
+          if (cats <= 1) r.weak = { k: 'acces_pied', v: {} };
+        } else if (b.transports.length) { r.note = 70; d('transports', { list: b.transports }); }
+      } else if (b.parking != null) {
+        r.note = b.parking >= 1 ? 100 : 40; d('parking', { n: b.parking });
+        if (b.parking === 0) r.weak = { k: 'stationnement', v: {} };
+      }
+    }
+    else if (q === 'interieur') {
+      if (a === 'A') {
+        if (b.expo.length) {
+          r.note = (has(b.expo, 'Sud') || has(b.expo, 'Ouest')) ? 100 : has(b.expo, 'Est') ? 70 : has(b.expo, 'Nord') ? 40 : 70;
+          d('expo', { list: b.expo, etage: b.type === 'appart' ? b.etage : null });
+          if (r.note === 40) r.weak = { k: 'expo_nord', v: {} };
+        } else if (b.type === 'appart' && b.etage != null) {
+          r.note = b.etage === 0 ? 40 : 70; d('etage', { etage: b.etage });
+          if (b.etage === 0) r.weak = { k: 'rdc', v: {} };
+        }
+        if (r.note != null && visavis) { r.note = Math.min(r.note, 70); d('vigilance', { item: 'Vis-à-vis direct' }); r.weak = r.weak || { k: 'vis_a_vis', v: {} }; }
+      } else {
+        if (b.sonore) {
+          r.note = b.sonore === 'Calme' ? 100 : b.sonore === 'Normal' ? 70 : 40; d('sonore', { val: b.sonore });
+          if (b.sonore === 'Bruyant') r.weak = { k: 'bruit', v: {} };
+        } else if (bruitVig) { r.note = 40; d('vigilance', { item: 'Nuisances sonores' }); r.weak = { k: 'bruit', v: {} }; }
+        if (r.note != null && visavis) { r.note = Math.min(r.note, 70); d('vigilance', { item: 'Vis-à-vis direct' }); r.weak = r.weak || { k: 'vis_a_vis', v: {} }; }
+      }
+    }
+    else if (q === 'travaux') {
+      var etat = b.etat != null ? b.etat : b.prest;
+      if (etat != null) d(b.etat != null ? 'etat' : 'prest', { n: etat });
+      if (travaux.length) d('travaux', { list: travaux });
+      if (a === 'A') {
+        if (etat != null) r.note = etat >= 8 ? 100 : etat >= 6 ? 70 : 40;
+        if (travaux.length) { r.note = 40; r.weak = { k: 'travaux', v: { list: travaux } }; }
+      } else if (travaux.length || etat != null) {
+        r.note = (travaux.length || etat < 6) ? 100 : 70;
+      }
+    }
+    else if (q === 'rangement') {
+      if (a === 'A') {
+        if (size != null) { r.note = b.annexes.length ? up(size) : size; d('surface', sizeData); }
+        else if (b.annexes.length) r.note = 70;
+        if (b.annexes.length) d('annexes', { list: b.annexes });
+      } else if (size != null) {
+        r.note = (b.surface != null ? b.surface < 60 : b.pieces <= 3) ? 100 : 70; d('surface', sizeData);
+      }
+    }
+    else if (q === 'quartier') {
+      if (a === 'A') {
+        if (b.poi) {
+          r.note = b.poi.commerce >= 5 ? 100 : b.poi.commerce >= 1 ? 70 : 40; d('commerces', { n: b.poi.commerce });
+          if (b.poi.commerce === 0) r.weak = { k: 'peu_commerces', v: {} };
+        }
+      } else if (b.sonore) {
+        r.note = b.sonore === 'Calme' ? 100 : b.sonore === 'Normal' ? 70 : 40; d('sonore', { val: b.sonore });
+        if (b.sonore === 'Bruyant') r.weak = { k: 'bruit', v: {} };
+      } else if (bruitVig) { r.note = 40; d('vigilance', { item: 'Nuisances sonores' }); r.weak = { k: 'bruit', v: {} }; }
+      else if (b.secteur != null && b.secteur >= 8) { r.note = 70; d('secteur', { n: b.secteur }); }
+    }
+    else if (q === 'energie') {
+      if (a === 'A') {
+        if (b.dpe) {
+          r.note = 'AB'.indexOf(b.dpe) !== -1 ? 100 : 'CD'.indexOf(b.dpe) !== -1 ? 70 : 40;
+          if (b.enr.length && r.note < 100) r.note = up(r.note);
+          d('dpe', { l: b.dpe, enr: b.enr });
+          if ('EFG'.indexOf(b.dpe) !== -1) r.weak = { k: 'dpe', v: { l: b.dpe } };
+        } else if (b.enr.length) { r.note = 70; d('dpe', { l: null, enr: b.enr }); }
+      } else if (b.dpe) { r.note = 100; d('dpe', { l: b.dpe, enr: b.enr }); }
+    }
+    else if (q === 'avenir') {
+      if (a === 'A') {
+        if (b.secteur != null) { r.note = b.secteur >= 8 ? 100 : b.secteur >= 6 ? 70 : 40; d('secteur', { n: b.secteur }); }
+        if (r.note != null && has(b.vig, 'Environnement en mutation')) { r.note = Math.min(r.note, 70); d('vigilance', { item: 'Environnement en mutation' }); r.weak = { k: 'mutation', v: {} }; }
+      } else {
+        // Un marché actif (ventes comparables) et un secteur bien noté : aucune donnée de prix utilisée.
+        var sig = 0, known = 0;
+        if (b.dvfN != null) { known++; if (b.dvfN >= 5) sig++; d('dvf', { n: b.dvfN }); }
+        if (b.secteur != null) { known++; if (b.secteur >= 7) sig++; d('secteur', { n: b.secteur }); }
+        if (known) r.note = sig >= 2 ? 100 : sig === 1 ? 70 : 40;
+      }
+    }
+    if (r.note == null) { r.data = []; r.weak = null; }
+    return r;
+  }
+
+  function pct(notes) {
+    if (!notes.length) return null;
+    var mean = notes.reduce(function(s, n) { return s + n; }, 0) / notes.length;
+    return Math.max(60, Math.min(98, Math.round(60 + (mean - 40) * 38 / 60)));
+  }
+  function weaks(crits) {
+    var seen = {}, out = [];
+    crits.forEach(function(c) { if (c.weak && !seen[c.weak.k]) { seen[c.weak.k] = 1; out.push(c.weak); } });
+    return out.slice(0, 2);
+  }
+  function strongest(crits, n) {
+    return crits.filter(function(c) { return c.note != null && c.note >= 70 && !(c.q === 'energie' && c.a === 'B'); })
+      .sort(function(x, y) { return y.note - x.note || QUESTIONS.indexOf(x.q) - QUESTIONS.indexOf(y.q); }).slice(0, n);
+  }
+
+  // answers : { weekend: 'A', ... } (8 réponses). bien : contenu du bloc crush-data.
+  function score(answers, bien) {
+    var b = norm(bien);
+    var crits = QUESTIONS.map(function(q) { return crit(q, answers && answers[q] === 'B' ? 'B' : 'A', b); });
+    var used = crits.filter(function(c) { return c.note != null; });
+    return { score: pct(used.map(function(c) { return c.note; })), criteres: crits, nbUtilises: used.length, top: strongest(crits, 3), aVerifier: weaks(crits) };
+  }
+
+  // Deux personnes : scores individuels, score en commun, accords et sujets à discuter.
+  function duo(a1, a2, bien) {
+    var r1 = score(a1, bien), r2 = score(a2, bien);
+    var notes = [], accord = 0, communs = [], divergences = [];
+    QUESTIONS.forEach(function(q, i) {
+      var c1 = r1.criteres[i], c2 = r2.criteres[i];
+      if (c1.note != null) notes.push(c1.note);
+      if (c2.note != null) notes.push(c2.note);
+      if (c1.a === c2.a) { accord++; communs.push(c1); } else divergences.push({ q: q, a1: c1.a, a2: c2.a, c1: c1, c2: c2 });
+    });
+    return { s1: r1.score, s2: r2.score, commun: pct(notes), accord: accord, total: QUESTIONS.length,
+             reunit: strongest(communs, 3), discuter: divergences, aVerifier: weaks(r1.criteres.concat(r2.criteres)), r1: r1, r2: r2 };
+  }
+
+  root.PrivencyCrush = { QUESTIONS: QUESTIONS, score: score, duo: duo, norm: norm };
+})(typeof window !== 'undefined' ? window : this);
+</script>
+<script id="crush-ui">
+// ═══ CRUSH IMMOBILIER : interface (accueil, 8 questions, résultat seul ou à deux, envoi à l'agent) ═══
+(function() {
+  var root = document.getElementById('crush-root');
+  if (!root || !window.PrivencyCrush) return;
+  var C = window.PrivencyCrush, Q = C.QUESTIONS;
+  var DATA = {};
+  try { DATA = JSON.parse((document.getElementById('crush-data') || {}).textContent || '{}') || {}; } catch (e) { DATA = {}; }
+
+  var ICO = {
+    weekend: ['<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+              '<path d="M4 11V8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v3"/><path d="M2 13a2 2 0 0 1 4 0v2h12v-2a2 2 0 0 1 4 0v5H2z"/><path d="M5 18v2M19 18v2"/>'],
+    quotidien: ['<circle cx="13" cy="4" r="2"/><path d="M10 22l2-7-3-3 1-5 4 3h3"/><path d="M9 12l-3 2"/>',
+                '<path d="M5 17h14v-5l-2-5H7l-2 5z"/><circle cx="8" cy="17" r="2"/><circle cx="16" cy="17" r="2"/><path d="M5 12h14"/>'],
+    interieur: ['<rect x="4" y="3" width="16" height="18" rx="1"/><path d="M12 3v18M4 12h16"/>',
+                '<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>'],
+    travaux: ['<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M15 8l2 2"/>',
+              '<rect x="4" y="3" width="14" height="5" rx="1"/><path d="M18 5h2v5h-8v3"/><rect x="10" y="13" width="4" height="8" rx="1"/>'],
+    rangement: ['<path d="M3 7l9-4 9 4v10l-9 4-9-4z"/><path d="M3 7l9 4 9-4M12 11v10"/>',
+                '<path d="M20 4C12 4 6 10 6 18v2"/><path d="M6 18c6 0 12-4 14-14"/><path d="M10 14h5"/>'],
+    quartier: ['<path d="M4 8h13v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M8 2v3M12 2v3"/>',
+               '<path d="M12 22v-6"/><path d="M12 16a6 6 0 0 0 6-6 6 6 0 0 0-12 0 6 6 0 0 0 6 6z"/>'],
+    energie: ['<path d="M5 19C5 10 11 4 20 4c0 9-6 15-15 15z"/><path d="M5 19l8-8"/>',
+              '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>'],
+    avenir: ['<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/>',
+             '<path d="M4 21h16"/><path d="M6 21V3h9v18"/><path d="M15 5l4 1v15"/>']
+  };
+  function svg(p, cls) { return '<svg class="' + (cls || 'cr-ico') + '" viewBox="0 0 24 24" aria-hidden="true">' + p + '</svg>'; }
+
+  // ── Textes (FR/EN/PT/ES). Toute clé absente d'une langue retombe sur le français. ──
+  var T = {
+    fr: {
+      intro1: 'Huit questions sur votre façon de vivre, un tap par question.',
+      intro2: 'Nous comparons vos réponses aux vraies informations de ce bien et vous donnons votre pourcentage de coup de cœur.',
+      solo: 'Je fais le test seul(e)', duo: 'On le fait à deux',
+      safe: 'Aucune information personnelle demandée : ni revenus, ni âge, ni situation.',
+      names: 'Vos prénoms ou pseudos (facultatif)', p1: 'Personne 1', p2: 'Personne 2', go: 'C\'est parti', back: '← Retour',
+      reminder: 'Pas de bonne ou de mauvaise réponse.', turnOf: 'Au tour de {n}',
+      handoffTxt: '{n1} a répondu. {n2} peut répondre sur ce téléphone, ou sur le sien grâce au lien.',
+      passPhone: 'Je passe le téléphone à {n}', sendLink: 'Envoyer le test à {n}', linkCopied: 'Lien copié : envoyez-le à {n}.',
+      linkNote: 'Le résultat à deux s\'affichera sur le téléphone de {n}.', guest: '{n} vous propose ce test pour voir si ce bien vous plaît à tous les deux. À vous !', guestAnon: 'Une personne proche vous propose ce test pour voir si ce bien vous plaît à tous les deux. À vous !',
+      start: 'Commencer',
+      ringSub: 'de coup de cœur', matchTitle: 'Votre match avec ce bien', likes: 'Ce qui vous plaît ici', check: 'Points à vérifier ensemble',
+      noCheck: 'Rien de particulier : tout ce que vous recherchez est cohérent avec la fiche.',
+      how: 'Comment est calculé ce score ?',
+      howTxt: 'Chaque réponse est comparée à une donnée de la fiche : correspondance forte = 100, partielle = 70, faible = 40. La moyenne des critères renseignés est ramenée entre 60 % et 98 % : le bien a déjà été choisi pour vous, et aucun bien n\'est parfait. Un critère absent de la fiche est ignoré, jamais deviné.',
+      based: ['Calculé sur {n} critère renseigné sur 8.', 'Calculé sur {n} critères renseignés sur 8.'], noScore: 'La fiche ne contient pas encore assez d\'informations pour calculer un score. Votre conseiller pourra vous répondre de vive voix.',
+      notes: { 100: 'Forte', 70: 'Partielle', 40: 'Faible', none: 'Non renseigné : ignoré' },
+      answer: 'Votre réponse', data: 'Donnée de la fiche', note: 'Note',
+      prenom: 'Votre prénom (facultatif)', send: 'Envoyer mon match à l\'agent', sent: 'Envoyé ! {agent} a bien reçu votre résultat.', sendErr: 'L\'envoi n\'a pas abouti. Réessayez dans un instant.',
+      redo: 'Refaire le test', agent: 'votre conseiller',
+      inCommon: 'En commun', agree: 'D\'accord sur {x} critères sur 8', unites: 'Ce qui vous réunit', discuss: 'À discuter lors de la visite',
+      discussTxt: '{n1} penche pour « {c1} », {n2} pour « {c2} ».', discussEnd: 'De quoi en parler ensemble sur place.', noDiscuss: 'Vous êtes d\'accord sur tout : il ne reste qu\'à visiter !',
+      themes: { weekend: 'Week-end idéal', quotidien: 'Au quotidien', interieur: 'À l\'intérieur', travaux: 'Les travaux', rangement: 'Le rangement', quartier: 'Le quartier', energie: 'L\'énergie', avenir: 'Dans 5 ans' },
+      ch: {
+        weekend: [['Dehors', 'Un déjeuner au soleil, les mains dans la terre.'], ['En cocon', 'Un plaid, un livre, et personne pour vous déranger.']],
+        quotidien: [['Tout à pied', 'Pain, transports et parc sans prendre la voiture.'], ['La voiture sans stress', 'Se garer facilement et partir quand on veut.']],
+        interieur: [['Lumineux et ouvert', 'La lumière qui entre partout.'], ['Calme et intime', 'Un vrai refuge, loin du bruit.']],
+        travaux: [['Clés en main', 'On pose les cartons et on profite.'], ['J\'aime personnaliser', 'Quelques travaux ne me font pas peur.']],
+        rangement: [['Beaucoup de place', 'Placards, cave : de quoi tout ranger.'], ['Je vis léger', 'L\'essentiel me suffit.']],
+        quartier: [['Animé', 'Des cafés, des commerces, de la vie.'], ['Paisible', 'Des rues tranquilles, des voisins discrets.']],
+        energie: [['Un logement sobre', 'Une bonne performance énergétique compte pour moi.'], ['Peu importe', 'Ce n\'est pas ce qui guide mon choix.']],
+        avenir: [['J\'y suis toujours', 'Je cherche un endroit où m\'installer longtemps.'], ['Je garde la porte ouverte', 'Pouvoir revendre ou louer si la vie change.']]
+      },
+      why: { weekend: ['Pour vos week-ends dehors', 'Un vrai cocon'], quotidien: ['Tout à pied', 'La voiture sans stress'], interieur: ['De la lumière', 'Du calme'],
+             travaux: ['Prêt à vivre', 'De quoi personnaliser'], rangement: ['De la place pour ranger', 'Une taille qui vous ressemble'],
+             quartier: ['Un quartier vivant', 'Un quartier paisible'], energie: ['Un logement sobre', ''], avenir: ['Un secteur où s\'installer', 'Un bien qui garde ses options'] },
+      d: {
+        ext: 'Extérieur : {list}', terrain: 'terrain {m} m²', parcOui: 'Espace vert à moins de 800 m', parcNon: 'Aucun espace vert à moins de 800 m, extérieur non renseigné',
+        surface: '{s} m²', pieces: ['{p} pièce', '{p} pièces'], poi: 'À moins de 800 m : {list}',
+        poiT: ['{n} arrêt de transport', '{n} arrêts de transport'], poiC: ['{n} commerce', '{n} commerces'], poiV: ['{n} espace vert', '{n} espaces verts'],
+        transports: 'Transports signalés : {list}', parkOui: ['{n} place de stationnement', '{n} places de stationnement'], parkNon: 'Aucune place de stationnement',
+        expo: 'Exposition {list}', rdc: 'rez-de-chaussée', etage: '{n}e étage', vig: 'Point signalé : {item}', sonore: 'Exposition sonore : {v}',
+        etat: 'État du bien noté {n}/10', prest: 'Prestations notées {n}/10', travaux: 'Travaux signalés : {list}', annexes: 'Annexes : {list}',
+        commerces: ['{n} commerce à moins de 800 m', '{n} commerces à moins de 800 m'], secteur: 'Secteur noté {n}/10', dpe: 'DPE {l}', dvf: ['{n} vente comparable dans le secteur', '{n} ventes comparables dans le secteur'],
+        sonoreV: { Calme: 'calme', Normal: 'normale', Bruyant: 'bruyante' }
+      },
+      w: {
+        bruit: 'Vous cherchez le calme et l\'environnement est signalé comme bruyant : à écouter ensemble pendant la visite.',
+        vis_a_vis: 'Un vis-à-vis est signalé : à regarder ensemble depuis les pièces de vie.',
+        expo_nord: 'Exposition nord : la luminosité se juge sur place, idéalement à différentes heures.',
+        rdc: 'Rez-de-chaussée : la luminosité se juge sur place.',
+        travaux: 'Des travaux sont signalés ({list}) : à passer en revue ensemble.',
+        stationnement: 'Aucune place de stationnement n\'est indiquée : les solutions du quartier sont à voir ensemble.',
+        acces_pied: 'Peu de transports et de commerces à moins de 800 m : le trajet du quotidien est à tester ensemble.',
+        peu_commerces: 'Peu de commerces à proximité immédiate : l\'ambiance du quartier se découvre sur place.',
+        dpe: 'DPE {l} : la performance énergétique et les pistes d\'amélioration sont à voir ensemble.',
+        mutation: 'Le secteur est en mutation : les projets à venir sont à voir ensemble.',
+      },
+      lex: {}
+    },
+  };
+  T.fr.lex = { 'Sud': 'sud', 'Nord': 'nord', 'Est': 'est', 'Ouest': 'ouest', 'Autre': 'autre', 'jardin': 'jardin', 'terrasse': 'terrasse', 'balcon': 'balcon', 'veranda': 'véranda', 'piscine': 'piscine', 'PAC': 'pompe à chaleur' };
+
+  function L() { var l = (typeof _currentLang === 'string' && T[_currentLang]) ? _currentLang : 'fr'; return l; }
+  function t(path, vars) {
+    var parts = path.split('.'), v = T[L()], f = T.fr;
+    parts.forEach(function(p) { v = v == null ? v : v[p]; f = f == null ? f : f[p]; });
+    var s = v == null || v === '' && f ? f : v;
+    if (typeof s !== 'string') return s;
+    return s.replace(/\{(\w+)\}/g, function(m, k) { return vars && vars[k] != null ? vars[k] : ''; });
+  }
+  function tn(path, n, vars) { var a = t(path); vars = vars || {}; return (Array.isArray(a) ? a[n === 1 ? 0 : 1] : String(a)).replace(/\{(\w+)\}/g, function(m, k) { return vars[k] != null ? vars[k] : ''; }); }
+  function lex(w) { var x = T[L()].lex || {}; return x[w] || (T.fr.lex[w]) || String(w).toLowerCase(); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function nb(n) { return (Math.round(n * 10) / 10).toLocaleString(L() === 'en' ? 'en-GB' : 'fr-FR'); }
+  function joinList(arr) { return arr.map(lex).join(', '); }
+
+  // Donnée comparée → texte lisible
+  function dataText(x) {
+    var v = x.v || {};
+    switch (x.k) {
+      case 'ext': return t('d.ext', { list: Object.keys(v.ext || {}).filter(function(k) { return k !== 'vue'; }).map(function(k) { return lex(k) + (typeof v.ext[k] === 'number' ? ' ' + nb(v.ext[k]) + ' m²' : ''); })
+        .concat(v.terrain ? [t('d.terrain', { m: nb(v.terrain) })] : []).join(', ') });
+      case 'parc': return v.n > 0 ? t('d.parcOui') : t('d.parcNon');
+      case 'surface': return [v.surface != null ? t('d.surface', { s: nb(v.surface) }) : '', v.pieces != null ? tn('d.pieces', v.pieces, { p: v.pieces }) : ''].filter(Boolean).join(', ');
+      case 'poi': return t('d.poi', { list: [tn('d.poiT', v.transport, { n: v.transport }), tn('d.poiC', v.commerce, { n: v.commerce }), tn('d.poiV', v.vert, { n: v.vert })].join(', ') });
+      case 'transports': return t('d.transports', { list: (v.list || []).join(', ') });
+      case 'parking': return v.n > 0 ? tn('d.parkOui', v.n, { n: v.n }) : t('d.parkNon');
+      case 'expo': return t('d.expo', { list: joinList(v.list || []) }) + (v.etage != null ? ', ' + (v.etage === 0 ? t('d.rdc') : t('d.etage', { n: v.etage })) : '');
+      case 'etage': return v.etage === 0 ? t('d.rdc') : t('d.etage', { n: v.etage });
+      case 'vigilance': return t('d.vig', { item: lex(v.item) });
+      case 'sonore': return t('d.sonore', { v: t('d.sonoreV.' + v.val) });
+      case 'etat': return t('d.etat', { n: nb(v.n) });
+      case 'prest': return t('d.prest', { n: nb(v.n) });
+      case 'travaux': return t('d.travaux', { list: joinList(v.list || []) });
+      case 'annexes': return t('d.annexes', { list: joinList(v.list || []) });
+      case 'commerces': return tn('d.commerces', v.n, { n: v.n });
+      case 'dvf': return tn('d.dvf', v.n, { n: v.n });
+      case 'secteur': return t('d.secteur', { n: nb(v.n) });
+      case 'dpe': return [v.l ? t('d.dpe', { l: v.l }) : '', (v.enr || []).length ? joinList(v.enr) : ''].filter(Boolean).join(', ');
+    }
+    return '';
+  }
+  function critData(c) { return c.data.map(dataText).filter(Boolean).join(' · '); }
+  function weakText(w) { return t('w.' + w.k, { list: joinList((w.v && w.v.list) || []), l: w.v && w.v.l }); }
+  function choice(q, a) { return t('ch.' + q)[a === 'B' ? 1 : 0][0]; }
+
+  // ── Points d'intérêt à 800 m (même source que la carte du quartier) : absents → critère ignoré, jamais « zéro » ──
+  var poiAsked = false;
+  function loadPoi() {
+    if (poiAsked) return; poiAsked = true;
+    try {
+      var c = typeof getFicheCoords === 'function' ? getFicheCoords() : null;
+      if (!c || typeof fetchPoiFeatures !== 'function') return;
+      fetchPoiFeatures(c.lat, c.lng).then(function(features) {
+        if (!features || !features.length) return;
+        var n = { transport: 0, commerce: 0, vert: 0 };
+        features.forEach(function(f) {
+          var p = f.properties || {}, cat = poiCategoryOf(p);
+          if (!cat || !(cat in n)) return;
+          var la = p.lat != null ? p.lat : f.geometry.coordinates[1], lo = p.lon != null ? p.lon : f.geometry.coordinates[0];
+          if (_haversine(c.lat, c.lng, la, lo) <= 800) n[cat]++;
+        });
+        DATA.poi = n; if (S.step === 'result') render();
+      }, function() {});
+    } catch (e) {}
+  }
+
+  // ── État ──
+  var S = { mode: null, step: 'home', who: 0, idx: 0, ans: [{}, {}], names: ['', ''], sent: false, err: false, guest: false, copied: false };
+  function name(i) { return S.names[i] || t(i ? 'p2' : 'p1'); }
+  function reset() { S = { mode: null, step: 'home', who: 0, idx: 0, ans: [{}, {}], names: ['', ''], sent: false, err: false, guest: false, copied: false }; }
+
+  function ring(p) {
+    var r = 52, cir = 2 * Math.PI * r, off = cir * (1 - (p || 0) / 100);
+    return '<svg class="cr-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="' + r + '" class="cr-ring-bg"/><circle cx="60" cy="60" r="' + r + '" class="cr-ring-fg" stroke-dasharray="' + cir.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"/></svg>';
+  }
+  function reasons(list, empty) {
+    if (!list.length) return empty ? '<p class="cr-muted">' + esc(empty) + '</p>' : '';
+    return '<ul class="cr-list">' + list.map(function(c) {
+      return '<li><b>' + esc(t('why.' + c.q)[c.a === 'B' ? 1 : 0]) + '</b><span>' + esc(critData(c)) + '</span></li>';
+    }).join('') + '</ul>';
+  }
+  function weakCard(ws) {
+    return '<div class="cr-card cr-amber"><h3>' + esc(t('check')) + '</h3>' + (ws.length ? '<ul class="cr-list">' + ws.map(function(w) { return '<li><span>' + esc(weakText(w)) + '</span></li>'; }).join('') + '</ul>' : '<p class="cr-muted">' + esc(t('noCheck')) + '</p>') + '</div>';
+  }
+  function howBlock(res, label) {
+    var notes = t('notes');
+    return '<details class="cr-how"><summary>' + esc(t('how')) + '</summary><p>' + esc(t('howTxt')) + '</p>' + (label ? '<p class="cr-who">' + esc(label) + '</p>' : '')
+      + '<div class="cr-crits">' + res.criteres.map(function(c) {
+        var n = c.note == null ? 'none' : c.note;
+        return '<div class="cr-crit"><div class="cr-crit-h"><span class="cr-theme">' + esc(t('themes.' + c.q)) + '</span><span class="cr-pill cr-n' + n + '">' + (c.note == null ? esc(notes.none) : c.note + ' · ' + esc(notes[n])) + '</span></div>'
+          + '<div class="cr-crit-b">' + esc(t('answer')) + ' : <b>' + esc(choice(c.q, c.a)) + '</b>' + (c.note != null ? '<br>' + esc(t('data')) + ' : ' + esc(critData(c)) : '') + '</div></div>';
+      }).join('') + '</div></details>';
+  }
+  function sendBlock(prefill) {
+    if (S.sent) return '<div class="cr-sent" role="status">' + esc(t('sent', { agent: agentName() })) + '</div>';
+    return '<div class="cr-send"><label for="cr-prenom">' + esc(t('prenom')) + '</label><input id="cr-prenom" type="text" maxlength="40" autocomplete="given-name" value="' + esc(prefill || '') + '">'
+      + '<button type="button" class="cr-btn" data-act="send">' + esc(t('send')) + '</button>' + (S.err ? '<p class="cr-err">' + esc(t('sendErr')) + '</p>' : '') + '</div>';
+  }
+  function agentName() { var a = (typeof _sp_agent === 'string' && _sp_agent.trim()) ? _sp_agent.trim() : t('agent'); return typeof capFirst === 'function' ? capFirst(a) : a; }
+
+  function render() {
+    var h = '';
+    if (S.step === 'home') {
+      h = '<div class="cr-home"><p class="cr-lead">' + esc(t('intro1')) + '</p><p>' + esc(t('intro2')) + '</p>'
+        + '<div class="cr-actions"><button type="button" class="cr-btn" data-act="solo">' + esc(t('solo')) + '</button><button type="button" class="cr-btn cr-sec" data-act="duo">' + esc(t('duo')) + '</button></div>'
+        + '<div class="cr-safe">' + svg('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>') + '<span>' + esc(t('safe')) + '</span></div></div>';
+    } else if (S.step === 'names') {
+      h = '<div class="cr-home"><p class="cr-lead">' + esc(t('names')) + '</p>'
+        + '<input class="cr-input" id="cr-n1" maxlength="30" placeholder="' + esc(t('p1')) + '" value="' + esc(S.names[0]) + '"><input class="cr-input" id="cr-n2" maxlength="30" placeholder="' + esc(t('p2')) + '" value="' + esc(S.names[1]) + '">'
+        + '<div class="cr-actions"><button type="button" class="cr-btn" data-act="names">' + esc(t('go')) + '</button><button type="button" class="cr-link" data-act="home">' + esc(t('back')) + '</button></div></div>';
+    } else if (S.step === 'guest') {
+      h = '<div class="cr-home"><p class="cr-lead">' + esc(S.names[0] ? t('guest', { n: S.names[0] }) : t('guestAnon')) + '</p>'
+        + '<input class="cr-input" id="cr-n2" maxlength="30" placeholder="' + esc(t('p2')) + '" value="' + esc(S.names[1]) + '">'
+        + '<div class="cr-actions"><button type="button" class="cr-btn" data-act="guestgo">' + esc(t('start')) + '</button></div>'
+        + '<div class="cr-safe">' + svg('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>') + '<span>' + esc(t('safe')) + '</span></div></div>';
+    } else if (S.step === 'q') {
+      var q = Q[S.idx], ch = t('ch.' + q), cur = S.ans[S.who][q];
+      h = (S.mode === 'duo' ? '<p class="cr-who">' + esc(name(S.who)) + '</p>' : '')
+        + '<div class="cr-prog"><div class="cr-prog-t"><span>' + (S.idx + 1) + ' / ' + Q.length + '</span>' + (S.idx > 0 ? '<button type="button" class="cr-link" data-act="prev">' + esc(t('back')) + '</button>' : '') + '</div><div class="cr-bar"><i style="width:' + ((S.idx + 1) / Q.length * 100) + '%"></i></div></div>'
+        + '<p class="cr-theme cr-qtheme">' + esc(t('themes.' + q)) + '</p>'
+        + '<div class="cr-choices">' + ['A', 'B'].map(function(a, i) {
+          return '<button type="button" class="cr-choice' + (cur === a ? ' on' : '') + '" data-act="pick" data-a="' + a + '" aria-pressed="' + (cur === a) + '">' + svg(ICO[q][i]) + '<b>' + esc(ch[i][0]) + '</b><span>' + esc(ch[i][1]) + '</span></button>';
+        }).join('') + '</div><p class="cr-muted cr-center">' + esc(t('reminder')) + '</p>';
+    } else if (S.step === 'handoff') {
+      h = '<div class="cr-home"><p class="cr-lead">' + esc(t('turnOf', { n: name(1) })) + '</p><p>' + esc(t('handoffTxt', { n1: name(0), n2: name(1) })) + '</p>'
+        + '<div class="cr-actions"><button type="button" class="cr-btn" data-act="pass">' + esc(t('passPhone', { n: name(1) })) + '</button><button type="button" class="cr-btn cr-sec" data-act="link">' + esc(t('sendLink', { n: name(1) })) + '</button></div>'
+        + (S.copied ? '<p class="cr-sent" role="status">' + esc(t('linkCopied', { n: name(1) })) + '<br><span class="cr-url">' + esc(shareUrl()) + '</span></p>' : '')
+        + '<p class="cr-muted">' + esc(t('linkNote', { n: name(1) })) + '</p></div>';
+    } else if (S.step === 'result' && S.mode === 'solo') {
+      var r = C.score(S.ans[0], DATA);
+      h = r.score == null ? '<p class="cr-muted">' + esc(t('noScore')) + '</p>' :
+        '<div class="cr-hero">' + '<div class="cr-ring-w">' + ring(r.score) + '<div class="cr-ring-v"><b>' + r.score + ' %</b><span>' + esc(t('ringSub')) + '</span></div></div><p>' + esc(t('matchTitle')) + '</p>'
+        + (r.nbUtilises < 8 ? '<small>' + esc(tn('based', r.nbUtilises, { n: r.nbUtilises })) + '</small>' : '') + '</div>'
+        + '<div class="cr-card"><h3>' + esc(t('likes')) + '</h3>' + reasons(r.top, '') + '</div>'
+        + weakCard(r.aVerifier) + howBlock(r) + sendBlock('');
+      h += '<div class="cr-extra"></div><div class="cr-actions"><button type="button" class="cr-link" data-act="redo">' + esc(t('redo')) + '</button></div>';
+    } else if (S.step === 'result') {
+      var d = C.duo(S.ans[0], S.ans[1], DATA);
+      h = d.commun == null ? '<p class="cr-muted">' + esc(t('noScore')) + '</p>' :
+        '<div class="cr-hero"><div class="cr-ring-w">' + ring(d.commun) + '<div class="cr-ring-v"><b>' + d.commun + ' %</b><span>' + esc(t('inCommon')) + '</span></div></div>'
+        + '<div class="cr-duo"><div><b>' + d.s1 + ' %</b><span>' + esc(name(0)) + '</span></div><div><b>' + d.s2 + ' %</b><span>' + esc(name(1)) + '</span></div></div>'
+        + '<p>' + esc(t('agree', { x: d.accord })) + '</p></div>'
+        + '<div class="cr-card"><h3>' + esc(t('unites')) + '</h3>' + reasons(d.reunit, '') + '</div>'
+        + '<div class="cr-card"><h3>' + esc(t('discuss')) + '</h3>' + (d.discuter.length ? '<ul class="cr-list">' + d.discuter.map(function(x) {
+            var dt = critData(x.c1.note != null ? x.c1 : x.c2);
+            return '<li><b>' + esc(t('themes.' + x.q)) + '</b><span>' + esc(t('discussTxt', { n1: name(0), n2: name(1), c1: choice(x.q, x.a1), c2: choice(x.q, x.a2) })) + (dt ? ' ' + esc(dt) + '.' : '') + ' ' + esc(t('discussEnd')) + '</span></li>';
+          }).join('') + '</ul>' : '<p class="cr-muted">' + esc(t('noDiscuss')) + '</p>') + '</div>'
+        + weakCard(d.aVerifier) + howBlock(d.r1, name(0)) + howBlock(d.r2, name(1)) + sendBlock([S.names[0], S.names[1]].filter(Boolean).join(' & '));
+      h += '<div class="cr-extra"></div><div class="cr-actions"><button type="button" class="cr-link" data-act="redo">' + esc(t('redo')) + '</button></div>';
+    }
+    root.innerHTML = '<div class="cr-wrap">' + h + '</div>';
+    var ex = root.querySelector('.cr-extra');
+    if (ex && window.pvCrushResult) {
+      var me = S.mode === 'duo' && S.guest ? 1 : 0;
+      window.pvCrushResult(ex, S.ans[me], C.score(S.ans[me], DATA).top, [S.names[me]]);
+    }
+  }
+
+  // ── Lien pour la 2e personne : réponses de la 1re dans l'ancre (jamais envoyées au serveur) ──
+  function shareUrl() {
+    var a = Q.map(function(q) { return S.ans[0][q] || 'A'; }).join('');
+    return location.href.split('#')[0] + '#crush=1.' + a + '.' + encodeURIComponent(S.names[0] || '') + '.' + encodeURIComponent(S.names[1] || '');
+  }
+  function readHash() {
+    var m = (location.hash || '').match(/^#crush=1\.([AB]{8})\.([^.]*)\.([^.]*)$/);
+    if (!m) return false;
+    reset(); S.mode = 'duo'; S.guest = true; S.step = 'guest'; S.who = 1;
+    Q.forEach(function(q, i) { S.ans[0][q] = m[1].charAt(i); });
+    try { S.names = [decodeURIComponent(m[2]).slice(0, 30), decodeURIComponent(m[3]).slice(0, 30)]; } catch (e) {}
+    return true;
+  }
+
+  function send() {
+    var inp = document.getElementById('cr-prenom');
+    var prenom = (inp && inp.value || '').replace(/[<>"]/g, '').trim().slice(0, 40);
+    var p;
+    if (S.mode === 'duo') {
+      var d = C.duo(S.ans[0], S.ans[1], DATA);
+      p = { v: 1, m: 'duo', s: d.commun, s1: d.s1, s2: d.s2, acc: d.accord, c: d.reunit.map(function(c) { return c.q; }), w: d.aVerifier.map(function(w) { return w.k; }),
+            a: Q.map(function(q) { return S.ans[0][q]; }).join(''), a2: Q.map(function(q) { return S.ans[1][q]; }).join('') };
+    } else {
+      var r = C.score(S.ans[0], DATA);
+      p = { v: 1, m: 'solo', s: r.score, c: r.top.map(function(c) { return c.q; }), w: r.aVerifier.map(function(w) { return w.k; }), a: Q.map(function(q) { return S.ans[0][q]; }).join('') };
+    }
+    if (prenom) p.n = prenom;
+    try {
+      if (typeof window.privencyTrack !== 'function') throw new Error('stats');
+      window.privencyTrack('crush_termine:' + JSON.stringify(p));
+      S.sent = true; S.err = false;
+    } catch (e) { S.err = true; }
+    render();
+  }
+
+  root.addEventListener('click', function(e) {
+    var b = e.target.closest('[data-act]'); if (!b) return;
+    var act = b.getAttribute('data-act');
+    if (act === 'solo') { reset(); S.mode = 'solo'; S.step = 'q'; loadPoi(); }
+    else if (act === 'duo') { reset(); S.mode = 'duo'; S.step = 'names'; }
+    else if (act === 'home') { reset(); }
+    else if (act === 'names') {
+      S.names = [(document.getElementById('cr-n1').value || '').trim().slice(0, 30), (document.getElementById('cr-n2').value || '').trim().slice(0, 30)];
+      S.step = 'q'; S.who = 0; S.idx = 0; loadPoi();
+    }
+    else if (act === 'guestgo') { S.names[1] = (document.getElementById('cr-n2').value || '').trim().slice(0, 30); S.step = 'q'; S.idx = 0; loadPoi(); }
+    else if (act === 'prev') { S.idx = Math.max(0, S.idx - 1); }
+    else if (act === 'pick') {
+      S.ans[S.who][Q[S.idx]] = b.getAttribute('data-a');
+      if (S.idx < Q.length - 1) S.idx++;
+      else if (S.mode === 'duo' && S.who === 0) S.step = 'handoff';
+      else { S.step = 'result'; S.sent = false; }
+    }
+    else if (act === 'pass') { S.who = 1; S.idx = 0; S.step = 'q'; S.copied = false; }
+    else if (act === 'link') {
+      var url = shareUrl(), done = function() { S.copied = true; render(); };
+      if (navigator.share) { navigator.share({ title: document.title, url: url }).then(function() {}, function() {}); }
+      try { navigator.clipboard.writeText(url).then(done, done); } catch (x) { done(); }
+      return;
+    }
+    else if (act === 'send') { send(); return; }
+    else if (act === 'redo') { var g = S.guest; reset(); if (g) history.replaceState(null, '', location.href.split('#')[0]); }
+    render();
+    var top = document.getElementById('crush'); if (top && act !== 'send' && top.getBoundingClientRect().top < 0) top.scrollIntoView({ block: 'start' });
+  });
+
+  window.renderCrush = render;
+  if (readHash()) {
+    render();
+    var open = function() { var btn = document.querySelector('#main-nav button[data-tab="crush"]'); if (btn) btn.click(); };
+    if (document.readyState === 'complete') setTimeout(open, 300); else window.addEventListener('load', function() { setTimeout(open, 300); });
+  } else render();
+})();
+</script>
+<script id="participation-data" type="application/json">{"points":[{"k":"electricite"},{"k":"amiante"},{"k":"dpe","v":{"l":"G"}},{"k":"vig","v":{"fr":"Pas de garage ni de parking"}},{"k":"lumiere"}],"chips":["lumiere","volumes","cuisine","salle_bain","calme","etat","quartier"],"mot":{"fr":[],"libre":""}}</script>
+<script id="participation-js">
+// ═══ PARTICIPATION ACHETEUR : ma visite, carnet, partage, critère déterminant, mot du vendeur ═══
+// Chaque action enregistre un événement dans les statistiques existantes (fiche_views) ; aucune donnée personnelle demandée.
+(function() {
+  var PD = {};
+  try { PD = JSON.parse((document.getElementById('participation-data') || {}).textContent || '{}') || {}; } catch (e) { PD = {}; }
+  var KEY = 'pv_part_' + location.pathname + '_';
+  function load(k, def) { try { var v = localStorage.getItem(KEY + k); return v == null ? def : JSON.parse(v); } catch (e) { return def; } }
+  function save(k, v) { try { localStorage.setItem(KEY + k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  function track(name, payload) {
+    try { if (typeof window.privencyTrack !== 'function') return false; window.privencyTrack(payload ? name + ':' + JSON.stringify(payload) : name); return true; } catch (e) { return false; }
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function $(id) { return document.getElementById(id); }
+  function ico(p) { return '<svg class="pv-pico" viewBox="0 0 24 24" aria-hidden="true">' + p + '</svg>'; }
+  var I = {
+    share: '<path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/>',
+    heart: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+    check: '<path d="M5 12l4 4 10-10"/>', cam: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+    wa: '<path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c.5 2 2.5 4 4.5 4.5l1-1 2 1c-.3 1.2-1.3 2-2.5 1.8-3-.5-5.8-3.3-6.3-6.3C7.5 8.3 8.3 7.3 9.5 7l1 2z"/>',
+    sms: '<path d="M4 5h16v11H9l-5 4z"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/>', link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
+  };
+
+  var T = {
+    fr: {
+      visTitle: 'Ma visite en 3 questions', visSub: 'Choisissez jusqu\'à 3 points à vérifier pendant la visite : votre conseiller préparera les réponses.',
+      visMax: '3 points au maximum : retirez-en un pour en choisir un autre.', visSend: 'Envoyer à mon conseiller', visDone: 'C\'est noté ! Votre conseiller préparera ces points pour la visite :',
+      vis: { bruit: 'Le bruit, fenêtres ouvertes et fermées', charges: 'Les charges de copropriété : ce qu\'elles comprennent', travaux_ag: 'Les travaux votés en assemblée générale', toiture: 'L\'état de la toiture',
+        voisinage: 'Le voisinage et le vis-à-vis', humidite: 'Les éventuelles traces d\'humidité', travaux: 'Les travaux à prévoir', fenetres: 'Les fenêtres et l\'isolation', chauffage: 'Le chauffage et son ancienneté',
+        electricite: 'L\'installation électrique', gaz: 'L\'installation de gaz', amiante: 'Les points du diagnostic amiante', parties_communes: 'L\'état des parties communes', facade: 'L\'état de la façade',
+        dpe: 'Le DPE {l} : isolation et chauffage', lumiere: 'La luminosité, à différentes heures', rangements: 'Les rangements', etat_general: 'L\'état général : sols, murs, plafonds', environnement: 'Les abords du bien, à pied' },
+      carTitle: 'Mon carnet de visite', carSub: 'Notez vos coups de cœur pendant la visite. Votre carnet reste sur ce téléphone.',
+      carLikes: 'Mes coups de cœur', carNotes: 'Mes notes', carNotesPh: 'Ce que je veux retenir…', carPhotos: 'Mes photos (facultatif)', carAdd: 'Ajouter une photo', carDel: 'Retirer la photo',
+      carPrivacy: 'Rien n\'est envoyé tant que vous ne cliquez pas sur « Partager avec mon agent ».', carShare: 'Partager avec mon agent', carSaved: 'Enregistré sur ce téléphone.',
+      carDone: 'Partagé ! Votre conseiller a reçu vos coups de cœur et vos notes. Votre retour de visite, plus bas, est pré-rempli.', carPhotosStay: 'Vos photos restent sur votre téléphone.',
+      carPhotosSend: 'Envoyer aussi mes photos', carEmpty: 'Choisissez au moins un coup de cœur ou écrivez une note.', carFull: 'Le téléphone n\'a plus de place pour cette photo.',
+      chip: { lumiere: 'Lumière', volumes: 'Volumes', cuisine: 'Cuisine', salle_bain: 'Salle de bains', calme: 'Calme', jardin: 'Jardin', exterieur: 'Extérieur', vue: 'Vue', rangements: 'Rangements', etat: 'État général', quartier: 'Quartier' },
+      shareBtn: 'Partager', shareTitle: 'Partager à mon conjoint ou à un proche', shareSub: 'Message prêt à envoyer (vous pouvez le modifier) :', shareEnd: 'Partager à mon conjoint ou à un proche',
+      shareMsg: 'Regarde ce bien que j\'ai repéré, j\'aimerais avoir ton avis :', shareMsgCrush: 'Regarde ce bien que j\'ai repéré ! J\'ai fait le test « Ce bien est-il fait pour nous ? » : fais-le aussi et on comparera nos résultats.',
+      shareSubject: 'Un bien à regarder ensemble', copy: 'Copier le lien', copied: 'Lien copié !', email: 'E-mail', close: 'Fermer',
+      critTitle: 'Ce qui compte vraiment pour moi', critSub: 'Un seul choix : votre conseiller saura sur quoi insister.', critPre: 'Pré-sélectionné d\'après vos réponses au test.', critOk: 'C\'est bien ça', critDone: 'Noté, votre conseiller en tiendra compte.',
+      crit: { calme: 'Le calme', lumiere: 'La lumière', transports: 'Les transports', exterieur: 'L\'extérieur', energie: 'L\'énergie', quartier: 'Le quartier' },
+      agentSees: 'Votre agent verra ce choix pour mieux vous accompagner.', motTitle: 'Le mot du vendeur', motLike: 'Ça me parle', motLiked: 'Merci, c\'est noté !'
+    },
+  };
+  function L() { return (typeof _currentLang === 'string' && T[_currentLang]) ? _currentLang : 'fr'; }
+  function t(path, vars) {
+    var v = T[L()], f = T.fr;
+    path.split('.').forEach(function(p) { v = v == null ? v : v[p]; f = f == null ? f : f[p]; });
+    var s = v == null ? f : v;
+    return typeof s === 'string' ? s.replace(/\{(\w+)\}/g, function(m, k) { return vars && vars[k] != null ? vars[k] : ''; }) : s;
+  }
+
+  // ── 3. Ouverture via un lien partagé (?s=code) : signalée une fois par session ──
+  (function() {
+    var s = (new URLSearchParams(location.search).get('s') || '').replace(/[^a-z0-9]/gi, '').slice(0, 12);
+    if (!s) return;
+    var mark = 'pv_open_' + s;
+    try { if (sessionStorage.getItem(mark)) return; sessionStorage.setItem(mark, '1'); } catch (e) {}
+    var go = function() { track('ouverture_partage', { s: s }); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+  })();
+
+  // ── 1. Ma visite en 3 questions ──
+  var points = Array.isArray(PD.points) ? PD.points : [];
+  function pid(p, i) { return p.k === 'vig' ? 'vig' + i : p.k; }
+  function plabel(p) {
+    if (p.k === 'vig') { var v = p.v || {}; return v[L()] || v.fr || ''; }
+    return t('vis.' + p.k, p.v || {}) || '';
+  }
+  var vis = load('visite', { sel: [], sent: false }), visMsg = '';
+  function renderVisite() {
+    var box = $('pv-visite'); if (!box) return;
+    if (!points.length) { box.style.display = 'none'; return; }
+    box.style.display = '';
+    var h = '<div class="lbl">' + esc(t('visTitle')) + '</div><p class="pv-sub">' + esc(vis.sent ? t('visDone') : t('visSub')) + '</p>';
+    if (vis.sent) {
+      h += '<ul class="pv-check">' + points.map(function(p, i) { return vis.sel.indexOf(pid(p, i)) !== -1 ? '<li>' + ico(I.check) + '<span>' + esc(plabel(p)) + '</span></li>' : ''; }).join('') + '</ul>';
+    } else {
+      h += '<div class="pv-opts" role="group">' + points.map(function(p, i) {
+        var id = pid(p, i), on = vis.sel.indexOf(id) !== -1;
+        return '<button type="button" class="pv-opt' + (on ? ' on' : '') + '" aria-pressed="' + on + '" data-pv="vis" data-id="' + esc(id) + '"><span class="pv-box">' + (on ? ico(I.check) : '') + '</span><span>' + esc(plabel(p)) + '</span></button>';
+      }).join('') + '</div><div class="pv-row"><span class="pv-count">' + vis.sel.length + ' / 3</span><button type="button" class="pv-btn" data-pv="vis-send"' + (vis.sel.length ? '' : ' disabled') + '>' + esc(t('visSend')) + '</button></div>'
+        + (visMsg ? '<p class="pv-msg">' + esc(visMsg) + '</p>' : '');
+    }
+    box.innerHTML = h + '<p class="pv-note pv-agent">' + esc(t('agentSees')) + '</p>';
+  }
+
+  // ── 2. Carnet de visite (navigateur de l'acheteur ; envoyé seulement sur « Partager avec mon agent ») ──
+  var chips = Array.isArray(PD.chips) ? PD.chips : [];
+  var car = load('carnet', { c: [], n: '', shared: false }), photos = load('photos', []), carMsg = '', canSharePhotos = false;
+  var RETOUR = { lumiere: 'agencement', volumes: 'agencement', cuisine: 'agencement', salle_bain: 'agencement', rangements: 'agencement', calme: 'quartier', quartier: 'quartier' };
+  function renderCarnet() {
+    var box = $('pv-carnet'); if (!box) return;
+    if (!chips.length) { box.style.display = 'none'; return; }
+    box.style.display = '';
+    var h = '<div class="lbl">' + esc(t('carTitle')) + '</div><p class="pv-sub">' + esc(t('carSub')) + '</p>'
+      + '<p class="pv-h">' + esc(t('carLikes')) + '</p><div class="pv-chips">' + chips.map(function(c) {
+        var on = car.c.indexOf(c) !== -1;
+        return '<button type="button" class="pv-chip' + (on ? ' on' : '') + '" aria-pressed="' + on + '" data-pv="chip" data-id="' + esc(c) + '">' + (on ? '♥ ' : '') + esc(t('chip.' + c) || c) + '</button>';
+      }).join('') + '</div>'
+      + '<label class="pv-h" for="pv-notes">' + esc(t('carNotes')) + '</label><textarea id="pv-notes" class="pv-text" maxlength="600" placeholder="' + esc(t('carNotesPh')) + '">' + esc(car.n) + '</textarea>'
+      + '<p class="pv-h">' + esc(t('carPhotos')) + '</p><div class="pv-photos">' + photos.map(function(src, i) {
+        return '<div class="pv-ph"><img src="' + esc(src) + '" alt=""><button type="button" data-pv="ph-del" data-i="' + i + '" aria-label="' + esc(t('carDel')) + '">×</button></div>';
+      }).join('') + (photos.length < 4 ? '<label class="pv-ph pv-add">' + ico(I.cam) + '<span>' + esc(t('carAdd')) + '</span><input type="file" accept="image/*" id="pv-photo-in" hidden></label>' : '') + '</div>'
+      + '<p class="pv-note">' + esc(t('carPrivacy')) + '</p>'
+      + '<button type="button" class="pv-btn" data-pv="car-share">' + esc(t('carShare')) + '</button>'
+      + (carMsg ? '<p class="pv-msg">' + esc(carMsg) + '</p>' : '')
+      + (car.shared && photos.length ? (canSharePhotos ? '<button type="button" class="pv-btn pv-sec" data-pv="ph-share">' + esc(t('carPhotosSend')) + '</button>' : '<p class="pv-note">' + esc(t('carPhotosStay')) + '</p>') : '');
+    box.innerHTML = h;
+    var ta = $('pv-notes'); if (ta) ta.addEventListener('input', function() { car.n = ta.value.slice(0, 600); save('carnet', car); });
+    var fi = $('pv-photo-in'); if (fi) fi.addEventListener('change', function() { if (fi.files && fi.files[0]) addPhoto(fi.files[0]); });
+  }
+  function addPhoto(file) {
+    var img = new Image(), url = URL.createObjectURL(file);
+    img.onload = function() {
+      var max = 900, r = Math.min(1, max / Math.max(img.width, img.height)), cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * r); cv.height = Math.round(img.height * r);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(url);
+      var data = cv.toDataURL('image/jpeg', 0.72), next = photos.concat([data]);
+      if (save('photos', next)) { photos = next; carMsg = t('carSaved'); } else carMsg = t('carFull');
+      renderCarnet();
+    };
+    img.onerror = function() { URL.revokeObjectURL(url); };
+    img.src = url;
+  }
+  function photoFiles() {
+    return photos.map(function(d, i) {
+      var b = atob(d.split(',')[1]), a = new Uint8Array(b.length); for (var j = 0; j < b.length; j++) a[j] = b.charCodeAt(j);
+      return new File([a], 'visite-' + (i + 1) + '.jpg', { type: 'image/jpeg' });
+    });
+  }
+
+  // ── 3. Partager à mon conjoint ou à un proche ──
+  function shareCode() { var c = load('share', ''); if (!c) { c = Math.random().toString(36).slice(2, 8); save('share', c); } return c; }
+  function crushDone() { try { var x = JSON.parse(localStorage.getItem('pv_crush_' + location.pathname) || 'null'); return x && /^[AB]{8}$/.test(x.a) ? x : null; } catch (e) { return null; } }
+  function shareUrl() {
+    var q = new URLSearchParams(location.search), out = new URLSearchParams();
+    if (q.get('client')) out.set('client', q.get('client'));   // même fiche, même suivi ; jamais le prénom d'accueil
+    out.set('s', shareCode());
+    var cd = crushDone();
+    return location.origin + location.pathname + '?' + out.toString() + (cd ? '#crush=1.' + cd.a + '.' + encodeURIComponent(cd.n || '') + '.' : '');
+  }
+  function shareText() { return (crushDone() ? t('shareMsgCrush') : t('shareMsg')) + '\n' + shareUrl(); }
+  function openShare() {
+    var sh = $('pv-share-sheet');
+    if (!sh) { sh = document.createElement('div'); sh.id = 'pv-share-sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); document.body.appendChild(sh); }
+    sh.innerHTML = '<div class="pv-sheet"><div class="pv-sheet-h"><b>' + esc(t('shareTitle')) + '</b><button type="button" data-pv="sh-close" aria-label="' + esc(t('close')) + '">×</button></div>'
+      + '<label for="pv-share-txt" class="pv-sub">' + esc(t('shareSub')) + '</label><textarea id="pv-share-txt" class="pv-text" rows="4">' + esc(shareText()) + '</textarea>'
+      + '<div class="pv-sh-grid">'
+      + '<button type="button" class="pv-sh" data-pv="sh" data-c="whatsapp">' + ico(I.wa) + '<span>WhatsApp</span></button>'
+      + '<button type="button" class="pv-sh" data-pv="sh" data-c="sms">' + ico(I.sms) + '<span>SMS</span></button>'
+      + '<button type="button" class="pv-sh" data-pv="sh" data-c="email">' + ico(I.mail) + '<span>' + esc(t('email')) + '</span></button>'
+      + '<button type="button" class="pv-sh" data-pv="sh" data-c="copie">' + ico(I.link) + '<span>' + esc(t('copy')) + '</span></button>'
+      + '</div><p class="pv-msg" id="pv-sh-msg" role="status"></p></div>';
+    sh.classList.add('open');
+    var first = sh.querySelector('[data-c="whatsapp"]'); if (first) first.focus();
+  }
+  function doShare(c) {
+    var txtEl = $('pv-share-txt'), txt = txtEl ? txtEl.value : shareText(), url = shareUrl();
+    if (txt.indexOf(url) === -1) txt += '\n' + url;   // le lien est toujours présent, même si le message a été modifié
+    var e = encodeURIComponent(txt);
+    if (c === 'whatsapp') window.open('https://wa.me/?text=' + e, '_blank', 'noopener');
+    else if (c === 'sms') location.href = 'sms:?&body=' + e;
+    else if (c === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(t('shareSubject')) + '&body=' + e;
+    else if (c === 'copie') {
+      var m = $('pv-sh-msg'), ok = function() { if (m) m.textContent = t('copied'); };
+      try { navigator.clipboard.writeText(txt).then(ok, function() { if (txtEl) { txtEl.select(); try { document.execCommand('copy'); } catch (x) {} } ok(); }); }
+      catch (x) { if (txtEl) { txtEl.select(); try { document.execCommand('copy'); } catch (y) {} } ok(); }
+    }
+    track('fiche_partagee', { c: c, s: shareCode(), t: crushDone() ? 1 : 0 });
+  }
+  window.pvOpenShare = openShare;
+
+  // ── 4. Critère déterminant ──
+  var CRIT = ['calme', 'lumiere', 'transports', 'exterieur', 'energie', 'quartier'];
+  var crit = load('critere', { k: null, sent: null });
+  function critFromAnswers(ans, top) {
+    var map = function(q, a) { return q === 'weekend' && a === 'A' ? 'exterieur' : q === 'quotidien' && a === 'A' ? 'transports' : q === 'interieur' ? (a === 'A' ? 'lumiere' : 'calme') : q === 'quartier' ? 'quartier' : q === 'energie' && a === 'A' ? 'energie' : null; };
+    var k = null;
+    (top || []).some(function(c) { k = map(c.q, c.a); return !!k; });
+    if (!k) ['weekend', 'interieur', 'quotidien', 'quartier', 'energie'].some(function(q) { k = ans && ans[q] ? map(q, ans[q]) : null; return !!k; });
+    return k;
+  }
+  function critHTML(pre) {
+    var cur = crit.k || pre, confirmed = !!crit.sent;
+    return '<div class="pv-crit"><p class="pv-h">' + esc(t('critTitle')) + '</p><p class="pv-sub">' + esc(t('critSub')) + '</p><div class="pv-chips">'
+      + CRIT.map(function(k) { var on = cur === k; return '<button type="button" class="pv-chip' + (on ? ' on' : '') + '" aria-pressed="' + on + '" data-pv="crit" data-id="' + k + '">' + esc(t('crit.' + k)) + '</button>'; }).join('') + '</div>'
+      + (!confirmed && !crit.k && pre ? '<p class="pv-note">' + esc(t('critPre')) + '</p><button type="button" class="pv-btn pv-sec" data-pv="crit-ok" data-id="' + pre + '">' + esc(t('critOk')) + '</button>' : '')
+      + (confirmed ? '<p class="pv-msg">' + esc(t('critDone')) + '</p>' : '') + '<p class="pv-note pv-agent">' + esc(t('agentSees')) + '</p></div>';
+  }
+  function chooseCrit(k) {
+    if (CRIT.indexOf(k) === -1) return;
+    crit.k = k;
+    if (crit.sent !== k && track('critere_choisi', { k: k })) crit.sent = k;
+    save('critere', crit); renderAll();
+  }
+  function renderCritBien() { var box = $('pv-critere'); if (box) box.innerHTML = critHTML(null); }
+  var lastCrush = null;
+  // Appelé par l'onglet « Le test » à l'affichage d'un résultat : critère pré-sélectionné + partage
+  window.pvCrushResult = function(el, ans, top, names) {
+    lastCrush = { el: el, ans: ans, top: top };
+    try { localStorage.setItem('pv_crush_' + location.pathname, JSON.stringify({ a: ['weekend', 'quotidien', 'interieur', 'travaux', 'rangement', 'quartier', 'energie', 'avenir'].map(function(q) { return ans[q] === 'B' ? 'B' : 'A'; }).join(''), n: (names && names[0]) || '' })); } catch (e) {}
+    if (!el) return;
+    el.innerHTML = critHTML(critFromAnswers(ans, top)) + '<button type="button" class="pv-btn pv-sec pv-share-end" data-pv="share">' + ico(I.share) + '<span>' + esc(t('shareEnd')) + '</span></button>';
+  };
+
+  // ── 5. Le mot du vendeur ──
+  var liked = load('mot', false);
+  function renderMot() {
+    var box = $('pv-mot'); if (!box) return;
+    var m = PD.mot || {}, list = (Array.isArray(m[L()]) && m[L()].length ? m[L()] : m.fr) || [], libre = String(m.libre || '').trim();
+    if (!list.length && !libre) { box.style.display = 'none'; return; }
+    box.style.display = '';
+    box.innerHTML = '<div class="lbl">' + esc(t('motTitle')) + '</div>'
+      + (list.length ? '<ul class="pv-quote">' + list.map(function(x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '')
+      + (libre ? '<p class="pv-libre">« ' + esc(libre) + ' »</p>' : '')
+      + '<button type="button" class="pv-heart' + (liked ? ' on' : '') + '" data-pv="mot-like" aria-pressed="' + liked + '">' + ico(I.heart) + '<span>' + esc(liked ? t('motLiked') : t('motLike')) + '</span></button>'
+      + '<p class="pv-note pv-agent">' + esc(t('agentSees')) + '</p>';
+  }
+
+  function renderShareTop() { var b = $('pv-share-top'); if (b) b.innerHTML = ico(I.share) + '<span>' + esc(t('shareBtn')) + '</span>'; }
+  function renderAll() {
+    renderVisite(); renderCarnet(); renderCritBien(); renderMot(); renderShareTop();
+    if (lastCrush && lastCrush.el && document.body.contains(lastCrush.el)) window.pvCrushResult(lastCrush.el, lastCrush.ans, lastCrush.top);
+    var sh = $('pv-share-sheet'); if (sh && sh.classList.contains('open')) openShare();
+  }
+  window.renderParticipation = renderAll;
+
+  document.addEventListener('click', function(e) {
+    var b = e.target.closest('[data-pv]'); if (!b) { var sh0 = $('pv-share-sheet'); if (sh0 && e.target === sh0) sh0.classList.remove('open'); return; }
+    var a = b.getAttribute('data-pv'), id = b.getAttribute('data-id');
+    if (a === 'vis') {
+      var i = vis.sel.indexOf(id);
+      if (i !== -1) { vis.sel.splice(i, 1); visMsg = ''; } else if (vis.sel.length >= 3) visMsg = t('visMax'); else { vis.sel.push(id); visMsg = ''; }
+      save('visite', vis); renderVisite();
+    } else if (a === 'vis-send') {
+      if (!vis.sel.length) return;
+      if (track('visite_points', { k: vis.sel.slice(0, 3) })) { vis.sent = true; save('visite', vis); }
+      renderVisite();
+    } else if (a === 'chip') {
+      var j = car.c.indexOf(id); if (j !== -1) car.c.splice(j, 1); else car.c.push(id);
+      save('carnet', car); carMsg = ''; renderCarnet();
+    } else if (a === 'ph-del') {
+      photos.splice(parseInt(b.getAttribute('data-i'), 10), 1); save('photos', photos); renderCarnet();
+    } else if (a === 'car-share') {
+      var notes = ($('pv-notes') || {}).value || car.n || '';
+      if (!car.c.length && !notes.trim()) { carMsg = t('carEmpty'); renderCarnet(); return; }
+      var payload = { c: car.c.slice(0, 11), ph: photos.length };
+      if (notes.trim()) payload.n = notes.trim().slice(0, 500);
+      if (track('carnet_partage', payload)) {
+        car.shared = true; save('carnet', car); carMsg = t('carDone');
+        // Les coups de cœur pré-remplissent le retour de visite existant (liste fermée, 4 réponses au maximum)
+        var codes = ['coup_coeur']; car.c.forEach(function(c) { var r = RETOUR[c]; if (r && codes.indexOf(r) === -1) codes.push(r); });
+        try { if (window.vrPreselect) window.vrPreselect(codes.slice(0, 4)); } catch (x) {}
+        try { canSharePhotos = !!(photos.length && navigator.canShare && navigator.canShare({ files: photoFiles() })); } catch (x) { canSharePhotos = false; }
+      }
+      renderCarnet();
+    } else if (a === 'ph-share') {
+      try { navigator.share({ files: photoFiles(), title: t('carTitle'), text: (car.n || '') }).then(function() {}, function() {}); } catch (x) {}
+    } else if (a === 'share') { openShare();
+    } else if (a === 'sh-close') { var sh = $('pv-share-sheet'); if (sh) sh.classList.remove('open');
+    } else if (a === 'sh') { doShare(b.getAttribute('data-c'));
+    } else if (a === 'crit' || a === 'crit-ok') { chooseCrit(id);
+    } else if (a === 'mot-like') {
+      if (!liked && track('mot_vendeur_coeur')) { liked = true; save('mot', true); }
+      renderMot();
+    }
+  });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { var sh = $('pv-share-sheet'); if (sh) sh.classList.remove('open'); } });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderAll); else renderAll();
+})();
+</script>
 <script>
 // Retour de visite en un clic : réponses d'une liste fermée (jamais de texte libre), transmises à l'agent.
 (function() {
@@ -1590,6 +2547,12 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       sent = true; try { if (window.privencyTrack) window.privencyTrack('retour_visite'); } catch (e) {}
       render();
     }, function() { msg(T[L()].err, 'err'); }).then(function() { b.disabled = false; });
+  };
+  // Pré-sélection depuis le carnet de visite (coups de cœur partagés) : jamais au-delà de 4 réponses
+  window.vrPreselect = function(codes) {
+    if (sent) return;
+    (codes || []).forEach(function(c) { if (CODES.indexOf(c) !== -1 && sel.indexOf(c) === -1 && sel.length < 4) sel.push(c); });
+    render();
   };
   document.addEventListener('DOMContentLoaded', render);
   try { new MutationObserver(function() { render(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']}); } catch (e) {}
