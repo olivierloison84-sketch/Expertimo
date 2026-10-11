@@ -6587,6 +6587,87 @@ function _clVars(g) {
     coups: _clListe(((ca && ca.d.c) || []).map(function(x) { return _COUPS_LBL[x] || ''; }))
   };
 }
+// ── « Ce qu'il a fait sur la fiche » : uniquement ce que l'acquéreur a lui-même rempli ou envoyé, en toutes lettres ──
+// Libellés repris de la fiche (index.html) : points de visite, test « Crush ou crash ? ». Rien n'est déduit.
+var _VISITE_TXT = { bruit: 'Le bruit, fenêtres ouvertes et fermées', charges: 'Les charges de copropriété : ce qu\u2019elles comprennent', travaux_ag: 'Les travaux votés en assemblée générale', toiture: 'L\u2019état de la toiture',
+  voisinage: 'Le voisinage et le vis-à-vis', humidite: 'Les éventuelles traces d\u2019humidité', travaux: 'Les travaux à prévoir', fenetres: 'Les fenêtres et l\u2019isolation', chauffage: 'Le chauffage et son ancienneté',
+  electricite: 'L\u2019installation électrique', gaz: 'L\u2019installation de gaz', amiante: 'Les points du diagnostic amiante', parties_communes: 'L\u2019état des parties communes', facade: 'L\u2019état de la façade',
+  dpe: 'Le DPE : isolation et chauffage', lumiere: 'La luminosité, à différentes heures', rangements: 'Les rangements', etat_general: 'L\u2019état général : sols, murs, plafonds', environnement: 'Les abords du bien, à pied' };
+var _CRUSH_Q = ['weekend', 'quotidien', 'interieur', 'travaux', 'rangement', 'quartier', 'energie', 'avenir'];
+var _CRUSH_THEME = { weekend: 'Week-end idéal', quotidien: 'Au quotidien', interieur: 'À l\u2019intérieur', travaux: 'Les travaux', rangement: 'Le rangement', quartier: 'Le quartier', energie: 'L\u2019énergie', avenir: 'Dans 5 ans' };
+var _CRUSH_CHOIX = { weekend: ['Dehors', 'En cocon'], quotidien: ['Tout à pied', 'La voiture sans stress'], interieur: ['Lumineux et ouvert', 'Calme et intime'], travaux: ['Clés en main', 'J\u2019aime personnaliser'],
+  rangement: ['Beaucoup de place', 'Je vis léger'], quartier: ['Animé', 'Paisible'], energie: ['Un logement sobre', 'Peu importe'], avenir: ['J\u2019y suis toujours', 'Je garde la porte ouverte'] };
+var _CRUSH_VERIF = { bruit: 'Le bruit (environnement signalé comme bruyant)', vis_a_vis: 'Un vis-à-vis signalé', expo_nord: 'Exposition nord : la luminosité', rdc: 'Rez-de-chaussée : la luminosité', travaux: 'Des travaux signalés',
+  stationnement: 'Aucune place de stationnement indiquée', acces_pied: 'Peu de transports et de commerces à moins de 800 m', peu_commerces: 'Peu de commerces à proximité immédiate', dpe: 'Le DPE', mutation: 'Le secteur en mutation' };
+// Sujets de négociation repris tels quels : cases du retour de visite et notes du carnet qui en parlent
+var _NEGO_RETOUR = ['prix', 'travaux', 'charges'];
+var _NEGO_NOTE = /\bprix\b|\bcher\b|\bch[eè]re\b|\btravaux\b|r[ée]nov|\bcharges?\b/i;
+function _clCap(s) { s = String(s || ''); return s.charAt(0).toUpperCase() + s.slice(1); }
+function _clJour(at) { try { return at ? new Date(at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) : ''; } catch (e) { return ''; } }
+function _clReponses(a) {
+  a = String(a || '');
+  return a.length === 8 ? _CRUSH_Q.map(function(q, i) { return _CRUSH_THEME[q] + ' : ' + _CRUSH_CHOIX[q][a.charAt(i) === 'B' ? 1 : 0]; }) : [];
+}
+// Sections (titre, date, lignes), lignes « À aborder dans la négociation » et ce qui a été rempli (indicateur de la liste).
+// Une section n'existe que si l'acquéreur a réellement rempli quelque chose ; une ligne { note: true } est un texte libre, affiché en entier.
+function _clParticipation(g) {
+  var out = { sections: [], nego: [], rempli: [] };
+  var ca = _clLast(g, 'carnet_partage');
+  if (ca) {
+    var coups = (ca.d.c || []).map(function(x) { return _clCap(_COUPS_LBL[x] || ''); }).filter(Boolean);
+    var notes = typeof ca.d.n === 'string' ? ca.d.n.trim() : '', lc = [];
+    if (coups.length) lc.push('Coups de cœur : ' + coups.join(', '));
+    if (notes) lc.push({ note: true, lbl: 'Ses notes', txt: notes });
+    if (ca.d.ph > 0) lc.push(ca.d.ph + ' photo' + (ca.d.ph > 1 ? 's' : '') + ' dans son carnet (restées sur son téléphone, non transmises par la fiche)');
+    if (lc.length) { out.sections.push({ titre: 'Carnet de visite', at: ca.at, lignes: lc }); out.rempli.push('le carnet'); }
+    if (notes && _NEGO_NOTE.test(notes)) out.nego.push({ note: true, lbl: 'A écrit dans son carnet', txt: notes });
+  }
+  var vp = _clLast(g, 'visite_points');
+  var pts = vp ? (vp.d.k || []).map(function(x) { x = String(x); return /^vig\d*$/.test(x) ? 'Un point de vigilance signalé dans la fiche' : (_VISITE_TXT[x] || ''); }).filter(Boolean) : [];
+  if (pts.length) { out.sections.push({ titre: 'Points à vérifier en visite', at: vp.at, lignes: pts }); out.rempli.push('la visite'); }
+  var rts = (g.retours || []).filter(function(r) { return r && Array.isArray(r.reponses) && r.reponses.length; }).slice().sort(function(x, y) { return (y.at || '').localeCompare(x.at || ''); });
+  if (rts.length) {
+    out.sections.push({ titre: 'Retour de visite', at: rts[0].at, lignes: rts.map(function(r, i) { return (rts.length > 1 ? (i ? 'Précédent (' + _clJour(r.at) + ') : ' : 'Dernier : ') : '') + r.reponses.map(function(c) { return _RETOUR_LBL[c] || c; }).join(', '); }) });
+    out.rempli.push('le retour');
+    _NEGO_RETOUR.forEach(function(c) { if (rts.some(function(r) { return r.reponses.indexOf(c) !== -1; })) out.nego.push('A coché : ' + _RETOUR_LBL[c]); });
+  }
+  var cr = _clLast(g, 'critere_choisi');
+  if (cr && _CRITERE_LBL[cr.d.k]) { out.sections.push({ titre: 'Critère déterminant', at: cr.at, lignes: [_clCap(_CRITERE_LBL[cr.d.k])] }); out.rempli.push('le critère'); }
+  var ct = _clLast(g, 'crush_termine');
+  if (ct) {
+    var d = ct.d || {}, lt = [];
+    if (typeof d.s === 'number') lt.push('Résultat : ' + Math.round(d.s) + ' % de coup de cœur' + (d.m === 'duo' ? ' en commun (test à deux' + (typeof d.s1 === 'number' && typeof d.s2 === 'number' ? ' : ' + Math.round(d.s1) + ' % et ' + Math.round(d.s2) + ' %' : '') + ')' : ''));
+    if (typeof d.n === 'string' && d.n.trim()) lt.push('Prénom indiqué : ' + d.n.trim());
+    var plait = (d.c || []).map(function(q) { return _CRUSH_THEME[q] || ''; }).filter(Boolean);
+    if (plait.length) lt.push((d.m === 'duo' ? 'Ce qui les réunit' : 'Ce qui lui plaît ici') + ' : ' + plait.join(', '));
+    var verif = (d.w || []).map(function(k) { return _CRUSH_VERIF[k] || ''; }).filter(Boolean);
+    if (verif.length) lt.push('Points à vérifier selon le test : ' + verif.join(' ; '));
+    var r1 = _clReponses(d.a), r2 = _clReponses(d.a2);
+    if (r1.length) lt.push((d.m === 'duo' ? 'Réponses de la personne 1' : 'Ses réponses') + ' : ' + r1.join(' · '));
+    if (r2.length) lt.push('Réponses de la personne 2 : ' + r2.join(' · '));
+    if (lt.length) { out.sections.push({ titre: 'Test « ' + _CRUSH_NOM + ' »', at: ct.at, lignes: lt }); out.rempli.push('le test'); }
+  }
+  if (((g.events || {}).mot_vendeur_coeur || 0) > 0) out.sections.push({ titre: 'Mot du vendeur', at: (g.evAt || {}).mot_vendeur_coeur, lignes: ['A cliqué « Ça me parle »'] });
+  return out;
+}
+function _clLigneHtml(l) {
+  if (l && l.note) return '<li style="list-style:none;margin-left:-18px;"><span style="font-weight:600;">' + esc(l.lbl) + ' :</span><div style="margin-top:2px;padding:6px 10px;border-left:3px solid var(--border);background:#f8fafc;white-space:pre-wrap;overflow-wrap:anywhere;">' + esc(l.txt) + '</div></li>';
+  return '<li style="overflow-wrap:anywhere;">' + esc(l) + '</li>';
+}
+function clParticipationHtml(g) {
+  var p = _clParticipation(g), h = '';
+  if (p.nego.length) h += '<div class="cl-nego" role="note" style="margin-bottom:10px;padding:10px 12px;border-radius:var(--radius);background:#FFF8EC;border:1px solid #F1D9AE;color:#8A5A12;">'
+    + '<div style="font-weight:700;font-size:13.5px;">À aborder dans la négociation</div>'
+    + '<div style="font-size:11.5px;margin-top:2px;">Repris tel quel de ce que l\u2019acheteur a coché ou écrit.</div>'
+    + '<ul style="margin:6px 0 0;padding-left:18px;font-size:13px;line-height:1.5;color:#3d2a08;">' + p.nego.map(_clLigneHtml).join('') + '</ul></div>';
+  if (p.sections.length) h += '<div class="cl-fait" style="margin-bottom:10px;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);">'
+    + '<div style="font-weight:700;font-size:13.5px;">Ce qu\u2019il a fait sur la fiche</div>'
+    + p.sections.map(function(s) {
+        return '<div class="cl-fait-s" style="margin-top:8px;"><div style="font-size:12px;font-weight:700;color:#0A6F4D;">' + esc(s.titre) + (s.at ? ' <span style="font-weight:400;color:var(--muted);">· ' + esc(_clJour(s.at)) + '</span>' : '') + '</div>'
+          + '<ul style="margin:3px 0 0;padding-left:18px;font-size:13px;line-height:1.5;">' + s.lignes.map(_clLigneHtml).join('') + '</ul></div>';
+      }).join('') + '</div>';
+  return h;
+}
 // Angle suggéré : d'après ce que l'acquéreur a dit lui-même (retour de visite) ou envoyé explicitement à l'agent (offre, demande de documents) ; sinon aucun.
 // Jamais d'après ce qu'il a simplement lu ou simulé : le message ne doit pas trahir le suivi. L'agent peut choisir un autre angle.
 function clSuggestAngle(g) {
@@ -6749,14 +6830,6 @@ function renderAnalytics() {
         + '</ul></details>';
     }
 
-    if (g.retours && g.retours.length) {
-      qHtml += g.retours.slice().sort(function(x, y) { return (x.at || '').localeCompare(y.at || ''); }).map(function(rt) {
-        var d = ''; try { d = new Date(rt.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch (e) {}
-        return '<div style="margin-top:6px;font-size:12px;white-space:normal;">🗣️ <span style="font-weight:700;">Retour de visite</span> <span style="color:var(--muted);">' + esc(d) + '</span> : '
-          + rt.reponses.map(function(c) { return esc(_RETOUR_LBL[c] || c); }).join(', ') + '</div>';
-      }).join('');
-    }
-
     if (g.demandes && g.demandes.length) {
       qHtml += g.demandes.slice().sort(function(a, b) { return (a.at || '').localeCompare(b.at || ''); }).map(function(dm) {
         var d = ''; try { d = new Date(dm.at).toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}); } catch (e) {}
@@ -6769,6 +6842,7 @@ function renderAnalytics() {
     var why = bg0 ? '<div style="font-size:12.5px;margin-bottom:10px;line-height:1.5;white-space:normal;"><b>' + esc(bg0.label.split(' · ')[0]) + '</b> : ' + (bg0.silent ? 'sans ouverture depuis ' + bg0.st.days + ' jours. Dernière relance, ou passez à un autre acquéreur. ' : (bg0.st.days === 0 ? 'actif aujourd’hui : ' : 'dernière activité il y a ' + bg0.st.days + ' j : ')) + esc(bg0.st.reasons.join(' · ')) + '</div>' : '';
 
     var anon = ['', 'inconnu', 'anonyme'].indexOf((g.client || '').trim().toLowerCase()) !== -1;
+    var rempli = _clParticipation(g).rempli;
     var badgeHtml = bg0 ? '<span style="display:inline-block;margin-left:8px;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;color:#fff;background:' + bg0.color + ';white-space:nowrap;">' + esc(bg0.label) + '</span>' : '';
     tr.innerHTML =
       '<td style="padding:0;border-left:4px solid ' + (bg0 ? bg0.color : 'transparent') + ';">'
@@ -6777,6 +6851,7 @@ function renderAnalytics() {
       +   '<button type="button" class="cl-toggle" aria-expanded="false" onclick="toggleClientStats(this)" style="flex:1 1 220px;min-width:0;text-align:left;background:none;border:0;padding:0;cursor:pointer;font:inherit;color:inherit;">'
       +     '<span class="cl-arrow" style="display:inline-block;width:14px;color:var(--muted);">▸</span><span style="font-weight:700;font-size:14px;">' + esc(g.client) + '</span>' + badgeHtml
       +     '<div style="font-size:12px;color:var(--muted);margin-left:14px;white-space:normal;">' + esc(_clAddr(g.adresse) || g.adresse) + '</div>'
+      +     (rempli.length ? '<div class="cl-rempli" style="font-size:11.5px;color:#0A6F4D;margin-left:14px;white-space:normal;">✓ A rempli : ' + esc(rempli.join(' · ')) + '</div>' : '')
       +   '</button>'
       +   '<div style="font-size:12px;color:var(--muted);text-align:right;white-space:nowrap;">' + g.count + ' événement' + (g.count > 1 ? 's' : '') + (g.nbSessions ? ' · ' + esc(fmtDuree(g.dureeTotal)) : '') + '<br>' + esc(dateStr) + '</div>'
       +   (anon ? '' : '<button type="button" class="btn btn-sm btn-outline cl-msg" data-key="' + esc(g.key) + '" data-silent="' + (bg0 && bg0.silent ? '1' : '') + '" onclick="clMessageDialog(this.dataset.key, !!this.dataset.silent)">💬 Message adapté</button>')
@@ -6784,6 +6859,7 @@ function renderAnalytics() {
       + '</div>'
       + '<div class="cl-detail" hidden style="padding:4px 14px 14px 40px;white-space:normal;">'
       +   why
+      +   clParticipationHtml(g)
       +   '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">' + tiles + '</div>'
       +   '<div>' + evHtml + qHtml + '</div>'
       + '</div></td>';
