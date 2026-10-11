@@ -1468,6 +1468,17 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
   </div>
 </div>
+<!-- ── Le mot du vendeur (facultatif, proposé depuis les points forts) ── -->
+<div class="card" id="mot-vendeur-card">
+  <div class="card-header">💬 Le mot du vendeur <span style="font-weight:400;color:var(--muted);font-size:12px;">— facultatif, affiché en haut de la fiche acheteur</span></div>
+  <div class="card-body">
+    <p style="font-size:12.5px;color:var(--muted);margin:0 0 10px;">Phrases proposées automatiquement à partir des points forts. Décochez ou modifiez-les librement ; rien n'est obligatoire. Si rien n'est coché, le bloc n'apparaît pas.</p>
+    <div class="form-group" id="mv_row_1" style="display:none;"><label class="check-item" style="display:flex;gap:8px;align-items:flex-start;"><input type="checkbox" id="mv_on_1" checked style="margin-top:9px;"><input type="text" id="mv_txt_1" maxlength="240" style="flex:1;"><input type="hidden" id="mv_edit_1"><button type="button" class="btn btn-sm" title="Revenir à la phrase proposée" onclick="resetMotVendeurPhrase(1)" style="flex:none;">↺</button></label></div>
+    <div class="form-group" id="mv_row_2" style="display:none;"><label class="check-item" style="display:flex;gap:8px;align-items:flex-start;"><input type="checkbox" id="mv_on_2" checked style="margin-top:9px;"><input type="text" id="mv_txt_2" maxlength="240" style="flex:1;"><input type="hidden" id="mv_edit_2"><button type="button" class="btn btn-sm" title="Revenir à la phrase proposée" onclick="resetMotVendeurPhrase(2)" style="flex:none;">↺</button></label></div>
+    <div class="form-group" id="mv_row_3" style="display:none;"><label class="check-item" style="display:flex;gap:8px;align-items:flex-start;"><input type="checkbox" id="mv_on_3" checked style="margin-top:9px;"><input type="text" id="mv_txt_3" maxlength="240" style="flex:1;"><input type="hidden" id="mv_edit_3"><button type="button" class="btn btn-sm" title="Revenir à la phrase proposée" onclick="resetMotVendeurPhrase(3)" style="flex:none;">↺</button></label></div>
+    <div class="form-group"><label>Un mot libre du vendeur (facultatif)</label><textarea id="mv_libre" maxlength="400" style="min-height:50px" placeholder="Ex. : Nous avons vécu ici dix belles années…"></textarea></div>
+  </div>
+</div>
 
 <details open class="tier-recommande">
 <summary><span class="chevron">▸</span> 🟡 Informations recommandées</summary>
@@ -3990,6 +4001,12 @@ function injectData(html, d, dEn, dX) {
   crushJson = crushJson.replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
   html = html.replace(/(<script id="crush-data" type="application\/json">)[\s\S]*?(<\/script>)/, function(m, a, b) { return a + crushJson + b; });
 
+  // ── Participation acheteur (points de visite, coups de cœur du carnet, mot du vendeur) : générés depuis la fiche ──
+  var partJson = '{}';
+  try { partJson = JSON.stringify(buildParticipationData(d, dEn, dX)); } catch (e) { console.error('[buildParticipationData]', e); }
+  partJson = partJson.replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+  html = html.replace(/(<script id="participation-data" type="application\/json">)[\s\S]*?(<\/script>)/, function(m, a, b) { return a + partJson + b; });
+
   // ── PHASE 2 : DOM manipulation ──
   var doc = new DOMParser().parseFromString(html, 'text/html');
 
@@ -4796,6 +4813,7 @@ function initStep2() {
   document.getElementById('page-2').addEventListener('input',  function(){ scheduleDraftSave(); });
   document.getElementById('page-2').addEventListener('change', function(){ scheduleDraftSave(); });
   switchType('appart');
+  initMotVendeur();
 }
 
 // ═══════════════════════════════════════════════════════
@@ -4886,6 +4904,7 @@ function restoreRawFormState(d) {
     // réconciliée avec les champs URL, qui sont ce que la fiche publiée affichait.
     _photos=(d.photos||[]).filter(function(p){return p&&p.dataUrl&&!p.uploading;});
     syncPhotosFromUrlFields(true);
+    try { refreshMotVendeur(); } catch (e) {}
     if(d._pieces_table){
       var rows=document.querySelectorAll('#pieces_tbody tr');
       d._pieces_table.forEach(function(rowData,ri){
@@ -5025,6 +5044,7 @@ function collectBienData() {
     scoreQP:       getV('bien_score_qp'),
     scoreEtat:     getV('bien_score_etat'),
     fort1:getV('bien_fort1'), fort2:getV('bien_fort2'), fort3:getV('bien_fort3'),
+    motVendeur: readMotVendeur(),
     vig1: getV('bien_vig1'),  vig2: getV('bien_vig2'),  vig3: getV('bien_vig3'),
     photo1:photosFiche.photo1, photo2:photosFiche.photo2, photo3:photosFiche.photo3, photo4:photosFiche.photo4, photo5:photosFiche.photo5,
     photo6:photosFiche.photo6, photo7:photosFiche.photo7, photo8:photosFiche.photo8, photo9:photosFiche.photo9, photo10:photosFiche.photo10,
@@ -5237,6 +5257,156 @@ function scrubChatText(text, sensitiveValues) {
     out = out.replace(re, function(m, p1) { return p1 + '[information masquée]'; });
   });
   return out;
+}
+
+// ═══════════════════════════════════════════════════════
+// PARTICIPATION ACHETEUR — listes générées depuis la fiche (fonctions pures, testées par tests/participation.test.js)
+// ═══════════════════════════════════════════════════════
+// Points à vérifier pendant la visite (« Ma visite en 3 questions ») : codes traduits côté fiche.
+// src : { type, copro, sonore, charges, vigilances[], defauts[], diags[{key,status}], travauxAg, toitEtat, facadeEtat, voisinage, dpe, vigTxt:{fr:[],en:[],pt:[],es:[]} }
+var VISITE_GENERIQUES = ['lumiere', 'rangements', 'etat_general', 'environnement'];
+function visitePointsFrom(src) {
+  src = src || {};
+  var out = [], seen = {};
+  function add(k, v) { if (seen[k]) return; seen[k] = 1; out.push(v ? { k: k, v: v } : { k: k }); }
+  var vig = Array.isArray(src.vigilances) ? src.vigilances : [], def = Array.isArray(src.defauts) ? src.defauts : [];
+  function has(list, x) { return list.indexOf(x) !== -1; }
+  var diag = {}; (src.diags || []).forEach(function(x) { if (x && x.key) diag[x.key] = x.status; });
+  var mauvais = ['Moyen', 'À rénover'];
+  if (src.sonore === 'Bruyant' || has(vig, 'Nuisances sonores')) add('bruit');
+  if (src.copro && Number(src.charges) > 0) add('charges');
+  if (src.travauxAg === 'oui') add('travaux_ag');
+  if (has(vig, 'Toit / toiture à refaire') || has(mauvais, src.toitEtat)) add('toiture');
+  if (has(vig, 'Vis-à-vis direct') || has(vig, 'Litige de voisinage') || String(src.voisinage || '').trim()) add('voisinage');
+  if (has(vig, 'Humidité récurrente') || has(def, 'Moisissures') || has(def, 'Remontées capillaires') || has(def, "Dégâts d'eau")) add('humidite');
+  if (has(vig, 'Travaux importants à prévoir')) add('travaux');
+  if (has(vig, 'Fenêtres à changer') || has(vig, 'Isolation thermique insuffisante')) add('fenetres');
+  if (has(vig, 'Chauffage vétuste')) add('chauffage');
+  if (has(vig, 'Électricité à mettre aux normes') || diag.electricite === 'attention' || diag.electricite === 'defavorable') add('electricite');
+  if (diag.gaz === 'attention' || diag.gaz === 'defavorable') add('gaz');
+  if (diag.amiante === 'attention' || diag.amiante === 'defavorable' || has(def, 'Amiante')) add('amiante');
+  if (has(vig, 'Parties communes dégradées')) add('parties_communes');
+  if (has(mauvais, src.facadeEtat)) add('facade');
+  if (/^[EFG]$/.test(String(src.dpe || ''))) add('dpe', { l: String(src.dpe) });
+  // Vigilances écrites par l'agent (texte libre déjà publié dans la fiche, avec ses traductions)
+  var vt = src.vigTxt || {}, fr = Array.isArray(vt.fr) ? vt.fr : [];
+  fr.forEach(function(t, i) {
+    t = String(t || '').trim(); if (!t || out.length >= 8) return;
+    var v = { fr: t };
+    ['en', 'pt', 'es'].forEach(function(l) { var x = vt[l] && vt[l][i]; if (x && String(x).trim()) v[l] = String(x).trim(); });
+    out.push({ k: 'vig', v: v });
+  });
+  out = out.slice(0, 8);
+  // Toujours au moins 5 propositions : points universels de visite, jamais présentés comme un défaut du bien
+  VISITE_GENERIQUES.forEach(function(k) { if (out.length < 5) add(k); });
+  return out;
+}
+
+// Coups de cœur proposés dans le carnet de visite, adaptés au bien (codes traduits côté fiche).
+// src : { ext: {Jardin: 40, Vue: true…}, terrain, sonore, vigilances[], annexes[], equipCuisine[] }
+function carnetChipsFrom(src) {
+  src = src || {};
+  var ext = src.ext && typeof src.ext === 'object' ? Object.keys(src.ext) : [];
+  var vig = Array.isArray(src.vigilances) ? src.vigilances : [];
+  var out = ['lumiere', 'volumes', 'cuisine', 'salle_bain'];
+  if (src.sonore !== 'Bruyant' && vig.indexOf('Nuisances sonores') === -1) out.push('calme');
+  if (ext.some(function(k) { return /jardin|pelouse/i.test(k); }) || Number(src.terrain) > 0) out.push('jardin');
+  else if (ext.some(function(k) { return /terrasse|balcon|v[ée]randa/i.test(k); })) out.push('exterieur');
+  if (ext.some(function(k) { return /^vue$/i.test(k); })) out.push('vue');
+  if ((src.annexes || []).length) out.push('rangements');
+  out.push('etat', 'quartier');
+  return out;
+}
+
+// « Le mot du vendeur » : 3 phrases pré-écrites tirées des points forts (aucune saisie obligatoire).
+var MOT_VENDEUR_MODELES = {
+  fr: ['Ce que nous avons le plus aimé ici : {f}.', 'Ce qui va le plus nous manquer : {f}.', 'Notre petit plus préféré : {f}.'],
+  en: ['What we loved most here: {f}.', 'What we will miss the most: {f}.', 'Our favourite little extra: {f}.'],
+  pt: ['O que mais gostámos aqui: {f}.', 'O que mais vamos sentir falta: {f}.', 'O nosso pequeno extra preferido: {f}.'],
+  es: ['Lo que más nos ha gustado aquí: {f}.', 'Lo que más vamos a echar de menos: {f}.', 'Nuestro pequeño detalle favorito: {f}.']
+};
+function motVendeurPhrases(forts, lang) {
+  var M = MOT_VENDEUR_MODELES[lang] || MOT_VENDEUR_MODELES.fr;
+  return (forts || []).slice(0, 3).map(function(f, i) {
+    f = String(f || '').trim().replace(/[\s.;:!,]+$/, '');
+    if (!f) return '';
+    // minuscule initiale, sauf sigle ou nom propre en capitales (« DPE », « RER B »)
+    if (!/^[A-ZÀ-Ý]{2,}/.test(f)) f = f.charAt(0).toLowerCase() + f.slice(1);
+    return M[i].replace('{f}', f);
+  });
+}
+
+// Collecte depuis le formulaire (champs publics uniquement) → données du bloc #participation-data de la fiche.
+function buildParticipationData(d, dEn, dX) {
+  d = d || {}; dX = dX || {};
+  var page = document.getElementById('page-2');
+  function vis(el) { return !!el && (!page || page.contains(el)) && _chatVisible(el); }
+  function val(id) { var e = document.getElementById(id); return vis(e) ? String(e.value || '').trim() : ''; }
+  function ouiLabels(id) {
+    var c = document.getElementById(id), out = [];
+    if (!vis(c)) return out;
+    c.querySelectorAll('.defaut-item').forEach(function(it) {
+      var on = it.querySelector('input[type=radio][value="oui"]'), sp = it.querySelector('span');
+      if (on && on.checked && sp) out.push(sp.textContent.trim());
+    });
+    return out;
+  }
+  function radio(name) { var r = page ? page.querySelector('input[type=radio][name="' + name + '"]:checked') : null; return r && vis(r) ? r.value : null; }
+  function rating(name) { var b = page ? page.querySelector('.rating-badge.sel[data-name="' + name + '"]') : null; return b && vis(b) ? b.dataset.val : null; }
+  var crush = {}; try { crush = buildCrushData(d); } catch (e) {}
+  var vigTxt = { fr: [d.vig1, d.vig2, d.vig3] };
+  [['en', dEn], ['pt', dX.pt], ['es', dX.es]].forEach(function(p) { if (p[1]) vigTxt[p[0]] = [p[1].vig1, p[1].vig2, p[1].vig3]; });
+  var points = visitePointsFrom({
+    type: d.type, copro: radio('copro_statut') === 'oui',
+    sonore: crush.sonore, charges: d.chargesCopro, vigilances: crush.vigilances || [], defauts: ouiLabels('defauts_grid'),
+    diags: ['electricite', 'gaz', 'amiante'].map(function(k) { return { key: k, status: val('diag_' + k + '_status') }; }),
+    travauxAg: radio('travaux_ag'), toitEtat: rating('toit_etat'), facadeEtat: rating('facade_etat'), voisinage: val('voisinage'), dpe: d.dpe, vigTxt: vigTxt
+  });
+  var chips = carnetChipsFrom({ ext: crush.ext, terrain: crush.terrain, sonore: crush.sonore, vigilances: crush.vigilances, annexes: crush.annexes });
+  // Mot du vendeur : phrases cochées ; une phrase non modifiée est régénérée dans chaque langue avec le point fort traduit
+  var mv = d.motVendeur || { items: [], libre: '' }, mot = { fr: [], en: [], pt: [], es: [], libre: String(mv.libre || '').trim().slice(0, 400) };
+  var langs = { fr: d, en: dEn, pt: dX.pt, es: dX.es };
+  (mv.items || []).forEach(function(it) {
+    if (!it || !it.on || !String(it.txt || '').trim()) return;
+    Object.keys(langs).forEach(function(l) {
+      var src = langs[l];
+      if (it.auto && src) { var p = motVendeurPhrases([src.fort1, src.fort2, src.fort3], l)[it.n - 1]; mot[l].push(p || it.txt); }
+      else if (l === 'fr' || src) mot[l].push(String(it.txt).trim().slice(0, 240));
+    });
+  });
+  return { points: points, chips: chips, mot: mot };
+}
+
+// Étape 2 : lignes « Le mot du vendeur » (case cochée + phrase modifiable), proposées dès qu'un point fort est saisi.
+function readMotVendeur() {
+  var items = [];
+  for (var n = 1; n <= 3; n++) {
+    var cb = document.getElementById('mv_on_' + n), tx = document.getElementById('mv_txt_' + n), ed = document.getElementById('mv_edit_' + n);
+    if (!cb || !tx) continue;
+    items.push({ n: n, on: !!cb.checked, txt: tx.value.trim(), auto: !(ed && ed.value === '1') });
+  }
+  var lib = document.getElementById('mv_libre');
+  return { items: items, libre: lib ? lib.value.trim() : '' };
+}
+function refreshMotVendeur() {
+  for (var n = 1; n <= 3; n++) {
+    var tx = document.getElementById('mv_txt_' + n), ed = document.getElementById('mv_edit_' + n), row = document.getElementById('mv_row_' + n);
+    if (!tx) continue;
+    if (!ed || ed.value !== '1') tx.value = motVendeurPhrases([getV('bien_fort1'), getV('bien_fort2'), getV('bien_fort3')], 'fr')[n - 1] || '';
+    if (row) row.style.display = tx.value.trim() ? '' : 'none';
+  }
+}
+function initMotVendeur() {
+  [1, 2, 3].forEach(function(n) {
+    var f = document.getElementById('bien_fort' + n), tx = document.getElementById('mv_txt_' + n), ed = document.getElementById('mv_edit_' + n);
+    if (f) f.addEventListener('input', refreshMotVendeur);
+    if (tx) tx.addEventListener('input', function() { if (ed) ed.value = '1'; });
+  });
+  refreshMotVendeur();
+}
+function resetMotVendeurPhrase(n) {
+  var ed = document.getElementById('mv_edit_' + n); if (ed) ed.value = '';
+  refreshMotVendeur(); scheduleDraftSave();
 }
 
 // Données du test « Crush immobilier » : uniquement des champs déjà publics (ceux du contexte de l'assistant IA).
@@ -5943,11 +6113,13 @@ async function loadAnalytics() {
       g.count++; g.ids.push(row.id);
       if (!row.created_at || row.created_at > g.last) g.last = row.created_at;
       var ev = row.evenement || 'inconnu';
-      // Test « Crush immobilier » : un seul événement « crush_termine:{...} » (score, mode, critères, prénom éventuel)
-      if (ev.indexOf('crush_termine:') === 0) {
-        var cj = null; try { cj = JSON.parse(ev.slice(14)); } catch (e) {}
-        g.crush = g.crush || []; g.crush.push({ at: row.created_at || '', d: cj || {} });
-        ev = 'crush_termine';
+      // Événements de participation « nom:{...} » (test crush, carnet, partage…) : regroupés par nom, données gardées à part
+      var evm = /^([a-z_]+):(\{[\s\S]*\})$/.exec(ev);
+      if (evm) {
+        var cj = null; try { cj = JSON.parse(evm[2]); } catch (e) {}
+        ev = evm[1];
+        g.payloads = g.payloads || {}; (g.payloads[ev] = g.payloads[ev] || []).push({ at: row.created_at || '', d: cj || {} });
+        if (ev === 'crush_termine') { g.crush = g.crush || []; g.crush.push({ at: row.created_at || '', d: cj || {} }); }
       }
       g.events[ev] = (g.events[ev] || 0) + 1;
     });
@@ -6094,13 +6266,27 @@ function fmtAdresse(s) {
 
 /* Libellés lisibles pour Mes stats (au lieu des codes bruts « fiche_ouverte », « onglet_budget »…) */
 var _TAB_LBL = { bien: 'Le bien', marche: 'Ventes comparables', rentabilite: 'Simulateur investisseur', historique: 'Historique du bien', diagnostics: 'Diagnostics', budget: 'Financement et budget', financement: 'Financement et budget', quartier: 'Quartier et carte', documents: 'Documents', assistant: 'Assistant', offre: 'Faire une offre', crush: 'Le test (crush immobilier)' };
-var _EVT_LBL = { fiche_ouverte: 'Fiche ouverte', credit_simule: 'Financement simulé', offre_soumise: 'Offre transmise', documents_demandes: 'Documents demandés', retour_visite: 'Retour de visite', crush_termine: 'Test crush terminé', inconnu: 'Autre' };
+var _EVT_LBL = { fiche_ouverte: 'Fiche ouverte', credit_simule: 'Financement simulé', offre_soumise: 'Offre transmise', documents_demandes: 'Documents demandés', retour_visite: 'Retour de visite', crush_termine: 'Test crush terminé', visite_points: 'Points de visite choisis', carnet_partage: 'Carnet de visite partagé', fiche_partagee: 'Fiche partagée', ouverture_partage: 'Ouverture via lien partagé', critere_choisi: 'Critère déterminant choisi', mot_vendeur_coeur: '« Ça me parle » (mot du vendeur)', inconnu: 'Autre' };
 function _tabLabel(k) { k = String(k == null ? '' : k); return Object.prototype.hasOwnProperty.call(_TAB_LBL, k) ? _TAB_LBL[k] : (k.replace(/_/g, ' ').replace(/^./, function(c) { return c.toUpperCase(); })); }
 // « Test crush terminé (87 %) » : score du dernier test envoyé (à deux : score en commun).
 function _crushLabel(g) {
   var last = (g.crush || []).slice().sort(function(a, b) { return (b.at || '').localeCompare(a.at || ''); })[0];
   var sc = last && last.d && typeof last.d.s === 'number' ? Math.round(last.d.s) : null;
   return 'Test crush terminé' + (sc != null ? ' (' + sc + ' %' + (last.d.m === 'duo' ? ', à deux' : '') + ')' : '');
+}
+// Libellé lisible d'un événement de participation, d'après ses dernières données (jamais le code brut).
+var _VISITE_LBL = { bruit: 'bruit', charges: 'charges', travaux_ag: 'travaux votés', toiture: 'toiture', voisinage: 'voisinage', humidite: 'humidité', travaux: 'travaux', fenetres: 'fenêtres', chauffage: 'chauffage', electricite: 'électricité', gaz: 'gaz', amiante: 'amiante', parties_communes: 'parties communes', facade: 'façade', dpe: 'DPE', vig: 'point signalé', lumiere: 'luminosité', rangements: 'rangements', etat_general: 'état général', environnement: 'environnement' };
+var _CRITERE_LBL = { calme: 'le calme', lumiere: 'la lumière', transports: 'les transports', exterieur: 'l\u2019extérieur', energie: 'l\u2019énergie', quartier: 'le quartier' };
+var _CANAL_LBL = { whatsapp: 'WhatsApp', sms: 'SMS', email: 'e-mail', copie: 'lien copié', natif: 'partage du téléphone' };
+function _evtLabelFor(g, ev) {
+  if (ev === 'crush_termine') return _crushLabel(g);
+  var list = (g.payloads && g.payloads[ev]) || [];
+  var last = (list.slice().sort(function(a, b) { return (b.at || '').localeCompare(a.at || ''); })[0] || {}).d || {};
+  if (ev === 'visite_points') { var k = (last.k || []).map(function(x) { return _VISITE_LBL[String(x).replace(/\d+$/, '')] || null; }).filter(Boolean); return 'Points de visite' + (k.length ? ' : ' + k.join(', ') : ''); }
+  if (ev === 'carnet_partage') { var n = (last.c || []).length; return 'Carnet de visite partagé' + (n ? ' (' + n + ' coup' + (n > 1 ? 's' : '') + ' de cœur)' : ''); }
+  if (ev === 'fiche_partagee') return 'Fiche partagée' + (_CANAL_LBL[last.c] ? ' (' + _CANAL_LBL[last.c] + ')' : '');
+  if (ev === 'critere_choisi') return 'Critère déterminant' + (_CRITERE_LBL[last.k] ? ' : ' + _CRITERE_LBL[last.k] : '');
+  return _evtLabel(ev);
 }
 function _evtLabel(ev) {
   ev = String(ev == null ? '' : ev);
@@ -6272,7 +6458,7 @@ function renderAnalytics() {
       var col = '#0A6F4D';
       var bd2 = ev.startsWith('onglet') ? 'border:1px solid #A6E3C6;' : '';
       return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';' + bd2 + 'border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
-        + esc(ev === 'crush_termine' ? _crushLabel(g) : _evtLabel(ev)) + ' ×' + g.events[ev] + '</span>';
+        + esc(_evtLabelFor(g, ev)) + ' ×' + g.events[ev] + '</span>';
     }).join(' ');
 
     var topTab = Object.keys(g.onglets || {}).sort(function(a, b) { return g.onglets[b] - g.onglets[a]; })[0];
