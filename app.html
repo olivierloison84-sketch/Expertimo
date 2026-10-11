@@ -3983,6 +3983,13 @@ function injectData(html, d, dEn, dX) {
     html = html.replace('var _chat_ctx = "";', function() { return 'var _chat_ctx = ' + chatCtxJs + ';'; });
   }
 
+  // ── Données du test « Crush immobilier » (champs publics du formulaire, aucune nouvelle saisie) ──
+  // Remplacent les données de démonstration du gabarit ; un champ vide reste vide (le critère est alors ignoré).
+  var crushJson = '{}';
+  try { crushJson = JSON.stringify(buildCrushData(d)); } catch (e) { console.error('[buildCrushData]', e); }
+  crushJson = crushJson.replace(/</g, '\\u003c').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
+  html = html.replace(/(<script id="crush-data" type="application\/json">)[\s\S]*?(<\/script>)/, function(m, a, b) { return a + crushJson + b; });
+
   // ── PHASE 2 : DOM manipulation ──
   var doc = new DOMParser().parseFromString(html, 'text/html');
 
@@ -5232,6 +5239,51 @@ function scrubChatText(text, sensitiveValues) {
   return out;
 }
 
+// Données du test « Crush immobilier » : uniquement des champs déjà publics (ceux du contexte de l'assistant IA).
+// Jamais d'identité, de coordonnées, de prix ni de note interne. Un champ non renseigné vaut null (critère ignoré).
+function buildCrushData(d) {
+  d = d || {};
+  var page = document.getElementById('page-2');
+  function vis(el) { return !!el && (!page || page.contains(el)) && _chatVisible(el); }
+  function val(id) { var e = document.getElementById(id); return vis(e) ? String(e.value || '').trim() : ''; }
+  function numOrNull(x) { var n = parseFloat(String(x == null ? '' : x).replace(',', '.')); return isFinite(n) && n > 0 ? n : null; }
+  function ouiItems(id) {
+    var c = document.getElementById(id), out = [];
+    if (!vis(c)) return out;
+    c.querySelectorAll('.defaut-item').forEach(function(it) {
+      var on = it.querySelector('input[type=radio][value="oui"]');
+      if (!on || !on.checked) return;
+      var sp = it.querySelector('span'), m2 = it.querySelector('input[type=number]');
+      out.push({ label: sp ? sp.textContent.trim() : '', m2: m2 ? numOrNull(m2.value) : null });
+    });
+    return out;
+  }
+  function checkedVals(id) {
+    var c = document.getElementById(id);
+    if (!vis(c)) return [];
+    return Array.prototype.map.call(c.querySelectorAll('input:checked'), function(i) { return i.value; }).filter(function(v) { return v && v !== 'Autre'; });
+  }
+  var ext = {};
+  ouiItems('exterieur_grid').forEach(function(x) { if (x.label && x.label !== 'Portail') ext[x.label] = x.m2 || true; });
+  var son = page ? page.querySelector('input[type=radio][name="expo_sonore"]:checked') : null;
+  var pk = ['parking_int', 'parking_ext', 'parking_box'].map(val);
+  var parking = pk.some(function(v) { return v !== ''; }) ? pk.reduce(function(n, v) { return n + (parseInt(v, 10) || 0); }, 0) : null;
+  var dvfN = (d.dvf || []).filter(function(r) { return r && (r.prix > 0 || r.prixm2 > 0); }).length;
+  return {
+    type: d.type || null,
+    surface: numOrNull(d.surface), terrain: numOrNull(val('surface_terrain') || val('surface_terrain_m')),
+    pieces: parseInt(d.pieces, 10) || null, chambres: parseInt(val('nb_chambres'), 10) || null, etage: d.etage || null,
+    ext: ext, expo: checkedVals('exposition_group'), sonore: son && vis(son) ? son.value : null,
+    transports: checkedVals('transport_group'), parking: parking,
+    annexes: ouiItems('pieces_utiles_grid').map(function(x) { return x.label; }),
+    dpe: d.dpe || null, chauffage: checkedVals('chauf_energie_group'),
+    equip: ouiItems('equip_general_grid').map(function(x) { return x.label; }),
+    scores: { etat: numOrNull(d.scoreEtat), prest: numOrNull(d.scorePrest), secteur: numOrNull(d.scoreSecteur) },
+    vigilances: ouiItems('vigilances_grid').map(function(x) { return x.label; }),
+    dvf: { n: dvfN || null }
+  };
+}
+
 function buildChatContext(d) {
   var page = document.getElementById('page-2');
   if (!page) return '';
@@ -5891,6 +5943,12 @@ async function loadAnalytics() {
       g.count++; g.ids.push(row.id);
       if (!row.created_at || row.created_at > g.last) g.last = row.created_at;
       var ev = row.evenement || 'inconnu';
+      // Test « Crush immobilier » : un seul événement « crush_termine:{...} » (score, mode, critères, prénom éventuel)
+      if (ev.indexOf('crush_termine:') === 0) {
+        var cj = null; try { cj = JSON.parse(ev.slice(14)); } catch (e) {}
+        g.crush = g.crush || []; g.crush.push({ at: row.created_at || '', d: cj || {} });
+        ev = 'crush_termine';
+      }
       g.events[ev] = (g.events[ev] || 0) + 1;
     });
 
@@ -6035,9 +6093,15 @@ function fmtAdresse(s) {
 }
 
 /* Libellés lisibles pour Mes stats (au lieu des codes bruts « fiche_ouverte », « onglet_budget »…) */
-var _TAB_LBL = { bien: 'Le bien', marche: 'Ventes comparables', rentabilite: 'Simulateur investisseur', historique: 'Historique du bien', diagnostics: 'Diagnostics', budget: 'Financement et budget', financement: 'Financement et budget', quartier: 'Quartier et carte', documents: 'Documents', assistant: 'Assistant', offre: 'Faire une offre' };
-var _EVT_LBL = { fiche_ouverte: 'Fiche ouverte', credit_simule: 'Financement simulé', offre_soumise: 'Offre transmise', documents_demandes: 'Documents demandés', retour_visite: 'Retour de visite', inconnu: 'Autre' };
+var _TAB_LBL = { bien: 'Le bien', marche: 'Ventes comparables', rentabilite: 'Simulateur investisseur', historique: 'Historique du bien', diagnostics: 'Diagnostics', budget: 'Financement et budget', financement: 'Financement et budget', quartier: 'Quartier et carte', documents: 'Documents', assistant: 'Assistant', offre: 'Faire une offre', crush: 'Le test (crush immobilier)' };
+var _EVT_LBL = { fiche_ouverte: 'Fiche ouverte', credit_simule: 'Financement simulé', offre_soumise: 'Offre transmise', documents_demandes: 'Documents demandés', retour_visite: 'Retour de visite', crush_termine: 'Test crush terminé', inconnu: 'Autre' };
 function _tabLabel(k) { k = String(k == null ? '' : k); return Object.prototype.hasOwnProperty.call(_TAB_LBL, k) ? _TAB_LBL[k] : (k.replace(/_/g, ' ').replace(/^./, function(c) { return c.toUpperCase(); })); }
+// « Test crush terminé (87 %) » : score du dernier test envoyé (à deux : score en commun).
+function _crushLabel(g) {
+  var last = (g.crush || []).slice().sort(function(a, b) { return (b.at || '').localeCompare(a.at || ''); })[0];
+  var sc = last && last.d && typeof last.d.s === 'number' ? Math.round(last.d.s) : null;
+  return 'Test crush terminé' + (sc != null ? ' (' + sc + ' %' + (last.d.m === 'duo' ? ', à deux' : '') + ')' : '');
+}
 function _evtLabel(ev) {
   ev = String(ev == null ? '' : ev);
   if (Object.prototype.hasOwnProperty.call(_EVT_LBL, ev)) return _EVT_LBL[ev];
@@ -6208,7 +6272,7 @@ function renderAnalytics() {
       var col = '#0A6F4D';
       var bd2 = ev.startsWith('onglet') ? 'border:1px solid #A6E3C6;' : '';
       return '<span style="display:inline-block;background:' + bg + ';color:' + col + ';' + bd2 + 'border-radius:12px;padding:2px 8px;font-size:11px;font-weight:600;margin:1px;">'
-        + esc(_evtLabel(ev)) + ' ×' + g.events[ev] + '</span>';
+        + esc(ev === 'crush_termine' ? _crushLabel(g) : _evtLabel(ev)) + ' ×' + g.events[ev] + '</span>';
     }).join(' ');
 
     var topTab = Object.keys(g.onglets || {}).sort(function(a, b) { return g.onglets[b] - g.onglets[a]; })[0];
