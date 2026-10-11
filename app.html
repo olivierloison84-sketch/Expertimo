@@ -6356,7 +6356,7 @@ var _CL_ANGLES = {
   crush_duo: ['Test à deux : préparer la visite', 'Le test fait à deux montre que vous êtes d’accord sur l’essentiel, avec quelques points à en discuter. Je vous propose une visite à deux, pour que chacun se fasse son avis sur place, et je prépare des éléments sur les points où vos avis diffèrent.'],
   critere: ['Critère déterminant : adapter la suite', 'Vous avez indiqué que {critere} compte avant tout pour vous. C’est ce que je regarderai en priorité avec vous : je peux vous donner les éléments précis sur ce point et, si ce bien ne vous convient pas sur ce critère, vous proposer d’autres biens qui y répondent mieux.'],
   visite_points: ['Visite préparée : points à vérifier', 'Vous avez noté des points que vous souhaitez vérifier lors de la visite : {points}. Je les prépare : vous aurez les réponses et les documents correspondants, et nous les passerons en revue sur place.'],
-  carnet: ['Carnet partagé : seconde visite', 'Merci pour vos retours de visite. Ce qui vous a plu ({coups}) est un bon signe. Je vous propose une seconde visite pour revoir ces points et regarder à tête reposée ceux qui vous posent question.'],
+  carnet: ['Carnet partagé : seconde visite', 'Vos retours de visite sont précieux. Ce qui vous a plu ({coups}) est un bon signe. Je vous propose une seconde visite pour revoir ces points et regarder à tête reposée ceux qui vous posent question.'],
   coeur: ['Ça me parle : poursuivre', 'Les propriétaires tiennent à ce bien, et le mot qu’ils ont laissé semble vous avoir parlé. Je serais ravi de vous le faire visiter pour que vous puissiez juger par vous-même si vous vous y projetez.'],
   // Suggéré après un partage ou une ouverture via lien partagé, sans jamais le dire (ni ici, ni dans l'intro).
   partage: ['Visite à plusieurs', 'Si vous souhaitez venir à plusieurs, ou avec un proche, n’hésitez pas : je peux caler la visite sur les disponibilités de chacun, y compris en fin de journée ou le week-end.']
@@ -6376,12 +6376,23 @@ function _clCrushKey(d) {
   if (d.m === 'duo') return 'crush_duo';
   return (typeof d.s === 'number' && d.s >= 85 && !(d.w || []).length) ? 'crush_match' : 'crush_verifier';
 }
+// Points de visite en clair ; les vigilances écrites par l'agent (codes vig*) n'apparaissent qu'une fois :
+// « un point signalé dans la fiche » ou, s'il y en a plusieurs, « des points signalés dans la fiche ».
+function _clPoints(ks) {
+  var nVig = ks.filter(function(x) { return /^vig\d*$/.test(String(x)); }).length, out = [], vigDone = false;
+  ks.forEach(function(x) {
+    if (/^vig\d*$/.test(String(x))) {
+      if (!vigDone) { out.push(nVig > 1 ? 'des points signalés dans la fiche' : 'un point signalé dans la fiche'); vigDone = true; }
+    } else out.push(_VISITE_LBL[String(x)] || '');
+  });
+  return out;
+}
 // Variables des messages : critère, points de visite, coups de cœur (toujours d'après ce que l'acquéreur a envoyé).
 function _clVars(g) {
   var cr = _clLast(g, 'critere_choisi'), vp = _clLast(g, 'visite_points'), ca = _clLast(g, 'carnet_partage');
   return {
     critere: (cr && _CRITERE_LBL[cr.d.k]) || '',
-    points: _clListe(((vp && vp.d.k) || []).map(function(x) { return _VISITE_LBL[String(x).replace(/\d+$/, '')] || ''; })),
+    points: _clListe(_clPoints((vp && vp.d.k) || [])),
     coups: _clListe(((ca && ca.d.c) || []).map(function(x) { return _COUPS_LBL[x] || ''; }))
   };
 }

@@ -31,6 +31,7 @@ const rows = [
   // variables vides : la phrase reste correcte
   ouvre('Nora Vide'), row('Nora Vide', 'carnet_partage', 10, { c: [], ph: 1, n: 'Juste des notes' }),
   ouvre('Oscar Vide'), row('Oscar Vide', 'visite_points', 10, { k: [] }),
+  ouvre('Pia Vigs'), row('Pia Vigs', 'visite_points', 10, { k: ['vig0', 'toiture', 'vig2'] }),
   ouvre('Paul Rien'),
   // les retours de visite, l'offre et les documents restent prioritaires
   ouvre('Rose Offre'), row('Rose Offre', 'offre_soumise', 200), row('Rose Offre', 'crush_termine', 5, { v: 1, m: 'solo', s: 95, c: [], w: [], a: 'AAAAAAAA' }),
@@ -77,8 +78,8 @@ rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
     ['Carla Point', 'crush_verifier', INTRO_TEST, null],
     ['Denis Duo', 'crush_duo', INTRO_TEST, 'Le test fait à deux montre que vous êtes d’accord sur l’essentiel, avec quelques points à en discuter. Je vous propose une visite à deux, pour que chacun se fasse son avis sur place, et je prépare des éléments sur les points où vos avis diffèrent.'],
     ['Emma Critere', 'critere', INTRO_RETOURS, 'Vous avez indiqué que le calme compte avant tout pour vous. C’est ce que je regarderai en priorité avec vous : je peux vous donner les éléments précis sur ce point et, si ce bien ne vous convient pas sur ce critère, vous proposer d’autres biens qui y répondent mieux.'],
-    ['Fanny Visite', 'visite_points', INTRO_RETOURS, 'Vous avez noté des points que vous souhaitez vérifier lors de la visite : bruit, charges et point signalé. Je les prépare : vous aurez les réponses et les documents correspondants, et nous les passerons en revue sur place.'],
-    ['Gaspard Carnet', 'carnet', INTRO_RETOURS, 'Merci pour vos retours de visite. Ce qui vous a plu (lumière, salle de bains et jardin) est un bon signe. Je vous propose une seconde visite pour revoir ces points et regarder à tête reposée ceux qui vous posent question.'],
+    ['Fanny Visite', 'visite_points', INTRO_RETOURS, 'Vous avez noté des points que vous souhaitez vérifier lors de la visite : bruit, charges et un point signalé dans la fiche. Je les prépare : vous aurez les réponses et les documents correspondants, et nous les passerons en revue sur place.'],
+    ['Gaspard Carnet', 'carnet', INTRO_RETOURS, 'Vos retours de visite sont précieux. Ce qui vous a plu (lumière, salle de bains et jardin) est un bon signe. Je vous propose une seconde visite pour revoir ces points et regarder à tête reposée ceux qui vous posent question.'],
     ['Hugo Coeur', 'coeur', INTRO_RETOURS, 'Les propriétaires tiennent à ce bien, et le mot qu’ils ont laissé semble vous avoir parlé. Je serais ravi de vous le faire visiter pour que vous puissiez juger par vous-même si vous vous y projetez.'],
     ['Inès Partage', 'partage', INTRO_DEFAUT, 'Si vous souhaitez venir à plusieurs, ou avec un proche, n’hésitez pas : je peux caler la visite sur les disponibilités de chacun, y compris en fin de journée ou le week-end.'],
     ['Jules Ouvert', 'partage', INTRO_DEFAUT, null],
@@ -98,8 +99,11 @@ rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
     assert(!/[{}]/.test(m), name + ' : variable non remplacée');
   });
   // Variables vides : phrase correcte, sans parenthèse vide ni deux-points orphelin
-  assert(msg('Nora Vide').includes('Merci pour vos retours de visite. Ce qui vous a plu est un bon signe.'), msg('Nora Vide'));
+  assert(msg('Nora Vide').includes('Vos retours de visite sont précieux. Ce qui vous a plu est un bon signe.'), msg('Nora Vide'));
+  assert(!/Merci pour vos retours de visite/.test(w.clBuildMessage(G('Gaspard Carnet'), false, 'carnet')), 'carnet : plus de double remerciement');
   assert(msg('Oscar Vide').includes('vérifier lors de la visite. Je les prépare'), msg('Oscar Vide'));
+  assert(msg('Pia Vigs').includes('lors de la visite : des points signalés dans la fiche et toiture. Je les prépare'), msg('Pia Vigs'));
+  assert(!/point signalé\b(?! dans)/.test(msg('Fanny Visite')), 'plus de « point signalé » seul');
   assert(w.clBuildMessage(G('Paul Rien'), false, 'critere').includes('Vous avez indiqué que ce critère compte avant tout pour vous.'));
   // Tous les nouveaux angles sont dans la liste déroulante (avec leurs libellés)
   const LBL = { crush_match: 'Test : bon match, proposer une visite', crush_verifier: 'Test : lever les points à vérifier', crush_duo: 'Test à deux : préparer la visite', critere: 'Critère déterminant : adapter la suite',
