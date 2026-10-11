@@ -438,6 +438,13 @@ html,body{overflow-x:hidden;}
 @media(max-width:340px){#crush .cr-choices{grid-template-columns:1fr;}#crush .cr-choice{min-height:0;}}
 @media(min-width:701px){#crush .cr-actions{flex-direction:row;}#crush .cr-actions .cr-btn{flex:1;}}
 @media(prefers-reduced-motion:reduce){#crush .cr-ring-fg,#crush .cr-bar i,#crush .cr-choice{transition:none;}}
+/* Nom de l'onglet « Crush ou crash ? » : pictogrammes décoratifs (cœur, cœur brisé) dans la couleur du texte */
+.pv-cc{white-space:nowrap;}
+.pv-cc-i{display:inline-block;width:1.2em;height:1.2em;vertical-align:-.22em;margin-right:.18em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+#pv-bar.pv-bar-cc .ico{display:none;}
+#crush .lbl.cr-titre{font:800 18px var(--pv-display,var(--pv-font,'Work Sans',sans-serif));letter-spacing:0;text-transform:none;color:var(--ink)!important;margin:0 0 4px;}
+/* Ouverture via un lien partagé : aucun message de bienvenue nominatif */
+html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
 /* ═════════ PARTICIPATION ACHETEUR (ma visite, carnet, partage, critère, mot du vendeur) — couleurs du thème ═════════ */
 .pv-card .pv-sub,.pv-crit .pv-sub,#pv-share-sheet .pv-sub{display:block;font-size:13px;line-height:1.5;color:var(--muted);margin:4px 0 12px;}
 .pv-h{display:block;font-weight:700;font-size:13.5px;color:var(--ink);margin:14px 0 8px;}
@@ -536,7 +543,7 @@ body:not(.pv4) #crush .cr-ring-fg{stroke:var(--gold);}
 <nav class="rail" id="main-nav">
   <div class="rail-progress"><span id="rail-progress-count">1</span><span data-i18n="rail-progress-suffix"> / 9 sections explorées</span></div>
   <button class="active" data-tab="bien" onclick="showTab('bien',this)"><span class="rail-dot">🏠</span><span class="rail-label" data-i18n="tab-bien">Le Bien</span></button>
-  <button data-tab="crush" onclick="showTab('crush',this)"><span class="rail-dot">💘</span><span class="rail-label" data-i18n="tab-crush">Le test</span></button>
+  <button data-tab="crush" onclick="showTab('crush',this)"><span class="rail-dot">💘</span><span class="rail-label" data-i18n="tab-crush">Crush ou crash ?</span></button>
   <button data-tab="marche" onclick="showTab('marche',this)"><span class="rail-dot">📊</span><span class="rail-label" data-i18n="tab-marche">Ventes comparables</span></button>
   <button data-tab="historique" onclick="showTab('historique',this)"><span class="rail-dot">🏛️</span><span class="rail-label" data-i18n="tab-historique">Tout savoir sur ce bien</span></button>
   <button data-tab="diagnostics" onclick="showTab('diagnostics',this)"><span class="rail-dot">📋</span><span class="rail-label">Diagnostics</span></button>
@@ -599,7 +606,7 @@ body:not(.pv4) #crush .cr-ring-fg{stroke:var(--gold);}
 <div class="pg">
 <div>
   <div class="card">
-    <div class="lbl" data-i18n="lbl-crush">Crush immobilier</div>
+    <div class="lbl cr-titre" data-i18n="tab-crush">Crush ou crash ?</div>
     <h2 class="stitle" data-i18n="stitle-crush">Ce bien est-il fait pour vous ?</h2>
     <div id="crush-root" aria-live="polite"></div>
   </div>
@@ -2000,6 +2007,58 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
 <script id="crush-ui">
 // ═══ CRUSH IMMOBILIER : interface (accueil, 8 questions, résultat seul ou à deux, envoi à l'agent) ═══
 (function() {
+  // ── Nom de l'onglet (« Crush ou crash ? ») : une seule source, la traduction « tab-crush » ; pictogrammes décoratifs
+  //    (cœur devant « crush », cœur brisé devant « crash »), dans la couleur du texte. Partages et statistiques : texte seul.
+  var CC = {
+    crush: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+    crash: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/><path d="M12 7.4 10.4 10.6 13.2 12.8 11 16 12 20"/>'
+  };
+  function nomOnglet() {
+    var v = '';
+    try { if (typeof uiText === 'function') v = uiText('tab-crush', typeof _currentLang !== 'undefined' ? _currentLang : undefined) || ''; } catch (e) {}
+    if (!v) { var l = document.querySelector('#main-nav button[data-tab="crush"] .rail-label'); v = l ? l.textContent : ''; }
+    return String(v).replace(/\s+/g, ' ').trim();
+  }
+  function decorer(el) {
+    if (!el) return;
+    var txt = el.textContent.replace(/\s+/g, ' ').trim();
+    if (!txt || (el.getAttribute('data-cc') === txt && el.querySelector('svg'))) return;
+    el.textContent = '';
+    txt.split(/(crush|crash)/i).forEach(function(p) {
+      if (!p) return;
+      var k = p.toLowerCase();
+      if (k !== 'crush' && k !== 'crash') { el.appendChild(document.createTextNode(p)); return; }
+      var w = document.createElement('span'); w.className = 'pv-cc';
+      w.innerHTML = '<svg class="pv-cc-i" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + CC[k] + '</svg>';
+      w.appendChild(document.createTextNode(p)); el.appendChild(w);
+    });
+    el.setAttribute('data-cc', txt);
+  }
+  // Barre du nouveau design (titre de la section ouverte) : pictogrammes seulement sur cet onglet ; l'icône de section
+  // (déjà un cœur) y est masquée pour que le nom tienne en entier sur téléphone
+  function barre() {
+    var bar = document.getElementById('pv-bar'), b = bar && bar.querySelector('.ttl'); if (!b) return;
+    var nom = nomOnglet(), ouvert = !!document.querySelector('#crush.tab.active');
+    if (ouvert && nom && b.textContent.replace(/\s+/g, ' ').trim() !== nom && document.body.classList.contains('pv-tab')) b.textContent = nom;   // après un changement de langue
+    var on = !!nom && b.textContent.replace(/\s+/g, ' ').trim() === nom;
+    bar.classList.toggle('pv-bar-cc', on);
+    if (on) decorer(b);
+  }
+  function decorerTout() {
+    decorer(document.querySelector('#main-nav button[data-tab="crush"] .rail-label'));
+    decorer(document.querySelector('#crush .cr-titre'));
+    barre();
+  }
+  window.pvCrushNom = nomOnglet;
+  (function() {
+    var go = function() {
+      decorerTout();
+      var b = document.querySelector('#pv-bar .ttl');   // barre du nouveau design : réécrite à chaque changement d'onglet
+      if (b && window.MutationObserver) new MutationObserver(barre).observe(b, { childList: true, characterData: true, subtree: true });
+    };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else setTimeout(go, 0);
+  })();
+
   var root = document.getElementById('crush-root');
   if (!root || !window.PrivencyCrush) return;
   var C = window.PrivencyCrush, Q = C.QUESTIONS;
@@ -2308,21 +2367,24 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     var ex = root.querySelector('.cr-extra');
     if (ex && window.pvCrushResult) {
       var me = S.mode === 'duo' && S.guest ? 1 : 0;
-      window.pvCrushResult(ex, S.ans[me], C.score(S.ans[me], DATA).top, [S.names[me]]);
+      var sc = S.mode === 'duo' ? C.duo(S.ans[0], S.ans[1], DATA).commun : C.score(S.ans[0], DATA).score;
+      window.pvCrushResult(ex, S.ans[me], C.score(S.ans[me], DATA).top, [S.names[me]], { s: sc, m: S.mode === 'duo' ? 'duo' : 'solo' });
     }
   }
 
   // ── Lien pour la 2e personne : réponses de la 1re dans l'ancre (jamais envoyées au serveur) ──
   function shareUrl() {
     var a = Q.map(function(q) { return S.ans[0][q] || 'A'; }).join('');
-    return location.href.split('#')[0] + '#crush=1.' + a + '.' + encodeURIComponent(S.names[0] || '') + '.' + encodeURIComponent(S.names[1] || '');
+    var base = typeof window.pvLienPartage === 'function' ? window.pvLienPartage() : location.origin + location.pathname;
+    // jamais de point en fin de lien (les messageries le retirent du lien cliquable)
+    return (base + '#crush=1.' + a + '.' + encodeURIComponent(S.names[0] || '') + '.' + encodeURIComponent(S.names[1] || '')).replace(/\.+$/, '');
   }
   function readHash() {
-    var m = (location.hash || '').match(/^#crush=1\.([AB]{8})\.([^.]*)\.([^.]*)$/);
+    var m = (location.hash || '').match(/^#crush=1\.([AB]{8})(?:\.([^.]*)(?:\.([^.]*))?)?$/);
     if (!m) return false;
     reset(); S.mode = 'duo'; S.guest = true; S.step = 'guest'; S.who = 1;
     Q.forEach(function(q, i) { S.ans[0][q] = m[1].charAt(i); });
-    try { S.names = [decodeURIComponent(m[2]).slice(0, 30), decodeURIComponent(m[3]).slice(0, 30)]; } catch (e) {}
+    try { S.names = [decodeURIComponent(m[2] || '').slice(0, 30), decodeURIComponent(m[3] || '').slice(0, 30)]; } catch (e) {}
     return true;
   }
 
@@ -2378,7 +2440,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     var top = document.getElementById('crush'); if (top && act !== 'send' && top.getBoundingClientRect().top < 0) top.scrollIntoView({ block: 'start' });
   });
 
-  window.renderCrush = render;
+  window.renderCrush = function() { decorerTout(); render(); };
   if (readHash()) {
     render();
     var open = function() { var btn = document.querySelector('#main-nav button[data-tab="crush"]'); if (btn) btn.click(); };
@@ -2425,7 +2487,9 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       carPhotosSend: 'Envoyer aussi mes photos', carEmpty: 'Choisissez au moins un coup de cœur ou écrivez une note.', carFull: 'Le téléphone n\'a plus de place pour cette photo.',
       chip: { lumiere: 'Lumière', volumes: 'Volumes', cuisine: 'Cuisine', salle_bain: 'Salle de bains', calme: 'Calme', jardin: 'Jardin', exterieur: 'Extérieur', vue: 'Vue', rangements: 'Rangements', etat: 'État général', quartier: 'Quartier' },
       shareBtn: 'Partager', shareTitle: 'Partager à mon conjoint ou à un proche', shareSub: 'Message prêt à envoyer (vous pouvez le modifier) :', shareEnd: 'Partager à mon conjoint ou à un proche',
-      shareMsg: 'Regarde ce bien que j\'ai repéré, j\'aimerais avoir ton avis :', shareMsgCrush: 'Regarde ce bien que j\'ai repéré ! J\'ai fait le test « Ce bien est-il fait pour nous ? » : fais-le aussi et on comparera nos résultats.',
+      shareMsg: 'Regarde ce bien que j\'ai repéré ! Tu peux aussi faire le test « {tab} » sur la fiche (onglet « {tab} ») pour voir s\'il te correspond.',
+      shareMsgCrush: 'Regarde ce bien que j\'ai repéré ! J\'ai fait le test « {tab} » : {score} % de compatibilité. Fais-le aussi (onglet « {tab} » sur la fiche) et on comparera nos résultats.',
+      shareMsgDuo: 'Regarde ce bien que j\'ai repéré ! J\'ai fait le test « {tab} » : {score} % de compatibilité à deux. Fais-le aussi (onglet « {tab} » sur la fiche) et on comparera nos résultats.',
       shareSubject: 'Un bien à regarder ensemble', copy: 'Copier le lien', copied: 'Lien copié !', email: 'E-mail', close: 'Fermer',
       critTitle: 'Ce qui compte vraiment pour moi', critSub: 'Un seul choix : votre conseiller saura sur quoi insister.', critPre: 'Pré-sélectionné d\'après vos réponses au test.', critOk: 'C\'est bien ça', critDone: 'Noté, votre conseiller en tiendra compte.',
       crit: { calme: 'Le calme', lumiere: 'La lumière', transports: 'Les transports', exterieur: 'L\'extérieur', energie: 'L\'énergie', quartier: 'Le quartier' },
@@ -2445,7 +2509,9 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       carPhotosSend: 'Send my photos too', carEmpty: 'Choose at least one thing you loved or write a note.', carFull: 'Your phone has no room left for this photo.',
       chip: { lumiere: 'Light', volumes: 'Space', cuisine: 'Kitchen', salle_bain: 'Bathroom', calme: 'Quiet', jardin: 'Garden', exterieur: 'Outdoor space', vue: 'View', rangements: 'Storage', etat: 'Condition', quartier: 'Neighbourhood' },
       shareBtn: 'Share', shareTitle: 'Share with my partner or someone close', shareSub: 'Message ready to send (you can edit it):', shareEnd: 'Share with my partner or someone close',
-      shareMsg: 'Have a look at this property I found, I\'d love your opinion:', shareMsgCrush: 'Have a look at this property I found! I took the "Is this property right for us?" test: take it too and we\'ll compare our results.',
+      shareMsg: 'Have a look at this property I found! You can also take the "{tab}" test on the listing ("{tab}" tab) to see if it\'s right for you.',
+      shareMsgCrush: 'Have a look at this property I found! I took the "{tab}" test: {score}% compatibility. Take it too ("{tab}" tab on the listing) and we\'ll compare our results.',
+      shareMsgDuo: 'Have a look at this property I found! I took the "{tab}" test: {score}% compatibility for the two of us. Take it too ("{tab}" tab on the listing) and we\'ll compare our results.',
       shareSubject: 'A property to look at together', copy: 'Copy link', copied: 'Link copied!', email: 'Email', close: 'Close',
       critTitle: 'What really matters to me', critSub: 'Just one choice: your advisor will know what to focus on.', critPre: 'Pre-selected from your test answers.', critOk: 'That\'s right', critDone: 'Noted, your advisor will take it into account.',
       crit: { calme: 'Peace and quiet', lumiere: 'Light', transports: 'Transport', exterieur: 'Outdoor space', energie: 'Energy', quartier: 'The neighbourhood' },
@@ -2464,6 +2530,8 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   (function() {
     var s = (new URLSearchParams(location.search).get('s') || '').replace(/[^a-z0-9]/gi, '').slice(0, 12);
     if (!s) return;
+    // La personne qui ouvre le lien n'est pas l'acheteur : aucun prénom de bienvenue (ni celui du lien, ni celui de la fiche)
+    document.documentElement.classList.add('pv-partage');
     var mark = 'pv_open_' + s;
     try { if (sessionStorage.getItem(mark)) return; sessionStorage.setItem(mark, '1'); } catch (e) {}
     var go = function() { track('ouverture_partage', { s: s }); };
@@ -2543,14 +2611,19 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   // ── 3. Partager à mon conjoint ou à un proche ──
   function shareCode() { var c = load('share', ''); if (!c) { c = Math.random().toString(36).slice(2, 8); save('share', c); } return c; }
   function crushDone() { try { var x = JSON.parse(localStorage.getItem('pv_crush_' + location.pathname) || 'null'); return x && /^[AB]{8}$/.test(x.a) ? x : null; } catch (e) { return null; } }
+  // Lien partagé : la fiche + le code de suivi s= ; jamais client= ni aucun nom ou prénom (la personne qui l'ouvre a ses propres statistiques)
+  function lienPartage() { return location.origin + location.pathname + '?s=' + shareCode(); }
+  window.pvLienPartage = lienPartage;
   function shareUrl() {
-    var q = new URLSearchParams(location.search), out = new URLSearchParams();
-    if (q.get('client')) out.set('client', q.get('client'));   // même fiche, même suivi ; jamais le prénom d'accueil
-    out.set('s', shareCode());
     var cd = crushDone();
-    return location.origin + location.pathname + '?' + out.toString() + (cd ? '#crush=1.' + cd.a + '.' + encodeURIComponent(cd.n || '') + '.' : '');
+    return lienPartage() + (cd ? '#crush=1.' + cd.a : '');
   }
-  function shareText() { return (crushDone() ? t('shareMsgCrush') : t('shareMsg')) + '\n' + shareUrl(); }
+  // Message partagé : texte seul (nom de l'onglet lu dans les traductions, sans pictogramme), lien en dernier
+  function shareText() {
+    var cd = crushDone(), v = { tab: typeof window.pvCrushNom === 'function' ? window.pvCrushNom() : '' }, k = 'shareMsg';
+    if (cd && typeof cd.s === 'number' && isFinite(cd.s)) { v.score = Math.round(cd.s); k = cd.m === 'duo' ? 'shareMsgDuo' : 'shareMsgCrush'; }
+    return t(k, v) + ' ' + shareUrl();
+  }
   function openShare() {
     var sh = $('pv-share-sheet');
     if (!sh) { sh = document.createElement('div'); sh.id = 'pv-share-sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); document.body.appendChild(sh); }
@@ -2567,7 +2640,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   }
   function doShare(c) {
     var txtEl = $('pv-share-txt'), txt = txtEl ? txtEl.value : shareText(), url = shareUrl();
-    if (txt.indexOf(url) === -1) txt += '\n' + url;   // le lien est toujours présent, même si le message a été modifié
+    if (txt.indexOf(url) === -1) txt = txt.replace(/\s+$/, '') + ' ' + url;   // le lien est toujours présent (en dernier), même si le message a été modifié
     var e = encodeURIComponent(txt);
     if (c === 'whatsapp') window.open('https://wa.me/?text=' + e, '_blank', 'noopener');
     else if (c === 'sms') location.href = 'sms:?&body=' + e;
@@ -2606,10 +2679,12 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   }
   function renderCritBien() { var box = $('pv-critere'); if (box) box.innerHTML = critHTML(null); }
   var lastCrush = null;
-  // Appelé par l'onglet « Le test » à l'affichage d'un résultat : critère pré-sélectionné + partage
-  window.pvCrushResult = function(el, ans, top, names) {
-    lastCrush = { el: el, ans: ans, top: top };
-    try { localStorage.setItem('pv_crush_' + location.pathname, JSON.stringify({ a: ['weekend', 'quotidien', 'interieur', 'travaux', 'rangement', 'quartier', 'energie', 'avenir'].map(function(q) { return ans[q] === 'B' ? 'B' : 'A'; }).join(''), n: (names && names[0]) || '' })); } catch (e) {}
+  // Appelé par l'onglet « Crush ou crash ? » à l'affichage d'un résultat : critère pré-sélectionné + partage
+  window.pvCrushResult = function(el, ans, top, names, res) {
+    lastCrush = { el: el, ans: ans, top: top, res: res };
+    // Gardé sur l'appareil pour le message de partage : réponses, score, seul ou à deux (aucun prénom)
+    var r = res && typeof res.s === 'number' && isFinite(res.s) ? { s: Math.round(res.s), m: res.m === 'duo' ? 'duo' : 'solo' } : {};
+    try { localStorage.setItem('pv_crush_' + location.pathname, JSON.stringify({ a: ['weekend', 'quotidien', 'interieur', 'travaux', 'rangement', 'quartier', 'energie', 'avenir'].map(function(q) { return ans[q] === 'B' ? 'B' : 'A'; }).join(''), s: r.s, m: r.m })); } catch (e) {}
     if (!el) return;
     el.innerHTML = critHTML(critFromAnswers(ans, top)) + '<button type="button" class="pv-btn pv-sec pv-share-end" data-pv="share">' + ico(I.share) + '<span>' + esc(t('shareEnd')) + '</span></button>';
   };
@@ -2631,7 +2706,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   function renderShareTop() { var b = $('pv-share-top'); if (b) b.innerHTML = ico(I.share) + '<span>' + esc(t('shareBtn')) + '</span>'; }
   function renderAll() {
     renderVisite(); renderCarnet(); renderCritBien(); renderMot(); renderShareTop();
-    if (lastCrush && lastCrush.el && document.body.contains(lastCrush.el)) window.pvCrushResult(lastCrush.el, lastCrush.ans, lastCrush.top);
+    if (lastCrush && lastCrush.el && document.body.contains(lastCrush.el)) window.pvCrushResult(lastCrush.el, lastCrush.ans, lastCrush.top, null, lastCrush.res);
     var sh = $('pv-share-sheet'); if (sh && sh.classList.contains('open')) openShare();
   }
   window.renderParticipation = renderAll;
@@ -2886,8 +2961,7 @@ var I18N_STATIC = {
     'price-meta': "Frais d'agence inclus · Données temps réel",
     'rail-progress-suffix': ' / 9 sections explorées',
     'tab-bien': 'Le Bien',
-    'tab-crush': 'Le test',
-    'lbl-crush': 'Crush immobilier',
+    'tab-crush': 'Crush ou crash ?',
     'stitle-crush': 'Ce bien est-il fait pour vous ?',
     'tab-marche': 'Ventes comparables',
     'tab-historique': 'Tout savoir sur ce bien',
@@ -3008,8 +3082,7 @@ var I18N_STATIC = {
     'price-meta': 'Agency fees included · Real-time data',
     'rail-progress-suffix': ' / 9 sections explored',
     'tab-bien': 'The Property',
-    'tab-crush': 'The test',
-    'lbl-crush': 'Property crush',
+    'tab-crush': 'Crush or crash?',
     'stitle-crush': 'Is this property right for you?',
     'tab-marche': 'Comparable Sales',
     'tab-historique': 'Everything About This Property',
