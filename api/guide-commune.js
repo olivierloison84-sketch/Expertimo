@@ -34,7 +34,7 @@ const RUBRIQUES = [
 ];
 const ORDRE_CORRESPONDANCE = ['parcs', 'patrimoine', 'equipements', 'culture', 'transports', 'economie'];
 const MAX_CAR_RUBRIQUE = 3500, MAX_CAR_PRESENTATION = 2500;
-const MAX_CAR_TEXTE = 450, MAX_PHRASES = 4, MAX_CAR_EXTRAIT = 1500;
+const MAX_CAR_TEXTE = 450, MAX_PHRASES = 4;
 
 // Types DATAtourisme utiles par rubrique (noms de classes de l'ontologie)
 const DT_RUBRIQUE = [
@@ -121,6 +121,10 @@ function datesDt(o) {
 const DT_CATEGORIES = [[/Church|Chapel|ReligiousSite/i, 'édifice religieux'], [/Castle|Chateau/i, 'château'], [/Museum/i, 'musée'], [/Theater|Theatre/i, 'théâtre'],
   [/Cinema/i, 'cinéma'], [/Library/i, 'bibliothèque'], [/ParkAndGarden|Garden|Park\b/i, 'parc ou jardin'], [/NaturalHeritage/i, 'site naturel'], [/Monument|RemarkableBuilding/i, 'monument'],
   [/SportsAndLeisurePlace|Leisure/i, 'lieu de sport et de loisirs'], [/SwimmingPool/i, 'piscine'], [/CulturalSite/i, 'site culturel']];
+// Rubrique d'un lieu d'après sa catégorie : un lieu de sport ou de loisirs va dans « Culture et loisirs », jamais dans le patrimoine
+const DT_CAT_RUBRIQUE = { 'édifice religieux': 'patrimoine', 'château': 'patrimoine', 'monument': 'patrimoine', 'parc ou jardin': 'parcs', 'site naturel': 'parcs',
+  'musée': 'culture', 'théâtre': 'culture', 'cinéma': 'culture', 'bibliothèque': 'culture', 'lieu de sport et de loisirs': 'culture', 'piscine': 'culture', 'site culturel': 'culture' };
+const DT_LOISIR = /SportsAndLeisurePlace|Leisure|SwimmingPool|ThemePark|Farm|Playground|Sport/i;
 function categorieDt(types) {
   for (const [re, l] of DT_CATEGORIES) if (types.some(t => re.test(t))) return l;
   return types.filter(t => !/^(PointOfInterest|PlaceOfInterest|Thing)$/.test(t))[0] || '';
@@ -151,10 +155,11 @@ async function datatourisme(fetchFn, key, insee, aujourdhui) {
         if (fin && fin >= aujourdhui) evenements.push({ nom: nom.slice(0, 140), debut: (d.debut.sort()[0] || null), fin });
         continue;
       }
-      const r = DT_RUBRIQUE.find(([, re]) => ty.some(t => re.test(t)));
-      if (r) {
+      const cat = categorieDt(ty), loisir = ty.some(t => DT_LOISIR.test(t));
+      const cle = DT_CAT_RUBRIQUE[cat] || (DT_RUBRIQUE.find(([k, re]) => !(k === 'patrimoine' && loisir) && ty.some(t => re.test(t))) || [loisir ? 'culture' : null])[0];
+      if (cle) {
         // Seuls le nom et la catégorie renvoyés par l'API sont gardés : aucune description, aucun horaire
-        const l = (parRubrique[r[0]] = parRubrique[r[0]] || []), cat = categorieDt(ty);
+        const l = (parRubrique[cle] = parRubrique[cle] || []);
         if (l.length < 25 && !l.some(x => x.nom === nom)) l.push({ nom: nom.slice(0, 120), categorie: cat });
       }
     }
@@ -183,6 +188,14 @@ const SYSTEME = [
   '',
   'Ce qui compte pour un acheteur qui va habiter là, en priorité : transports (gare, lignes, routes), écoles (écoles, collège, lycée), commerces et équipements du quotidien, parcs, patrimoine.',
   '- Chaque rubrique : 3 ou 4 phrases courtes (une idée par phrase), 3 ou 4 faits utiles à l\'acheteur, 450 caractères au plus. Choisis les faits les plus utiles pour habiter, pas les plus anecdotiques.',
+  '- Distance utile et autorisée : une distance en kilomètres vers Paris, un aéroport ou une gare, si elle figure dans la source ; reprends-la telle quelle (ex. « à dix-neuf kilomètres au sud de Paris »).',
+  '- Écoles, commerces et équipements : cite d\'abord les écoles maternelles et élémentaires (primaires), le collège et le lycée présents dans la source, avec leur nom s\'il y figure ; jamais d\'effectifs ni d\'académie.',
+  '- Patrimoine : uniquement monuments, édifices religieux, châteaux et bâtiments anciens. Les lieux de loisirs ou de sport n\'y vont jamais (ils relèvent de « Culture et loisirs »).',
+  '- Une rubrique qui n\'a que des lieux DATAtourisme : une phrase simple qui les nomme suffit (ex. « Pour se promener : l\'Arboretum de Longjumeau, la plaine de Balizy et le parc Nativelle. »).',
+  '',
+  'Formulation : écris comme un guide pour un acheteur, pas comme une encyclopédie. Phrases simples : sujet, verbe, fait.',
+  '- Exemples : « L\'A6 et la RN20 contournent la commune » plutôt que « font office de frontières » ; « L\'église Saint-Martin est classée monument historique » plutôt que « Le monument d\'importance est… ».',
+  '- Jamais : « font office de », « d\'importance », « constitue », « doté(e) de », « à la croisée de », « parmi les lieux de… on trouve ».',
   '- Ton classique et sobre, sans formule lyrique ni publicitaire.',
   '- Si la source d\'une rubrique ne permet pas d\'écrire au moins une phrase fidèle, renvoie une chaîne vide "".',
   '- Pas de titre, pas de liste à puces, pas de mention de source (elles sont ajoutées à part).'
@@ -193,11 +206,11 @@ const SYSTEME = [
 // relation se retrouve dans la source de SA rubrique, et si l'essentiel de ses mots porteurs de sens y figure aussi.
 const norm = s => ' ' + sansAccent(s).replace(/[’'`]/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
 const DEBUTS = new Set('le la les l un une des du de d il elle ils elles on ce cette ces cet son sa ses leur leurs plusieurs au aux en a depuis dans sur par pour avec outre enfin ainsi entre apres avant chaque tous toutes tout la commune ville elle on situee situe construite construit proche cote parmi'.split(' '));
-const VIDES = new Set('dans pour avec sans sous entre leurs cette celle celui ceux elles sont etait etaient avait avaient aussi ainsi plus moins tres trop bien comme dont mais donc puis encore deja toute toutes tous plusieurs autres autre notamment egalement commune ville situee situe partie nombreux nombreuses compte comptent possede possedent dispose disposent propose proposent trouve trouvent quelques certains certaines depuis apres avant pendant aupres chacun chacune dont lequel laquelle lesquels lesquelles leur leurs notre votre celui-ci celle-ci figure figurent parmi lieux trouve trouvent comprend comprennent citons recense recensent culturel culturels culturelle culturelles loisirs sportifs sportives equipements espaces patrimoine'.split(' '));
+const VIDES = new Set('dans pour avec sans sous entre leurs cette celle celui ceux elles sont etait etaient avait avaient aussi ainsi plus moins tres trop bien comme dont mais donc puis encore deja toute toutes tous plusieurs autres autre notamment egalement commune ville situee situe partie nombreux nombreuses compte comptent possede possedent dispose disposent propose proposent trouve trouvent quelques certains certaines depuis apres avant pendant aupres chacun chacune dont lequel laquelle lesquels lesquelles leur leurs notre votre celui-ci celle-ci figure figurent parmi lieux trouve trouvent comprend comprennent citons recense recensent culturel culturels culturelle culturelles loisirs sportifs sportives equipements espaces patrimoine verts jardin jardins parc parcs naturel naturels naturelle naturelles site sites pour se'.split(' '));
 const RELATIONS = ['abrit', 'install', 'accueil', 'heberg', 'pres de', 'a proximite', 'proche de', 'travers', 'longe', 'borde', 'contourn', 'evite', 'dessert', 'desserv', 'relie', 'reliee', 'jouxt', 'au coeur', 'au nord', 'au sud', 'a l est', 'a l ouest', 'situe', 'traverse'];
 const PERIODES = ['chaque', 'tous les', 'toutes les', 'hebdomadaire', 'mensuel', 'annuel', 'quotidien', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche',
   'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre', 'matin', 'soir', 'week end'];
-const NOMBRES = ['deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'quinze', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'cent', 'cents', 'mille', 'dizaine', 'douzaine', 'centaine', 'premier', 'premiere', 'second', 'seconde'];
+const NOMBRES_APPROX = ['dizaine', 'douzaine', 'vingtaine', 'centaine', 'millier', 'premier', 'premiere', 'second', 'seconde'];
 // Faits qui vieillissent : jamais écrits, même s'ils sont dans la source
 const PERISSABLE = /tribunal|commissariat|gendarmerie|tresorerie|perception|sous prefecture|bureau de poste|horaire|ouvert(e|s)? (du|le|les|de|tous)|\bmarches?\b|festival|brocante|\bfetes?\b|\bsalons?\b|\bfoire|edition|carnaval|kermesse/;
 // Jamais écrits non plus : effectifs, nombres d'exploitations, capacités de salles, rattachement administratif, entreprises
@@ -206,13 +219,13 @@ const INTERDIT = [
   [/\b(effectifs?|salaries?|employes?|emplois?|agriculteurs?|actifs)\b/, 'effectif'],
   [new RegExp('\\b' + NB + ' (eleves|etudiants|inscrits|enfants|licencies|adherents)\\b'), 'effectif'],
   [/\bexploitations?\b/, 'nombre d\'exploitations'],
-  [new RegExp('\\b' + NB + ' (etablissements|commerces|entreprises|societes)\\b'), 'nombre d\'établissements'],
+  [new RegExp('\\b' + NB + ' (etablissements(?! scolaires)|commerces|entreprises|societes)\\b'), 'nombre d\'établissements'],
   [/\b(\d+ places|places assises|sieges|capacite|jauge|spectateurs)\b/, 'capacité de salle'],
   [/\b(academie|canton|cantonal|arrondissement|circonscription|chef lieu|rattachee?s?)\b/, 'rattachement administratif'],
   [/\b(siege|sieges sociaux|groupe(?! scolaire)|filiales?|usines?|enseignes?|multinationale|marques?)\b/, 'entreprise']
 ];
 // Écoles, commerces, économie : un nom propre doit désigner un lieu (« collège Paul-Langevin », « zone des Champs »), pas une marque
-const LIEU_AVANT = /^(ecole|ecoles|scolaire|college|lycee|creche|gymnase|stade|piscine|mediatheque|bibliotheque|conservatoire|centre|hopital|clinique|maison|gare|place|rue|avenue|boulevard|quartier|zone|zac|zi|za|parc|halle|salle|espace|complexe|cite|residence)$/;
+const LIEU_AVANT = /^(ecole|ecoles|scolaire|college|colleges|lycee|lycees|creche|creches|gymnase|gymnases|stade|stades|piscine|mediatheque|bibliotheque|conservatoire|centre|hopital|clinique|maison|gare|place|rue|avenue|boulevard|quartier|zone|zac|zi|za|parc|halle|salle|espace|complexe|cite|residence)$/;
 const COMMERCE_AVANT = /^(commercial|commerciale|hypermarche|supermarche|magasin|magasins|boutique|galerie|enseigne|marque)$/;
 function nomDeMarque(phrase, source, commune) {
   const mots = phrase.replace(/[«»"(),;:]/g, ' ').split(/\s+/).filter(Boolean), nC = norm(commune);
@@ -221,34 +234,65 @@ function nomDeMarque(phrase, source, commune) {
     if (!/^\p{Lu}/u.test(brut) || !n || nC.indexOf(' ' + n + ' ') !== -1) continue;
     if (i === 0 && (DEBUTS.has(n) || VIDES.has(n) || new RegExp('(^|[^\\p{L}])' + brut.toLowerCase() + '([^\\p{L}]|$)', 'u').test(source))) continue;   // mot courant en tête de phrase
     if (i > 0 && /^\p{Lu}/u.test(mots[i - 1].replace(/^[^\p{L}]+/u, '')) && i - 1 > 0) continue;   // suite d'un nom déjà examiné (« Paul Langevin »)
-    const avant = mots.slice(Math.max(0, i - 4), i).map(m => norm(m).trim());
-    if (avant.some(m => COMMERCE_AVANT.test(m))) return brut;
-    if (avant.some(m => LIEU_AVANT.test(m))) continue;
+    const avant = mots.slice(Math.max(0, i - 4), i).map(m => norm(m).trim()), debut = mots.slice(0, i).map(m => norm(m).trim());
+    if (avant.some(m => COMMERCE_AVANT.test(m))) return brut;   // « magasin Intersport », « centre commercial Carrefour »
+    if (debut.some(m => LIEU_AVANT.test(m))) continue;   // « les lycées Jacques-Prévert (…) et Jean-Perrin »
     return brut;
   }
   return null;
 }
+// Nombres écrits en chiffres ou en lettres (« 19 » = « dix-neuf ») : renvoie l'ensemble des valeurs
+const NB_UNITES = { zero: 0, deux: 2, trois: 3, quatre: 4, cinq: 5, six: 6, sept: 7, huit: 8, neuf: 9, dix: 10, onze: 11, douze: 12, treize: 13, quatorze: 14, quinze: 15, seize: 16 };
+const NB_DIZAINES = { vingt: 20, vingts: 20, trente: 30, quarante: 40, cinquante: 50, soixante: 60 };
+function valeursNombres(texte) {
+  const out = new Set((String(texte || '').match(/\d[\d  .,]*\d|\d/g) || []).map(x => x.replace(/[^\d]/g, '')));
+  const t = norm(texte).trim().split(' ');
+  const estNb = w => w in NB_UNITES || w in NB_DIZAINES || w === 'cent' || w === 'cents' || w === 'mille';
+  for (let i = 0; i < t.length; i++) {
+    if (!estNb(t[i])) continue;
+    let total = 0, cur = 0, j = i;
+    for (; j < t.length; j++) {
+      const w = t[j];
+      if (w === 'et' && (t[j + 1] === 'un' || t[j + 1] === 'une' || t[j + 1] === 'onze') && j > i) continue;
+      if ((w === 'un' || w === 'une') && t[j - 1] === 'et') { cur += 1; continue; }
+      if (w in NB_UNITES) cur += NB_UNITES[w];
+      else if (w in NB_DIZAINES) cur = (NB_DIZAINES[w] === 20 && cur > 0 && cur < 10) ? cur * 20 : cur + NB_DIZAINES[w];   // quatre-vingt
+      else if (w === 'cent' || w === 'cents') cur = (cur || 1) * 100;
+      else if (w === 'mille') { total += (cur || 1) * 1000; cur = 0; }
+      else break;
+    }
+    out.add(String(total + cur)); i = j - 1;
+  }
+  return out;
+}
+// Relations équivalentes : « contournent la commune » quand la source parle de frontière ou de limite
+const RELATIONS_EQUIV = { contourn: ['contourn', 'frontiere', 'limite', 'borde', 'longe', 'evite'], longe: ['longe', 'frontiere', 'limite', 'borde', 'contourn'], borde: ['borde', 'frontiere', 'limite', 'longe', 'contourn'] };
+// Tournures d'encyclopédie, jamais écrites dans un guide pour acheteur
+const FORMULES = /font office de|faisant office de|fait office de|d importance est|le monument d importance|a la croisee d|parmi les lieux de/;
+// Patrimoine : jamais de lieux de loisirs ou de sport
+const PAS_PATRIMOINE = /loisirs?|sporti|\bsports?\b|ferme pedagogique|ludotheque|piscine|\bstades?\b|gymnase|aire de jeux/;
 function verifierPhrase(phrase, source, cle, commune) {
   const nS = norm(source), nP = norm(phrase), dans = m => nS.indexOf(' ' + m.trim() + ' ') !== -1;
   if (PERISSABLE.test(nP)) return { ok: false, motif: 'fait qui vieillit' };
+  if (FORMULES.test(nP)) return { ok: false, motif: 'formulation d\'encyclopédie' };
+  if (cle === 'patrimoine' && PAS_PATRIMOINE.test(nP)) return { ok: false, motif: 'lieu de loisirs hors du patrimoine' };
   for (const [re, motif] of INTERDIT) if (re.test(nP)) return { ok: false, motif };
   if (cle === 'equipements' || cle === 'economie') { const m = nomDeMarque(phrase, source, commune || ''); if (m) return { ok: false, motif: 'nom d\'entreprise ou de marque : ' + m }; }
-  // nombres et années (chiffres)
-  const chiffres = (phrase.match(/\d[\d  .,]*\d|\d/g) || []).map(x => x.replace(/[^\d]/g, ''));
-  const chiffresSource = new Set((source.match(/\d[\d  .,]*\d|\d/g) || []).map(x => x.replace(/[^\d]/g, '')));
-  for (const c of chiffres) if (!chiffresSource.has(c)) return { ok: false, motif: 'nombre absent de la source : ' + c };
+  // nombres, années, distances : en chiffres ou en lettres, la valeur doit être dans la source
+  const valeursSource = valeursNombres(source);
+  for (const c of valeursNombres(phrase)) if (!valeursSource.has(c)) return { ok: false, motif: 'nombre absent de la source : ' + c };
   // siècles en chiffres romains (XIIIe, XVIIIe…)
   for (const m of phrase.match(/\b[IVX]{1,5}(?=(e|er|ème|eme)\b)/g) || []) if (!new RegExp('\\b' + m + '(e|er|ème|eme)\\b').test(source)) return { ok: false, motif: 'siècle absent de la source : ' + m };   // siècles I à XXI
   // nombres en lettres, périodicité, relations
-  for (const w of NOMBRES) if (dans(w) === false && nP.indexOf(' ' + w + ' ') !== -1) return { ok: false, motif: 'nombre en lettres absent : ' + w };
+  for (const w of NOMBRES_APPROX) if (dans(w) === false && nP.indexOf(' ' + w + ' ') !== -1) return { ok: false, motif: 'nombre en lettres absent : ' + w };
   for (const w of PERIODES) if (nP.indexOf(' ' + w + ' ') !== -1 && !dans(w)) return { ok: false, motif: 'périodicité absente : ' + w };
-  for (const w of RELATIONS) if (nP.indexOf(' ' + w) !== -1 && nS.indexOf(' ' + w) === -1) return { ok: false, motif: 'relation absente de la source : ' + w };
+  for (const w of RELATIONS) if (nP.indexOf(' ' + w) !== -1 && !(RELATIONS_EQUIV[w] || [w]).some(x => nS.indexOf(' ' + x) !== -1)) return { ok: false, motif: 'relation absente de la source : ' + w };
   // noms propres (mots à majuscule, sigles, A6 / RN20…)
   const mots = phrase.replace(/[«»"()]/g, ' ').split(/\s+/).filter(Boolean);
   for (let i = 0; i < mots.length; i++) {
     const brut = mots[i].replace(/^[^\p{L}\d]+|[^\p{L}\d]+$/gu, '');
     if (!/^\p{Lu}/u.test(brut) && !/^\p{L}+\d+$/u.test(brut)) continue;
-    const parts = norm(brut).trim().split(' ').filter(x => x.length > 1 && !DEBUTS.has(x));   // « La », « Le »… en tête de phrase ignorés
+    const parts = norm(brut).trim().split(' ').filter(x => x.length > 1 && !DEBUTS.has(x) && !(i === 0 && VIDES.has(x)));   // « La », « Les », « Espaces »… en tête de phrase ignorés
     for (const x of parts) if (!dans(x)) return { ok: false, motif: 'nom propre absent de la source : ' + brut };
   }
   // mots porteurs de sens : l'essentiel doit venir de la source (racines de 5 lettres)
@@ -264,42 +308,91 @@ function textesSource(entree) {
   return [entree.wikipedia || ''].concat((entree.datatourisme || []).map(x => x.nom + ' ' + (x.categorie || ''))).join('\n');
 }
 const decouper = t => (String(t || '').replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]*/g) || []).map(x => x.trim()).filter(Boolean);
-// Garde les seules phrases fidèles ; renvoie le texte, les phrases gardées et les phrases retirées (avec le motif)
-function filtrerFidele(texte, source, commune, cle) {
-  const src = String(source || '') + '\n' + (commune || '');
-  const gardees = [], retirees = [];
-  for (const p of decouper(texte)) { const v = verifierPhrase(p, src, cle, commune); if (v.ok) gardees.push(p); else retirees.push({ phrase: p, motif: v.motif }); }
-  return { texte: gardees.join(' ').trim(), gardees, retirees };
+// Passages candidats d'une rubrique, recopiés tels quels : phrases de Wikipédia, lieux DATAtourisme « nom (catégorie) »
+function passagesCandidats(entree) {
+  const out = [];
+  String(entree.wikipedia || '').split(/\n+/).forEach(par => decouper(par).forEach(ph => { if (ph.length > 15 && out.indexOf(ph) === -1) out.push(ph); }));
+  (entree.datatourisme || []).forEach(x => out.push(x.nom + (x.categorie ? ' (' + x.categorie + ')' : '')));
+  return out;
 }
-// Format : MAX_PHRASES phrases au plus, MAX_CAR_TEXTE caractères au plus, en phrases entières
-function formater(phrases) {
+// Passages de la source qui portent une phrase : ensemble (3 au plus) qui contient tous ses noms propres, nombres et
+// siècles, et l'essentiel de ses mots porteurs de sens. null si aucun : la phrase n'est pas publiée.
+function passagesPour(phrase, candidats, source, commune) {
+  const nC = norm(commune || ''), cles = new Set(), nombres = valeursNombres(phrase);
+  const mots = phrase.replace(/[«»"()]/g, ' ').split(/\s+/).filter(Boolean);
+  mots.forEach((m, i) => {
+    const brut = m.replace(/^[^\p{L}\d]+|[^\p{L}\d]+$/gu, '');
+    if (!/^\p{Lu}/u.test(brut) && !/^\p{L}+\d+$/u.test(brut)) return;
+    if (i === 0 && new RegExp('(^|[^\\p{L}])' + brut.toLowerCase().replace(/[^\p{L}\d]/gu, '.') + '([^\\p{L}]|$)', 'u').test(source)) return;   // mot courant en tête de phrase
+    norm(brut).trim().split(' ').filter(x => x.length > 1 && !DEBUTS.has(x) && !VIDES.has(x) && nC.indexOf(' ' + x + ' ') === -1).forEach(x => cles.add(x));
+  });
+  const racines = [...new Set(norm(phrase).trim().split(' ').filter(x => x.length >= 5 && !VIDES.has(x) && nC.indexOf(' ' + x + ' ') === -1).map(x => x.slice(0, 5)))];
+  const info = candidats.map(c => { const n = norm(c); return { c, n, nb: valeursNombres(c), r: new Set(n.trim().split(' ').filter(x => x.length >= 5).map(x => x.slice(0, 5))) }; });
+  const choisis = [], resteCles = new Set(cles), resteNb = new Set(nombres), resteR = new Set(racines);
+  const besoinR = () => racines.length && (racines.length - resteR.size) / racines.length < 0.6;
+  while ((resteCles.size || resteNb.size || besoinR() || !choisis.length) && choisis.length < 3) {
+    let meilleur = null, score = 0;
+    for (const x of info) {
+      if (choisis.indexOf(x) !== -1) continue;
+      let k = 0;
+      resteCles.forEach(c => { if (x.n.indexOf(' ' + c + ' ') !== -1) k += 3; });
+      resteNb.forEach(v => { if (x.nb.has(v)) k += 3; });
+      resteR.forEach(r => { if (x.r.has(r)) k += 1; });
+      if (k > score) { score = k; meilleur = x; }
+    }
+    if (!meilleur) break;
+    choisis.push(meilleur);
+    [...resteCles].forEach(c => { if (meilleur.n.indexOf(' ' + c + ' ') !== -1) resteCles.delete(c); });
+    [...resteNb].forEach(v => { if (meilleur.nb.has(v)) resteNb.delete(v); });
+    [...resteR].forEach(r => { if (meilleur.r.has(r)) resteR.delete(r); });
+  }
+  if (!choisis.length || resteCles.size || resteNb.size || besoinR()) return null;
+  return choisis.map(x => x.c);
+}
+// Garde les seules phrases fidèles ; renvoie le texte, les phrases gardées (et leurs passages si les candidats sont
+// fournis : une phrase sans passage correspondant est alors retirée) et les phrases retirées (avec le motif)
+function filtrerFidele(texte, source, commune, cle, candidats) {
+  const src = String(source || '') + '\n' + (commune || '');
+  const gardees = [], passages = [], retirees = [];
+  for (const p of decouper(texte)) {
+    const v = verifierPhrase(p, src, cle, commune);
+    if (!v.ok) { retirees.push({ phrase: p, motif: v.motif }); continue; }
+    if (candidats) {
+      const pa = passagesPour(p, candidats, src, commune);
+      if (!pa) { retirees.push({ phrase: p, motif: 'aucun passage correspondant dans la source' }); continue; }
+      passages.push(pa);
+    }
+    gardees.push(p);
+  }
+  return { texte: gardees.join(' ').trim(), gardees, passages, retirees };
+}
+// Format : MAX_PHRASES phrases au plus, MAX_CAR_TEXTE caractères au plus, en phrases entières (renvoie les indices gardés)
+function formaterIndices(phrases) {
   const out = []; let n = 0;
-  for (const p of phrases) {
-    if (out.length >= MAX_PHRASES || n + (n ? 1 : 0) + p.length > MAX_CAR_TEXTE) break;
-    out.push(p); n += (n ? 1 : 0) + p.length;
+  for (let i = 0; i < phrases.length; i++) {
+    const p = phrases[i];
+    if (out.length >= MAX_PHRASES) break;
+    if (n + (n ? 1 : 0) + p.length > MAX_CAR_TEXTE) continue;   // trop longue : la suivante peut tenir
+    out.push(i); n += (n ? 1 : 0) + p.length;
   }
   return out;
 }
-// Extrait exact de la source : pour chaque phrase gardée, la phrase de Wikipédia qui la porte le plus (recopiée telle
-// quelle) et les lieux DATAtourisme qu'elle cite (« nom (catégorie) »). Sert à l'agent pour contrôler le texte.
-function extraitSource(phrases, entree) {
-  const racines = t => new Set(norm(t).trim().split(' ').filter(x => x.length >= 4 && !VIDES.has(x)).map(x => x.slice(0, 5)));
-  const candidates = [];
-  String(entree.wikipedia || '').split(/\n+/).forEach(par => decouper(par).forEach(ph => { if (ph.length > 15 && /[.!?]$/.test(ph)) candidates.push(ph); }));
-  const morceaux = [];
-  for (const p of phrases) {
-    const rp = racines(p); let meilleure = null, score = 0;
-    for (const c of candidates) { let k = 0; for (const r of racines(c)) if (rp.has(r)) k++; if (k > score) { score = k; meilleure = c; } }
-    if (meilleure && score >= 2 && morceaux.indexOf(meilleure) === -1) morceaux.push(meilleure);
-    const nP = norm(p);
-    for (const x of entree.datatourisme || []) {
-      const l = x.nom + (x.categorie ? ' (' + x.categorie + ')' : '');
-      if (nP.indexOf(norm(x.nom)) !== -1 && morceaux.indexOf(l) === -1) morceaux.push(l);
-    }
-  }
-  let ex = morceaux.map(m => '« ' + m + ' »').join('\n');
-  if (ex.length > MAX_CAR_EXTRAIT) ex = ex.slice(0, MAX_CAR_EXTRAIT - 1).replace(/\s+\S*$/, '') + '…';
-  return ex;
+const formater = phrases => formaterIndices(phrases).map(i => phrases[i]);
+// Extrait enregistré : TOUS les passages des phrases publiées, recopiés tels quels, sans coupure
+function extraitDe(passages) {
+  const vus = [];
+  passages.forEach(l => l.forEach(m => { if (vus.indexOf(m) === -1) vus.push(m); }));
+  return vus.map(m => '« ' + m + ' »').join('\n');
+}
+// Rubrique sans phrase publiable mais avec des lieux DATAtourisme : une phrase simple qui les nomme, tels quels
+const DT_INTRO = { parcs: 'Pour se promener : ', patrimoine: 'À voir : ', culture: 'Pour les sorties : ' };
+function phraseLieux(cle, lieux) {
+  const l = (lieux || []).filter(x => x && x.nom && !PERISSABLE.test(norm(x.nom)) && !INTERDIT.some(([re]) => re.test(norm(x.nom)))).slice(0, 4);
+  if (!l.length || !DT_INTRO[cle]) return null;
+  const noms = l.map(x => x.nom), liste = noms.length > 1 ? noms.slice(0, -1).join(', ') + ' et ' + noms[noms.length - 1] : noms[0];
+  const phrase = DT_INTRO[cle] + liste + '.';
+  if (phrase.length > MAX_CAR_TEXTE) return null;
+  return { phrase, passages: l.map(x => x.nom + (x.categorie ? ' (' + x.categorie + ')' : '')) };
 }
 
 // Retire toute phrase porteuse d'un chiffre daté qui aurait échappé à la consigne.
@@ -345,13 +438,20 @@ async function construireGuide(deps, insee, commune, aujourdhui) {
     if (!entrees[cle]) return;   // jamais de rubrique sans donnée, même si l'IA en renvoie une
     let t = typeof textes[cle] === 'string' ? sansChiffreDate(textes[cle]) : '';
     t = t.split(/(?<=[.!?])\s+/).filter(p => !LYRIQUE.test(p)).join(' ').trim();   // phrases lyriques retirées
-    const phrases = formater(filtrerFidele(t, textesSource(entrees[cle]), commune, cle).gardees);   // phrases non sourcées retirées
+    const f = filtrerFidele(t, textesSource(entrees[cle]), commune, cle, passagesCandidats(entrees[cle]));   // phrases non sourcées ou sans passage retirées
+    f.retirees.forEach(x => console.info('[guide-commune]', insee, cle, 'phrase retirée (' + x.motif + ') :', x.phrase.slice(0, 160)));
+    const idx = formaterIndices(f.gardees);
+    let phrases = idx.map(i => f.gardees[i]), passages = idx.map(i => f.passages[i]);
+    if (phrases.join(' ').length < 30) {   // rien de publiable : les lieux DATAtourisme, nommés tels quels
+      const l = phraseLieux(cle, entrees[cle].datatourisme);
+      if (l) { phrases = [l.phrase]; passages = [l.passages]; }
+    }
     t = phrases.join(' ');
     if (t.length < 30) return;   // rubrique vide : elle n'apparaît pas
     const sources = [];
     if (entrees[cle].wikipedia) sources.push({ type: 'wikipedia', titre: 'Wikipédia — ' + wp.titre, url: wp.url, licence: LICENCE_WP });
     if (entrees[cle].datatourisme) sources.push({ type: 'datatourisme', titre: 'DATAtourisme', url: 'https://www.datatourisme.fr' });
-    rubriques.push({ cle, titre, texte: t, sources, extrait: extraitSource(phrases, entrees[cle]) });
+    rubriques.push({ cle, titre, texte: t, sources, extrait: extraitDe(passages) });
   });
   if (!rubriques.length) return { guide: null, dt };
   return { guide: { insee, commune, rubriques, modele, genere_le: new Date(aujourdhui + 'T12:00:00Z').toISOString() }, dt };
@@ -407,4 +507,4 @@ async function handler(req, res, deps) {
 
 module.exports = (req, res) => handler(req, res);
 module.exports.handler = handler;
-module.exports._interne = { sectionsWikipedia, sansChiffreDate, construireGuide, wikipedia, datatourisme, RUBRIQUES, MODELE_DEFAUT, verifierPhrase, filtrerFidele, formater, extraitSource, SYSTEME, MAX_CAR_TEXTE };
+module.exports._interne = { sectionsWikipedia, sansChiffreDate, construireGuide, wikipedia, datatourisme, RUBRIQUES, MODELE_DEFAUT, verifierPhrase, filtrerFidele, formater, passagesPour, passagesCandidats, valeursNombres, phraseLieux, SYSTEME, MAX_CAR_TEXTE };

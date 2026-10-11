@@ -231,6 +231,77 @@ const appel = async (w, insee, commune, auth = 'Bearer jwt') => { const r = res(
     assert.deepStrictEqual(w.table.get('91345').rubriques.map(x => x.extrait), g.rubriques.map(x => x.extrait), 'extraits enregistrés dans le cache');
     assert(!/A6|Intersport|1438/.test(g.rubriques.map(x => x.extrait).join(' ')), 'pas d\'extrait pour une phrase retirée');
   }
+  // ── corrections après lecture des extraits de Longjumeau
+  {
+    const { verifierPhrase, passagesPour, valeursNombres, filtrerFidele } = route._interne;
+    const ok = (p, src, cle) => verifierPhrase(p, src + '\nLongjumeau', cle, 'Longjumeau');
+    // 1. distance en kilomètres vers Paris : en lettres ou en chiffres, si elle est dans la source
+    const PRES = 'Longjumeau (prononcé [lɔ̃ʒymo] ; ) est une commune française située à dix-neuf kilomètres au sud de Paris dans le département de l’Essonne, en région Île-de-France.';
+    assert(valeursNombres('à dix-neuf kilomètres').has('19') && valeursNombres('quatre-vingt-dix').has('90') && valeursNombres('vingt et un').has('21') && valeursNombres('1 200 m').has('1200'), 'nombres en lettres');
+    assert(ok('Longjumeau est située à dix-neuf kilomètres au sud de Paris.', PRES, 'presentation').ok, 'distance en lettres gardée');
+    assert(ok('Longjumeau est à 19 km au sud de Paris.', PRES, 'presentation').ok, 'distance en chiffres gardée');
+    assert(/nombre absent de la source : 25/.test(ok('Longjumeau est à 25 km de Paris.', PRES, 'presentation').motif), 'distance inventée retirée');
+    assert(/dix-neuf kilomètres au sud de Paris/.test(route._interne.SYSTEME), 'consigne : distance autorisée');
+    // 4. formulation d'acheteur
+    const TR = 'Deux axes majeurs de la région font office de frontières pour la commune, la route nationale 20 à l’ouest et l’autoroute A6 au nord-est (mais seule la route nationale pénètre dans le territoire communal).';
+    assert(/encyclopédie/.test(ok('La route nationale 20 et l\'autoroute A6 font office de frontières pour la commune.', TR, 'transports').motif), '« font office de frontières » retiré');
+    assert(ok('La route nationale 20 et l\'autoroute A6 contournent la commune.', TR, 'transports').ok, '« contournent la commune » quand la source parle de frontières');
+    assert(!ok('L\'autoroute A6 traverse la commune.', TR, 'transports').ok, '« traverse » toujours refusé');
+    const PAT = 'Le monument d’importance est l’église Saint-Martin, construite aux XIIIe et XIVe siècles et classée le 1er avril 1910.\nFerme pédagogique Le P\'tit brin d\'Paille lieu de sport et de loisirs';
+    assert(/encyclopédie/.test(ok('Le monument d\'importance est l\'église Saint-Martin.', PAT, 'patrimoine').motif), '« le monument d\'importance est » retiré');
+    assert(ok('L\'église Saint-Martin, des XIIIe et XIVe siècles, est classée depuis 1910.', PAT, 'patrimoine').ok, 'reformulation simple gardée');
+    assert(/loisirs hors du patrimoine/.test(ok('Parmi les lieux de loisirs, on trouve la Ferme pédagogique Le P\'tit brin d\'Paille.', PAT, 'patrimoine').motif + ok('La Ferme pédagogique Le P\'tit brin d\'Paille est un lieu de loisirs.', PAT, 'patrimoine').motif), 'loisirs jamais dans le patrimoine');
+    assert(/font office de/.test(route._interne.SYSTEME) && /contournent la commune/.test(route._interne.SYSTEME) && /Patrimoine : uniquement/.test(route._interne.SYSTEME), 'consignes de formulation');
+    // 5. écoles : primaires, collège, lycée gardés ; ni effectifs ni académie
+    const EC = 'La commune est rattachée à l’académie de Versailles. Elle dispose de six écoles maternelles et de six écoles élémentaires. La plupart des élèves poursuivent leur scolarité au collège Louis-Pasteur puis dans l’un des lycées de la commune : Jacques-Prévert pour les sections générales et technologiques, Jean-Perrin pour certaines sections professionnelles. Le collège compte 600 élèves.';
+    const fe = filtrerFidele('La commune compte six écoles maternelles et six écoles élémentaires. Les élèves poursuivent leur scolarité au collège Louis-Pasteur. Les lycées Jacques-Prévert (sections générales et technologiques) et Jean-Perrin (sections professionnelles) sont dans la commune. Les écoles dépendent de l\'académie de Versailles. Le collège compte 600 élèves.', EC, 'Longjumeau', 'equipements', [...EC.match(/[^.]+\./g)].map(x => x.trim()));
+    assert.strictEqual(fe.gardees.length, 3, 'écoles primaires, collège et lycées gardés : ' + JSON.stringify(fe.retirees));
+    assert.deepStrictEqual(fe.retirees.map(x => x.motif), ['rattachement administratif', 'effectif']);
+    assert(/écoles maternelles et élémentaires \(primaires\), le collège et le lycée/.test(route._interne.SYSTEME));
+    // 3. chaque phrase a son passage ; sinon elle est retirée
+    const C = ['Le territoire communal est traversé par les trams-trains de la ligne 12 du tramway d\'Île-de-France.', 'Longjumeau dispose des gares de Longjumeau et de Gravigny-Balizy.', 'La commune est desservie par les lignes de bus 199 et 297 du réseau Massy-Juvisy.', 'La gare de Massy-Palaiseau est desservie par le RER B.'];
+    assert.deepStrictEqual(passagesPour('Les lignes de bus 199 et 297 du réseau Massy-Juvisy desservent la commune.', C, C.join('\n'), 'Longjumeau'), [C[2]], 'passage exact retrouvé');
+    assert.strictEqual(passagesPour('Les lignes 199 et 297 du réseau Massy-Juvisy relient la commune à Évry.', C, C.join('\n') + ' Évry', 'Longjumeau'), null, 'élément sans passage (Évry) : pas de passage');
+    const f3 = filtrerFidele('Les lignes de bus 199 et 297 du réseau Massy-Juvisy desservent la commune. Les gares de Gravigny-Balizy et de Massy-Palaiseau, la ligne 12 et les lignes de bus 199 et 297 desservent Longjumeau.', C.join('\n'), 'Longjumeau', 'transports', C);
+    assert.deepStrictEqual(f3.retirees.map(x => x.motif), ['aucun passage correspondant dans la source'], 'phrase sans passage dans l\'extrait : retirée');
+  }
+  // ── 2 et 3 : route complète — parcs DATAtourisme seuls, loisirs hors patrimoine, extrait complet (sans coupure)
+  {
+    const sauve = DT['91345'];
+    const lieu = (type, nom) => ({ type, label: { fr: nom }, isLocatedAt: [{ address: [{ hasAddressCity: { insee: '91345' } }] }] });
+    DT['91345'] = [lieu(['ParkAndGarden'], 'Arboretum de Longjumeau'), lieu(['NaturalHeritage'], 'Plaine de Balizy'), lieu(['ParkAndGarden'], 'Parc Nativelle'),
+      lieu(['SportsAndLeisurePlace', 'CulturalHeritage'], 'Ferme pédagogique Le P\'tit brin d\'Paille'), lieu(['Church', 'CulturalSite'], 'Église Saint-Martin')];
+    const longues = Array.from({ length: 4 }, (_, k) => 'La ligne de bus ' + (100 + k) + ' du réseau Massy-Juvisy dessert la gare' + ', avec des arrêts et des correspondances détaillés'.repeat(14) + '.');
+    const COM = COMMUNES['91345'], ancien = COM.extrait;
+    COM.extrait = ancien.replace('=== Transports ===\n', '=== Transports ===\n' + longues.join(' ') + '\n');
+    const w5 = monde(), f5 = w5.deps.fetch;
+    let entreeIa = null;
+    w5.deps.fetch = async (u, i) => {
+      if (!/anthropic/.test(u)) return f5(u, i);
+      entreeIa = JSON.parse(JSON.parse(i.body).messages[0].content).rubriques;
+      return { ok: true, status: 200, json: async () => ({ stop_reason: 'end_turn', content: [{ type: 'text', text: JSON.stringify({ rubriques: {
+        transports: 'La ligne de bus 103 du réseau Massy-Juvisy dessert la gare. La ligne de bus 100 du réseau Massy-Juvisy dessert la gare.',
+        parcs: 'La commune compte trois espaces verts remarquables.',
+        patrimoine: 'Le monument d\'importance est l\'Église Saint-Martin. Parmi les lieux de loisirs, on trouve la Ferme pédagogique Le P\'tit brin d\'Paille.',
+        culture: 'Ferme pédagogique Le P\'tit brin d\'Paille figure parmi les lieux de sport et de loisirs.' } }) }] }) };
+    };
+    const r5 = await appel(w5, '91345', 'Longjumeau');
+    DT['91345'] = sauve; COM.extrait = ancien;
+    assert(entreeIa.culture.datatourisme.some(x => /Ferme/.test(x.nom)) && !entreeIa.patrimoine.datatourisme.some(x => /Ferme/.test(x.nom)), 'ferme pédagogique classée en culture et loisirs, pas en patrimoine');
+    const rb = k => r5.body.guide.rubriques.find(x => x.cle === k);
+    assert(rb('parcs'), 'rubrique Parcs et espaces verts présente');
+    assert.strictEqual(rb('parcs').texte, 'Pour se promener : Arboretum de Longjumeau, Plaine de Balizy et Parc Nativelle.', 'parcs : ' + rb('parcs').texte);
+    assert.strictEqual(rb('parcs').extrait, '« Arboretum de Longjumeau (parc ou jardin) »\n« Plaine de Balizy (site naturel) »\n« Parc Nativelle (parc ou jardin) »');
+    assert(!rb('patrimoine') || !/Ferme|importance/.test(rb('patrimoine').texte), 'patrimoine sans loisirs ni « d\'importance »');
+    const t5 = rb('transports');
+    assert(/103/.test(t5.texte) && /100/.test(t5.texte), 'deux phrases de transport publiées : ' + t5.texte);
+    assert(t5.extrait.includes(longues[3]) && t5.extrait.includes(longues[0]) && t5.extrait.length > 1500, 'extrait complet, tous les passages, sans coupure (' + t5.extrait.length + ' car.)');
+    // chaque phrase publiée a son passage dans l'extrait enregistré
+    for (const x of r5.body.guide.rubriques) {
+      const passages = (x.extrait.match(/« ([^»]+) »/g) || []).map(m => m.slice(2, -2));
+      for (const ph of x.texte.match(/[^.!?]+[.!?]/g)) assert(route._interne.passagesPour(ph.trim(), passages, passages.join('\n') + '\nLongjumeau', 'Longjumeau'), x.cle + ' : phrase sans passage dans l\'extrait : ' + ph);
+    }
+  }
   // ── DATAtourisme : seuls le nom et la catégorie sont transmis à l'IA
   {
     const entreeDt = JSON.parse(JSON.parse(ia[0].init.body).messages[0].content).rubriques.parcs.datatourisme;
