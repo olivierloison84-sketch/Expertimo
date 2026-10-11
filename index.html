@@ -890,6 +890,57 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 @media(max-width:340px){#crush .cr-choices{grid-template-columns:1fr;}#crush .cr-choice{min-height:0;}}
 @media(min-width:701px){#crush .cr-actions{flex-direction:row;}#crush .cr-actions .cr-btn{flex:1;}}
 @media(prefers-reduced-motion:reduce){#crush .cr-ring-fg,#crush .cr-bar i,#crush .cr-choice{transition:none;}}
+/* ═════════ PARTICIPATION ACHETEUR (ma visite, carnet, partage, critère, mot du vendeur) — couleurs du thème ═════════ */
+.pv-card .pv-sub,.pv-crit .pv-sub,#pv-share-sheet .pv-sub{display:block;font-size:13px;line-height:1.5;color:var(--muted);margin:4px 0 12px;}
+.pv-h{display:block;font-weight:700;font-size:13.5px;color:var(--ink);margin:14px 0 8px;}
+.pv-pico{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.pv-opts{display:flex;flex-direction:column;gap:8px;}
+.pv-opt{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:12px 14px;font:500 14px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);cursor:pointer;}
+.pv-opt.on{border-color:var(--gold);background:var(--cream);}
+.pv-box{display:flex;align-items:center;justify-content:center;width:22px;height:22px;flex:none;border-radius:7px;border:1.5px solid var(--border);background:#fff;color:#fff;}
+.pv-opt.on .pv-box{background:var(--gold);border-color:var(--gold);}
+.pv-opt.on .pv-box .pv-pico{width:14px;height:14px;stroke-width:2.4;}
+.pv-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;flex-wrap:wrap;}
+.pv-count{font:600 12.5px 'IBM Plex Mono',monospace;color:var(--muted);}
+.pv-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:14px;padding:13px 18px;background:var(--gold);color:#fff;font:700 14px var(--pv-font,'Work Sans',sans-serif);cursor:pointer;margin-top:10px;}
+.pv-btn:disabled{opacity:.45;cursor:default;}
+.pv-btn.pv-sec{background:#fff;color:var(--ink);border:1.5px solid var(--border);}
+.pv-btn:focus-visible,.pv-opt:focus-visible,.pv-chip:focus-visible,.pv-sh:focus-visible,.pv-heart:focus-visible,.pv-share-top:focus-visible{outline:3px solid var(--pv-accent2,var(--gold));outline-offset:2px;}
+.pv-msg{font-size:13px;color:var(--vert,#2F7A4F);margin:10px 0 0;line-height:1.45;}
+.pv-note{font-size:12px;color:var(--muted);line-height:1.45;margin:10px 0 0;}
+.pv-check{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.pv-check li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink);}
+.pv-check .pv-pico{color:var(--vert,#2F7A4F);margin-top:1px;}
+.pv-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.pv-chip{border:1.5px solid var(--border);background:#fff;border-radius:99px;padding:9px 14px;font:600 13px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);cursor:pointer;}
+.pv-chip.on{background:var(--gold);border-color:var(--gold);color:#fff;}
+.pv-text{display:block;width:100%;box-sizing:border-box;min-height:84px;border:1.5px solid var(--border);border-radius:12px;padding:10px 12px;font:500 14px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);background:#fff;resize:vertical;}
+.pv-photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;}
+.pv-ph{position:relative;aspect-ratio:1;border-radius:12px;overflow:hidden;background:var(--cream);}
+.pv-ph img{width:100%;height:100%;object-fit:cover;display:block;}
+.pv-ph button{position:absolute;top:4px;right:4px;width:26px;height:26px;border-radius:50%;border:none;background:rgba(15,23,40,.7);color:#fff;font-size:16px;line-height:1;cursor:pointer;}
+.pv-add{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1.5px dashed var(--border);background:#fff;color:var(--gold);font-size:11.5px;text-align:center;padding:4px;cursor:pointer;}
+.pv-add .pv-pico{width:22px;height:22px;}
+.pv-crit{margin-top:4px;}
+.pv-share-end{width:100%;margin-top:14px;}
+.pv-quote{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
+.pv-quote li{font-size:15px;line-height:1.5;color:var(--ink);padding-left:14px;border-left:3px solid var(--gold);}
+.pv-libre{font-size:14.5px;line-height:1.55;font-style:italic;color:var(--ink);margin:10px 0 0;}
+.pv-heart{display:inline-flex;align-items:center;gap:8px;margin-top:14px;border:1.5px solid var(--border);background:#fff;border-radius:99px;padding:9px 16px;font:600 13.5px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);cursor:pointer;}
+.pv-heart.on{border-color:#C0465A;color:#A3364A;background:#FCEEF1;}
+.pv-heart.on .pv-pico{fill:currentColor;}
+.pv-share-top{display:inline-flex;align-items:center;gap:7px;margin-top:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.95);color:var(--ink);border-radius:99px;padding:8px 15px;font:700 13px var(--pv-font,'Work Sans',sans-serif);cursor:pointer;}
+#pv-share-sheet{position:fixed;inset:0;z-index:2000;background:rgba(10,18,32,.45);display:none;align-items:flex-end;justify-content:center;}
+#pv-share-sheet.open{display:flex;}
+#pv-share-sheet .pv-sheet{background:#fff;width:100%;max-width:520px;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(10,18,32,.25);}
+#pv-share-sheet .pv-sheet-h{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:16px;color:var(--ink);}
+#pv-share-sheet .pv-sheet-h button{border:none;background:var(--cream);width:34px;height:34px;border-radius:50%;font-size:20px;cursor:pointer;color:var(--ink);}
+#pv-share-sheet .pv-sh-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;}
+#pv-share-sheet .pv-sh{display:flex;flex-direction:column;align-items:center;gap:6px;border:1.5px solid var(--border);background:#fff;border-radius:14px;padding:12px 4px;font:600 12px var(--pv-font,'Work Sans',sans-serif);color:var(--ink);cursor:pointer;}
+#pv-share-sheet .pv-sh .pv-pico{width:24px;height:24px;color:var(--gold);}
+@media(min-width:701px){#pv-share-sheet{align-items:center;}#pv-share-sheet .pv-sheet{border-radius:22px;}}
+@media(max-width:700px){body.pv4 .header .pv-share-top{display:flex;margin:10px auto 6px;}}
+@media(max-width:360px){#pv-share-sheet .pv-sh-grid{grid-template-columns:repeat(2,1fr);}.pv-photos{grid-template-columns:repeat(3,minmax(0,1fr));}}
 </style>
 </head>
 <body class="pv pv4 pv-home tone-b">
@@ -913,6 +964,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
       </div>
       <h1 class="htitle">5 Rue de l'Arpajonnais<br><span style="color:var(--gold);font-style:italic;" class="quartier-val" data-fr-val="Longjumeau , centre ville" data-en-val="Longjumeau , centre ville">Longjumeau , centre ville</span></h1>
       <p class="hsub" data-fr-val="Appartement 3 pièces de 76,87 m² · 2ème et dernier étage · DPE D" data-en-val="Appartement 3 pièces de 76,87 m² · 2ème et dernier étage · DPE D">Appartement 3 pièces de 76,87 m² · 2ème et dernier étage · DPE D</p>
+      <button type="button" id="pv-share-top" class="pv-share-top" onclick="pvOpenShare()">Partager</button>
     </div>
     <div class="price-card">
       <div class="plabel" data-i18n="price-label">Prix affiché</div>
@@ -945,6 +997,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <section id="bien" class="tab active">
 <div class="pg">
 <div>
+  <div class="card pv-card" id="pv-mot" style="display:none;"></div>
   <div class="card">
     <div class="lbl" data-i18n="lbl-le-bien">Le bien</div>
     <h2 class="stitle">5 Rue de l'Arpajonnais · 3 pièces · 2ème étage</h2>
@@ -984,6 +1037,7 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
   <div class="sline"><span data-i18n="score-qp">Rapport qualité/prix</span><div><strong>8/10</strong><div class="sbar"><div class="sbar-fill" style="width:80%"></div></div></div></div>
   <div class="sline"><span data-i18n="score-etat">État général</span><div><strong>10/10</strong><div class="sbar"><div class="sbar-fill" style="width:100%"></div></div></div></div>
 </div>
+  <div class="card pv-card" id="pv-critere"></div>
 </div>
 <div><div class="cons-card">
   <img id="agent-photo" src="" style="width:56px;height:56px;border-radius:50%;object-fit:cover;display:none" alt="">
@@ -1261,6 +1315,8 @@ body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22p
 <section id="offre" class="tab">
 <div class="pg">
 <div>
+  <div class="card pv-card" id="pv-visite"></div>
+  <div class="card pv-card" id="pv-carnet"></div>
   <div class="card" id="vr-card">
   <div class="lbl" id="vr-lbl">Votre retour de visite</div>
   <div class="vr-title" id="vr-title"></div>
@@ -3158,6 +3214,12 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       render();
     }, function() { msg(T[L()].err, 'err'); }).then(function() { b.disabled = false; });
   };
+  // Pré-sélection depuis le carnet de visite (coups de cœur partagés) : jamais au-delà de 4 réponses
+  window.vrPreselect = function(codes) {
+    if (sent) return;
+    (codes || []).forEach(function(c) { if (CODES.indexOf(c) !== -1 && sel.indexOf(c) === -1 && sel.length < 4) sel.push(c); });
+    render();
+  };
   document.addEventListener('DOMContentLoaded', render);
   try { new MutationObserver(function() { render(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']}); } catch (e) {}
 })();
@@ -3412,6 +3474,7 @@ function applyLang(lang) {
   if (typeof renderDpeInfo === 'function') renderDpeInfo(lang);
   if (typeof renderWelcomeParam === 'function') renderWelcomeParam(lang);
   if (typeof renderCrush === 'function') renderCrush();
+  if (typeof renderParticipation === 'function') renderParticipation();
   try { updateOffer(); } catch(e) {}
 
   // L'assistant IA a déjà démarré une conversation dans l'ancienne langue :
@@ -3741,7 +3804,7 @@ document.addEventListener('DOMContentLoaded', function() {
       reminder: 'Pas de bonne ou de mauvaise réponse.', turnOf: 'Au tour de {n}',
       handoffTxt: '{n1} a répondu. {n2} peut répondre sur ce téléphone, ou sur le sien grâce au lien.',
       passPhone: 'Je passe le téléphone à {n}', sendLink: 'Envoyer le test à {n}', linkCopied: 'Lien copié : envoyez-le à {n}.',
-      linkNote: 'Le résultat à deux s\'affichera sur le téléphone de {n}.', guest: '{n} vous propose ce test pour voir si ce bien vous plaît à tous les deux. À vous !',
+      linkNote: 'Le résultat à deux s\'affichera sur le téléphone de {n}.', guest: '{n} vous propose ce test pour voir si ce bien vous plaît à tous les deux. À vous !', guestAnon: 'Une personne proche vous propose ce test pour voir si ce bien vous plaît à tous les deux. À vous !',
       start: 'Commencer',
       ringSub: 'de coup de cœur', matchTitle: 'Votre match avec ce bien', likes: 'Ce qui vous plaît ici', check: 'Points à vérifier ensemble',
       noCheck: 'Rien de particulier : tout ce que vous recherchez est cohérent avec la fiche.',
@@ -3801,7 +3864,7 @@ document.addEventListener('DOMContentLoaded', function() {
       reminder: 'There are no right or wrong answers.', turnOf: '{n}\'s turn',
       handoffTxt: '{n1} has answered. {n2} can answer on this phone, or on their own with the link.',
       passPhone: 'I\'ll hand the phone to {n}', sendLink: 'Send the test to {n}', linkCopied: 'Link copied: send it to {n}.',
-      linkNote: 'Your joint result will show on {n}\'s phone.', guest: '{n} invites you to take this test to see if you both like this property. Your turn!',
+      linkNote: 'Your joint result will show on {n}\'s phone.', guest: '{n} invites you to take this test to see if you both like this property. Your turn!', guestAnon: 'Someone close to you invites you to take this test to see if you both like this property. Your turn!',
       start: 'Start',
       ringSub: 'crush', matchTitle: 'Your match with this property', likes: 'What you\'ll love here', check: 'Points to check together',
       noCheck: 'Nothing in particular: everything you\'re looking for is consistent with the listing.',
@@ -3865,7 +3928,7 @@ document.addEventListener('DOMContentLoaded', function() {
       reminder: 'Não há respostas certas nem erradas.', turnOf: 'A vez de {n}',
       handoffTxt: '{n1} já respondeu. {n2} pode responder neste telemóvel, ou no seu com a ligação.',
       passPhone: 'Passo o telemóvel a {n}', sendLink: 'Enviar o teste a {n}', linkCopied: 'Ligação copiada: envie-a a {n}.',
-      linkNote: 'O resultado a dois aparecerá no telemóvel de {n}.', guest: '{n} propõe-lhe este teste para ver se este imóvel agrada aos dois. É a sua vez!',
+      linkNote: 'O resultado a dois aparecerá no telemóvel de {n}.', guest: '{n} propõe-lhe este teste para ver se este imóvel agrada aos dois. É a sua vez!', guestAnon: 'Alguém próximo propõe-lhe este teste para ver se este imóvel agrada aos dois. É a sua vez!',
       start: 'Começar',
       ringSub: 'de paixão', matchTitle: 'A sua compatibilidade com este imóvel', likes: 'O que lhe agrada aqui', check: 'Pontos a verificar em conjunto',
       noCheck: 'Nada em especial: tudo o que procura é coerente com a ficha.',
@@ -3929,7 +3992,7 @@ document.addEventListener('DOMContentLoaded', function() {
       reminder: 'No hay respuestas buenas ni malas.', turnOf: 'Turno de {n}',
       handoffTxt: '{n1} ya ha respondido. {n2} puede responder en este móvil, o en el suyo con el enlace.',
       passPhone: 'Le paso el móvil a {n}', sendLink: 'Enviar el test a {n}', linkCopied: 'Enlace copiado: envíeselo a {n}.',
-      linkNote: 'El resultado en pareja aparecerá en el móvil de {n}.', guest: '{n} le propone este test para ver si esta vivienda les gusta a los dos. ¡Su turno!',
+      linkNote: 'El resultado en pareja aparecerá en el móvil de {n}.', guest: '{n} le propone este test para ver si esta vivienda les gusta a los dos. ¡Su turno!', guestAnon: 'Alguien cercano le propone este test para ver si esta vivienda les gusta a los dos. ¡Su turno!',
       start: 'Empezar',
       ringSub: 'de flechazo', matchTitle: 'Su afinidad con esta vivienda', likes: 'Lo que le gusta de aquí', check: 'Puntos a comprobar juntos',
       noCheck: 'Nada en particular: todo lo que busca es coherente con la ficha.',
@@ -4097,7 +4160,7 @@ document.addEventListener('DOMContentLoaded', function() {
         + '<input class="cr-input" id="cr-n1" maxlength="30" placeholder="' + esc(t('p1')) + '" value="' + esc(S.names[0]) + '"><input class="cr-input" id="cr-n2" maxlength="30" placeholder="' + esc(t('p2')) + '" value="' + esc(S.names[1]) + '">'
         + '<div class="cr-actions"><button type="button" class="cr-btn" data-act="names">' + esc(t('go')) + '</button><button type="button" class="cr-link" data-act="home">' + esc(t('back')) + '</button></div></div>';
     } else if (S.step === 'guest') {
-      h = '<div class="cr-home"><p class="cr-lead">' + esc(t('guest', { n: name(0) })) + '</p>'
+      h = '<div class="cr-home"><p class="cr-lead">' + esc(S.names[0] ? t('guest', { n: S.names[0] }) : t('guestAnon')) + '</p>'
         + '<input class="cr-input" id="cr-n2" maxlength="30" placeholder="' + esc(t('p2')) + '" value="' + esc(S.names[1]) + '">'
         + '<div class="cr-actions"><button type="button" class="cr-btn" data-act="guestgo">' + esc(t('start')) + '</button></div>'
         + '<div class="cr-safe">' + svg('<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>') + '<span>' + esc(t('safe')) + '</span></div></div>';
@@ -4121,7 +4184,7 @@ document.addEventListener('DOMContentLoaded', function() {
         + (r.nbUtilises < 8 ? '<small>' + esc(tn('based', r.nbUtilises, { n: r.nbUtilises })) + '</small>' : '') + '</div>'
         + '<div class="cr-card"><h3>' + esc(t('likes')) + '</h3>' + reasons(r.top, '') + '</div>'
         + weakCard(r.aVerifier) + howBlock(r) + sendBlock('');
-      h += '<div class="cr-actions"><button type="button" class="cr-link" data-act="redo">' + esc(t('redo')) + '</button></div>';
+      h += '<div class="cr-extra"></div><div class="cr-actions"><button type="button" class="cr-link" data-act="redo">' + esc(t('redo')) + '</button></div>';
     } else if (S.step === 'result') {
       var d = C.duo(S.ans[0], S.ans[1], DATA);
       h = d.commun == null ? '<p class="cr-muted">' + esc(t('noScore')) + '</p>' :
@@ -4134,9 +4197,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return '<li><b>' + esc(t('themes.' + x.q)) + '</b><span>' + esc(t('discussTxt', { n1: name(0), n2: name(1), c1: choice(x.q, x.a1), c2: choice(x.q, x.a2) })) + (dt ? ' ' + esc(dt) + '.' : '') + ' ' + esc(t('discussEnd')) + '</span></li>';
           }).join('') + '</ul>' : '<p class="cr-muted">' + esc(t('noDiscuss')) + '</p>') + '</div>'
         + weakCard(d.aVerifier) + howBlock(d.r1, name(0)) + howBlock(d.r2, name(1)) + sendBlock([S.names[0], S.names[1]].filter(Boolean).join(' & '));
-      h += '<div class="cr-actions"><button type="button" class="cr-link" data-act="redo">' + esc(t('redo')) + '</button></div>';
+      h += '<div class="cr-extra"></div><div class="cr-actions"><button type="button" class="cr-link" data-act="redo">' + esc(t('redo')) + '</button></div>';
     }
     root.innerHTML = '<div class="cr-wrap">' + h + '</div>';
+    var ex = root.querySelector('.cr-extra');
+    if (ex && window.pvCrushResult) {
+      var me = S.mode === 'duo' && S.guest ? 1 : 0;
+      window.pvCrushResult(ex, S.ans[me], C.score(S.ans[me], DATA).top, [S.names[me]]);
+    }
   }
 
   // ── Lien pour la 2e personne : réponses de la 1re dans l'ancre (jamais envoyées au serveur) ──
@@ -4211,6 +4279,339 @@ document.addEventListener('DOMContentLoaded', function() {
     var open = function() { var btn = document.querySelector('#main-nav button[data-tab="crush"]'); if (btn) btn.click(); };
     if (document.readyState === 'complete') setTimeout(open, 300); else window.addEventListener('load', function() { setTimeout(open, 300); });
   } else render();
+})();
+</script>
+<script id="participation-data" type="application/json">{"points":[{"k":"charges"},{"k":"vig","v":{"fr":"Chaudière à gaz individuelle (frais de chauffage non prévus dans les charges de copropriété)"}},{"k":"lumiere"},{"k":"rangements"},{"k":"etat_general"}],"chips":["lumiere","volumes","cuisine","salle_bain","calme","exterieur","rangements","etat","quartier"],"mot":{"fr":["Ce que nous avons le plus aimé ici : la superbe terrasse de 50 m² sans vis-à-vis."],"en":["What we loved most here: the superb 50 m² terrace with no overlooking neighbours."],"pt":["O que mais gostámos aqui: o magnífico terraço de 50 m² sem vista direta de vizinhos."],"es":["Lo que más nos ha gustado aquí: la magnífica terraza de 50 m² sin vistas directas de vecinos."],"libre":""}}</script>
+<script id="participation-js">
+// ═══ PARTICIPATION ACHETEUR : ma visite, carnet, partage, critère déterminant, mot du vendeur ═══
+// Chaque action enregistre un événement dans les statistiques existantes (fiche_views) ; aucune donnée personnelle demandée.
+(function() {
+  var PD = {};
+  try { PD = JSON.parse((document.getElementById('participation-data') || {}).textContent || '{}') || {}; } catch (e) { PD = {}; }
+  var KEY = 'pv_part_' + location.pathname + '_';
+  function load(k, def) { try { var v = localStorage.getItem(KEY + k); return v == null ? def : JSON.parse(v); } catch (e) { return def; } }
+  function save(k, v) { try { localStorage.setItem(KEY + k, JSON.stringify(v)); return true; } catch (e) { return false; } }
+  function track(name, payload) {
+    try { if (typeof window.privencyTrack !== 'function') return false; window.privencyTrack(payload ? name + ':' + JSON.stringify(payload) : name); return true; } catch (e) { return false; }
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function $(id) { return document.getElementById(id); }
+  function ico(p) { return '<svg class="pv-pico" viewBox="0 0 24 24" aria-hidden="true">' + p + '</svg>'; }
+  var I = {
+    share: '<path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v12"/><path d="M8 7l4-4 4 4"/>',
+    heart: '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/>',
+    check: '<path d="M5 12l4 4 10-10"/>', cam: '<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
+    wa: '<path d="M4 20l1.3-4A8 8 0 1 1 8 18.7z"/><path d="M9 9.5c.5 2 2.5 4 4.5 4.5l1-1 2 1c-.3 1.2-1.3 2-2.5 1.8-3-.5-5.8-3.3-6.3-6.3C7.5 8.3 8.3 7.3 9.5 7l1 2z"/>',
+    sms: '<path d="M4 5h16v11H9l-5 4z"/>', mail: '<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/>', link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'
+  };
+
+  var T = {
+    fr: {
+      visTitle: 'Ma visite en 3 questions', visSub: 'Choisissez jusqu\'à 3 points à vérifier pendant la visite : votre conseiller préparera les réponses.',
+      visMax: '3 points au maximum : retirez-en un pour en choisir un autre.', visSend: 'Envoyer à mon conseiller', visDone: 'C\'est noté ! Votre conseiller préparera ces points pour la visite :',
+      vis: { bruit: 'Le bruit, fenêtres ouvertes et fermées', charges: 'Les charges de copropriété : ce qu\'elles comprennent', travaux_ag: 'Les travaux votés en assemblée générale', toiture: 'L\'état de la toiture',
+        voisinage: 'Le voisinage et le vis-à-vis', humidite: 'Les éventuelles traces d\'humidité', travaux: 'Les travaux à prévoir', fenetres: 'Les fenêtres et l\'isolation', chauffage: 'Le chauffage et son ancienneté',
+        electricite: 'L\'installation électrique', gaz: 'L\'installation de gaz', amiante: 'Les points du diagnostic amiante', parties_communes: 'L\'état des parties communes', facade: 'L\'état de la façade',
+        dpe: 'Le DPE {l} : isolation et chauffage', lumiere: 'La luminosité, à différentes heures', rangements: 'Les rangements', etat_general: 'L\'état général : sols, murs, plafonds', environnement: 'Les abords du bien, à pied' },
+      carTitle: 'Mon carnet de visite', carSub: 'Notez vos coups de cœur pendant la visite. Votre carnet reste sur ce téléphone.',
+      carLikes: 'Mes coups de cœur', carNotes: 'Mes notes', carNotesPh: 'Ce que je veux retenir…', carPhotos: 'Mes photos (facultatif)', carAdd: 'Ajouter une photo', carDel: 'Retirer la photo',
+      carPrivacy: 'Rien n\'est envoyé tant que vous ne cliquez pas sur « Partager avec mon agent ».', carShare: 'Partager avec mon agent', carSaved: 'Enregistré sur ce téléphone.',
+      carDone: 'Partagé ! Votre conseiller a reçu vos coups de cœur et vos notes. Votre retour de visite, plus bas, est pré-rempli.', carPhotosStay: 'Vos photos restent sur votre téléphone.',
+      carPhotosSend: 'Envoyer aussi mes photos', carEmpty: 'Choisissez au moins un coup de cœur ou écrivez une note.', carFull: 'Le téléphone n\'a plus de place pour cette photo.',
+      chip: { lumiere: 'Lumière', volumes: 'Volumes', cuisine: 'Cuisine', salle_bain: 'Salle de bains', calme: 'Calme', jardin: 'Jardin', exterieur: 'Extérieur', vue: 'Vue', rangements: 'Rangements', etat: 'État général', quartier: 'Quartier' },
+      shareBtn: 'Partager', shareTitle: 'Partager à mon conjoint ou à un proche', shareSub: 'Message prêt à envoyer (vous pouvez le modifier) :', shareEnd: 'Partager à mon conjoint ou à un proche',
+      shareMsg: 'Regarde ce bien que j\'ai repéré, j\'aimerais avoir ton avis :', shareMsgCrush: 'Regarde ce bien que j\'ai repéré ! J\'ai fait le test « Ce bien est-il fait pour nous ? » : fais-le aussi et on comparera nos résultats.',
+      shareSubject: 'Un bien à regarder ensemble', copy: 'Copier le lien', copied: 'Lien copié !', email: 'E-mail', close: 'Fermer',
+      critTitle: 'Ce qui compte vraiment pour moi', critSub: 'Un seul choix : votre conseiller saura sur quoi insister.', critPre: 'Pré-sélectionné d\'après vos réponses au test.', critOk: 'C\'est bien ça', critDone: 'Noté, votre conseiller en tiendra compte.',
+      crit: { calme: 'Le calme', lumiere: 'La lumière', transports: 'Les transports', exterieur: 'L\'extérieur', energie: 'L\'énergie', quartier: 'Le quartier' },
+      motTitle: 'Le mot du vendeur', motLike: 'Ça me parle', motLiked: 'Merci, c\'est noté !'
+    },
+    en: {
+      visTitle: 'My visit in 3 questions', visSub: 'Choose up to 3 points to check during the visit: your advisor will prepare the answers.',
+      visMax: '3 points maximum: remove one to choose another.', visSend: 'Send to my advisor', visDone: 'Noted! Your advisor will prepare these points for the visit:',
+      vis: { bruit: 'Noise, with windows open and closed', charges: 'Service charges: what they include', travaux_ag: 'Works voted at the owners\' meeting', toiture: 'The condition of the roof',
+        voisinage: 'Neighbours and being overlooked', humidite: 'Any signs of damp', travaux: 'Works to plan for', fenetres: 'Windows and insulation', chauffage: 'The heating and its age',
+        electricite: 'The electrical installation', gaz: 'The gas installation', amiante: 'The asbestos survey findings', parties_communes: 'The condition of the communal areas', facade: 'The condition of the facade',
+        dpe: 'EPC {l}: insulation and heating', lumiere: 'Natural light at different times of day', rangements: 'Storage', etat_general: 'Overall condition: floors, walls, ceilings', environnement: 'The surroundings, on foot' },
+      carTitle: 'My visit notebook', carSub: 'Note what you love during the visit. Your notebook stays on this phone.',
+      carLikes: 'What I loved', carNotes: 'My notes', carNotesPh: 'What I want to remember…', carPhotos: 'My photos (optional)', carAdd: 'Add a photo', carDel: 'Remove photo',
+      carPrivacy: 'Nothing is sent until you tap "Share with my agent".', carShare: 'Share with my agent', carSaved: 'Saved on this phone.',
+      carDone: 'Shared! Your advisor has received what you loved and your notes. Your visit feedback below has been pre-filled.', carPhotosStay: 'Your photos stay on your phone.',
+      carPhotosSend: 'Send my photos too', carEmpty: 'Choose at least one thing you loved or write a note.', carFull: 'Your phone has no room left for this photo.',
+      chip: { lumiere: 'Light', volumes: 'Space', cuisine: 'Kitchen', salle_bain: 'Bathroom', calme: 'Quiet', jardin: 'Garden', exterieur: 'Outdoor space', vue: 'View', rangements: 'Storage', etat: 'Condition', quartier: 'Neighbourhood' },
+      shareBtn: 'Share', shareTitle: 'Share with my partner or someone close', shareSub: 'Message ready to send (you can edit it):', shareEnd: 'Share with my partner or someone close',
+      shareMsg: 'Have a look at this property I found, I\'d love your opinion:', shareMsgCrush: 'Have a look at this property I found! I took the "Is this property right for us?" test: take it too and we\'ll compare our results.',
+      shareSubject: 'A property to look at together', copy: 'Copy link', copied: 'Link copied!', email: 'Email', close: 'Close',
+      critTitle: 'What really matters to me', critSub: 'Just one choice: your advisor will know what to focus on.', critPre: 'Pre-selected from your test answers.', critOk: 'That\'s right', critDone: 'Noted, your advisor will take it into account.',
+      crit: { calme: 'Peace and quiet', lumiere: 'Light', transports: 'Transport', exterieur: 'Outdoor space', energie: 'Energy', quartier: 'The neighbourhood' },
+      motTitle: 'A word from the seller', motLike: 'This speaks to me', motLiked: 'Thank you, noted!'
+    },
+    pt: {
+      visTitle: 'A minha visita em 3 perguntas', visSub: 'Escolha até 3 pontos a verificar durante a visita: o seu consultor preparará as respostas.',
+      visMax: '3 pontos no máximo: retire um para escolher outro.', visSend: 'Enviar ao meu consultor', visDone: 'Anotado! O seu consultor vai preparar estes pontos para a visita:',
+      vis: { bruit: 'O ruído, com janelas abertas e fechadas', charges: 'As despesas de condomínio: o que incluem', travaux_ag: 'As obras aprovadas em assembleia', toiture: 'O estado do telhado',
+        voisinage: 'A vizinhança e a vista direta de vizinhos', humidite: 'Eventuais sinais de humidade', travaux: 'As obras a prever', fenetres: 'As janelas e o isolamento', chauffage: 'O aquecimento e a sua idade',
+        electricite: 'A instalação elétrica', gaz: 'A instalação de gás', amiante: 'Os pontos do diagnóstico de amianto', parties_communes: 'O estado das partes comuns', facade: 'O estado da fachada',
+        dpe: 'Certificado energético {l}: isolamento e aquecimento', lumiere: 'A luminosidade a diferentes horas', rangements: 'A arrumação', etat_general: 'O estado geral: pavimentos, paredes, tetos', environnement: 'A envolvente, a pé' },
+      carTitle: 'O meu caderno de visita', carSub: 'Anote o que mais gosta durante a visita. O caderno fica neste telemóvel.',
+      carLikes: 'O que mais gostei', carNotes: 'As minhas notas', carNotesPh: 'O que quero lembrar…', carPhotos: 'As minhas fotos (facultativo)', carAdd: 'Adicionar uma foto', carDel: 'Retirar a foto',
+      carPrivacy: 'Nada é enviado enquanto não tocar em «Partilhar com o meu consultor».', carShare: 'Partilhar com o meu consultor', carSaved: 'Guardado neste telemóvel.',
+      carDone: 'Partilhado! O seu consultor recebeu o que mais gostou e as suas notas. O seu feedback da visita, mais abaixo, foi pré-preenchido.', carPhotosStay: 'As suas fotos ficam no seu telemóvel.',
+      carPhotosSend: 'Enviar também as fotos', carEmpty: 'Escolha pelo menos um ponto de que gostou ou escreva uma nota.', carFull: 'O telemóvel não tem espaço para esta foto.',
+      chip: { lumiere: 'Luz', volumes: 'Espaço', cuisine: 'Cozinha', salle_bain: 'Casa de banho', calme: 'Tranquilidade', jardin: 'Jardim', exterieur: 'Exterior', vue: 'Vista', rangements: 'Arrumação', etat: 'Estado geral', quartier: 'Zona' },
+      shareBtn: 'Partilhar', shareTitle: 'Partilhar com o meu cônjuge ou alguém próximo', shareSub: 'Mensagem pronta a enviar (pode alterá-la):', shareEnd: 'Partilhar com o meu cônjuge ou alguém próximo',
+      shareMsg: 'Vê este imóvel que encontrei, gostava de saber a tua opinião:', shareMsgCrush: 'Vê este imóvel que encontrei! Fiz o teste «Este imóvel é feito para nós?»: faz também e comparamos os resultados.',
+      shareSubject: 'Um imóvel para vermos juntos', copy: 'Copiar a ligação', copied: 'Ligação copiada!', email: 'E-mail', close: 'Fechar',
+      critTitle: 'O que realmente conta para mim', critSub: 'Uma só escolha: o seu consultor saberá em que insistir.', critPre: 'Pré-selecionado a partir das suas respostas ao teste.', critOk: 'É isso mesmo', critDone: 'Anotado, o seu consultor terá isso em conta.',
+      crit: { calme: 'A tranquilidade', lumiere: 'A luz', transports: 'Os transportes', exterieur: 'O exterior', energie: 'A energia', quartier: 'A zona' },
+      motTitle: 'A palavra do vendedor', motLike: 'Identifico-me', motLiked: 'Obrigado, anotado!'
+    },
+    es: {
+      visTitle: 'Mi visita en 3 preguntas', visSub: 'Elija hasta 3 puntos a comprobar durante la visita: su asesor preparará las respuestas.',
+      visMax: '3 puntos como máximo: quite uno para elegir otro.', visSend: 'Enviar a mi asesor', visDone: '¡Anotado! Su asesor preparará estos puntos para la visita:',
+      vis: { bruit: 'El ruido, con ventanas abiertas y cerradas', charges: 'Los gastos de comunidad: qué incluyen', travaux_ag: 'Las obras aprobadas en junta', toiture: 'El estado del tejado',
+        voisinage: 'Los vecinos y las vistas directas', humidite: 'Posibles signos de humedad', travaux: 'Las obras previstas', fenetres: 'Las ventanas y el aislamiento', chauffage: 'La calefacción y su antigüedad',
+        electricite: 'La instalación eléctrica', gaz: 'La instalación de gas', amiante: 'Los puntos del diagnóstico de amianto', parties_communes: 'El estado de las zonas comunes', facade: 'El estado de la fachada',
+        dpe: 'Certificado energético {l}: aislamiento y calefacción', lumiere: 'La luminosidad a distintas horas', rangements: 'El almacenaje', etat_general: 'El estado general: suelos, paredes, techos', environnement: 'Los alrededores, a pie' },
+      carTitle: 'Mi cuaderno de visita', carSub: 'Anote lo que más le guste durante la visita. El cuaderno se queda en este móvil.',
+      carLikes: 'Lo que más me ha gustado', carNotes: 'Mis notas', carNotesPh: 'Lo que quiero recordar…', carPhotos: 'Mis fotos (opcional)', carAdd: 'Añadir una foto', carDel: 'Quitar la foto',
+      carPrivacy: 'No se envía nada hasta que pulse «Compartir con mi asesor».', carShare: 'Compartir con mi asesor', carSaved: 'Guardado en este móvil.',
+      carDone: '¡Compartido! Su asesor ha recibido lo que más le ha gustado y sus notas. Su opinión tras la visita, más abajo, se ha rellenado.', carPhotosStay: 'Sus fotos se quedan en su móvil.',
+      carPhotosSend: 'Enviar también mis fotos', carEmpty: 'Elija al menos algo que le haya gustado o escriba una nota.', carFull: 'El móvil no tiene espacio para esta foto.',
+      chip: { lumiere: 'Luz', volumes: 'Amplitud', cuisine: 'Cocina', salle_bain: 'Baño', calme: 'Tranquilidad', jardin: 'Jardín', exterieur: 'Exterior', vue: 'Vistas', rangements: 'Almacenaje', etat: 'Estado general', quartier: 'Barrio' },
+      shareBtn: 'Compartir', shareTitle: 'Compartir con mi pareja o alguien cercano', shareSub: 'Mensaje listo para enviar (puede modificarlo):', shareEnd: 'Compartir con mi pareja o alguien cercano',
+      shareMsg: 'Mira esta vivienda que he encontrado, me gustaría saber tu opinión:', shareMsgCrush: '¡Mira esta vivienda que he encontrado! He hecho el test «¿Es esta vivienda para nosotros?»: hazlo tú también y comparamos los resultados.',
+      shareSubject: 'Una vivienda para ver juntos', copy: 'Copiar el enlace', copied: '¡Enlace copiado!', email: 'Correo', close: 'Cerrar',
+      critTitle: 'Lo que de verdad me importa', critSub: 'Una sola elección: su asesor sabrá en qué insistir.', critPre: 'Preseleccionado según sus respuestas al test.', critOk: 'Es eso', critDone: 'Anotado, su asesor lo tendrá en cuenta.',
+      crit: { calme: 'La tranquilidad', lumiere: 'La luz', transports: 'El transporte', exterieur: 'El exterior', energie: 'La energía', quartier: 'El barrio' },
+      motTitle: 'Unas palabras del vendedor', motLike: 'Me identifico', motLiked: '¡Gracias, anotado!'
+    }
+  };
+  function L() { return (typeof _currentLang === 'string' && T[_currentLang]) ? _currentLang : 'fr'; }
+  function t(path, vars) {
+    var v = T[L()], f = T.fr;
+    path.split('.').forEach(function(p) { v = v == null ? v : v[p]; f = f == null ? f : f[p]; });
+    var s = v == null ? f : v;
+    return typeof s === 'string' ? s.replace(/\{(\w+)\}/g, function(m, k) { return vars && vars[k] != null ? vars[k] : ''; }) : s;
+  }
+
+  // ── 3. Ouverture via un lien partagé (?s=code) : signalée une fois par session ──
+  (function() {
+    var s = (new URLSearchParams(location.search).get('s') || '').replace(/[^a-z0-9]/gi, '').slice(0, 12);
+    if (!s) return;
+    var mark = 'pv_open_' + s;
+    try { if (sessionStorage.getItem(mark)) return; sessionStorage.setItem(mark, '1'); } catch (e) {}
+    var go = function() { track('ouverture_partage', { s: s }); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+  })();
+
+  // ── 1. Ma visite en 3 questions ──
+  var points = Array.isArray(PD.points) ? PD.points : [];
+  function pid(p, i) { return p.k === 'vig' ? 'vig' + i : p.k; }
+  function plabel(p) {
+    if (p.k === 'vig') { var v = p.v || {}; return v[L()] || v.fr || ''; }
+    return t('vis.' + p.k, p.v || {}) || '';
+  }
+  var vis = load('visite', { sel: [], sent: false }), visMsg = '';
+  function renderVisite() {
+    var box = $('pv-visite'); if (!box) return;
+    if (!points.length) { box.style.display = 'none'; return; }
+    box.style.display = '';
+    var h = '<div class="lbl">' + esc(t('visTitle')) + '</div><p class="pv-sub">' + esc(vis.sent ? t('visDone') : t('visSub')) + '</p>';
+    if (vis.sent) {
+      h += '<ul class="pv-check">' + points.map(function(p, i) { return vis.sel.indexOf(pid(p, i)) !== -1 ? '<li>' + ico(I.check) + '<span>' + esc(plabel(p)) + '</span></li>' : ''; }).join('') + '</ul>';
+    } else {
+      h += '<div class="pv-opts" role="group">' + points.map(function(p, i) {
+        var id = pid(p, i), on = vis.sel.indexOf(id) !== -1;
+        return '<button type="button" class="pv-opt' + (on ? ' on' : '') + '" aria-pressed="' + on + '" data-pv="vis" data-id="' + esc(id) + '"><span class="pv-box">' + (on ? ico(I.check) : '') + '</span><span>' + esc(plabel(p)) + '</span></button>';
+      }).join('') + '</div><div class="pv-row"><span class="pv-count">' + vis.sel.length + ' / 3</span><button type="button" class="pv-btn" data-pv="vis-send"' + (vis.sel.length ? '' : ' disabled') + '>' + esc(t('visSend')) + '</button></div>'
+        + (visMsg ? '<p class="pv-msg">' + esc(visMsg) + '</p>' : '');
+    }
+    box.innerHTML = h;
+  }
+
+  // ── 2. Carnet de visite (navigateur de l'acheteur ; envoyé seulement sur « Partager avec mon agent ») ──
+  var chips = Array.isArray(PD.chips) ? PD.chips : [];
+  var car = load('carnet', { c: [], n: '', shared: false }), photos = load('photos', []), carMsg = '', canSharePhotos = false;
+  var RETOUR = { lumiere: 'agencement', volumes: 'agencement', cuisine: 'agencement', salle_bain: 'agencement', rangements: 'agencement', calme: 'quartier', quartier: 'quartier' };
+  function renderCarnet() {
+    var box = $('pv-carnet'); if (!box) return;
+    if (!chips.length) { box.style.display = 'none'; return; }
+    box.style.display = '';
+    var h = '<div class="lbl">' + esc(t('carTitle')) + '</div><p class="pv-sub">' + esc(t('carSub')) + '</p>'
+      + '<p class="pv-h">' + esc(t('carLikes')) + '</p><div class="pv-chips">' + chips.map(function(c) {
+        var on = car.c.indexOf(c) !== -1;
+        return '<button type="button" class="pv-chip' + (on ? ' on' : '') + '" aria-pressed="' + on + '" data-pv="chip" data-id="' + esc(c) + '">' + (on ? '♥ ' : '') + esc(t('chip.' + c) || c) + '</button>';
+      }).join('') + '</div>'
+      + '<label class="pv-h" for="pv-notes">' + esc(t('carNotes')) + '</label><textarea id="pv-notes" class="pv-text" maxlength="600" placeholder="' + esc(t('carNotesPh')) + '">' + esc(car.n) + '</textarea>'
+      + '<p class="pv-h">' + esc(t('carPhotos')) + '</p><div class="pv-photos">' + photos.map(function(src, i) {
+        return '<div class="pv-ph"><img src="' + esc(src) + '" alt=""><button type="button" data-pv="ph-del" data-i="' + i + '" aria-label="' + esc(t('carDel')) + '">×</button></div>';
+      }).join('') + (photos.length < 4 ? '<label class="pv-ph pv-add">' + ico(I.cam) + '<span>' + esc(t('carAdd')) + '</span><input type="file" accept="image/*" id="pv-photo-in" hidden></label>' : '') + '</div>'
+      + '<p class="pv-note">' + esc(t('carPrivacy')) + '</p>'
+      + '<button type="button" class="pv-btn" data-pv="car-share">' + esc(t('carShare')) + '</button>'
+      + (carMsg ? '<p class="pv-msg">' + esc(carMsg) + '</p>' : '')
+      + (car.shared && photos.length ? (canSharePhotos ? '<button type="button" class="pv-btn pv-sec" data-pv="ph-share">' + esc(t('carPhotosSend')) + '</button>' : '<p class="pv-note">' + esc(t('carPhotosStay')) + '</p>') : '');
+    box.innerHTML = h;
+    var ta = $('pv-notes'); if (ta) ta.addEventListener('input', function() { car.n = ta.value.slice(0, 600); save('carnet', car); });
+    var fi = $('pv-photo-in'); if (fi) fi.addEventListener('change', function() { if (fi.files && fi.files[0]) addPhoto(fi.files[0]); });
+  }
+  function addPhoto(file) {
+    var img = new Image(), url = URL.createObjectURL(file);
+    img.onload = function() {
+      var max = 900, r = Math.min(1, max / Math.max(img.width, img.height)), cv = document.createElement('canvas');
+      cv.width = Math.round(img.width * r); cv.height = Math.round(img.height * r);
+      cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height); URL.revokeObjectURL(url);
+      var data = cv.toDataURL('image/jpeg', 0.72), next = photos.concat([data]);
+      if (save('photos', next)) { photos = next; carMsg = t('carSaved'); } else carMsg = t('carFull');
+      renderCarnet();
+    };
+    img.onerror = function() { URL.revokeObjectURL(url); };
+    img.src = url;
+  }
+  function photoFiles() {
+    return photos.map(function(d, i) {
+      var b = atob(d.split(',')[1]), a = new Uint8Array(b.length); for (var j = 0; j < b.length; j++) a[j] = b.charCodeAt(j);
+      return new File([a], 'visite-' + (i + 1) + '.jpg', { type: 'image/jpeg' });
+    });
+  }
+
+  // ── 3. Partager à mon conjoint ou à un proche ──
+  function shareCode() { var c = load('share', ''); if (!c) { c = Math.random().toString(36).slice(2, 8); save('share', c); } return c; }
+  function crushDone() { try { var x = JSON.parse(localStorage.getItem('pv_crush_' + location.pathname) || 'null'); return x && /^[AB]{8}$/.test(x.a) ? x : null; } catch (e) { return null; } }
+  function shareUrl() {
+    var q = new URLSearchParams(location.search), out = new URLSearchParams();
+    if (q.get('client')) out.set('client', q.get('client'));   // même fiche, même suivi ; jamais le prénom d'accueil
+    out.set('s', shareCode());
+    var cd = crushDone();
+    return location.origin + location.pathname + '?' + out.toString() + (cd ? '#crush=1.' + cd.a + '.' + encodeURIComponent(cd.n || '') + '.' : '');
+  }
+  function shareText() { return (crushDone() ? t('shareMsgCrush') : t('shareMsg')) + '\n' + shareUrl(); }
+  function openShare() {
+    var sh = $('pv-share-sheet');
+    if (!sh) { sh = document.createElement('div'); sh.id = 'pv-share-sheet'; sh.setAttribute('role', 'dialog'); sh.setAttribute('aria-modal', 'true'); document.body.appendChild(sh); }
+    sh.innerHTML = '<div class="pv-sheet"><div class="pv-sheet-h"><b>' + esc(t('shareTitle')) + '</b><button type="button" data-pv="sh-close" aria-label="' + esc(t('close')) + '">×</button></div>'
+      + '<label for="pv-share-txt" class="pv-sub">' + esc(t('shareSub')) + '</label><textarea id="pv-share-txt" class="pv-text" rows="4">' + esc(shareText()) + '</textarea>'
+      + '<div class="pv-sh-grid">'
+      + '<button type="button" class="pv-sh" data-pv="sh" data-c="whatsapp">' + ico(I.wa) + '<span>WhatsApp</span></button>'
+      + '<button type="button" class="pv-sh" data-pv="sh" data-c="sms">' + ico(I.sms) + '<span>SMS</span></button>'
+      + '<button type="button" class="pv-sh" data-pv="sh" data-c="email">' + ico(I.mail) + '<span>' + esc(t('email')) + '</span></button>'
+      + '<button type="button" class="pv-sh" data-pv="sh" data-c="copie">' + ico(I.link) + '<span>' + esc(t('copy')) + '</span></button>'
+      + '</div><p class="pv-msg" id="pv-sh-msg" role="status"></p></div>';
+    sh.classList.add('open');
+    var first = sh.querySelector('[data-c="whatsapp"]'); if (first) first.focus();
+  }
+  function doShare(c) {
+    var txtEl = $('pv-share-txt'), txt = txtEl ? txtEl.value : shareText(), url = shareUrl();
+    if (txt.indexOf(url) === -1) txt += '\n' + url;   // le lien est toujours présent, même si le message a été modifié
+    var e = encodeURIComponent(txt);
+    if (c === 'whatsapp') window.open('https://wa.me/?text=' + e, '_blank', 'noopener');
+    else if (c === 'sms') location.href = 'sms:?&body=' + e;
+    else if (c === 'email') location.href = 'mailto:?subject=' + encodeURIComponent(t('shareSubject')) + '&body=' + e;
+    else if (c === 'copie') {
+      var m = $('pv-sh-msg'), ok = function() { if (m) m.textContent = t('copied'); };
+      try { navigator.clipboard.writeText(txt).then(ok, function() { if (txtEl) { txtEl.select(); try { document.execCommand('copy'); } catch (x) {} } ok(); }); }
+      catch (x) { if (txtEl) { txtEl.select(); try { document.execCommand('copy'); } catch (y) {} } ok(); }
+    }
+    track('fiche_partagee', { c: c, s: shareCode(), t: crushDone() ? 1 : 0 });
+  }
+  window.pvOpenShare = openShare;
+
+  // ── 4. Critère déterminant ──
+  var CRIT = ['calme', 'lumiere', 'transports', 'exterieur', 'energie', 'quartier'];
+  var crit = load('critere', { k: null, sent: null });
+  function critFromAnswers(ans, top) {
+    var map = function(q, a) { return q === 'weekend' && a === 'A' ? 'exterieur' : q === 'quotidien' && a === 'A' ? 'transports' : q === 'interieur' ? (a === 'A' ? 'lumiere' : 'calme') : q === 'quartier' ? 'quartier' : q === 'energie' && a === 'A' ? 'energie' : null; };
+    var k = null;
+    (top || []).some(function(c) { k = map(c.q, c.a); return !!k; });
+    if (!k) ['weekend', 'interieur', 'quotidien', 'quartier', 'energie'].some(function(q) { k = ans && ans[q] ? map(q, ans[q]) : null; return !!k; });
+    return k;
+  }
+  function critHTML(pre) {
+    var cur = crit.k || pre, confirmed = !!crit.sent;
+    return '<div class="pv-crit"><p class="pv-h">' + esc(t('critTitle')) + '</p><p class="pv-sub">' + esc(t('critSub')) + '</p><div class="pv-chips">'
+      + CRIT.map(function(k) { var on = cur === k; return '<button type="button" class="pv-chip' + (on ? ' on' : '') + '" aria-pressed="' + on + '" data-pv="crit" data-id="' + k + '">' + esc(t('crit.' + k)) + '</button>'; }).join('') + '</div>'
+      + (!confirmed && !crit.k && pre ? '<p class="pv-note">' + esc(t('critPre')) + '</p><button type="button" class="pv-btn pv-sec" data-pv="crit-ok" data-id="' + pre + '">' + esc(t('critOk')) + '</button>' : '')
+      + (confirmed ? '<p class="pv-msg">' + esc(t('critDone')) + '</p>' : '') + '</div>';
+  }
+  function chooseCrit(k) {
+    if (CRIT.indexOf(k) === -1) return;
+    crit.k = k;
+    if (crit.sent !== k && track('critere_choisi', { k: k })) crit.sent = k;
+    save('critere', crit); renderAll();
+  }
+  function renderCritBien() { var box = $('pv-critere'); if (box) box.innerHTML = critHTML(null); }
+  var lastCrush = null;
+  // Appelé par l'onglet « Le test » à l'affichage d'un résultat : critère pré-sélectionné + partage
+  window.pvCrushResult = function(el, ans, top, names) {
+    lastCrush = { el: el, ans: ans, top: top };
+    try { localStorage.setItem('pv_crush_' + location.pathname, JSON.stringify({ a: ['weekend', 'quotidien', 'interieur', 'travaux', 'rangement', 'quartier', 'energie', 'avenir'].map(function(q) { return ans[q] === 'B' ? 'B' : 'A'; }).join(''), n: (names && names[0]) || '' })); } catch (e) {}
+    if (!el) return;
+    el.innerHTML = critHTML(critFromAnswers(ans, top)) + '<button type="button" class="pv-btn pv-sec pv-share-end" data-pv="share">' + ico(I.share) + '<span>' + esc(t('shareEnd')) + '</span></button>';
+  };
+
+  // ── 5. Le mot du vendeur ──
+  var liked = load('mot', false);
+  function renderMot() {
+    var box = $('pv-mot'); if (!box) return;
+    var m = PD.mot || {}, list = (Array.isArray(m[L()]) && m[L()].length ? m[L()] : m.fr) || [], libre = String(m.libre || '').trim();
+    if (!list.length && !libre) { box.style.display = 'none'; return; }
+    box.style.display = '';
+    box.innerHTML = '<div class="lbl">' + esc(t('motTitle')) + '</div>'
+      + (list.length ? '<ul class="pv-quote">' + list.map(function(x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '')
+      + (libre ? '<p class="pv-libre">« ' + esc(libre) + ' »</p>' : '')
+      + '<button type="button" class="pv-heart' + (liked ? ' on' : '') + '" data-pv="mot-like" aria-pressed="' + liked + '">' + ico(I.heart) + '<span>' + esc(liked ? t('motLiked') : t('motLike')) + '</span></button>';
+  }
+
+  function renderShareTop() { var b = $('pv-share-top'); if (b) b.innerHTML = ico(I.share) + '<span>' + esc(t('shareBtn')) + '</span>'; }
+  function renderAll() {
+    renderVisite(); renderCarnet(); renderCritBien(); renderMot(); renderShareTop();
+    if (lastCrush && lastCrush.el && document.body.contains(lastCrush.el)) window.pvCrushResult(lastCrush.el, lastCrush.ans, lastCrush.top);
+    var sh = $('pv-share-sheet'); if (sh && sh.classList.contains('open')) openShare();
+  }
+  window.renderParticipation = renderAll;
+
+  document.addEventListener('click', function(e) {
+    var b = e.target.closest('[data-pv]'); if (!b) { var sh0 = $('pv-share-sheet'); if (sh0 && e.target === sh0) sh0.classList.remove('open'); return; }
+    var a = b.getAttribute('data-pv'), id = b.getAttribute('data-id');
+    if (a === 'vis') {
+      var i = vis.sel.indexOf(id);
+      if (i !== -1) { vis.sel.splice(i, 1); visMsg = ''; } else if (vis.sel.length >= 3) visMsg = t('visMax'); else { vis.sel.push(id); visMsg = ''; }
+      save('visite', vis); renderVisite();
+    } else if (a === 'vis-send') {
+      if (!vis.sel.length) return;
+      if (track('visite_points', { k: vis.sel.slice(0, 3) })) { vis.sent = true; save('visite', vis); }
+      renderVisite();
+    } else if (a === 'chip') {
+      var j = car.c.indexOf(id); if (j !== -1) car.c.splice(j, 1); else car.c.push(id);
+      save('carnet', car); carMsg = ''; renderCarnet();
+    } else if (a === 'ph-del') {
+      photos.splice(parseInt(b.getAttribute('data-i'), 10), 1); save('photos', photos); renderCarnet();
+    } else if (a === 'car-share') {
+      var notes = ($('pv-notes') || {}).value || car.n || '';
+      if (!car.c.length && !notes.trim()) { carMsg = t('carEmpty'); renderCarnet(); return; }
+      var payload = { c: car.c.slice(0, 11), ph: photos.length };
+      if (notes.trim()) payload.n = notes.trim().slice(0, 500);
+      if (track('carnet_partage', payload)) {
+        car.shared = true; save('carnet', car); carMsg = t('carDone');
+        // Les coups de cœur pré-remplissent le retour de visite existant (liste fermée, 4 réponses au maximum)
+        var codes = ['coup_coeur']; car.c.forEach(function(c) { var r = RETOUR[c]; if (r && codes.indexOf(r) === -1) codes.push(r); });
+        try { if (window.vrPreselect) window.vrPreselect(codes.slice(0, 4)); } catch (x) {}
+        try { canSharePhotos = !!(photos.length && navigator.canShare && navigator.canShare({ files: photoFiles() })); } catch (x) { canSharePhotos = false; }
+      }
+      renderCarnet();
+    } else if (a === 'ph-share') {
+      try { navigator.share({ files: photoFiles(), title: t('carTitle'), text: (car.n || '') }).then(function() {}, function() {}); } catch (x) {}
+    } else if (a === 'share') { openShare();
+    } else if (a === 'sh-close') { var sh = $('pv-share-sheet'); if (sh) sh.classList.remove('open');
+    } else if (a === 'sh') { doShare(b.getAttribute('data-c'));
+    } else if (a === 'crit' || a === 'crit-ok') { chooseCrit(id);
+    } else if (a === 'mot-like') {
+      if (!liked && track('mot_vendeur_coeur')) { liked = true; save('mot', true); }
+      renderMot();
+    }
+  });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { var sh = $('pv-share-sheet'); if (sh) sh.classList.remove('open'); } });
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderAll); else renderAll();
 })();
 </script>
 <script id="pv-skin-js">
