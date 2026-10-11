@@ -12,6 +12,8 @@
 // Accès : agent connecté (jeton Supabase vérifié). Modèle : GUIDE_COMMUNE_MODEL, sinon claude-sonnet-5-5.
 // Fidélité : rédaction extractive, puis contrôle en code phrase par phrase (verifierPhrase) : toute phrase dont un nom propre,
 // un nombre, une date, une périodicité ou une relation n'est pas dans la source de sa rubrique est supprimée.
+// Format : 3 ou 4 phrases courtes par rubrique, 450 caractères au plus. Vérifiabilité : chaque rubrique enregistre dans le
+// cache l'extrait exact de la source (phrases de Wikipédia, noms DATAtourisme) sur lequel reposent ses phrases.
 const { createClient } = require('@supabase/supabase-js');
 
 const SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
@@ -24,14 +26,15 @@ const LICENCE_WP = 'CC BY-SA 4.0';
 const RUBRIQUES = [
   { cle: 'presentation', titre: 'La commune' },
   { cle: 'transports', titre: 'Transports', re: /transport|voies de communication|desserte|acces|reseau routier|circulation/ },
-  { cle: 'patrimoine', titre: 'Patrimoine', re: /patrimoine(?! naturel)|lieux et monuments|monuments|architecture|edifices/ },
+  { cle: 'equipements', titre: 'Écoles, commerces et équipements', re: /enseignement|education|ecoles?\b|scolaire|college|lycee|commerces de proximite|vie quotidienne|sante|equipements|services publics|(^|[^a-z])sports?\b/ },
   { cle: 'parcs', titre: 'Parcs et espaces verts', re: /parcs?\b|espaces? verts?|jardins?|patrimoine naturel|environnement|bois et forets|espaces naturels/ },
+  { cle: 'patrimoine', titre: 'Patrimoine', re: /patrimoine(?! naturel)|lieux et monuments|monuments|architecture|edifices/ },
   { cle: 'culture', titre: 'Culture et loisirs', re: /culture|culturel|manifestations|festivites|evenements|vie associative|associations|loisirs|vie locale/ },
-  { cle: 'equipements', titre: 'Équipements et services', re: /enseignement|education|sante|equipements|services publics|(^|[^a-z])sports?\b/ },
   { cle: 'economie', titre: 'Économie', re: /economie|emploi|entreprises|commerces?|activites economiques|zones d'activite/ }
 ];
 const ORDRE_CORRESPONDANCE = ['parcs', 'patrimoine', 'equipements', 'culture', 'transports', 'economie'];
 const MAX_CAR_RUBRIQUE = 3500, MAX_CAR_PRESENTATION = 2500;
+const MAX_CAR_TEXTE = 450, MAX_PHRASES = 4, MAX_CAR_EXTRAIT = 1500;
 
 // Types DATAtourisme utiles par rubrique (noms de classes de l'ontologie)
 const DT_RUBRIQUE = [
@@ -63,7 +66,7 @@ function sectionsWikipedia(extrait) {
     if (!cle) continue;
     // la section et ses sous-sections, jusqu'au prochain titre de même niveau ou supérieur
     let bloc = texte(s);
-    for (let j = i + 1; j < sections.length && sections[j].niveau > s.niveau; j++) bloc += '\n' + sections[j].titre + ' : ' + texte(sections[j]);
+    for (let j = i + 1; j < sections.length && sections[j].niveau > s.niveau; j++) bloc += '\n' + sections[j].titre + '\n' + texte(sections[j]);   // titre seul sur sa ligne : l'extrait reste recopiable tel quel
     out[cle] = ((out[cle] ? out[cle] + '\n' : '') + bloc.trim()).slice(0, MAX_CAR_RUBRIQUE);
   }
   Object.keys(out).forEach(k => { if (!out[k] || out[k].replace(/\s/g, '').length < 40) delete out[k]; });
@@ -176,7 +179,11 @@ const SYSTEME = [
   '- Pour les lieux DATAtourisme, tu ne peux citer que leur nom et leur catégorie, sans aucun détail.',
   '- N\'écris pas les faits qui vieillissent : services publics susceptibles d\'être réorganisés (tribunal, commissariat, gendarmerie, trésorerie), horaires, marchés, événements ponctuels ou annuels.',
   '- Aucun chiffre daté : population, habitants, revenus, budgets, montants, taux, classements, statistiques.',
-  '- Ton classique et sobre, sans formule lyrique ni publicitaire. 2 à 4 phrases, 500 caractères au plus par rubrique.',
+  '- Interdit aussi : effectifs (salariés, employés, élèves, agriculteurs), nombres d\'exploitations ou d\'établissements, capacités de salles (places, sièges), rattachement administratif (académie, canton, arrondissement, circonscription), noms d\'entreprises, de marques et sièges sociaux.',
+  '',
+  'Ce qui compte pour un acheteur qui va habiter là, en priorité : transports (gare, lignes, routes), écoles (écoles, collège, lycée), commerces et équipements du quotidien, parcs, patrimoine.',
+  '- Chaque rubrique : 3 ou 4 phrases courtes (une idée par phrase), 3 ou 4 faits utiles à l\'acheteur, 450 caractères au plus. Choisis les faits les plus utiles pour habiter, pas les plus anecdotiques.',
+  '- Ton classique et sobre, sans formule lyrique ni publicitaire.',
   '- Si la source d\'une rubrique ne permet pas d\'écrire au moins une phrase fidèle, renvoie une chaîne vide "".',
   '- Pas de titre, pas de liste à puces, pas de mention de source (elles sont ajoutées à part).'
 ].join('\n');
@@ -193,9 +200,39 @@ const PERIODES = ['chaque', 'tous les', 'toutes les', 'hebdomadaire', 'mensuel',
 const NOMBRES = ['deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'quinze', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'cent', 'cents', 'mille', 'dizaine', 'douzaine', 'centaine', 'premier', 'premiere', 'second', 'seconde'];
 // Faits qui vieillissent : jamais écrits, même s'ils sont dans la source
 const PERISSABLE = /tribunal|commissariat|gendarmerie|tresorerie|perception|sous prefecture|bureau de poste|horaire|ouvert(e|s)? (du|le|les|de|tous)|\bmarches?\b|festival|brocante|\bfetes?\b|\bsalons?\b|\bfoire|edition|carnaval|kermesse/;
-function verifierPhrase(phrase, source) {
+// Jamais écrits non plus : effectifs, nombres d'exploitations, capacités de salles, rattachement administratif, entreprises
+const NB = '(\\d+|un|une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|quinze|vingt|trente|cent|cents|mille|\\w+aine|plusieurs|nombreux|nombreuses)';
+const INTERDIT = [
+  [/\b(effectifs?|salaries?|employes?|emplois?|agriculteurs?|actifs)\b/, 'effectif'],
+  [new RegExp('\\b' + NB + ' (eleves|etudiants|inscrits|enfants|licencies|adherents)\\b'), 'effectif'],
+  [/\bexploitations?\b/, 'nombre d\'exploitations'],
+  [new RegExp('\\b' + NB + ' (etablissements|commerces|entreprises|societes)\\b'), 'nombre d\'établissements'],
+  [/\b(\d+ places|places assises|sieges|capacite|jauge|spectateurs)\b/, 'capacité de salle'],
+  [/\b(academie|canton|cantonal|arrondissement|circonscription|chef lieu|rattachee?s?)\b/, 'rattachement administratif'],
+  [/\b(siege|sieges sociaux|groupe(?! scolaire)|filiales?|usines?|enseignes?|multinationale|marques?)\b/, 'entreprise']
+];
+// Écoles, commerces, économie : un nom propre doit désigner un lieu (« collège Paul-Langevin », « zone des Champs »), pas une marque
+const LIEU_AVANT = /^(ecole|ecoles|scolaire|college|lycee|creche|gymnase|stade|piscine|mediatheque|bibliotheque|conservatoire|centre|hopital|clinique|maison|gare|place|rue|avenue|boulevard|quartier|zone|zac|zi|za|parc|halle|salle|espace|complexe|cite|residence)$/;
+const COMMERCE_AVANT = /^(commercial|commerciale|hypermarche|supermarche|magasin|magasins|boutique|galerie|enseigne|marque)$/;
+function nomDeMarque(phrase, source, commune) {
+  const mots = phrase.replace(/[«»"(),;:]/g, ' ').split(/\s+/).filter(Boolean), nC = norm(commune);
+  for (let i = 0; i < mots.length; i++) {
+    const brut = mots[i].replace(/^[^\p{L}\d]+|[^\p{L}\d]+$/gu, ''), n = norm(brut).trim();
+    if (!/^\p{Lu}/u.test(brut) || !n || nC.indexOf(' ' + n + ' ') !== -1) continue;
+    if (i === 0 && (DEBUTS.has(n) || VIDES.has(n) || new RegExp('(^|[^\\p{L}])' + brut.toLowerCase() + '([^\\p{L}]|$)', 'u').test(source))) continue;   // mot courant en tête de phrase
+    if (i > 0 && /^\p{Lu}/u.test(mots[i - 1].replace(/^[^\p{L}]+/u, '')) && i - 1 > 0) continue;   // suite d'un nom déjà examiné (« Paul Langevin »)
+    const avant = mots.slice(Math.max(0, i - 4), i).map(m => norm(m).trim());
+    if (avant.some(m => COMMERCE_AVANT.test(m))) return brut;
+    if (avant.some(m => LIEU_AVANT.test(m))) continue;
+    return brut;
+  }
+  return null;
+}
+function verifierPhrase(phrase, source, cle, commune) {
   const nS = norm(source), nP = norm(phrase), dans = m => nS.indexOf(' ' + m.trim() + ' ') !== -1;
   if (PERISSABLE.test(nP)) return { ok: false, motif: 'fait qui vieillit' };
+  for (const [re, motif] of INTERDIT) if (re.test(nP)) return { ok: false, motif };
+  if (cle === 'equipements' || cle === 'economie') { const m = nomDeMarque(phrase, source, commune || ''); if (m) return { ok: false, motif: 'nom d\'entreprise ou de marque : ' + m }; }
   // nombres et années (chiffres)
   const chiffres = (phrase.match(/\d[\d  .,]*\d|\d/g) || []).map(x => x.replace(/[^\d]/g, ''));
   const chiffresSource = new Set((source.match(/\d[\d  .,]*\d|\d/g) || []).map(x => x.replace(/[^\d]/g, '')));
@@ -226,13 +263,43 @@ function verifierPhrase(phrase, source) {
 function textesSource(entree) {
   return [entree.wikipedia || ''].concat((entree.datatourisme || []).map(x => x.nom + ' ' + (x.categorie || ''))).join('\n');
 }
-// Garde les seules phrases fidèles ; renvoie le texte et les phrases retirées (avec le motif)
-function filtrerFidele(texte, source, commune) {
+const decouper = t => (String(t || '').replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]*/g) || []).map(x => x.trim()).filter(Boolean);
+// Garde les seules phrases fidèles ; renvoie le texte, les phrases gardées et les phrases retirées (avec le motif)
+function filtrerFidele(texte, source, commune, cle) {
   const src = String(source || '') + '\n' + (commune || '');
-  const phrases = String(texte || '').replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]*/g) || [];
   const gardees = [], retirees = [];
-  for (const p of phrases.map(x => x.trim()).filter(Boolean)) { const v = verifierPhrase(p, src); if (v.ok) gardees.push(p); else retirees.push({ phrase: p, motif: v.motif }); }
-  return { texte: gardees.join(' ').trim(), retirees };
+  for (const p of decouper(texte)) { const v = verifierPhrase(p, src, cle, commune); if (v.ok) gardees.push(p); else retirees.push({ phrase: p, motif: v.motif }); }
+  return { texte: gardees.join(' ').trim(), gardees, retirees };
+}
+// Format : MAX_PHRASES phrases au plus, MAX_CAR_TEXTE caractères au plus, en phrases entières
+function formater(phrases) {
+  const out = []; let n = 0;
+  for (const p of phrases) {
+    if (out.length >= MAX_PHRASES || n + (n ? 1 : 0) + p.length > MAX_CAR_TEXTE) break;
+    out.push(p); n += (n ? 1 : 0) + p.length;
+  }
+  return out;
+}
+// Extrait exact de la source : pour chaque phrase gardée, la phrase de Wikipédia qui la porte le plus (recopiée telle
+// quelle) et les lieux DATAtourisme qu'elle cite (« nom (catégorie) »). Sert à l'agent pour contrôler le texte.
+function extraitSource(phrases, entree) {
+  const racines = t => new Set(norm(t).trim().split(' ').filter(x => x.length >= 4 && !VIDES.has(x)).map(x => x.slice(0, 5)));
+  const candidates = [];
+  String(entree.wikipedia || '').split(/\n+/).forEach(par => decouper(par).forEach(ph => { if (ph.length > 15 && /[.!?]$/.test(ph)) candidates.push(ph); }));
+  const morceaux = [];
+  for (const p of phrases) {
+    const rp = racines(p); let meilleure = null, score = 0;
+    for (const c of candidates) { let k = 0; for (const r of racines(c)) if (rp.has(r)) k++; if (k > score) { score = k; meilleure = c; } }
+    if (meilleure && score >= 2 && morceaux.indexOf(meilleure) === -1) morceaux.push(meilleure);
+    const nP = norm(p);
+    for (const x of entree.datatourisme || []) {
+      const l = x.nom + (x.categorie ? ' (' + x.categorie + ')' : '');
+      if (nP.indexOf(norm(x.nom)) !== -1 && morceaux.indexOf(l) === -1) morceaux.push(l);
+    }
+  }
+  let ex = morceaux.map(m => '« ' + m + ' »').join('\n');
+  if (ex.length > MAX_CAR_EXTRAIT) ex = ex.slice(0, MAX_CAR_EXTRAIT - 1).replace(/\s+\S*$/, '') + '…';
+  return ex;
 }
 
 // Retire toute phrase porteuse d'un chiffre daté qui aurait échappé à la consigne.
@@ -278,12 +345,13 @@ async function construireGuide(deps, insee, commune, aujourdhui) {
     if (!entrees[cle]) return;   // jamais de rubrique sans donnée, même si l'IA en renvoie une
     let t = typeof textes[cle] === 'string' ? sansChiffreDate(textes[cle]) : '';
     t = t.split(/(?<=[.!?])\s+/).filter(p => !LYRIQUE.test(p)).join(' ').trim();   // phrases lyriques retirées
-    t = filtrerFidele(t, textesSource(entrees[cle]), commune).texte.slice(0, 700);   // phrases non sourcées retirées
+    const phrases = formater(filtrerFidele(t, textesSource(entrees[cle]), commune, cle).gardees);   // phrases non sourcées retirées
+    t = phrases.join(' ');
     if (t.length < 30) return;   // rubrique vide : elle n'apparaît pas
     const sources = [];
     if (entrees[cle].wikipedia) sources.push({ type: 'wikipedia', titre: 'Wikipédia — ' + wp.titre, url: wp.url, licence: LICENCE_WP });
     if (entrees[cle].datatourisme) sources.push({ type: 'datatourisme', titre: 'DATAtourisme', url: 'https://www.datatourisme.fr' });
-    rubriques.push({ cle, titre, texte: t, sources });
+    rubriques.push({ cle, titre, texte: t, sources, extrait: extraitSource(phrases, entrees[cle]) });
   });
   if (!rubriques.length) return { guide: null, dt };
   return { guide: { insee, commune, rubriques, modele, genere_le: new Date(aujourdhui + 'T12:00:00Z').toISOString() }, dt };
@@ -339,4 +407,4 @@ async function handler(req, res, deps) {
 
 module.exports = (req, res) => handler(req, res);
 module.exports.handler = handler;
-module.exports._interne = { sectionsWikipedia, sansChiffreDate, construireGuide, wikipedia, datatourisme, RUBRIQUES, MODELE_DEFAUT, verifierPhrase, filtrerFidele, SYSTEME };
+module.exports._interne = { sectionsWikipedia, sansChiffreDate, construireGuide, wikipedia, datatourisme, RUBRIQUES, MODELE_DEFAUT, verifierPhrase, filtrerFidele, formater, extraitSource, SYSTEME, MAX_CAR_TEXTE };
