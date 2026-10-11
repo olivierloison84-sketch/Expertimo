@@ -59,7 +59,7 @@ function buildParticipation(a) {
     const duo = p.m === 'duo', s = pct(p.s), rep = typeof p.a === 'string' ? p.a : '';
     title = duo ? '💘 ' + (who ? who + (who.indexOf('&') !== -1 ? ' ont fait' : ' a fait') : 'Deux acquéreurs ont fait') + ' le test à deux' + (s != null ? ' : ' + s + ' % en commun' : '')
                 : '💘 ' + (who || 'Un acquéreur') + ' a envoyé son match' + (s != null ? ' : ' + s + ' %' : '');
-    let mode = duo ? 'Test « Le crush » fait à deux' : 'Test « Le crush » fait seul';
+    let mode = duo ? 'Test « Crush ou crash ? » fait à deux' : 'Test « Crush ou crash ? » fait seul';
     if (duo) { const s1 = pct(p.s1), s2 = pct(p.s2), acc = Number(p.acc);
       const det = []; if (s1 != null && s2 != null) det.push(s1 + ' % et ' + s2 + ' % chacun'); if (Number.isInteger(acc) && acc >= 0 && acc <= 8) det.push('d’accord sur ' + acc + ' critère' + (acc > 1 ? 's' : '') + ' sur 8');
       if (det.length) mode += ' (' + det.join(', ') + ')'; }

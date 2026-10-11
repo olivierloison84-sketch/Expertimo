@@ -162,20 +162,82 @@ function appDom(extra) {
   // Mot du vendeur : « Ça me parle » compté une seule fois
   click('#pv-mot [data-pv="mot-like"]'); click('#pv-mot [data-pv="mot-like"]');
   assert.strictEqual(events.filter(e => e === 'mot_vendeur_coeur').length, 1);
-  // Partage : lien de la fiche + ?s=, jamais le prénom d'accueil ; lien duo du test si le test a été fait
-  click('#pv-share-top');
-  assert(fdoc.getElementById('pv-share-sheet').classList.contains('open'));
-  let msg = fdoc.getElementById('pv-share-txt').value;
-  assert(/fiches\/x\.html\?client=Marie&s=[a-z0-9]{6}$/.test(msg.split('\n').pop()) && !/prenom=/.test(msg), 'lien partagé : ' + msg);
+  // Partage : lien = fiche + ?s= seulement (jamais client=, ni nom, ni prénom) ; message texte seul, lien en dernier
+  const NOM = { fr: 'Crush ou crash ?', en: 'Crush or crash?', pt: 'Crush ou crash?', es: '¿Crush o crash?' };
+  const LIEN = /https:\/\/espace\.privency\.fr\/fiches\/x\.html\?s=[a-z0-9]{6}(#crush=1\.[AB]{8})?$/;
+  const partage = () => { click('#pv-share-top'); assert(fdoc.getElementById('pv-share-sheet').classList.contains('open')); return fdoc.getElementById('pv-share-txt').value; };
+  const propre = (m, quoi) => {
+    assert(!/client=|prenom=|nom=|Marie/.test(m), quoi + ' : ni client=, ni nom, ni prénom : ' + m);
+    assert(!/[<>]|svg|[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(m), quoi + ' : texte seul, sans pictogramme ni emoji : ' + m);
+    assert(LIEN.test(m) && !/\.$/.test(m), quoi + ' : lien en dernier, sans point final : ' + m);
+  };
+  let msg = partage();
+  propre(msg, 'test non fait');
+  assert.strictEqual(msg.replace(/ https:\S+$/, ''), 'Regarde ce bien que j\'ai repéré ! Tu peux aussi faire le test « Crush ou crash ? » sur la fiche (onglet « Crush ou crash ? ») pour voir s\'il te correspond.', 'message sans test : ' + msg);
   click('#pv-share-sheet [data-c="whatsapp"]');
   assert(events.some(e => /^fiche_partagee:\{"c":"whatsapp","s":"[a-z0-9]{6}","t":0\}$/.test(e)), events.join(' | '));
-  fw.localStorage.setItem('pv_crush_/fiches/x.html', JSON.stringify({ a: 'ABABABAB', n: 'Marie' }));
-  click('#pv-share-top'); msg = fdoc.getElementById('pv-share-txt').value;
-  assert(/#crush=1\.ABABABAB\.Marie\.$/.test(msg) && /test/.test(msg), 'test fait : le lien ouvre le mode à deux');
-  // Fin du test crush : critère pré-sélectionné d'après les réponses + bouton de partage
+  fw.localStorage.setItem('pv_crush_/fiches/x.html', JSON.stringify({ a: 'ABABABAB', s: 87, m: 'solo' }));
+  msg = partage(); propre(msg, 'test fait');
+  assert.strictEqual(msg.replace(/ https:\S+$/, ''), 'Regarde ce bien que j\'ai repéré ! J\'ai fait le test « Crush ou crash ? » : 87 % de compatibilité. Fais-le aussi (onglet « Crush ou crash ? » sur la fiche) et on comparera nos résultats.', 'message avec score : ' + msg);
+  assert(/#crush=1\.ABABABAB$/.test(msg), 'test fait : le lien ouvre le test à deux, sans prénom');
+  fw.localStorage.setItem('pv_crush_/fiches/x.html', JSON.stringify({ a: 'ABABABAB', s: 91, m: 'duo' }));
+  msg = partage(); propre(msg, 'test à deux');
+  assert(/: 91 % de compatibilité à deux\. Fais-le aussi/.test(msg), 'message duo : ' + msg);
+  fw.localStorage.setItem('pv_crush_/fiches/x.html', JSON.stringify({ a: 'ABABABAB', n: 'Marie' }));   // ancien format (avant le score) : message sans score, prénom jamais repris
+  msg = partage(); propre(msg, 'ancien format'); assert(/Tu peux aussi faire le test/.test(msg), 'ancien format : message sans score');
+  for (const l of ['en', 'pt', 'es', 'fr']) {
+    fw.applyLang(l);
+    for (const st of [null, { a: 'ABABABAB', s: 80, m: 'solo' }, { a: 'ABABABAB', s: 75, m: 'duo' }]) {
+      if (st) fw.localStorage.setItem('pv_crush_/fiches/x.html', JSON.stringify(st)); else fw.localStorage.removeItem('pv_crush_/fiches/x.html');
+      msg = partage(); propre(msg, l);
+      assert.strictEqual(msg.split(NOM[l]).length - 1, 2, l + ' : nom de l\'onglet traduit, deux fois : ' + msg);
+      if (st) assert(msg.includes(String(st.s)), l + ' : score : ' + msg);
+    }
+  }
+  fw.localStorage.removeItem('pv_crush_/fiches/x.html');
+  // Nom de l'onglet : une seule clé, même jeu de mots dans les 4 langues ; pictogrammes décoratifs (cœur, cœur brisé)
+  for (const l of ['fr', 'en', 'pt', 'es']) {
+    fw.applyLang(l);
+    assert.strictEqual(fw.uiText('tab-crush', l), NOM[l], l + ' : traduction de l\'onglet');
+    for (const sel of ['#main-nav button[data-tab="crush"] .rail-label', '#crush .cr-titre']) {
+      const el = fdoc.querySelector(sel), ic = el.querySelectorAll('svg.pv-cc-i');
+      assert.strictEqual(el.textContent, NOM[l], l + ' ' + sel + ' : libellé accessible = texte seul');
+      assert.strictEqual(ic.length, 2, l + ' ' + sel + ' : deux pictogrammes');
+      assert([...ic].every(x => x.getAttribute('aria-hidden') === 'true'), 'pictogrammes décoratifs');
+      assert(ic[0].innerHTML !== ic[1].innerHTML && ic[1].querySelectorAll('path').length === 2, 'cœur et cœur brisé différents');
+      assert.deepStrictEqual([...el.querySelectorAll('.pv-cc')].map(x => x.textContent.toLowerCase()), ['crush', 'crash'], 'pictogramme devant « crush » puis devant « crash »');
+    }
+  }
+  fw.applyLang('fr');
+  // Barre du nouveau design : pictogrammes et icône de section masquée seulement sur cet onglet ; nom suivi au changement de langue
+  assert(fdoc.getElementById('pv-bar'), 'barre du nouveau design présente'); {
+    click('#main-nav button[data-tab="crush"]'); await new Promise(r => setTimeout(r, 30));
+    const bar = fdoc.getElementById('pv-bar'), ttl = bar.querySelector('.ttl');
+    assert(bar.classList.contains('pv-bar-cc') && ttl.querySelectorAll('svg.pv-cc-i').length === 2 && ttl.textContent === NOM.fr, 'barre : ' + ttl.textContent);
+    fw.applyLang('en'); await new Promise(r => setTimeout(r, 30));
+    assert(ttl.textContent === NOM.en && ttl.querySelectorAll('svg.pv-cc-i').length === 2, 'barre après changement de langue : ' + ttl.textContent);
+    fw.applyLang('fr'); click('#pv-bar .back'); click('#main-nav button[data-tab="historique"]'); await new Promise(r => setTimeout(r, 30));
+    assert(!bar.classList.contains('pv-bar-cc') && !ttl.querySelector('svg'), 'barre des autres onglets inchangée');
+    click('#pv-bar .back');
+  }
+  assert(!/Ce bien est-il fait pour vous/.test(fdoc.querySelector('#crush .cr-titre').textContent) && /fait pour vous/.test(fdoc.querySelector('#crush .stitle').textContent), 'sous-titre conservé dans l\'onglet');
+  // Fin du test crush : critère pré-sélectionné + partage ; score et mode gardés sur l'appareil, sans prénom
   click('#main-nav button[data-tab="crush"]'); click('#crush [data-act="solo"]');
   for (let i = 0; i < 8; i++) click('#crush [data-act="pick"][data-a="A"]');
   assert(fdoc.querySelector('#crush .cr-extra .pv-chip') && fdoc.querySelector('#crush .cr-extra [data-pv="share"]'), 'critère et partage en fin de test');
+  const saved = JSON.parse(fw.localStorage.getItem('pv_crush_/fiches/x.html'));
+  assert(saved.a === 'AAAAAAAA' && typeof saved.s === 'number' && saved.m === 'solo' && !('n' in saved), 'résultat gardé : ' + JSON.stringify(saved));
+  msg = partage(); propre(msg, 'après le test'); assert(msg.includes(saved.s + ' % de compatibilité.'), 'score du test dans le message : ' + msg);
+  // Test à deux : le lien envoyé à la 2e personne ne contient pas client=
+  click('#crush [data-act="redo"]'); click('#crush [data-act="duo"]');
+  fdoc.getElementById('cr-n1').value = 'Léa'; fdoc.getElementById('cr-n2').value = 'Tom'; click('#crush [data-act="names"]');
+  for (let i = 0; i < 8; i++) click('#crush [data-act="pick"][data-a="B"]');
+  fw.navigator.clipboard = { writeText: async () => {} };
+  click('#crush [data-act="link"]'); await new Promise(r => setTimeout(r, 20));
+  const lienDuo = fdoc.querySelector('#crush .cr-url').textContent;
+  assert(/^https:\/\/espace\.privency\.fr\/fiches\/x\.html\?s=[a-z0-9]{6}#crush=1\.BBBBBBBB\./.test(lienDuo) && !/client=|prenom=/.test(lienDuo), 'lien du test à deux : ' + lienDuo);
+  // Personne arrivée par un lien partagé : pas de bienvenue nominative
+  assert(fdoc.documentElement.classList.contains('pv-partage') && /html\.pv-partage #welcome-msg\{display:none!important;\}/.test(html), 'lien partagé : bienvenue masquée');
   fd.window.close();
 
   // 6. « Mes stats » : signaux lisibles, jamais de code brut
