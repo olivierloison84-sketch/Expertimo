@@ -9,11 +9,13 @@
 //      des sources collectées ; une rubrique sans donnée n'est pas écrite ; aucun chiffre daté (filtré en plus après coup).
 //   4. Événements à venir : DATAtourisme, récupérés à chaque appel, sans IA, jamais mis en cache.
 // Clés : ANTHROPIC_API_KEY et DATATOURISME_API_KEY (variables Vercel), jamais renvoyées ni journalisées.
-// Accès : agent connecté (jeton Supabase vérifié). Modèle : GUIDE_COMMUNE_MODEL, sinon claude-haiku-5-5.
+// Accès : agent connecté (jeton Supabase vérifié). Modèle : GUIDE_COMMUNE_MODEL, sinon claude-sonnet-5-5.
+// Fidélité : rédaction extractive, puis contrôle en code phrase par phrase (verifierPhrase) : toute phrase dont un nom propre,
+// un nombre, une date, une périodicité ou une relation n'est pas dans la source de sa rubrique est supprimée.
 const { createClient } = require('@supabase/supabase-js');
 
 const SUPABASE_URL = 'https://hhqcumnatnslfjpsrmgb.supabase.co';
-const MODELE_DEFAUT = 'claude-haiku-5-5';
+const MODELE_DEFAUT = 'claude-sonnet-5-5';
 const UA = 'PrivencyGuideCommune/1.0 (https://app.privency.fr)';
 const DT_BASE = 'https://api.datatourisme.fr/v1';
 const LICENCE_WP = 'CC BY-SA 4.0';
@@ -112,6 +114,14 @@ function datesDt(o) {
   })(o, 0);
   return out;
 }
+// Catégorie lisible d'un lieu DATAtourisme, d'après son type (classe de l'ontologie) ; à défaut, le nom de la classe
+const DT_CATEGORIES = [[/Church|Chapel|ReligiousSite/i, 'édifice religieux'], [/Castle|Chateau/i, 'château'], [/Museum/i, 'musée'], [/Theater|Theatre/i, 'théâtre'],
+  [/Cinema/i, 'cinéma'], [/Library/i, 'bibliothèque'], [/ParkAndGarden|Garden|Park\b/i, 'parc ou jardin'], [/NaturalHeritage/i, 'site naturel'], [/Monument|RemarkableBuilding/i, 'monument'],
+  [/SportsAndLeisurePlace|Leisure/i, 'lieu de sport et de loisirs'], [/SwimmingPool/i, 'piscine'], [/CulturalSite/i, 'site culturel']];
+function categorieDt(types) {
+  for (const [re, l] of DT_CATEGORIES) if (types.some(t => re.test(t))) return l;
+  return types.filter(t => !/^(PointOfInterest|PlaceOfInterest|Thing)$/.test(t))[0] || '';
+}
 async function datatourisme(fetchFn, key, insee, aujourdhui) {
   if (!key) return null;
   const filtres = [{ insee }, { filters: 'isLocatedAt.address.hasAddressCity.insee[eq]=' + insee }];
@@ -139,7 +149,11 @@ async function datatourisme(fetchFn, key, insee, aujourdhui) {
         continue;
       }
       const r = DT_RUBRIQUE.find(([, re]) => ty.some(t => re.test(t)));
-      if (r) { (parRubrique[r[0]] = parRubrique[r[0]] || []); if (parRubrique[r[0]].length < 25 && parRubrique[r[0]].indexOf(nom) === -1) parRubrique[r[0]].push(nom.slice(0, 120)); }
+      if (r) {
+        // Seuls le nom et la catégorie renvoyés par l'API sont gardés : aucune description, aucun horaire
+        const l = (parRubrique[r[0]] = parRubrique[r[0]] || []), cat = categorieDt(ty);
+        if (l.length < 25 && !l.some(x => x.nom === nom)) l.push({ nom: nom.slice(0, 120), categorie: cat });
+      }
     }
     evenements.sort((a, b) => String(a.debut || a.fin).localeCompare(String(b.debut || b.fin)));
     return { parRubrique, evenements: evenements.slice(0, 8) };
@@ -150,17 +164,76 @@ async function datatourisme(fetchFn, key, insee, aujourdhui) {
 // ── Rédaction IA ──
 const SYSTEME = [
   'Tu rédiges, en français, le guide « Vivre à [commune] » d\'une fiche immobilière destinée à des acheteurs.',
-  'Tu reçois un objet JSON : la commune et, pour chaque rubrique, des extraits de Wikipédia et/ou une liste de lieux DATAtourisme.',
+  'Tu reçois un objet JSON : la commune et, pour chaque rubrique, un extrait de Wikipédia et/ou une liste de lieux DATAtourisme (nom et catégorie seulement).',
   'Réponds UNIQUEMENT avec un objet JSON valide, sans texte autour ni balises : {"rubriques": {"<clé>": "<texte>", ...}}, avec exactement les clés reçues.',
-  'Règles strictes :',
-  '- Texte court, factuel, au ton classique et sobre : 2 à 4 phrases, 500 caractères au plus par rubrique.',
-  '- Aucune formule lyrique ou publicitaire (pas de « charmant », « idéal », « havre de paix », « incontournable », etc.).',
-  '- N\'utilise QUE les informations fournies pour la rubrique. N\'ajoute rien, ne devine rien.',
-  '- Aucun chiffre daté : pas de population, de nombre d\'habitants, de revenus, de budgets, de montants, de taux, de classements ni de statistiques.',
-  '- Les dates historiques (siècle, année de construction) sont permises pour le patrimoine.',
-  '- Si les informations d\'une rubrique sont insuffisantes ou hors sujet, renvoie une chaîne vide "" pour cette rubrique.',
-  '- N\'écris pas de titre, pas de liste à puces, pas de mention de source (elles sont ajoutées à part).'
+  '',
+  'Travail EXTRACTIF et strict :',
+  '- Chaque phrase reprend un fait écrit dans la source fournie POUR CETTE RUBRIQUE, avec les mêmes noms propres. Reformule peu ; en cas de doute, reprends les mots de la source.',
+  '- Interdit : tout nom propre, date, année, siècle, chiffre, distance, horaire ou périodicité (« chaque mois de mai », « le mercredi ») qui ne figure pas mot pour mot dans la source de la rubrique.',
+  '- Interdit : toute relation qui n\'est pas écrite dans la source (« abrite », « installé dans », « près de », « traverse », « dessert », « accueille »…). Ne déduis jamais une relation entre deux lieux.',
+  '- Ne fusionne jamais deux faits pour en créer un troisième. Si deux passages se contredisent, garde le mieux documenté ou n\'écris rien sur ce point.',
+  '- N\'utilise pas tes connaissances générales sur la commune, même si tu crois les connaître.',
+  '- Pour les lieux DATAtourisme, tu ne peux citer que leur nom et leur catégorie, sans aucun détail.',
+  '- N\'écris pas les faits qui vieillissent : services publics susceptibles d\'être réorganisés (tribunal, commissariat, gendarmerie, trésorerie), horaires, marchés, événements ponctuels ou annuels.',
+  '- Aucun chiffre daté : population, habitants, revenus, budgets, montants, taux, classements, statistiques.',
+  '- Ton classique et sobre, sans formule lyrique ni publicitaire. 2 à 4 phrases, 500 caractères au plus par rubrique.',
+  '- Si la source d\'une rubrique ne permet pas d\'écrire au moins une phrase fidèle, renvoie une chaîne vide "".',
+  '- Pas de titre, pas de liste à puces, pas de mention de source (elles sont ajoutées à part).'
 ].join('\n');
+
+// ── Contrôle de fidélité, en code ──
+// Une phrase n'est gardée que si chacun de ses noms propres, nombres, années, siècles, mots de périodicité et mots de
+// relation se retrouve dans la source de SA rubrique, et si l'essentiel de ses mots porteurs de sens y figure aussi.
+const norm = s => ' ' + sansAccent(s).replace(/[’'`]/g, ' ').replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+const DEBUTS = new Set('le la les l un une des du de d il elle ils elles on ce cette ces cet son sa ses leur leurs plusieurs au aux en a depuis dans sur par pour avec outre enfin ainsi entre apres avant chaque tous toutes tout la commune ville elle on situee situe construite construit proche cote parmi'.split(' '));
+const VIDES = new Set('dans pour avec sans sous entre leurs cette celle celui ceux elles sont etait etaient avait avaient aussi ainsi plus moins tres trop bien comme dont mais donc puis encore deja toute toutes tous plusieurs autres autre notamment egalement commune ville situee situe partie nombreux nombreuses compte comptent possede possedent dispose disposent propose proposent trouve trouvent quelques certains certaines depuis apres avant pendant aupres chacun chacune dont lequel laquelle lesquels lesquelles leur leurs notre votre celui-ci celle-ci figure figurent parmi lieux trouve trouvent comprend comprennent citons recense recensent culturel culturels culturelle culturelles loisirs sportifs sportives equipements espaces patrimoine'.split(' '));
+const RELATIONS = ['abrit', 'install', 'accueil', 'heberg', 'pres de', 'a proximite', 'proche de', 'travers', 'longe', 'borde', 'contourn', 'evite', 'dessert', 'desserv', 'relie', 'reliee', 'jouxt', 'au coeur', 'au nord', 'au sud', 'a l est', 'a l ouest', 'situe', 'traverse'];
+const PERIODES = ['chaque', 'tous les', 'toutes les', 'hebdomadaire', 'mensuel', 'annuel', 'quotidien', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche',
+  'janvier', 'fevrier', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aout', 'septembre', 'octobre', 'novembre', 'decembre', 'matin', 'soir', 'week end'];
+const NOMBRES = ['deux', 'trois', 'quatre', 'cinq', 'six', 'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'quinze', 'vingt', 'trente', 'quarante', 'cinquante', 'soixante', 'cent', 'cents', 'mille', 'dizaine', 'douzaine', 'centaine', 'premier', 'premiere', 'second', 'seconde'];
+// Faits qui vieillissent : jamais écrits, même s'ils sont dans la source
+const PERISSABLE = /tribunal|commissariat|gendarmerie|tresorerie|perception|sous prefecture|bureau de poste|horaire|ouvert(e|s)? (du|le|les|de|tous)|\bmarches?\b|festival|brocante|\bfetes?\b|\bsalons?\b|\bfoire|edition|carnaval|kermesse/;
+function verifierPhrase(phrase, source) {
+  const nS = norm(source), nP = norm(phrase), dans = m => nS.indexOf(' ' + m.trim() + ' ') !== -1;
+  if (PERISSABLE.test(nP)) return { ok: false, motif: 'fait qui vieillit' };
+  // nombres et années (chiffres)
+  const chiffres = (phrase.match(/\d[\d  .,]*\d|\d/g) || []).map(x => x.replace(/[^\d]/g, ''));
+  const chiffresSource = new Set((source.match(/\d[\d  .,]*\d|\d/g) || []).map(x => x.replace(/[^\d]/g, '')));
+  for (const c of chiffres) if (!chiffresSource.has(c)) return { ok: false, motif: 'nombre absent de la source : ' + c };
+  // siècles en chiffres romains (XIIIe, XVIIIe…)
+  for (const m of phrase.match(/\b[IVX]{1,5}(?=(e|er|ème|eme)\b)/g) || []) if (!new RegExp('\\b' + m + '(e|er|ème|eme)\\b').test(source)) return { ok: false, motif: 'siècle absent de la source : ' + m };   // siècles I à XXI
+  // nombres en lettres, périodicité, relations
+  for (const w of NOMBRES) if (dans(w) === false && nP.indexOf(' ' + w + ' ') !== -1) return { ok: false, motif: 'nombre en lettres absent : ' + w };
+  for (const w of PERIODES) if (nP.indexOf(' ' + w + ' ') !== -1 && !dans(w)) return { ok: false, motif: 'périodicité absente : ' + w };
+  for (const w of RELATIONS) if (nP.indexOf(' ' + w) !== -1 && nS.indexOf(' ' + w) === -1) return { ok: false, motif: 'relation absente de la source : ' + w };
+  // noms propres (mots à majuscule, sigles, A6 / RN20…)
+  const mots = phrase.replace(/[«»"()]/g, ' ').split(/\s+/).filter(Boolean);
+  for (let i = 0; i < mots.length; i++) {
+    const brut = mots[i].replace(/^[^\p{L}\d]+|[^\p{L}\d]+$/gu, '');
+    if (!/^\p{Lu}/u.test(brut) && !/^\p{L}+\d+$/u.test(brut)) continue;
+    const parts = norm(brut).trim().split(' ').filter(x => x.length > 1 && !DEBUTS.has(x));   // « La », « Le »… en tête de phrase ignorés
+    for (const x of parts) if (!dans(x)) return { ok: false, motif: 'nom propre absent de la source : ' + brut };
+  }
+  // mots porteurs de sens : l'essentiel doit venir de la source (racines de 5 lettres)
+  const racinesSource = new Set(nS.trim().split(' ').filter(x => x.length >= 5).map(x => x.slice(0, 5)));
+  const pleins = nP.trim().split(' ').filter(x => x.length >= 5 && !VIDES.has(x));
+  if (pleins.length) {
+    const absents = pleins.filter(x => !racinesSource.has(x.slice(0, 5)));
+    if (absents.length / pleins.length > 0.25) return { ok: false, motif: 'mots absents de la source : ' + absents.join(', ') };
+  }
+  return { ok: true };
+}
+function textesSource(entree) {
+  return [entree.wikipedia || ''].concat((entree.datatourisme || []).map(x => x.nom + ' ' + (x.categorie || ''))).join('\n');
+}
+// Garde les seules phrases fidèles ; renvoie le texte et les phrases retirées (avec le motif)
+function filtrerFidele(texte, source, commune) {
+  const src = String(source || '') + '\n' + (commune || '');
+  const phrases = String(texte || '').replace(/\s+/g, ' ').trim().match(/[^.!?]+[.!?]*/g) || [];
+  const gardees = [], retirees = [];
+  for (const p of phrases.map(x => x.trim()).filter(Boolean)) { const v = verifierPhrase(p, src); if (v.ok) gardees.push(p); else retirees.push({ phrase: p, motif: v.motif }); }
+  return { texte: gardees.join(' ').trim(), retirees };
+}
 
 // Retire toute phrase porteuse d'un chiffre daté qui aurait échappé à la consigne.
 function sansChiffreDate(texte) {
@@ -174,7 +247,7 @@ async function rediger(fetchFn, apiKey, modele, commune, entrees) {
   const r = await fetchFn('https://api.anthropic.com/v1/messages', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-    body: JSON.stringify({ model: modele, max_tokens: 4000, output_config: { effort: 'low' }, system: SYSTEME,
+    body: JSON.stringify({ model: modele, max_tokens: 4000, output_config: { effort: 'medium' }, system: SYSTEME,
       messages: [{ role: 'user', content: JSON.stringify({ commune, rubriques: entrees }) }] })
   });
   const data = await r.json().catch(() => null);
@@ -204,8 +277,9 @@ async function construireGuide(deps, insee, commune, aujourdhui) {
   RUBRIQUES.forEach(({ cle, titre }) => {
     if (!entrees[cle]) return;   // jamais de rubrique sans donnée, même si l'IA en renvoie une
     let t = typeof textes[cle] === 'string' ? sansChiffreDate(textes[cle]) : '';
-    t = t.split(/(?<=[.!?])\s+/).filter(p => !LYRIQUE.test(p)).join(' ').trim().slice(0, 700);   // phrases lyriques retirées
-    if (t.length < 30) return;
+    t = t.split(/(?<=[.!?])\s+/).filter(p => !LYRIQUE.test(p)).join(' ').trim();   // phrases lyriques retirées
+    t = filtrerFidele(t, textesSource(entrees[cle]), commune).texte.slice(0, 700);   // phrases non sourcées retirées
+    if (t.length < 30) return;   // rubrique vide : elle n'apparaît pas
     const sources = [];
     if (entrees[cle].wikipedia) sources.push({ type: 'wikipedia', titre: 'Wikipédia — ' + wp.titre, url: wp.url, licence: LICENCE_WP });
     if (entrees[cle].datatourisme) sources.push({ type: 'datatourisme', titre: 'DATAtourisme', url: 'https://www.datatourisme.fr' });
@@ -265,4 +339,4 @@ async function handler(req, res, deps) {
 
 module.exports = (req, res) => handler(req, res);
 module.exports.handler = handler;
-module.exports._interne = { sectionsWikipedia, sansChiffreDate, construireGuide, wikipedia, datatourisme, RUBRIQUES, MODELE_DEFAUT };
+module.exports._interne = { sectionsWikipedia, sansChiffreDate, construireGuide, wikipedia, datatourisme, RUBRIQUES, MODELE_DEFAUT, verifierPhrase, filtrerFidele, SYSTEME };
