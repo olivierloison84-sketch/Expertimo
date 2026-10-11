@@ -6288,14 +6288,16 @@ function fmtAdresse(s) {
 }
 
 /* Libellés lisibles pour Mes stats (au lieu des codes bruts « fiche_ouverte », « onglet_budget »…) */
-var _TAB_LBL = { bien: 'Le bien', marche: 'Ventes comparables', rentabilite: 'Simulateur investisseur', historique: 'Historique du bien', diagnostics: 'Diagnostics', budget: 'Financement et budget', financement: 'Financement et budget', quartier: 'Quartier et carte', documents: 'Documents', assistant: 'Assistant', offre: 'Faire une offre', crush: 'Le test (crush immobilier)' };
-var _EVT_LBL = { fiche_ouverte: 'Fiche ouverte', credit_simule: 'Financement simulé', offre_soumise: 'Offre transmise', documents_demandes: 'Documents demandés', retour_visite: 'Retour de visite', crush_termine: 'Test crush terminé', visite_points: 'Points de visite choisis', carnet_partage: 'Carnet de visite partagé', fiche_partagee: 'Fiche partagée', ouverture_partage: 'Ouverture via lien partagé', critere_choisi: 'Critère déterminant choisi', mot_vendeur_coeur: '« Ça me parle » (mot du vendeur)', inconnu: 'Autre' };
+// Nom de l'onglet du test sur la fiche (texte seul, jamais de pictogramme dans Mes stats ni dans les messages)
+var _CRUSH_NOM = 'Crush ou crash ?';
+var _TAB_LBL = { bien: 'Le bien', marche: 'Ventes comparables', rentabilite: 'Simulateur investisseur', historique: 'Historique du bien', diagnostics: 'Diagnostics', budget: 'Financement et budget', financement: 'Financement et budget', quartier: 'Quartier et carte', documents: 'Documents', assistant: 'Assistant', offre: 'Faire une offre', crush: _CRUSH_NOM };
+var _EVT_LBL = { fiche_ouverte: 'Fiche ouverte', credit_simule: 'Financement simulé', offre_soumise: 'Offre transmise', documents_demandes: 'Documents demandés', retour_visite: 'Retour de visite', crush_termine: _CRUSH_NOM + ' terminé', visite_points: 'Points de visite choisis', carnet_partage: 'Carnet de visite partagé', fiche_partagee: 'Fiche partagée', ouverture_partage: 'Ouverture via lien partagé', critere_choisi: 'Critère déterminant choisi', mot_vendeur_coeur: '« Ça me parle » (mot du vendeur)', inconnu: 'Autre' };
 function _tabLabel(k) { k = String(k == null ? '' : k); return Object.prototype.hasOwnProperty.call(_TAB_LBL, k) ? _TAB_LBL[k] : (k.replace(/_/g, ' ').replace(/^./, function(c) { return c.toUpperCase(); })); }
-// « Test crush terminé (87 %) » : score du dernier test envoyé (à deux : score en commun).
+// « Crush ou crash ? terminé (87 %) » : score du dernier test envoyé (à deux : score en commun).
 function _crushLabel(g) {
   var last = (g.crush || []).slice().sort(function(a, b) { return (b.at || '').localeCompare(a.at || ''); })[0];
   var sc = last && last.d && typeof last.d.s === 'number' ? Math.round(last.d.s) : null;
-  return 'Test crush terminé' + (sc != null ? ' (' + sc + ' %' + (last.d.m === 'duo' ? ', à deux' : '') + ')' : '');
+  return _CRUSH_NOM + ' terminé' + (sc != null ? ' (' + sc + ' %' + (last.d.m === 'duo' ? ', à deux' : '') + ')' : '');
 }
 // Libellé lisible d'un événement de participation, d'après ses dernières données (jamais le code brut).
 var _VISITE_LBL = { bruit: 'bruit', charges: 'charges', travaux_ag: 'travaux votés', toiture: 'toiture', voisinage: 'voisinage', humidite: 'humidité', travaux: 'travaux', fenetres: 'fenêtres', chauffage: 'chauffage', electricite: 'électricité', gaz: 'gaz', amiante: 'amiante', parties_communes: 'parties communes', facade: 'façade', dpe: 'DPE', vig: 'point signalé', lumiere: 'luminosité', rangements: 'rangements', etat_general: 'état général', environnement: 'environnement' };
@@ -6342,7 +6344,7 @@ function _clStats(g, now) {
   if (docs) reasons.push('a demandé ' + g.demandes.reduce(function(s, d) { return s + d.docs.length; }, 0) + ' document(s)');
   if (qn) reasons.push('a posé ' + qn + ' question(s) à l’assistant');
   if (rt) reasons.push('retour de visite : ' + g.retours[g.retours.length - 1].reponses.map(function(c) { return (_RETOUR_LBL[c] || c).toLowerCase(); }).join(', '));
-  if (crush) { var lc = _clLast(g, 'crush_termine'); reasons.push('a fait le test' + (lc && typeof lc.d.s === 'number' ? ' (' + Math.round(lc.d.s) + ' %)' : '')); }
+  if (crush) { var lc = _clLast(g, 'crush_termine'); reasons.push('a fait le test « ' + _CRUSH_NOM + ' »' + (lc && typeof lc.d.s === 'number' ? ' (' + Math.round(lc.d.s) + ' %)' : '')); }
   if (crit) { var lk = _clLast(g, 'critere_choisi'); reasons.push(lk && _CRITERE_LBL[lk.d.k] ? 'a choisi comme critère déterminant ' + _CRITERE_LBL[lk.d.k] : 'a choisi son critère déterminant'); }
   if (vpts) reasons.push('a noté des points à vérifier en visite');
   if (carnet) reasons.push('a partagé son carnet de visite');
@@ -6455,7 +6457,7 @@ function clBuildMessage(g, silent, angle) {
   var key = _CL_ANGLES[angle] ? angle : clSuggestAngle(g);
   var intro = key === 'offre' ? 'Merci pour votre intérêt pour le bien ' + bien + '.'
     : key === 'docs_demandes' ? 'Merci pour votre intérêt pour le bien ' + bien + '.'
-    : key.indexOf('crush_') === 0 ? 'Merci d’avoir pris le temps de faire le test sur le bien ' + bien + '.'
+    : key.indexOf('crush_') === 0 ? 'Merci d’avoir pris le temps de faire le test « ' + _CRUSH_NOM + ' » sur le bien ' + bien + '.'
     : ['critere', 'visite_points', 'carnet', 'coeur'].indexOf(key) !== -1 ? 'Merci pour vos retours sur le bien ' + bien + '.'
     : 'Avez-vous pu avancer dans votre réflexion sur le bien ' + bien + ' ?';
   // Variables ; si l'acquéreur n'a rien précisé, la phrase reste correcte sans elles.

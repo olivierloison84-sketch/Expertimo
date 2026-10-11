@@ -113,6 +113,11 @@ assert(/var SEQ=\['bien','crush',/.test(html), 'sommaire : crush en 2e');
 assert(/<script id="crush-data" type="application\/json">\{/.test(html), 'données de démonstration');
 JSON.parse(html.match(/<script id="crush-data" type="application\/json">([\s\S]*?)<\/script>/)[1]);
 assert.strictEqual((html.match(/['"]tab-crush['"]\s*:/g) || []).length, 4, 'libellé de l\'onglet dans les 4 langues');
+// Nom de l'onglet : même jeu de mots dans les 4 langues, seule la ponctuation change ; une seule clé (plus de « lbl-crush »)
+const NOMS = [...html.matchAll(/['"]tab-crush['"]\s*:\s*['"]([^'"]+)['"]/g)].map(x => x[1]);
+assert.deepStrictEqual(NOMS, ['Crush ou crash ?', 'Crush or crash?', 'Crush ou crash?', '¿Crush o crash?'], 'noms de l\'onglet : ' + NOMS);
+assert(NOMS.every(n => /^¿?Crush (ou|or|o) crash ?\?$/.test(n)), 'même jeu de mots');
+assert(!/lbl-crush/.test(html) && (html.match(/data-i18n="tab-crush"/g) || []).length === 2, 'une seule clé de traduction (rail + titre de l\'onglet)');
 assert(!/\/ 8 sec|10 sections/.test(html), 'compteurs à 9');
 assert(/body\.pv4\.pv-home \.rail\{grid-template-columns:repeat\(3,1fr\);\}/.test(html), 'tuiles : 3 colonnes sur ordinateur (3 × 3)');
 
@@ -153,10 +158,11 @@ assert(/body\.pv4\.pv-home \.rail\{grid-template-columns:repeat\(3,1fr\);\}/.tes
   assert.strictEqual(note(r, 'quotidien'), null, 'aucun point d\'intérêt ni transport saisi : ignoré');
   dom.window.close();
 
-  // 10. « Mes stats » : le signal s'affiche « Test crush terminé (87 %) », jamais le code brut.
+  // 10. « Mes stats » : le signal s'affiche « Crush ou crash ? terminé (87 %) », texte seul, jamais le code brut.
   const rows = [
     { id: 'x1', client_nom: 'Marie', bien_adresse: '1 rue A', evenement: 'fiche_ouverte', created_at: '2026-10-10T10:00:00Z' },
-    { id: 'x2', client_nom: 'Marie', bien_adresse: '1 rue A', evenement: 'crush_termine:' + JSON.stringify({ v: 1, m: 'solo', s: 87, c: ['weekend'], w: [], a: 'AAAAAAAA', n: 'Marie' }), created_at: '2026-10-10T10:05:00Z' }
+    { id: 'x2', client_nom: 'Marie', bien_adresse: '1 rue A', evenement: 'crush_termine:' + JSON.stringify({ v: 1, m: 'solo', s: 87, c: ['weekend'], w: [], a: 'AAAAAAAA', n: 'Marie' }), created_at: '2026-10-10T10:05:00Z' },
+    { id: 'x3', client_nom: 'Marie', bien_adresse: '1 rue A', evenement: 'onglet_crush', created_at: '2026-10-10T10:04:00Z' }
   ];
   const sdom = await JSDOM.fromFile(path.join(root, 'app.html'), { runScripts: 'dangerously', pretendToBeVisual: true, virtualConsole: new VirtualConsole(), url: 'http://localhost/app.html', beforeParse(w2) {
     w2.scrollTo = () => {};
@@ -169,7 +175,11 @@ assert(/body\.pv4\.pv-home \.rail\{grid-template-columns:repeat\(3,1fr\);\}/.tes
   sdom.window.privencyAuth = { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } };
   await sdom.window.loadAnalytics();
   const txt = sdom.window.document.getElementById('analytics-tbody').textContent;
-  assert(/Test crush terminé \(87 %\) ×1/.test(txt), 'signal affiché dans Mes stats : ' + txt.slice(0, 300));
+  assert(/Crush ou crash \? terminé \(87 %\) ×1/.test(txt) && /Onglet « Crush ou crash \? » ×1/.test(txt), 'signal affiché dans Mes stats : ' + txt.slice(0, 400));
+  const tb = sdom.window.document.getElementById('analytics-tbody');
+  assert(!/pv-cc|<path/.test(tb.innerHTML) && !/[\u{1F494}\u{2764}\u{1F498}]/u.test(txt), 'Mes stats : texte seul, sans pictogramme');
+  const g = sdom.window._analyticsGroups[0], m = sdom.window.clBuildMessage(g, false, 'crush_match');
+  assert(/faire le test « Crush ou crash \? » sur le bien/.test(m) && !/<|svg/.test(m), 'message à l\'acheteur : nom de l\'onglet en texte seul : ' + m.slice(0, 200));
   assert(!/crush_termine|"s":87/.test(txt), 'code brut jamais affiché');
   sdom.window.close();
   console.log('OK crush : calcul (complet, manquant, contradiction, plancher, plafond, duo), gabarit, génération et Mes stats');

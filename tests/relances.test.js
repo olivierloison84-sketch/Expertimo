@@ -66,7 +66,7 @@ rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
   const G = name => { const g = w._analyticsGroups.find(x => x.client === name); assert(g, 'groupe ' + name); return g; };
   const msg = (name, angle) => w.clBuildMessage(G(name), false, angle);
   const BIEN = '12 rue des Lilas';
-  const INTRO_TEST = 'Merci d’avoir pris le temps de faire le test sur le bien ' + BIEN + '.';
+  const INTRO_TEST = 'Merci d’avoir pris le temps de faire le test « Crush ou crash ? » sur le bien ' + BIEN + '.';
   const INTRO_RETOURS = 'Merci pour vos retours sur le bien ' + BIEN + '.';
   const INTRO_DEFAUT = 'Avez-vous pu avancer dans votre réflexion sur le bien ' + BIEN + ' ?';
   const FIN = '\n\nN’hésitez pas à me répondre par message ou à m’appeler quand cela vous arrange.\n\nBien cordialement,\nOlivier';
@@ -134,7 +134,7 @@ rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
   // 4. Score, badge et raisons
   const st = w._clStats(G('Sam Score'), NOW);
   assert.strictEqual(Math.round(st.score * 100) / 100, 12, 'score Sam : ' + st.score);
-  ['a fait le test (87 %)', 'a choisi comme critère déterminant le calme', 'a noté des points à vérifier en visite', 'a partagé son carnet de visite', 'a trouvé que le mot du vendeur lui parle']
+  ['a fait le test « Crush ou crash ? » (87 %)', 'a choisi comme critère déterminant le calme', 'a noté des points à vérifier en visite', 'a partagé son carnet de visite', 'a trouvé que le mot du vendeur lui parle']
     .forEach(r => assert(st.reasons.includes(r), 'raison « ' + r + ' » : ' + st.reasons.join(' | ')));
   assert.strictEqual(w._clBadge(G('Sam Score'), NOW).label, 'Intéressé · à rappeler');
   assert.strictEqual(w._clStats(G('Tom Chaud'), NOW).score, 16); assert.strictEqual(w._clBadge(G('Tom Chaud'), NOW).label, 'Très chaud · à rappeler', 'seuil très chaud inchangé (14)');
@@ -142,7 +142,7 @@ rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
   // la ligne d'explication (visible par l'agent) reprend les raisons
   w.renderAnalytics();
   const txt = d.getElementById('analytics-tbody').textContent;
-  assert(/Intéressé : actif aujourd’hui : .*a fait le test \(87 %\)/.test(txt), 'ligne d\'explication');
+  assert(/Intéressé : actif aujourd’hui : .*a fait le test « Crush ou crash \? » \(87 %\)/.test(txt), 'ligne d\'explication');
 
   dom.window.close();
   console.log('OK relances : ' + cas.length + ' cas d\'angle, partage jamais cité, Financement sans taux ni durée, score et badge');
