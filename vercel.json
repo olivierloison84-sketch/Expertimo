@@ -11,6 +11,10 @@
     "api/marche-secteur.js": {
       "memory": 512,
       "maxDuration": 30
+    },
+    "api/mesure-datatourisme.js": {
+      "memory": 512,
+      "maxDuration": 30
     }
   },
   "routes": [
