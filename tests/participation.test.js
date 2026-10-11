@@ -152,6 +152,7 @@ function appDom(extra) {
   const ta = fdoc.getElementById('pv-notes'); ta.value = 'Belle cuisine'; ta.dispatchEvent(new fw.Event('input'));
   assert.strictEqual(events.length, before, 'carnet : rien n\'est envoyé sans clic sur Partager');
   click('#pv-carnet [data-pv="car-share"]');
+  await new Promise(r => setTimeout(r, 30));   // « Partagé ! » après confirmation du serveur
   assert(events.includes('carnet_partage:{"c":["lumiere","calme"],"ph":0,"n":"Belle cuisine"}'), events.join(' | '));
   const pressed = [...fdoc.querySelectorAll('#vr-chips .vr-chip[aria-pressed="true"]')].map(b => b.getAttribute('data-code'));
   assert.deepStrictEqual(pressed.sort(), ['agencement', 'coup_coeur', 'quartier'], 'retour de visite pré-rempli : ' + pressed);

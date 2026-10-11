@@ -459,6 +459,7 @@ html,body{overflow-x:hidden;}
 .pv-cc{white-space:nowrap;}
 .pv-cc-i{display:inline-block;width:1.2em;height:1.2em;vertical-align:-.22em;margin-right:.18em;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
 #pv-bar.pv-bar-cc .ico{display:none;}
+@media(max-width:768px){body:not(.pv4) .rail-label .pv-cc-i{width:14px;height:14px;vertical-align:-3px;margin-right:2px;}}
 #crush .lbl.cr-titre{font:800 18px var(--pv-display,var(--pv-font,'Work Sans',sans-serif));letter-spacing:0;text-transform:none;color:var(--ink)!important;margin:0 0 4px;}
 /* Ouverture via un lien partagé : aucun message de bienvenue nominatif */
 html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
@@ -479,6 +480,7 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
 .pv-btn.pv-sec{background:#fff;color:var(--ink);border:1.5px solid var(--border);}
 .pv-btn:focus-visible,.pv-opt:focus-visible,.pv-chip:focus-visible,.pv-sh:focus-visible,.pv-heart:focus-visible,.pv-share-top:focus-visible{outline:3px solid var(--pv-accent2,var(--gold));outline-offset:2px;}
 .pv-msg{font-size:13px;color:var(--vert,#2F7A4F);margin:10px 0 0;line-height:1.45;}
+.pv-msg.pv-err{color:#A33;}
 .pv-note{font-size:12px;color:var(--muted);line-height:1.45;margin:10px 0 0;}
 .pv-check{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px;}
 .pv-check li{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink);}
@@ -2620,7 +2622,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   var client = params.get('client') || 'inconnu';
   var adresse = (document.querySelector('meta[name="pv-adr"]') || {}).content || document.title || window.location.pathname;
   function track(evenement) {
-    fetch(SUPABASE_URL + '/rest/v1/fiche_views', {
+    return fetch(SUPABASE_URL + '/rest/v1/fiche_views', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -2661,6 +2663,10 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     window.addEventListener('pagehide', send);
   })();
   window.privencyTrack = track;
+  // Envoi confirmé : promesse vraie seulement si le serveur a enregistré l'événement (hors ligne ou erreur : faux)
+  window.privencyEnvoi = function(evenement) {
+    try { return track(evenement).then(function(r) { return !!(r && r.ok); }, function() { return false; }); } catch (e) { return Promise.resolve(false); }
+  };
   // Documents souhaités (liste cochée par l'acquéreur) : enregistrés pour l'agent (libellés courts, pas de contact).
   window.privencyDocs = function(docs, note) {
     try {
@@ -3293,7 +3299,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   // ── État ──
   var S = { mode: null, step: 'home', who: 0, idx: 0, ans: [{}, {}], names: ['', ''], sent: false, err: false, guest: false, copied: false };
   function name(i) { return S.names[i] || t(i ? 'p2' : 'p1'); }
-  function reset() { S = { mode: null, step: 'home', who: 0, idx: 0, ans: [{}, {}], names: ['', ''], sent: false, err: false, guest: false, copied: false }; }
+  function reset() { S = { mode: null, step: 'home', who: 0, idx: 0, ans: [{}, {}], names: ['', ''], sent: false, err: false, busy: false, prenom: null, guest: false, copied: false }; }
 
   function ring(p) {
     var r = 52, cir = 2 * Math.PI * r, off = cir * (1 - (p || 0) / 100);
@@ -3319,8 +3325,8 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   }
   function sendBlock(prefill) {
     if (S.sent) return '<div class="cr-sent" role="status">' + esc(t('sent', { agent: agentName() })) + '</div>';
-    return '<div class="cr-send"><label for="cr-prenom">' + esc(t('prenom')) + '</label><input id="cr-prenom" type="text" maxlength="40" autocomplete="given-name" value="' + esc(prefill || '') + '">'
-      + '<button type="button" class="cr-btn" data-act="send">' + esc(t('send')) + '</button>' + (S.err ? '<p class="cr-err">' + esc(t('sendErr')) + '</p>' : '') + '</div>';
+    return '<div class="cr-send"><label for="cr-prenom">' + esc(t('prenom')) + '</label><input id="cr-prenom" type="text" maxlength="40" autocomplete="given-name" value="' + esc(S.prenom != null ? S.prenom : (prefill || '')) + '">'
+      + '<button type="button" class="cr-btn" data-act="send"' + (S.busy ? ' disabled aria-busy="true"' : '') + '>' + esc(t('send')) + '</button>' + (S.err ? '<p class="cr-err" role="alert">' + esc(t('sendErr')) + '</p>' : '') + '</div>';
   }
   function agentName() { var a = (typeof _sp_agent === 'string' && _sp_agent.trim()) ? _sp_agent.trim() : t('agent'); return typeof capFirst === 'function' ? capFirst(a) : a; }
 
@@ -3400,8 +3406,10 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   }
 
   function send() {
+    if (S.busy || S.sent) return;   // un seul envoi en cours ; rien de plus une fois l'envoi confirmé
     var inp = document.getElementById('cr-prenom');
     var prenom = (inp && inp.value || '').replace(/[<>"]/g, '').trim().slice(0, 40);
+    S.prenom = inp ? inp.value : null;
     var p;
     if (S.mode === 'duo') {
       var d = C.duo(S.ans[0], S.ans[1], DATA);
@@ -3412,12 +3420,14 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       p = { v: 1, m: 'solo', s: r.score, c: r.top.map(function(c) { return c.q; }), w: r.aVerifier.map(function(w) { return w.k; }), a: Q.map(function(q) { return S.ans[0][q]; }).join('') };
     }
     if (prenom) p.n = prenom;
-    try {
-      if (typeof window.privencyTrack !== 'function') throw new Error('stats');
-      window.privencyTrack('crush_termine:' + JSON.stringify(p));
-      S.sent = true; S.err = false;
-    } catch (e) { S.err = true; }
-    render();
+    // « Envoyé ! » seulement si le serveur confirme ; sinon message d'erreur, bouton actif, résultat conservé
+    var envoi = typeof window.privencyEnvoi === 'function' ? window.privencyEnvoi('crush_termine:' + JSON.stringify(p)) : Promise.resolve(false);
+    var mode = S.mode;
+    S.busy = true; S.err = false; render();
+    envoi.then(function(ok) {
+      if (S.mode !== mode) return;   // test recommencé entre-temps
+      S.busy = false; S.sent = !!ok; S.err = !ok; render();
+    });
   }
 
   root.addEventListener('click', function(e) {
@@ -3495,7 +3505,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       carLikes: 'Mes coups de cœur', carNotes: 'Mes notes', carNotesPh: 'Ce que je veux retenir…', carPhotos: 'Mes photos (facultatif)', carAdd: 'Ajouter une photo', carDel: 'Retirer la photo',
       carPrivacy: 'Rien n\'est envoyé tant que vous ne cliquez pas sur « Partager avec mon agent ».', carShare: 'Partager avec mon agent', carSaved: 'Enregistré sur ce téléphone.',
       carDone: 'Partagé ! Votre conseiller a reçu vos coups de cœur et vos notes. Votre retour de visite, plus bas, est pré-rempli.', carPhotosStay: 'Vos photos restent sur votre téléphone.',
-      carPhotosSend: 'Envoyer aussi mes photos', carEmpty: 'Choisissez au moins un coup de cœur ou écrivez une note.', carFull: 'Le téléphone n\'a plus de place pour cette photo.',
+      carPhotosSend: 'Envoyer aussi mes photos', carEmpty: 'Choisissez au moins un coup de cœur ou écrivez une note.', carErr: 'L\'envoi n\'a pas abouti. Réessayez dans un instant.', carFull: 'Le téléphone n\'a plus de place pour cette photo.',
       chip: { lumiere: 'Lumière', volumes: 'Volumes', cuisine: 'Cuisine', salle_bain: 'Salle de bains', calme: 'Calme', jardin: 'Jardin', exterieur: 'Extérieur', vue: 'Vue', rangements: 'Rangements', etat: 'État général', quartier: 'Quartier' },
       shareBtn: 'Partager', shareTitle: 'Partager à mon conjoint ou à un proche', shareSub: 'Message prêt à envoyer (vous pouvez le modifier) :', shareEnd: 'Partager à mon conjoint ou à un proche',
       shareMsg: 'Regarde ce bien que j\'ai repéré ! Tu peux aussi faire le test « {tab} » sur la fiche (onglet « {tab} ») pour voir s\'il te correspond.',
@@ -3517,7 +3527,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       carLikes: 'What I loved', carNotes: 'My notes', carNotesPh: 'What I want to remember…', carPhotos: 'My photos (optional)', carAdd: 'Add a photo', carDel: 'Remove photo',
       carPrivacy: 'Nothing is sent until you tap "Share with my agent".', carShare: 'Share with my agent', carSaved: 'Saved on this phone.',
       carDone: 'Shared! Your advisor has received what you loved and your notes. Your visit feedback below has been pre-filled.', carPhotosStay: 'Your photos stay on your phone.',
-      carPhotosSend: 'Send my photos too', carEmpty: 'Choose at least one thing you loved or write a note.', carFull: 'Your phone has no room left for this photo.',
+      carPhotosSend: 'Send my photos too', carEmpty: 'Choose at least one thing you loved or write a note.', carErr: 'Sending failed. Please try again in a moment.', carFull: 'Your phone has no room left for this photo.',
       chip: { lumiere: 'Light', volumes: 'Space', cuisine: 'Kitchen', salle_bain: 'Bathroom', calme: 'Quiet', jardin: 'Garden', exterieur: 'Outdoor space', vue: 'View', rangements: 'Storage', etat: 'Condition', quartier: 'Neighbourhood' },
       shareBtn: 'Share', shareTitle: 'Share with my partner or someone close', shareSub: 'Message ready to send (you can edit it):', shareEnd: 'Share with my partner or someone close',
       shareMsg: 'Have a look at this property I found! You can also take the "{tab}" test on the listing ("{tab}" tab) to see if it\'s right for you.',
@@ -3539,7 +3549,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       carLikes: 'O que mais gostei', carNotes: 'As minhas notas', carNotesPh: 'O que quero lembrar…', carPhotos: 'As minhas fotos (facultativo)', carAdd: 'Adicionar uma foto', carDel: 'Retirar a foto',
       carPrivacy: 'Nada é enviado enquanto não tocar em «Partilhar com o meu consultor».', carShare: 'Partilhar com o meu consultor', carSaved: 'Guardado neste telemóvel.',
       carDone: 'Partilhado! O seu consultor recebeu o que mais gostou e as suas notas. O seu feedback da visita, mais abaixo, foi pré-preenchido.', carPhotosStay: 'As suas fotos ficam no seu telemóvel.',
-      carPhotosSend: 'Enviar também as fotos', carEmpty: 'Escolha pelo menos um ponto de que gostou ou escreva uma nota.', carFull: 'O telemóvel não tem espaço para esta foto.',
+      carPhotosSend: 'Enviar também as fotos', carEmpty: 'Escolha pelo menos um ponto de que gostou ou escreva uma nota.', carErr: 'O envio falhou. Tente novamente dentro de instantes.', carFull: 'O telemóvel não tem espaço para esta foto.',
       chip: { lumiere: 'Luz', volumes: 'Espaço', cuisine: 'Cozinha', salle_bain: 'Casa de banho', calme: 'Tranquilidade', jardin: 'Jardim', exterieur: 'Exterior', vue: 'Vista', rangements: 'Arrumação', etat: 'Estado geral', quartier: 'Zona' },
       shareBtn: 'Partilhar', shareTitle: 'Partilhar com o meu cônjuge ou alguém próximo', shareSub: 'Mensagem pronta a enviar (pode alterá-la):', shareEnd: 'Partilhar com o meu cônjuge ou alguém próximo',
       shareMsg: 'Vê este imóvel que encontrei! Também podes fazer o teste «{tab}» na ficha (separador «{tab}») para ver se combina contigo.',
@@ -3561,7 +3571,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       carLikes: 'Lo que más me ha gustado', carNotes: 'Mis notas', carNotesPh: 'Lo que quiero recordar…', carPhotos: 'Mis fotos (opcional)', carAdd: 'Añadir una foto', carDel: 'Quitar la foto',
       carPrivacy: 'No se envía nada hasta que pulse «Compartir con mi asesor».', carShare: 'Compartir con mi asesor', carSaved: 'Guardado en este móvil.',
       carDone: '¡Compartido! Su asesor ha recibido lo que más le ha gustado y sus notas. Su opinión tras la visita, más abajo, se ha rellenado.', carPhotosStay: 'Sus fotos se quedan en su móvil.',
-      carPhotosSend: 'Enviar también mis fotos', carEmpty: 'Elija al menos algo que le haya gustado o escriba una nota.', carFull: 'El móvil no tiene espacio para esta foto.',
+      carPhotosSend: 'Enviar también mis fotos', carEmpty: 'Elija al menos algo que le haya gustado o escriba una nota.', carErr: 'No se ha podido enviar. Inténtelo de nuevo en un momento.', carFull: 'El móvil no tiene espacio para esta foto.',
       chip: { lumiere: 'Luz', volumes: 'Amplitud', cuisine: 'Cocina', salle_bain: 'Baño', calme: 'Tranquilidad', jardin: 'Jardín', exterieur: 'Exterior', vue: 'Vistas', rangements: 'Almacenaje', etat: 'Estado general', quartier: 'Barrio' },
       shareBtn: 'Compartir', shareTitle: 'Compartir con mi pareja o alguien cercano', shareSub: 'Mensaje listo para enviar (puede modificarlo):', shareEnd: 'Compartir con mi pareja o alguien cercano',
       shareMsg: '¡Mira esta vivienda que he encontrado! Tú también puedes hacer el test «{tab}» en la ficha (pestaña «{tab}») para ver si encaja contigo.',
@@ -3620,7 +3630,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
 
   // ── 2. Carnet de visite (navigateur de l'acheteur ; envoyé seulement sur « Partager avec mon agent ») ──
   var chips = Array.isArray(PD.chips) ? PD.chips : [];
-  var car = load('carnet', { c: [], n: '', shared: false }), photos = load('photos', []), carMsg = '', canSharePhotos = false;
+  var car = load('carnet', { c: [], n: '', shared: false }), photos = load('photos', []), carMsg = '', canSharePhotos = false, carBusy = false, carErr = false;
   var RETOUR = { lumiere: 'agencement', volumes: 'agencement', cuisine: 'agencement', salle_bain: 'agencement', rangements: 'agencement', calme: 'quartier', quartier: 'quartier' };
   function renderCarnet() {
     var box = $('pv-carnet'); if (!box) return;
@@ -3636,8 +3646,8 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
         return '<div class="pv-ph"><img src="' + esc(src) + '" alt=""><button type="button" data-pv="ph-del" data-i="' + i + '" aria-label="' + esc(t('carDel')) + '">×</button></div>';
       }).join('') + (photos.length < 4 ? '<label class="pv-ph pv-add">' + ico(I.cam) + '<span>' + esc(t('carAdd')) + '</span><input type="file" accept="image/*" id="pv-photo-in" hidden></label>' : '') + '</div>'
       + '<p class="pv-note">' + esc(t('carPrivacy')) + '</p>'
-      + '<button type="button" class="pv-btn" data-pv="car-share">' + esc(t('carShare')) + '</button>'
-      + (carMsg ? '<p class="pv-msg">' + esc(carMsg) + '</p>' : '')
+      + '<button type="button" class="pv-btn" data-pv="car-share"' + (carBusy ? ' disabled aria-busy="true"' : '') + '>' + esc(t('carShare')) + '</button>'
+      + (carMsg ? '<p class="pv-msg' + (carErr ? ' pv-err" role="alert' : '') + '">' + esc(carMsg) + '</p>' : '')
       + (car.shared && photos.length ? (canSharePhotos ? '<button type="button" class="pv-btn pv-sec" data-pv="ph-share">' + esc(t('carPhotosSend')) + '</button>' : '<p class="pv-note">' + esc(t('carPhotosStay')) + '</p>') : '');
     box.innerHTML = h;
     var ta = $('pv-notes'); if (ta) ta.addEventListener('input', function() { car.n = ta.value.slice(0, 600); save('carnet', car); });
@@ -3787,14 +3797,21 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
       if (!car.c.length && !notes.trim()) { carMsg = t('carEmpty'); renderCarnet(); return; }
       var payload = { c: car.c.slice(0, 11), ph: photos.length };
       if (notes.trim()) payload.n = notes.trim().slice(0, 500);
-      if (track('carnet_partage', payload)) {
-        car.shared = true; save('carnet', car); carMsg = t('carDone');
+      var sig = JSON.stringify(payload);
+      if (carBusy) return;
+      if (car.shared && car.sig === sig) { carMsg = t('carDone'); carErr = false; renderCarnet(); return; }   // déjà reçu : pas de doublon
+      var envoi = typeof window.privencyEnvoi === 'function' ? window.privencyEnvoi('carnet_partage:' + sig) : Promise.resolve(false);
+      carBusy = true; carMsg = ''; carErr = false; renderCarnet();
+      envoi.then(function(ok) {
+        carBusy = false;
+        if (!ok) { carMsg = t('carErr'); carErr = true; renderCarnet(); return; }
+        car.shared = true; car.sig = sig; save('carnet', car); carMsg = t('carDone'); carErr = false;
         // Les coups de cœur pré-remplissent le retour de visite existant (liste fermée, 4 réponses au maximum)
         var codes = ['coup_coeur']; car.c.forEach(function(c) { var r = RETOUR[c]; if (r && codes.indexOf(r) === -1) codes.push(r); });
         try { if (window.vrPreselect) window.vrPreselect(codes.slice(0, 4)); } catch (x) {}
         try { canSharePhotos = !!(photos.length && navigator.canShare && navigator.canShare({ files: photoFiles() })); } catch (x) { canSharePhotos = false; }
-      }
-      renderCarnet();
+        renderCarnet();
+      });
     } else if (a === 'ph-share') {
       try { navigator.share({ files: photoFiles(), title: t('carTitle'), text: (car.n || '') }).then(function() {}, function() {}); } catch (x) {}
     } else if (a === 'share') { openShare();

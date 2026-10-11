@@ -95,3 +95,12 @@ console.log('OK notifications');
   assert(rr2.sent === 1 && /bien=Adr%20B/.test(dd.sent[0].html) && dd.rpcs.some(x => x[0] === 'notif_alerte_marque' && x[1].p_cle === 'part:/fiches/a.html|olivier loison|1'), 'handler : alerte crush envoyée et marquée');
 }
 console.log('OK alertes participation');
+// ── résumé du lundi : ce que l'acheteur a fait lui-même
+{
+  const m = buildResume({ agent_prenom: 'O', chauds: [{ client: 'Léa', niveau: 'très chaud', bien: 'B', actions: 'a fait Crush ou crash ?, a partagé son carnet' }, { client: 'Tom', niveau: 'intéressé', bien: 'B' }],
+    silences: [{ client: 'Pia', jours: 9, bien: 'B', actions: '<b>x</b>' }], visites: 3, visites_prec: 1 });
+  assert(/Léa<\/b> — très chaud .*<br><span style="font-size:13px;">a fait Crush ou crash \?, a partagé son carnet<\/span>/.test(m.html), 'résumé : actions de l\'acheteur');
+  assert(/Tom<\/b> — intéressé <span[^>]*>\(B\)<\/span><\/li>/.test(m.html), 'résumé : rien d\'ajouté sans action');
+  assert(!/<b>x<\/b>/.test(m.html) && !/partag(é|e) la fiche|ouverture via/i.test(m.html), 'résumé : échappé, jamais le partage de la fiche');
+}
+console.log('OK résumé du lundi : participation');
