@@ -12,7 +12,7 @@
       "memory": 512,
       "maxDuration": 30
     },
-    "api/mesure-datatourisme.js": {
+    "api/guide-commune.js": {
       "memory": 512,
       "maxDuration": 30
     }

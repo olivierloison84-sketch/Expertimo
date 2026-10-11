@@ -50,13 +50,13 @@ function buildSystemPrompt(lang) {
   'valide, sans texte autour, sans balises markdown ```, rien d\'autre que le JSON.',
   '',
   'Tu reçois un objet JSON avec des champs texte libre (certains peuvent être des',
-  'chaînes vides) et deux tableaux : "diags" (objets avec une clé "result") et',
-  '"renovations" (objets avec une clé "desc").',
+  'chaînes vides) et trois tableaux : "diags" (objets avec une clé "result"),',
+  '"renovations" (objets avec une clé "desc") et "guide" (objets avec une clé "texte").',
   '',
   'Renvoie un objet JSON avec EXACTEMENT les mêmes clés que celles reçues, dans le',
-  'même ordre, avec les tableaux "diags" et "renovations" de la MÊME LONGUEUR et',
+  'même ordre, avec les tableaux "diags", "renovations" et "guide" de la MÊME LONGUEUR et',
   'dans le MÊME ORDRE que ceux reçus — traduis uniquement leur clé "result" /',
-  '"desc" respectivement.',
+  '"desc" / "texte" respectivement.',
   '',
   'Règles strictes :',
   '- Traduis fidèlement le sens, sans l\'enjoliver ni le résumer, dans ' + L.name + ' (' + L.register + ').',
@@ -108,11 +108,15 @@ module.exports = async function handler(req, res) {
   payload.renovations = Array.isArray(input.renovations)
     ? input.renovations.map(function(r) { return { desc: (r && typeof r.desc === 'string') ? r.desc : '' }; })
     : [];
+  payload.guide = Array.isArray(input.guide)
+    ? input.guide.slice(0, 12).map(function(g) { return { texte: (g && typeof g.texte === 'string') ? g.texte.slice(0, 2000) : '' }; })
+    : [];
 
   // Rien à traduire : ne fait aucun appel inutile à l'API.
   const hasText = TEXT_FIELDS.some(function(f) { return !isBlank(payload[f]); })
     || payload.diags.some(function(d) { return !isBlank(d.result); })
-    || payload.renovations.some(function(r) { return !isBlank(r.desc); });
+    || payload.renovations.some(function(r) { return !isBlank(r.desc); })
+    || payload.guide.some(function(g) { return !isBlank(g.texte); });
 
   if (!hasText) {
     return res.status(200).json(payload);
@@ -126,7 +130,7 @@ module.exports = async function handler(req, res) {
   try {
     const body = {
       model: 'claude-sonnet-4-5',
-      max_tokens: 4000,
+      max_tokens: 6000,
       system: buildSystemPrompt(lang),
       messages: [
         { role: 'user', content: JSON.stringify(payload) }
@@ -182,6 +186,11 @@ module.exports = async function handler(req, res) {
     result.renovations = payload.renovations.map(function(r, i) {
       var t = Array.isArray(translated.renovations) ? translated.renovations[i] : null;
       return { desc: (t && typeof t.desc === 'string') ? t.desc : r.desc };
+    });
+
+    result.guide = payload.guide.map(function(g, i) {
+      var t = Array.isArray(translated.guide) ? translated.guide[i] : null;
+      return { texte: (t && typeof t.texte === 'string') ? t.texte : g.texte };
     });
 
     return res.status(200).json(result);
