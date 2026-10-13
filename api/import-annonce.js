@@ -1,3 +1,6 @@
+const { createClient } = require('@supabase/supabase-js');
+const { verifierAbonnementActif } = require('./_abonnement');
+
 const ALLOWED_ORIGIN_PREFIXES = [
   'https://app.privency.fr',
   'https://expertimo-phi.vercel.app',
@@ -134,7 +137,7 @@ module.exports = async function handler(req, res) {
 
   res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -142,6 +145,26 @@ module.exports = async function handler(req, res) {
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  // Lecture seule : un compte dont l'abonnement n'est pas actif ne peut plus générer de contenu de fiche.
+  const authHeader = req.headers.authorization || '';
+  const jwt = authHeader.indexOf('Bearer ') === 0 ? authHeader.slice(7).trim() : '';
+  if (!jwt) {
+    return res.status(401).json({ error: 'Authentification requise' });
+  }
+  if (!process.env.SUPABASE_SECRET_KEY) {
+    return res.status(500).json({ error: 'Configuration serveur incomplète' });
+  }
+  const supabaseAdmin = createClient('https://hhqcumnatnslfjpsrmgb.supabase.co', process.env.SUPABASE_SECRET_KEY);
+  const { data: userData, error: userErr } = await supabaseAdmin.auth.getUser(jwt);
+  const user = userData && userData.user;
+  if (userErr || !user) {
+    return res.status(401).json({ error: 'Session invalide ou expirée' });
+  }
+  const abo = await verifierAbonnementActif(supabaseAdmin, user.id);
+  if (!abo.ok) {
+    return res.status(abo.status).json({ error: abo.error, code: abo.code });
   }
 
   const { text } = req.body || {};

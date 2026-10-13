@@ -1,4 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
+const { verifierAbonnementActif } = require('./_abonnement');
 
 const ALLOWED_ORIGIN_PREFIXES = [
   'https://app.privency.fr',
@@ -93,6 +94,11 @@ module.exports = async function handler(req, res) {
   const user = userData && userData.user;
   if (userErr || !user) {
     return res.status(401).json({ error: 'Session invalide ou expirée' });
+  }
+
+  const abo = await verifierAbonnementActif(supabaseAdmin, user.id);
+  if (!abo.ok) {
+    return res.status(abo.status).json({ error: abo.error, code: abo.code });
   }
 
   const body = req.body || {};

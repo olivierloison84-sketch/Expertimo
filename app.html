@@ -137,6 +137,10 @@ header {
   user-select: none;
 }
 .step-tab:hover  { background: #f5f6f8; color: var(--text); }
+/* Compte en lecture seule (abonnement non actif) : création de fiche désactivée */
+body.ro-mode #tab-2, body.ro-mode #tab-3, body.ro-mode #tab-4, body.ro-mode .newfiche-btn { opacity: .45; pointer-events: none; }
+.ro-banner { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 900; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center; max-width: calc(100% - 32px); background: #fff; border: 1.5px solid #fcd34d; border-radius: var(--radius); box-shadow: var(--shadow); padding: 10px 16px; font-size: 13px; line-height: 1.4; }
+.ro-banner[hidden] { display: none; }
 .step-tab.active { color: #057a55; background: #e8f7f0; font-weight: 700; }
 .step-tab.done   { color: var(--vert); }
 .step-num {
@@ -708,6 +712,23 @@ details[open] summary .chevron { transform: rotate(90deg); }
     window.location.replace('/login.html');
   }
 
+  function modeLectureSeule() {
+    window._readOnly = true;
+    const apply = () => {
+      document.body.classList.add('ro-mode');
+      const banner = document.getElementById('ro-banner');
+      if (banner) banner.hidden = false;
+      const imp = document.getElementById('import-annonce-btn');
+      if (imp) imp.disabled = true;
+      try { goToStep(6); } catch (e) { /* page de départ par défaut */ }
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', apply);
+    } else {
+      apply();
+    }
+  }
+
   // Session confirmée : on vérifie l'abonnement avant de révéler la page.
   // Connecté mais pas abonné → /dashboard.html (pas /login.html).
   async function checkSubscription(session) {
@@ -720,10 +741,14 @@ details[open] summary .chevron { transform: rotate(90deg); }
         .select('subscription_status')
         .eq('id', session.user.id)
         .single();
-      if (error || !data || data.subscription_status !== 'active') {
+      const statut = !error && data ? data.subscription_status : null;
+      if (!statut) {
         window.location.replace('/dashboard.html');
         return;
       }
+      // 'active' et 'past_due' (paiement échoué, quelques jours de grâce) : accès complet.
+      // Tout autre statut (ex. 'inactive') : lecture seule, fiches et stats consultables.
+      if (statut !== 'active' && statut !== 'past_due') modeLectureSeule();
       try {
         const { data: profile } = await authClient
           .from('agent_profiles')
@@ -878,6 +903,11 @@ details[open] summary .chevron { transform: rotate(90deg); }
     </div>
   </div>
 </header>
+
+<div class="ro-banner" id="ro-banner" role="status" hidden>
+  <span>Abonnement inactif : votre compte est en lecture seule. Vos fiches et statistiques restent consultables.</span>
+  <button type="button" class="btn btn-primary btn-sm" onclick="sabonnerPourContinuer()">S'abonner pour continuer</button>
+</div>
 
 <!-- ══════════ STEPPER ══════════ -->
 <nav class="stepper" id="stepper">
@@ -1068,7 +1098,7 @@ details[open] summary .chevron { transform: rotate(90deg); }
 
 <!-- ── Import rapide depuis une annonce (démo IA) ── -->
 <div style="margin:16px 16px 0;">
-  <button type="button" class="btn" style="background:var(--accent);color:#fff;font-weight:700;width:100%;justify-content:center;padding:12px 18px;font-size:14px;box-shadow:var(--shadow);" onclick="openImportAnnonceModal()">⚡ Import rapide depuis une annonce</button>
+  <button type="button" id="import-annonce-btn" class="btn" style="background:var(--accent);color:#fff;font-weight:700;width:100%;justify-content:center;padding:12px 18px;font-size:14px;box-shadow:var(--shadow);" onclick="openImportAnnonceModal()">⚡ Import rapide depuis une annonce</button>
 </div>
 
 <!-- ── Adresse du bien (doit être en tête — critique pour Leaflet, DVF, slug) ── -->
@@ -2380,6 +2410,11 @@ function setV(id, v) { var e = document.getElementById(id); if (e) e.value = (v 
 // STEP NAVIGATION
 // ═══════════════════════════════════════════════════════
 function goToStep(n) {
+  // Lecture seule : les étapes de création/publication (2 à 4) ramènent à « Mes fiches ».
+  if (window._readOnly && n >= 2 && n <= 4) {
+    showToast('Compte en lecture seule : abonnez-vous pour créer ou modifier une fiche.', true);
+    n = 6;
+  }
   // Hide all pages
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   document.getElementById('page-' + n).classList.add('active');
@@ -2707,8 +2742,24 @@ async function majLibelleAbonnement() {
     if (r && !r.error && r.data && !r.data.stripe_customer_id) {
       _abonne = false;
       btn.textContent = 'Démarrer mon abonnement';
+    } else if (window._readOnly) {
+      _abonne = false;
+      btn.textContent = 'Réactiver mon abonnement';
     }
   } catch (e) { /* on garde « Gérer mon abonnement » */ }
+}
+
+// Garde client (la vraie protection est côté serveur) : message court, action annulée.
+function _lectureSeule() {
+  if (!window._readOnly) return false;
+  showToast('Compte en lecture seule : abonnez-vous pour créer, modifier ou publier une fiche.', true);
+  return true;
+}
+
+function sabonnerPourContinuer() {
+  goToStep(8);
+  _abonne = false;
+  ouvrirAbonnement();
 }
 
 async function ouvrirAbonnement() {
@@ -5761,6 +5812,7 @@ function onAdresseChange(val) {
 }
 
 function continuerVersGeneration() {
+  if (_lectureSeule()) return;
   var adresse=getV('adresse');
   if (!adresse){showToast('⚠️ L\'adresse du bien est obligatoire.', true);return;}
   if (photosEnCours()){showToast('⏳ Envoi des photos en cours, patientez quelques secondes.', true);return;}
@@ -5825,7 +5877,7 @@ async function translateFicheFields(d, lang) {
   };
   var res = await fetch(PRIVENCY_API_BASE + '/api/translate-fiche', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + await getFicheSessionToken() },
     body: JSON.stringify(payload),
     signal: AbortSignal.timeout(60000)
   });
@@ -5984,6 +6036,7 @@ function downloadFiche() {
 }
 
 function continuerVersPublication() {
+  if (_lectureSeule()) return;
   if (!_lastGeneratedHTML) {
     showToast('⚠️ Générez d\'abord l\'aperçu.', true);
     return;
@@ -5996,6 +6049,7 @@ function continuerVersPublication() {
 // STEP 4 — PUBLICATION GITHUB
 // ═══════════════════════════════════════════════════════
 async function pushToGitHub() {
+  if (_lectureSeule()) return;
   if (!_lastGeneratedHTML || !_lastGeneratedSlug) {
     document.getElementById('gh-push-status').textContent =
       '⚠️ Générez d\'abord la fiche (étape 3).';
@@ -7135,6 +7189,7 @@ async function loadFiches() {
         +     '📤 Partager'
         +   '</button>'
         +   '<button class="btn btn-sm" style="background:var(--accent);color:#fff;margin-right:6px;" '
+        +           (window._readOnly ? 'disabled title="Abonnement inactif" ' : '')
         +           'onclick="modifierFiche(\'' + safeName + '\',\'' + safeSha + '\',\'' + safeDl + '\')">'
         +     '✏️ Modifier'
         +   '</button>'
@@ -7144,6 +7199,7 @@ async function loadFiches() {
         +     '🏠 Vendeur'
         +   '</button>'
         +   '<button class="btn btn-sm btn-outline" '
+        +           (window._readOnly ? 'disabled title="Abonnement inactif" ' : '')
         +           'data-fname="' + esc(f.filename) + '" '
         +           'onclick="supprimerFiche(this)">'
         +     '🗑️ Supprimer'
@@ -7296,6 +7352,7 @@ async function vendeurDialog(fname) {
 }
 
 async function supprimerFiche(btn) {
+  if (_lectureSeule()) return;
   var fname = btn.getAttribute('data-fname');
   if (!fname) { showToast('❌ Données manquantes pour la suppression.', true); return; }
   if (!confirm('Supprimer définitivement la fiche "' + fname + '" ?')) return;
@@ -7590,6 +7647,7 @@ function injectBienData(data) {
 // STEP 2 — Import rapide depuis une annonce (démo IA)
 // ═══════════════════════════════════════════════════════
 function openImportAnnonceModal() {
+  if (_lectureSeule()) return;
   var overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;z-index:10000;padding:20px;';
   overlay.innerHTML =
@@ -7636,7 +7694,7 @@ function openImportAnnonceModal() {
     try {
       var res = await fetch(PRIVENCY_API_BASE + '/api/import-annonce', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + await getFicheSessionToken() },
         body: JSON.stringify({ text: text }),
         signal: AbortSignal.timeout(30000)
       });
@@ -7661,6 +7719,7 @@ function openImportAnnonceModal() {
 }
 
 async function modifierFiche(filename, sha, downloadUrl) {
+  if (_lectureSeule()) return;
   showToast('⏳ Chargement de la fiche…');
   try {
     var r = await fetch(downloadUrl + '?t=' + Date.now());
