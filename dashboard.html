@@ -184,6 +184,10 @@
     <p class="hint">Première utilisation ? Activez votre abonnement pour commencer.</p>
     <a href="/app.html" class="btn btn-primary btn-block">Accéder au générateur</a>
     <button type="button" class="btn btn-secondary btn-block" id="subscribe-btn">Activer mon abonnement</button>
+    <div id="code-essai-wrap">
+      <label class="label" for="code-essai">Code d'essai (facultatif)</label>
+      <input type="text" class="field" id="code-essai" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Vous avez un code ? Saisissez-le ici">
+    </div>
     <div class="alert alert-error" id="error-message"></div>
   </div>
 </main>
@@ -192,6 +196,8 @@
 (function () {
   const subscribeBtn = document.getElementById('subscribe-btn');
   const errorMessage = document.getElementById('error-message');
+  const codeWrap = document.getElementById('code-essai-wrap');
+  const codeInput = document.getElementById('code-essai');
   let subscriptionActive = false;
 
   function capitalizeName(s){ return (s||'').trim().split(/\s+/).map(w => w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join(' '); }
@@ -214,6 +220,7 @@
       subscriptionActive = false;
     }
     subscribeBtn.textContent = subscriptionActive ? 'Gérer mon abonnement' : 'Activer mon abonnement';
+    codeWrap.style.display = subscriptionActive ? 'none' : '';
   }
 
   if (window.privencySession) {
@@ -240,10 +247,16 @@
       const body = subscriptionActive
         ? { user_id: session.user.id }
         : { user_id: session.user.id, email: session.user.email };
+      const headers = { 'Content-Type': 'application/json' };
+      const code = subscriptionActive ? '' : codeInput.value.trim();
+      if (code) {
+        body.code = code;
+        headers['Authorization'] = 'Bearer ' + session.access_token;
+      }
 
       const response = await fetch(PRIVENCY_API_BASE + endpoint, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify(body)
       });
 
