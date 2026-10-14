@@ -1,0 +1,20 @@
+# Signale (sans bloquer) toute fiche de fiches/ non inscrite dans agent_fiches.
+# Nécessite le secret de dépôt SUPABASE_SECRET_KEY ; sans lui, un simple avertissement est affiché.
+name: Vérifier l'inscription des fiches
+on:
+  push:
+    branches: [main]
+    paths: ['fiches/**']
+  workflow_dispatch:
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install --no-audit --no-fund @supabase/supabase-js@2
+      - run: node scripts/inscrire-fiche.js --verifier
+        env:
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
