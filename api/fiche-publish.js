@@ -107,9 +107,13 @@ module.exports = async function handler(req, res) {
   const htmlEn = body.htmlEn;
   const slug = String(body.slug || '').trim();
   const label = String(body.label || '').trim();
+  const ancienFilename = String(body.ancienFilename || '').trim();
 
   if (!filename || !FILENAME_RE.test(filename) || !html || typeof html !== 'string') {
     return res.status(400).json({ error: 'filename et html requis' });
+  }
+  if (ancienFilename && (!FILENAME_RE.test(ancienFilename) || ancienFilename === filename)) {
+    return res.status(400).json({ error: 'ancienFilename invalide' });
   }
 
   try {
@@ -126,6 +130,29 @@ module.exports = async function handler(req, res) {
 
     if (existingRow && existingRow.agent_user_id !== user.id) {
       return res.status(403).json({ error: 'Cette fiche appartient à un autre agent' });
+    }
+
+    // Fiche éditée depuis un lien migré : la liste porte l'ancien nom (page de redirection), on publie sous le
+    // nouveau nom (sinon la redirection serait écrasée et le nouveau lien resterait périmé). Si la base n'a pas
+    // encore été migrée, la ligne agent_fiches de l'ancien nom (du même agent) est renommée vers le nouveau.
+    if (ancienFilename && !existingRow) {
+      const { data: oldRow, error: oldErr } = await supabaseAdmin
+        .from('agent_fiches').select('agent_user_id').eq('filename', ancienFilename).maybeSingle();
+      if (oldErr) {
+        console.error('[api/fiche-publish] lookup ancienne ligne agent_fiches:', oldErr);
+        return res.status(500).json({ error: 'Erreur vérification du propriétaire' });
+      }
+      if (oldRow && oldRow.agent_user_id !== user.id) {
+        return res.status(403).json({ error: 'Cette fiche appartient à un autre agent' });
+      }
+      if (oldRow) {
+        const { error: renErr } = await supabaseAdmin.from('agent_fiches')
+          .update({ filename: filename }).eq('filename', ancienFilename).eq('agent_user_id', user.id);
+        if (renErr) {
+          console.error('[api/fiche-publish] renommage agent_fiches:', renErr);
+          return res.status(500).json({ error: 'Fiche NON publiée : mise à jour de votre liste de fiches échouée. Réessayez.', code: 'inscription_echouee' });
+        }
+      }
     }
 
     // 1) Inscription dans agent_fiches AVANT toute publication : si elle échoue, rien n'est mis en ligne
