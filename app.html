@@ -5169,6 +5169,11 @@ function opaqueId(n) {
   for (var i = 0; i < n; i++) out += chars[buf[i] % chars.length];
   return out;
 }
+// Nom de fichier publié : une fiche existante garde son nom (ancien « …-FINAL.html » compris),
+// une nouvelle fiche prend « ville-type-code.html » (aucune adresse, pas de « FINAL »).
+function ficheFilename() {
+  return (_editingFiche && _editingFiche.filename) ? _editingFiche.filename : _lastGeneratedSlug + '.html';
+}
 function slugify(str) {
   return (str||'adresse').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,60);
 }
@@ -6032,7 +6037,7 @@ function generatePreview() {
 
 function downloadFiche() {
   if (!_lastGeneratedHTML) return;
-  downloadHTML(_lastGeneratedHTML, _lastGeneratedSlug + '-FINAL.html');
+  downloadHTML(_lastGeneratedHTML, ficheFilename());
 }
 
 function continuerVersPublication() {
@@ -6086,7 +6091,7 @@ async function pushToGitHub() {
     console.error('pushToGitHub: échec injection agent_id', e);
   }
 
-  var frFilename = _lastGeneratedSlug + '-FINAL.html';
+  var frFilename = ficheFilename();
 
   try {
     var sessionRes = await window.privencyAuth.auth.getSession();
@@ -6261,7 +6266,7 @@ function refreshStep4Summary() {
   el.innerHTML =
     '<div style="font-size:13px;line-height:2;">'
     + '<div><span style="color:var(--muted)">Fichier</span> : '
-    + '<code>' + esc(_lastGeneratedSlug) + '-FINAL.html</code></div>'
+    + '<code>' + esc(ficheFilename()) + '</code></div>'
     + '<div><span style="color:var(--muted)">Dépôt</span> : '
     + '<code>olivierloison84-sketch/Expertimo</code></div>'
     + '<div><span style="color:var(--muted)">Branche</span> : '
