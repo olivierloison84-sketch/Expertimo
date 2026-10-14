@@ -128,20 +128,8 @@ module.exports = async function handler(req, res) {
       return res.status(403).json({ error: 'Cette fiche appartient à un autre agent' });
     }
 
-    const commitMsg = 'feat: fiche acquereur ' + (slug || filename.replace(/\.html$/, ''));
-    const frResult = await publishFile(filename, html, commitMsg);
-    if (!frResult.ok) {
-      console.error('[api/fiche-publish] GitHub publish error:', frResult.status, frResult.data);
-      return res.status(502).json({ error: (frResult.data && frResult.data.message) || 'Erreur publication GitHub' });
-    }
-
-    if (htmlEn && typeof htmlEn === 'string') {
-      const enResult = await publishFile(enFilenameFor(filename), htmlEn, commitMsg + ' (EN)');
-      if (!enResult.ok) {
-        console.error('[api/fiche-publish] GitHub publish (EN) error:', enResult.status, enResult.data);
-      }
-    }
-
+    // 1) Inscription dans agent_fiches AVANT toute publication : si elle échoue, rien n'est mis en ligne
+    //    (une fiche en ligne sans ligne agent_fiches serait invisible dans « Mes stats »).
     const pageUrl = 'https://espace.privency.fr/fiches/' + filename;
     const { error: upsertErr } = await supabaseAdmin.from('agent_fiches').upsert({
       agent_user_id: user.id,
@@ -153,7 +141,29 @@ module.exports = async function handler(req, res) {
 
     if (upsertErr) {
       console.error('[api/fiche-publish] upsert agent_fiches:', upsertErr);
-      return res.status(500).json({ error: 'Publication GitHub réussie mais échec d\'enregistrement' });
+      return res.status(500).json({
+        error: 'Fiche NON publiée : l\'inscription dans votre liste de fiches a échoué. Réessayez dans un instant ; si cela persiste, contactez le support.',
+        code: 'inscription_echouee'
+      });
+    }
+
+    // 2) Publication GitHub. En cas d'échec sur une nouvelle fiche, on retire la ligne qu'on vient de créer.
+    const commitMsg = 'feat: fiche acquereur ' + (slug || filename.replace(/\.html$/, ''));
+    const frResult = await publishFile(filename, html, commitMsg);
+    if (!frResult.ok) {
+      console.error('[api/fiche-publish] GitHub publish error:', frResult.status, frResult.data);
+      if (!existingRow) {
+        const { error: rollbackErr } = await supabaseAdmin.from('agent_fiches').delete().eq('filename', filename).eq('agent_user_id', user.id);
+        if (rollbackErr) console.error('[api/fiche-publish] rollback agent_fiches:', rollbackErr);
+      }
+      return res.status(502).json({ error: 'Fiche NON publiée : ' + ((frResult.data && frResult.data.message) || 'erreur de publication GitHub') + '. Réessayez.', code: 'publication_echouee' });
+    }
+
+    if (htmlEn && typeof htmlEn === 'string') {
+      const enResult = await publishFile(enFilenameFor(filename), htmlEn, commitMsg + ' (EN)');
+      if (!enResult.ok) {
+        console.error('[api/fiche-publish] GitHub publish (EN) error:', enResult.status, enResult.data);
+      }
     }
 
     return res.status(200).json({ ok: true, url: pageUrl });
