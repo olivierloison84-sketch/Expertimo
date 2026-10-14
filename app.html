@@ -5172,7 +5172,7 @@ function opaqueId(n) {
 // Nom de fichier publié : une fiche existante garde son nom (ancien « …-FINAL.html » compris),
 // une nouvelle fiche prend « ville-type-code.html » (aucune adresse, pas de « FINAL »).
 function ficheFilename() {
-  return (_editingFiche && _editingFiche.filename) ? _editingFiche.filename : _lastGeneratedSlug + '.html';
+  return (_editingFiche && _editingFiche.filename) ? (_editingFiche.filenameReel || _editingFiche.filename) : _lastGeneratedSlug + '.html';
 }
 function slugify(str) {
   return (str||'adresse').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').substring(0,60);
@@ -5962,7 +5962,7 @@ function generatePreview() {
     }
 
     _lastGeneratedSlug = (_editingFiche && _editingFiche.filename)
-      ? _editingFiche.filename.replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
+      ? (_editingFiche.filenameReel || _editingFiche.filename).replace(/-FINAL\.html$/, '').replace(/\.html$/, '')
       : shortSlug(d);
 
     // langs : {en, pt, es} → données traduites des langues réussies (vide = fiche française seule)
@@ -6124,6 +6124,7 @@ async function pushToGitHub() {
         filename: frFilename,
         html: htmlToPublish,
         slug: _lastGeneratedSlug,
+        ancienFilename: (_editingFiche && _editingFiche.filenameReel && _editingFiche.filenameReel !== _editingFiche.filename) ? _editingFiche.filename : undefined,
         label: (window._bienData && window._bienData.adresse) ? window._bienData.adresse : _lastGeneratedSlug.replace(/-/g, ' ')
       })
     });
@@ -7723,6 +7724,32 @@ function openImportAnnonceModal() {
   textarea.focus();
 }
 
+// Page de redirection (migration des liens) : <meta name="pv-redirect" content="NOUVEAU.html">.
+// Renvoie { html, filenameReel } (filenameReel = null si pas de redirection) ou null si la cible est illisible
+// ou redirige encore. fetchFn est injectable pour les tests.
+async function chargerHtmlFiche(downloadUrl, html, fetchFn) {
+  var RE = /<meta\b[^>]*\bname="pv-redirect"[^>]*\bcontent="([^"]*)"/i;
+  var m = html.match(RE);
+  if (!m) return { html: html, filenameReel: null };
+  var cible = m[1].trim();
+  if (!/^[A-Za-z0-9._-]+\.html$/.test(cible)) return null;
+  var u = new URL(downloadUrl, (typeof location !== 'undefined' && location.href) || undefined);
+  u.pathname = u.pathname.replace(/[^\/]*$/, encodeURIComponent(cible));
+  u.search = ''; u.hash = '';
+  var r2 = await fetchFn(u.href + '?t=' + Date.now());
+  if (!r2.ok) return null;
+  var html2 = await r2.text();
+  if (RE.test(html2)) return null;
+  return { html: html2, filenameReel: cible };
+}
+// Garde-fou : extraction vide (typiquement le <title> « Redirection… » d'une page de redirection).
+function ficheExtraiteVide(data) {
+  var adr = String((data && data.adresse) || '').trim();
+  var vide = !adr || /^redirection(…|\.\.\.)?$/i.test(adr);
+  return vide && !(data && data.prix) && !(data && data.surface);
+}
+var MSG_FICHE_DEPLACEE = '❌ Cette fiche a changé d\'adresse, rechargez la liste';
+
 async function modifierFiche(filename, sha, downloadUrl) {
   if (_lectureSeule()) return;
   showToast('⏳ Chargement de la fiche…');
@@ -7730,6 +7757,12 @@ async function modifierFiche(filename, sha, downloadUrl) {
     var r = await fetch(downloadUrl + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
     var html = await r.text();
+
+    var filenameReel = filename;
+    var src = await chargerHtmlFiche(downloadUrl, html, fetch);
+    if (!src) { showToast(MSG_FICHE_DEPLACEE, true); return; }
+    html = src.html;
+    if (src.filenameReel) filenameReel = src.filenameReel;
 
     var data = null;
 
@@ -7748,6 +7781,11 @@ async function modifierFiche(filename, sha, downloadUrl) {
           var pq = await window.privencyAuth.from('fiche_private').select('data')
             .eq('agent_user_id', uidP).eq('filename', filename).maybeSingle();
           var priv = pq && pq.data && pq.data.data;
+          if (!priv && filenameReel !== filename) {
+            pq = await window.privencyAuth.from('fiche_private').select('data')
+              .eq('agent_user_id', uidP).eq('filename', filenameReel).maybeSingle();
+            priv = pq && pq.data && pq.data.data;
+          }
           if (priv) {
             var mergedRaw = Object.assign({}, data._rawState || {}, priv._rawState || {});
             Object.keys(priv).forEach(function(k) { if (k !== '_rawState') data[k] = priv[k]; });
@@ -7830,6 +7868,8 @@ async function modifierFiche(filename, sha, downloadUrl) {
       };
     }
 
+    if (ficheExtraiteVide(data)) { showToast(MSG_FICHE_DEPLACEE, true); return; }
+
     // 1. Activate edit mode BEFORE navigating so loadDraftBien() is blocked
     window._editMode = true;
     // Un enregistrement de brouillon déjà programmé (frappe < 800 ms avant) réécrirait
@@ -7842,7 +7882,8 @@ async function modifierFiche(filename, sha, downloadUrl) {
     PrivencyAuth.lsRemove('privency_last_fiche');
 
     // 3. Remember which fiche we're editing
-    _editingFiche = { filename: filename, sha: sha };
+    // filename = nom de la liste (ligne agent_fiches tant que la base n'est pas migrée) ; filenameReel = fichier publié
+    _editingFiche = { filename: filename, sha: sha, filenameReel: filenameReel };
     _stepsComplete[2] = true;
 
     // Reset step 3 so the user must regenerate from the fresh template before publishing.
