@@ -77,7 +77,9 @@ async function verifier(client) {
   const r = await client.from('agent_fiches').select('filename');
   if (r.error) throw new Error('lecture agent_fiches : ' + r.error.message);
   const inscrites = new Set((r.data || []).map(x => x.filename));
-  return fs.readdirSync(DIR_FICHES).filter(estFicheFR).filter(f => !inscrites.has(f)).sort();
+  // Les pages de redirection d'anciens liens (migration vers ville-type-code) ne sont pas des fiches à inscrire.
+  const estRedirection = f => fs.readFileSync(path.join(DIR_FICHES, f), 'utf8').slice(0, 2000).includes('name="pv-redirect"');
+  return fs.readdirSync(DIR_FICHES).filter(estFicheFR).filter(f => !inscrites.has(f)).filter(f => !estRedirection(f)).sort();
 }
 
 function lireArgs(argv) {
