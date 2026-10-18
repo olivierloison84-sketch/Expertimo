@@ -410,6 +410,34 @@
     </div>
   </section>
 
+  <section id="suivi" style="background:var(--grey-50);border-top:1px solid var(--border-subtle);border-bottom:1px solid var(--border-subtle)">
+    <div style="max-width:1200px;margin:0 auto;padding:96px 24px">
+    <x-import component-from-global-scope="PrivencyDesignSystem_8036cf.SectionHeading" eyebrow="Ce que vous suivez" title="Après la visite, vous savez quoi faire" lead="Le retour de l'acquéreur, l'alerte qui compte, le message de relance et le bilan de votre vendeur." hint-size="100%,200px"></x-import>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:48px">
+      <div style="padding:26px;background:var(--white);border:1px solid var(--border-default);border-radius:var(--radius-card);box-shadow:var(--shadow-sm);transition:box-shadow 200ms var(--ease-out),border-color 200ms var(--ease-out),transform 200ms var(--ease-out)" style-hover="transform:translateY(-1px);box-shadow:var(--shadow-md);border-color:var(--border-strong)">
+        <span style="width:44px;height:44px;border-radius:var(--radius-md);background:var(--emerald-50);color:var(--emerald-700);display:inline-flex;align-items:center;justify-content:center"><x-import component-from-global-scope="PrivencyDesignSystem_8036cf.Icon" name="message-square" size="{{ i24 }}" hint-size="24px,24px"></x-import></span>
+        <h3 style="margin-top:18px;font-size:var(--text-h4);line-height:var(--leading-h4);color:var(--text-strong)">Retour de visite</h3>
+        <p style="margin-top:8px;font-size:var(--text-sm);line-height:1.65;color:var(--text-muted)">Après la visite, l'acquéreur coche ce qui compte : coup de cœur, prix, travaux, quartier, charges, financement. Vous savez quoi lui répondre avant de le rappeler.</p>
+      </div>
+      <div style="padding:26px;background:var(--white);border:1px solid var(--border-default);border-radius:var(--radius-card);box-shadow:var(--shadow-sm);transition:box-shadow 200ms var(--ease-out),border-color 200ms var(--ease-out),transform 200ms var(--ease-out)" style-hover="transform:translateY(-1px);box-shadow:var(--shadow-md);border-color:var(--border-strong)">
+        <span style="width:44px;height:44px;border-radius:var(--radius-md);background:var(--emerald-50);color:var(--emerald-700);display:inline-flex;align-items:center;justify-content:center"><x-import component-from-global-scope="PrivencyDesignSystem_8036cf.Icon" name="bell" size="{{ i24 }}" hint-size="24px,24px"></x-import></span>
+        <h3 style="margin-top:18px;font-size:var(--text-h4);line-height:var(--leading-h4);color:var(--text-strong)">Alertes utiles</h3>
+        <p style="margin-top:8px;font-size:var(--text-sm);line-height:1.65;color:var(--text-muted)">Un e-mail seulement quand il faut agir : offre transmise, demande de documents, retour de visite. 3 par jour au maximum, et une offre passe toujours. Chaque lundi, un résumé des acquéreurs à rappeler.</p>
+      </div>
+      <div style="padding:26px;background:var(--white);border:1px solid var(--border-default);border-radius:var(--radius-card);box-shadow:var(--shadow-sm);transition:box-shadow 200ms var(--ease-out),border-color 200ms var(--ease-out),transform 200ms var(--ease-out)" style-hover="transform:translateY(-1px);box-shadow:var(--shadow-md);border-color:var(--border-strong)">
+        <span style="width:44px;height:44px;border-radius:var(--radius-md);background:var(--emerald-50);color:var(--emerald-700);display:inline-flex;align-items:center;justify-content:center"><x-import component-from-global-scope="PrivencyDesignSystem_8036cf.Icon" name="chart-column" size="{{ i24 }}" hint-size="24px,24px"></x-import></span>
+        <h3 style="margin-top:18px;font-size:var(--text-h4);line-height:var(--leading-h4);color:var(--text-strong)">Mes stats et relances</h3>
+        <p style="margin-top:8px;font-size:var(--text-sm);line-height:1.65;color:var(--text-muted)">Chaque acquéreur sur une ligne, avec ce qu'il a consulté et un message de relance adapté, prêt à envoyer.</p>
+      </div>
+      <div style="padding:26px;background:var(--white);border:1px solid var(--border-default);border-radius:var(--radius-card);box-shadow:var(--shadow-sm);transition:box-shadow 200ms var(--ease-out),border-color 200ms var(--ease-out),transform 200ms var(--ease-out)" style-hover="transform:translateY(-1px);box-shadow:var(--shadow-md);border-color:var(--border-strong)">
+        <span style="width:44px;height:44px;border-radius:var(--radius-md);background:var(--emerald-50);color:var(--emerald-700);display:inline-flex;align-items:center;justify-content:center"><x-import component-from-global-scope="PrivencyDesignSystem_8036cf.Icon" name="file-text" size="{{ i24 }}" hint-size="24px,24px"></x-import></span>
+        <h3 style="margin-top:18px;font-size:var(--text-h4);line-height:var(--leading-h4);color:var(--text-strong)">Bilan vendeur chaque semaine</h3>
+        <p style="margin-top:8px;font-size:var(--text-sm);line-height:1.65;color:var(--text-muted)">Un lien privé pour votre vendeur et le point de la semaine à lui envoyer. Il voit que vous travaillez, vous gardez sa confiance.</p>
+      </div>
+    </div>
+    </div>
+  </section>
+
   <section id="fonctionnalites" style="max-width:1200px;margin:0 auto;padding:96px 24px">
     <x-import component-from-global-scope="PrivencyDesignSystem_8036cf.SectionHeading" eyebrow="Dans chaque espace acheteur" title="Sept outils que vous n'avez pas à construire" hint-size="100%,160px"></x-import>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin-top:48px">
