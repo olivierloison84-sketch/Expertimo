@@ -6,87 +6,108 @@
 <meta name="robots" content="noindex, nofollow, noarchive">
 <meta name="referrer" content="no-referrer">
 <title>Compte rendu de commercialisation</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F6F8FB;--card:#fff;--ink:#0B1626;--gold:#0F2747;--gold2:#091B33;--cream:#E8EDF4;--muted:#667085;--border:#D5DDE8;--vert:#0F2747;--rouge:#667085;--dark:#091B33;--agent:#0F2747;--soft:#AFC0D8;--line:#D5DDE8;}
+:root{--bg:#F6F8FB;--card:#fff;--ink:#0B1626;--navy:#0F2747;--navy2:#1B3A66;--deep:#091B33;--muted:#5B6678;--line:#D5DDE8;--soft:#E8EDF4;--mid:#AFC0D8;--gold:#0F2747;--gold2:#091B33;--cream:#E8EDF4;--border:#D5DDE8;--vert:#0F2747;--rouge:#5B6678;--dark:#091B33;--agent:#0F2747;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-text-size-adjust:100%;}
-.wrap{max-width:920px;margin:0 auto;padding:0 20px;}
-header.top{background:linear-gradient(160deg,#091B33 0%,#1B3A66 100%);color:#fff;padding:34px 0 64px;position:relative;overflow:hidden;}
-header.top::before{content:'';position:absolute;width:420px;height:420px;background:radial-gradient(circle,rgba(166,227,198,.22),transparent 70%);top:-180px;right:-90px;border-radius:50%;}
-.agent{display:flex;align-items:center;gap:12px;position:relative;z-index:1;}
-.avatar{width:46px;height:46px;border-radius:50%;background:#fff;color:#0F2747;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;flex:none;object-fit:cover;}
-.agent-name{font-weight:600;font-size:14px;}
-.agent-role{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.82);text-transform:uppercase;}
-.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#C8F0DC;margin:30px 0 8px;position:relative;z-index:1;}
-h1{font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(26px,5.2vw,40px);line-height:1.15;position:relative;z-index:1;text-wrap:balance;}
-.sub{color:rgba(255,255,255,.85);font-size:13.5px;margin-top:8px;position:relative;z-index:1;}
-main{margin-top:-40px;position:relative;z-index:2;padding-bottom:40px;}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 14px rgba(15,26,22,.05);}
-.lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
-h2{font-family:'Playfair Display',serif;font-weight:500;font-size:21px;line-height:1.25;margin-bottom:4px;text-wrap:balance;}
-.hint{font-size:12.5px;color:var(--muted);}
-.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
-.kpi{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 14px;box-shadow:0 2px 14px rgba(15,26,22,.05);}
-.kpi .v{font-family:'Playfair Display',serif;font-size:32px;line-height:1;font-variant-numeric:tabular-nums;}
-.kpi .l{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.3;}
-.kpi .d{font-family:'IBM Plex Mono',monospace;font-size:10.5px;margin-top:6px;}
-.up{color:var(--gold2);}.down{color:var(--rouge);}.flat{color:var(--muted);}
-.story{font-family:'Playfair Display',serif;font-size:clamp(18px,3.4vw,23px);line-height:1.4;}
-.story em{font-style:normal;color:var(--gold2);}
-.note{background:var(--cream);border-color:var(--soft);}
-.note p{white-space:pre-wrap;font-size:15px;}
-.note .who{font-size:12px;color:var(--muted);margin-top:10px;}
-svg.chart{width:100%;height:auto;display:block;}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.55;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px;}
+header.top{background:linear-gradient(160deg,#091B33 0%,#1B3A66 100%);color:#fff;padding:26px 0 90px;position:relative;}
+.agent{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.avatar{width:46px;height:46px;border-radius:50%;background:#fff;color:#0F2747;display:flex;align-items:center;justify-content:center;font-weight:800;flex:none;object-fit:cover;}
+.agent-name{font-weight:700;font-size:16px;}
+.agent-role{font-size:14px;opacity:.8;}
+.eyebrow{font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.75;font-weight:600;}
+h1{font-size:28px;line-height:1.2;margin:6px 0 4px;font-weight:800;text-wrap:balance;}
+.sub{opacity:.82;font-size:15px;}
+main{margin-top:-64px;position:relative;z-index:2;padding-bottom:40px;}
+.card{background:var(--card);border-radius:20px;padding:22px 20px;margin-bottom:16px;box-shadow:0 2px 14px rgba(15,39,71,.07);}
+.lbl{font-size:12.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--navy2);margin-bottom:8px;}
+h2{font-size:21px;line-height:1.3;font-weight:800;margin-bottom:4px;text-wrap:balance;}
+.hint{color:var(--muted);font-size:15px;margin-bottom:16px;}
+.say{margin-top:14px;background:var(--soft);border-radius:12px;padding:12px 14px;font-size:16px;}
+.verdict{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:center;}.verdict>div:last-child{flex:1 1 220px;min-width:0;}
+.verdict .vi{flex:none;width:60px;height:60px;border-radius:50%;background:var(--soft);display:flex;align-items:center;justify-content:center;font-size:30px;}
+.verdict h2{font-size:22px;}
+.story{color:var(--muted);font-size:16px;margin-top:4px;}
+.story em{font-style:normal;color:var(--navy);font-weight:700;}
+.nums{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.num{background:var(--soft);border-radius:16px;padding:16px 14px;}
+.num .ico{font-size:24px;}
+.num .v{font-size:30px;font-weight:800;color:var(--navy);line-height:1.1;margin-top:4px;font-variant-numeric:tabular-nums;}
+.num .t{font-size:15px;line-height:1.35;}
+.pill-d{display:inline-block;margin-top:8px;font-size:13px;line-height:1.3;font-weight:700;border-radius:12px;padding:4px 10px;background:var(--navy);color:#fff;}
+.pill-d.down,.pill-d.flat{background:#fff;color:var(--navy);border:1.5px solid var(--mid);}
+.note{border-left:5px solid var(--navy);}
+.note p{white-space:pre-wrap;font-size:17px;}
+.note .who{font-size:15px;color:var(--muted);margin-top:8px;}
+.chart{display:flex;align-items:flex-end;gap:6px;height:200px;padding-top:24px;}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+.col .n{font-weight:800;font-size:15px;margin-bottom:4px;color:var(--navy);}
+.col .bar{width:100%;border-radius:8px 8px 0 0;background:var(--mid);min-height:3px;}
+.col.cur .bar{background:var(--navy);}
+.col .w{font-size:12px;color:var(--muted);margin-top:6px;white-space:nowrap;}
+.col.cur .w{color:var(--navy);font-weight:800;white-space:normal;text-align:center;line-height:1.15;}
+.buyer{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--line);}
+.buyer.first{border-top:0;padding-top:4px;}
+.letter{flex:none;width:44px;height:44px;border-radius:50%;background:var(--navy);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.buyer .tx{flex:1;min-width:0;}
+.buyer .tx b{display:block;font-size:16px;}
+.buyer .tx span{display:block;font-size:14.5px;color:var(--muted);line-height:1.4;}
+.heat{display:flex;gap:4px;margin-top:6px;}
+.heat i{width:26px;height:8px;border-radius:4px;background:var(--line);}
+.heat i.on{background:var(--navy);}
+.buyer .tx .tag{display:inline-block;margin-bottom:6px;color:var(--navy);}.buyer .tx .tag.tres{background:var(--navy);color:#fff;}.tag{flex:none;font-size:13px;font-weight:700;border-radius:99px;padding:4px 12px;background:var(--soft);color:var(--navy);white-space:nowrap;}
+.tag.tres{background:var(--navy);color:#fff;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13.5px;color:var(--muted);margin-top:8px;}
+.hb{margin:14px 0;}
+.hb .top{display:flex;justify-content:space-between;gap:10px;font-size:16px;font-weight:600;margin-bottom:5px;}
+.hb .top em{font-style:normal;color:var(--navy);font-weight:800;}
+.hb .track{height:14px;background:var(--soft);border-radius:99px;overflow:hidden;}
+.hb .fill{height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy));border-radius:99px;}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.pill{background:var(--soft);color:var(--navy);border-radius:99px;padding:8px 14px;font-size:15px;font-weight:600;}
+.pill b{margin-left:6px;font-weight:800;}
+.sec{margin-top:20px;}
+details.more{margin-top:12px;}
+details.more summary{cursor:pointer;color:var(--navy);font-weight:700;font-size:15.5px;padding:8px 0;}
 ul.feed{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;}
-ul.feed li{display:flex;gap:14px;padding:10px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.45;}
+ul.feed li{display:flex;gap:14px;padding:10px 0;border-top:1px solid var(--line);font-size:15.5px;line-height:1.45;}
 ul.feed li:first-child{border-top:0;}
-ul.feed .when{flex:0 0 12em;white-space:nowrap;font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted);padding-top:2px;}
+ul.feed .when{flex:0 0 11em;white-space:nowrap;font-size:14px;color:var(--muted);padding-top:1px;}
 ul.feed .what{min-width:0;overflow-wrap:anywhere;}
 @media(max-width:600px){ul.feed li{flex-direction:column;gap:2px;}ul.feed .when{flex-basis:auto;white-space:normal;}}
-svg.chart text{font-family:'IBM Plex Mono',monospace;font-size:9.5px;fill:var(--muted);}
-@media(max-width:600px){svg.chart text{font-size:15px;}}
-svg.chart .val{fill:var(--ink);font-weight:500;}
-.bars .row{display:grid;grid-template-columns:minmax(120px,190px) 1fr 42px;gap:10px;align-items:center;margin:9px 0;font-size:13.5px;}
-.bars .track{height:10px;border-radius:99px;background:#E4F3EC;overflow:hidden;}
-.bars .fill{height:100%;border-radius:99px;background:var(--gold);}
-.bars .pct{font-family:'IBM Plex Mono',monospace;font-size:11.5px;text-align:right;color:var(--muted);}
-.buyers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
-.buyer{border:1px solid var(--border);border-radius:14px;padding:16px;background:var(--bg);}
-.buyer .top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
-.buyer .nm{font-family:'Playfair Display',serif;font-size:18px;}
-.badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;padding:4px 10px;border-radius:99px;white-space:nowrap;}
-.badge.tres{background:#D5DDE8;color:#0F2747;}.badge.interesse{background:var(--cream);color:var(--gold2);}.badge.ecoute{background:#eee;color:#555;}
-.buyer ul{list-style:none;font-size:13px;color:#333;}
-.buyer li{padding:3px 0;display:flex;gap:8px;}
-.buyer li::before{content:'•';color:var(--gold2);}
-.pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
-.pill{border:1px solid var(--border);background:var(--bg);border-radius:99px;padding:6px 12px;font-size:13px;}
-.pill b{font-family:'IBM Plex Mono',monospace;font-weight:500;margin-left:6px;color:var(--gold2);}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:99px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-decoration:none;text-transform:uppercase;}
-.btn.dark{background:var(--dark);color:#fff;}.btn.line{border:1px solid var(--border);color:var(--ink);background:var(--card);}
-.empty{padding:26px 10px;text-align:center;color:var(--muted);font-size:14px;}
-.foot{font-size:11.5px;color:var(--muted);text-align:center;padding:8px 0 40px;}
+.cta{display:flex;flex-direction:column;gap:10px;margin-top:14px;}
+.btn{display:block;text-align:center;border-radius:14px;padding:15px;font-size:17px;font-weight:700;text-decoration:none;border:2px solid var(--navy);font-family:inherit;cursor:pointer;}
+.btn.dark{background:var(--navy);color:#fff;}
+.btn.line{background:#fff;color:var(--navy);}
+.btn:disabled{opacity:.6;}
+.empty{padding:18px 6px;text-align:center;color:var(--muted);font-size:15.5px;}
+.foot{font-size:13px;color:var(--muted);text-align:center;padding:8px 0 40px;}
 #state{padding:80px 20px;text-align:center;color:var(--muted);}
 .hidden{display:none!important;}
-@media(max-width:720px){.kpis{grid-template-columns:repeat(2,1fr);}.buyers,.two{grid-template-columns:1fr;}.bars .row{grid-template-columns:1fr 42px;}.bars .row .track{grid-column:1/-1;order:3;}}
-.calc{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 16px;}
-.calc label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted);min-width:0;}
-.calc input{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;width:100%;}
-.calc input:focus{outline:2px solid var(--gold);outline-offset:1px;}
-.cost-out{margin-top:16px;padding:14px 16px;border-radius:12px;background:var(--cream);font-size:14.5px;line-height:1.55;}
-.cost-out b{font-family:'Playfair Display',serif;font-size:21px;font-weight:500;color:var(--ink);font-variant-numeric:tabular-nums;}
-.cost-out .l2{margin-top:6px;}
-@media(max-width:720px){.calc{grid-template-columns:1fr;}}
-.calc select{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 12px;width:100%;}
-.mkt-tbl{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;}
-.mkt-tbl th{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 6px;border-bottom:1px solid var(--border);}
-.mkt-tbl td{padding:6px 6px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;}
+.calc{display:grid;grid-template-columns:1fr;gap:12px;}
+.calc label{display:flex;flex-direction:column;gap:5px;font-size:15px;color:var(--muted);min-width:0;}
+.calc input,.calc select{font:inherit;font-size:17px;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;}
+.calc input:focus,.calc select:focus{outline:2px solid var(--navy);outline-offset:1px;}
+.cost-out{margin-top:16px;font-size:16px;line-height:1.55;}
+.cost-out b{font-size:20px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;}
+.cost-out .nums{margin-bottom:12px;grid-template-columns:repeat(3,1fr);}.cost-out .num .v{font-size:22px;}@media(max-width:340px){.cost-out .nums{grid-template-columns:1fr;}}.cost-out .num{padding:12px 10px;}.cost-out .num .t{font-size:13.5px;}
+.cost-out .l2{margin-top:10px;}
+.scale{position:relative;height:16px;border-radius:99px;background:linear-gradient(90deg,var(--soft),var(--mid) 50%,var(--soft));margin:54px 6px 10px;}
+.pin{position:absolute;top:-44px;transform:translateX(-50%);text-align:center;font-size:13px;font-weight:700;white-space:nowrap;line-height:1.25;}
+.pin:after{content:"";display:block;width:3px;height:30px;background:var(--navy);margin:2px auto 0;border-radius:2px;}
+.pin.you{color:var(--navy);}
+.pin.med{color:var(--muted);top:-34px;}
+.pin.med:after{background:var(--muted);height:22px;}
+.sc-l{display:flex;justify-content:space-between;font-size:13.5px;color:var(--muted);padding:0 2px;}
+.mkt-tbl{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:10px;}
+.mkt-tbl th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px;border-bottom:1px solid var(--line);}
+.mkt-tbl td{padding:8px 6px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums;}
 .mkt-tbl-wrap{overflow-x:auto;}
-.mkt-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.45;}
-@media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #0F2747;}header.top::before{display:none;}h1,.sub,.agent-name,.agent-role{color:#0B1626;}.eyebrow{color:#0F2747;margin-top:14px;}main{margin-top:0;}.card,.kpi,.buyer,ul.feed li{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
+.mkt-note{font-size:13.5px;color:var(--muted);margin-top:10px;line-height:1.45;}
+@media(min-width:640px){.calc{grid-template-columns:1fr 1fr;}}
+@media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #0F2747;}h1,.sub,.agent-name,.agent-role{color:#0B1626;}.eyebrow{color:#0F2747;margin-top:14px;opacity:1;}main{margin-top:0;}.card,.num,.buyer,ul.feed li{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn,.calc{display:none!important;}details.more{display:block;}}
 @media(prefers-reduced-motion:no-preference){.fill{transition:width .8s cubic-bezier(.22,.61,.36,1);}}
 </style>
 </head>
@@ -100,30 +121,31 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     <div class="sub" id="maj"></div>
   </div></header>
   <main class="wrap">
-    <div class="kpis" id="kpis"></div>
-    <div class="card" style="margin-top:16px;"><div class="lbl">L'essentiel</div><div class="story" id="story"></div></div>
+    <div class="card"><div class="verdict"><div class="vi" id="v-ico"></div><div><div class="lbl">En résumé</div><h2 id="v-title"></h2><div class="story" id="story"></div></div></div></div>
+    <div class="card"><div class="lbl">Cette semaine en 4 chiffres</div><div class="nums" id="kpis"></div></div>
     <div class="card note hidden" id="note-card"><div class="lbl">Le mot de votre conseiller</div><p id="note"></p><div class="who" id="note-who"></div></div>
-    <div class="card"><div class="lbl">Activité récente</div><h2>Ce qui s'est passé sur votre bien</h2><div class="hint" style="margin-bottom:12px;">Les démarches des acquéreurs sur la fiche, y compris en dehors des visites (30 derniers jours).</div><ul class="feed" id="feed"></ul></div>
-    <div class="card"><div class="lbl">Intérêt semaine après semaine</div><h2>Combien d'acquéreurs ouvrent la fiche de votre bien ?</h2><div class="hint" style="margin-bottom:10px;">Chaque barre est le nombre d'ouvertures de la fiche sur une semaine.</div><div id="chart"></div></div>
-    <div class="card"><div class="lbl">Les acquéreurs</div><h2>Qui s'intéresse à votre bien ?</h2><div class="hint" style="margin-bottom:14px;">Chaque acquéreur est désigné par une lettre : vous ne voyez jamais son nom ni ses coordonnées.</div><div class="buyers" id="buyers"></div></div>
-    <div class="two">
-      <div class="card"><div class="lbl">Ce qui retient l'attention</div><h2>Les rubriques les plus lues</h2><div class="bars" id="tabs"></div></div>
-      <div class="card"><div class="lbl">Ce qu'ils veulent savoir</div><h2>Les sujets qui reviennent</h2><div id="themes"></div><div class="lbl" style="margin-top:18px;">Documents les plus demandés</div><div id="docs"></div><div class="lbl" style="margin-top:18px;">Retours de visite</div><div id="retours"></div></div>
+    <div class="card"><div class="lbl">L'intérêt dans le temps</div><h2>Combien de fois votre annonce est consultée</h2><div class="hint">Chaque barre = le nombre de consultations sur une semaine.</div><div id="chart"></div><div class="say hidden" id="chart-say"></div></div>
+    <div class="card"><div class="lbl">Les acquéreurs</div><h2>Qui s'intéresse à votre bien ?</h2><div class="hint">Vous ne voyez jamais leur nom : chacun est désigné par une lettre.</div><div id="buyers"></div><div class="legend" id="buyers-legend"></div></div>
+    <div class="card"><div class="lbl">Ce qui retient l'attention</div><h2>Les parties les plus regardées</h2><div id="tabs"></div>
+      <div class="lbl sec">Ce qu'ils demandent le plus</div><div id="themes"></div>
+      <div class="lbl sec">Documents demandés</div><div id="docs"></div>
+      <div class="lbl sec">Retours de visite</div><div id="retours"></div>
     </div>
-    <div class="card" id="mkt-card"><div class="lbl">Le marché autour de votre bien</div><h2>Votre prix face aux ventes réelles de votre commune</h2>
-      <div class="hint" style="margin-bottom:14px;">Renseignez les caractéristiques du bien : nous le comparons aux ventes réellement signées dans votre commune (données officielles DVF, 3 dernières années) et estimons combien de foyers du secteur peuvent le financer (revenus Insee).</div>
+    <div class="card"><div class="lbl">Activité récente</div><h2>Ce qui s'est passé sur votre bien</h2><div class="hint">Les démarches des acquéreurs sur la fiche, y compris en dehors des visites (30 derniers jours).</div><ul class="feed" id="feed"></ul><details class="more hidden" id="feed-more"><summary>Voir toute l'activité</summary><ul class="feed" id="feed2"></ul></details></div>
+    <div class="card" id="mkt-card"><div class="lbl">Le marché autour de votre bien</div><h2>Votre prix par rapport aux ventes réelles</h2>
+      <div class="hint">Renseignez votre bien : nous le comparons aux ventes réellement signées dans votre commune (données officielles, 3 dernières années).</div>
       <div class="calc">
         <label><span>Type de bien</span><select id="m-type"><option value="appartement">Appartement</option><option value="maison">Maison</option></select></label>
         <label><span>Surface habitable (m²)</span><input id="m-surface" type="number" inputmode="decimal" min="9" max="400" step="1" placeholder="0"></label>
-        <label><span>Prix de vente affiché (€, frais d’agence inclus le cas échéant)</span><input id="m-prix" type="number" inputmode="decimal" min="0" step="1000" placeholder="0"></label>
-        <label><span>&nbsp;</span><button type="button" class="btn dark" id="m-go" style="justify-content:center;">Comparer à ma commune</button></label>
+        <label><span>Prix de vente affiché (€)</span><input id="m-prix" type="number" inputmode="decimal" min="0" step="1000" placeholder="0"></label>
+        <label><span>&nbsp;</span><button type="button" class="btn dark" id="m-go">Comparer à ma commune</button></label>
       </div>
       <div class="cost-out" id="m-out" aria-live="polite" style="display:none;"></div>
     </div>
     <div class="card" id="cost-card"><div class="lbl">Le coût de l'attente</div><h2>Ce que coûte chaque mois sans vente</h2>
-      <div class="hint" style="margin-bottom:14px;">Calcul indicatif, effectué sur cet écran : vos chiffres ne sont ni enregistrés ni transmis. Le capital remboursé de votre crédit n'est pas une perte : il n'est pas compté.</div>
+      <div class="hint">Estimation simple, calculée sur votre écran : rien n'est enregistré. Le capital remboursé de votre crédit n'est pas une perte : il n'est pas compté.</div>
       <div class="calc">
-        <label><span>Crédit : intérêts et assurance (€ / mois, hors capital remboursé)</span><input id="c-credit" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
+        <label><span>Crédit : intérêts et assurance (€ / mois)</span><input id="c-credit" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
         <label><span>Charges de copropriété (€ / mois)</span><input id="c-charges" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
         <label><span>Taxe foncière (€ / an)</span><input id="c-taxe" type="number" inputmode="decimal" min="0" step="50" placeholder="0"></label>
         <label><span>Autres frais : énergie, assurance (€ / mois)</span><input id="c-autres" type="number" inputmode="decimal" min="0" step="10" placeholder="0"></label>
@@ -143,7 +165,9 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
   var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocWN1bW5hdG5zbGZqcHNybWdiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExMDM2NDksImV4cCI6MjA5NjY3OTY0OX0.m49F-n7pn_GsMnblw1r36hiarQ-AwrOLTqhwHkOPASY';
   var TAB_LABELS = {bien: 'Le bien', marche: 'Ventes comparables', rentabilite: 'Simulateur investisseur', historique: 'Historique du bien', diagnostics: 'Diagnostics', budget: 'Financement et budget', quartier: 'Quartier et carte', documents: 'Documents', assistant: 'Assistant', offre: 'Faire une offre'};
   function tabLabel(id) { return Object.prototype.hasOwnProperty.call(TAB_LABELS, id) ? TAB_LABELS[id] : ''; }
-  var LEVELS = {tres: 'Très intéressé', interesse: 'Intéressé', ecoute: "À l'écoute"};
+  var LEVELS = {tres: 'Très intéressé', interesse: 'Intéressé', ecoute: 'Curieux'};
+  var HEAT = {tres: 3, interesse: 2, ecoute: 1};
+  var TAB_ICONS = {bien: '🏠', marche: '📊', rentabilite: '💼', historique: '📜', diagnostics: '🔍', budget: '💶', quartier: '📍', documents: '📄', assistant: '💬', offre: '✍️'};
   function $(id) { return document.getElementById(id); }
   /* Adresse affichée proprement : majuscules, accents courants, prépositions en minuscules. N'altère jamais les chiffres. */
   function fmtAdresse(s) {
@@ -193,36 +217,40 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
   }
   function fail(msg) { var s = $('state'); s.textContent = msg; s.classList.remove('hidden'); $('report').classList.add('hidden'); }
 
-  function kpi(v, l, delta) {
-    var k = el('div', 'kpi'); k.appendChild(el('div', 'v', String(v))); k.appendChild(el('div', 'l', l));
-    if (delta) { var d = el('div', 'd ' + delta.cls, delta.text); k.appendChild(d); }
+  function kpi(ico, v, l, delta) {
+    var k = el('div', 'num'); k.appendChild(el('div', 'ico', ico)); k.appendChild(el('div', 'v', String(v))); k.appendChild(el('div', 't', l));
+    if (delta) { k.appendChild(el('span', 'pill-d ' + delta.cls, delta.text)); }
     return k;
   }
-  function delta(now, prev, unit) {
+  function delta(now, prev) {
     var diff = now - prev;
     if (!prev && !now) return {cls: 'flat', text: 'aucune activité'};
-    if (diff > 0) return {cls: 'up', text: '▲ +' + diff + ' vs semaine précédente'};
-    if (diff < 0) return {cls: 'down', text: '▼ ' + diff + ' vs semaine précédente'};
-    return {cls: 'flat', text: '= identique à la semaine précédente'};
+    if (diff > 0) return {cls: 'up', text: '▲ +' + diff + ' vs semaine passée'};
+    if (diff < 0) return {cls: 'down', text: '▼ ' + diff + ' vs semaine passée'};
+    return {cls: 'flat', text: '= comme la semaine passée'};
   }
 
   function chart(courbe) {
     var host = $('chart'); host.textContent = '';
     var max = Math.max.apply(null, courbe.map(function(c) { return c.visites; }).concat([1]));
-    var W = 640, H = 210, padL = 8, padB = 34, padT = 24, n = courbe.length, gap = 12, bw = (W - padL * 2 - gap * (n - 1)) / n;
-    var NS = 'http://www.w3.org/2000/svg', svg = document.createElementNS(NS, 'svg');
-    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); svg.setAttribute('class', 'chart'); svg.setAttribute('role', 'img');
-    svg.setAttribute('aria-label', 'Ouvertures de la fiche par semaine sur les huit dernières semaines');
-    function add(tag, attrs, text) { var e = document.createElementNS(NS, tag); Object.keys(attrs).forEach(function(k) { e.setAttribute(k, attrs[k]); }); if (text != null) e.textContent = text; svg.appendChild(e); return e; }
-    add('line', {x1: padL, x2: W - padL, y1: H - padB, y2: H - padB, stroke: '#E5E9EF'});
+    var wrap = el('div', 'chart'); wrap.setAttribute('role', 'img'); wrap.setAttribute('aria-label', 'Consultations de la fiche par semaine');
     courbe.forEach(function(c, i) {
-      var h = Math.round((H - padB - padT) * c.visites / max), x = padL + i * (bw + gap), y = H - padB - h, cur = i === n - 1;
-      add('rect', {x: x, y: c.visites ? y : H - padB - 2, width: bw, height: c.visites ? h : 2, rx: 5, fill: cur ? '#0F2747' : '#AFC0D8'});
-      add('text', {x: x + bw / 2, y: (c.visites ? y : H - padB) - 6, 'text-anchor': 'middle', 'class': 'val'}, String(c.visites));
-      add('text', {x: x + bw / 2, y: H - padB + 16, 'text-anchor': 'middle'}, c.semaine.slice(8, 10) + '/' + c.semaine.slice(5, 7));
+      var cur = i === courbe.length - 1, col = el('div', 'col' + (cur ? ' cur' : ''));
+      col.appendChild(el('span', 'n', String(c.visites)));
+      var bar = el('div', 'bar'); bar.style.height = Math.round(100 * c.visites / max * 0.78) + '%'; col.appendChild(bar);
+      col.appendChild(el('span', 'w', cur ? 'Cette sem.' : c.semaine.slice(8, 10) + '/' + c.semaine.slice(5, 7)));
+      wrap.appendChild(col);
     });
-    add('text', {x: W - padL, y: H - 4, 'text-anchor': 'end'}, 'semaine commençant le… (jj/mm)');
-    host.appendChild(svg);
+    host.appendChild(wrap);
+    var say = $('chart-say'), n = courbe.length;
+    if (n >= 2 && courbe.some(function(c) { return c.visites > 0; })) {
+      var last = courbe[n - 1].visites, prev = courbe[n - 2].visites;
+      say.textContent = '';
+      say.appendChild(document.createTextNode('👉 Plus les barres sont hautes, plus votre bien est regardé. La tendance est '));
+      say.appendChild(el('b', null, last > prev ? 'à la hausse' : last < prev ? 'en retrait cette semaine' : 'stable'));
+      say.appendChild(document.createTextNode('.'));
+      say.classList.remove('hidden');
+    } else say.classList.add('hidden');
   }
 
   function render(r) {
@@ -245,31 +273,34 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       .catch(function() {});
 
     var k = $('kpis'); k.textContent = '';
-    k.appendChild(kpi(sm.visites || 0, 'ouvertures de la fiche cette semaine', delta(sm.visites || 0, sm.visites_prec || 0)));
-    k.appendChild(kpi(t.acquereurs || 0, (t.acquereurs > 1 ? 'acquéreurs identifiés' : 'acquéreur identifié') + (t.anonymes ? ' (+ ' + plur(t.anonymes, 'visite anonyme', 'visites anonymes') + ')' : '')));
-    k.appendChild(kpi(fmtMin(t.minutes), 'de lecture au total'));
-    k.appendChild(kpi(t.docs || 0, t.docs > 1 ? 'documents demandés' : 'document demandé'));
+    k.appendChild(kpi('👀', sm.visites || 0, 'consultations de votre annonce cette semaine', delta(sm.visites || 0, sm.visites_prec || 0)));
+    k.appendChild(kpi('👤', t.acquereurs || 0, (t.acquereurs > 1 ? 'acquéreurs intéressés' : 'acquéreur intéressé') + (t.anonymes ? ' (+ ' + plur(t.anonymes, 'visite anonyme', 'visites anonymes') + ')' : '')));
+    k.appendChild(kpi('⏱️', fmtMin(t.minutes), 'passées à lire votre fiche'));
+    k.appendChild(kpi('📄', t.docs || 0, t.docs > 1 ? 'documents demandés' : 'document demandé'));
 
     var story = $('story'); story.textContent = '';
     function em(txt) { var e = el('em', null, txt); story.appendChild(e); }
     var txt = function(s) { story.appendChild(document.createTextNode(s)); };
-    if (!t.visites) { txt("Votre fiche est en ligne : dès la première ouverture par un acquéreur, vous verrez ici l'intérêt de chacun."); }
+    var dv = (sm.visites || 0) - (sm.visites_prec || 0);
+    if (!t.visites) { $('v-ico').textContent = '⏳'; $('v-title').textContent = 'Votre fiche est en ligne'; txt("Dès la première ouverture par un acquéreur, vous verrez ici l'intérêt de chacun."); }
     else {
-      txt('Depuis sa mise en ligne, la fiche de votre bien a été ouverte '); em(plur(t.visites, 'fois', 'fois'));
+      if (dv > 0) { $('v-ico').textContent = '📈'; $('v-title').textContent = "L'intérêt est en hausse cette semaine"; }
+      else if (dv < 0 && sm.visites_prec) { $('v-ico').textContent = '📉'; $('v-title').textContent = "L'intérêt est en retrait cette semaine"; }
+      else { $('v-ico').textContent = '➡️'; $('v-title').textContent = "L'intérêt reste stable cette semaine"; }
+      txt('Depuis sa mise en ligne, votre fiche a été ouverte '); em(plur(t.visites, 'fois', 'fois'));
       if (t.acquereurs) { txt(', par '); em(plur(t.acquereurs, 'acquéreur identifié', 'acquéreurs identifiés')); }
       txt('. ');
       var tres = (r.acquereurs || []).filter(function(a) { return a.niveau === 'tres'; }).length;
       if (tres) { em(plur(tres, 'acquéreur très intéressé', 'acquéreurs très intéressés')); txt(' : ' + (tres > 1 ? 'ils sont revenus' : 'il est revenu') + ' plusieurs fois et ' + (tres > 1 ? 'ont' : 'a') + " approfondi le dossier. "); }
-      var d = (sm.visites || 0) - (sm.visites_prec || 0);
-      if (d > 0) txt("L'intérêt est en hausse cette semaine."); else if (d < 0 && sm.visites_prec) txt("L'intérêt est en retrait cette semaine : nous en parlons ensemble."); else if (sm.visites) txt("L'intérêt reste stable cette semaine.");
+      if (dv < 0 && sm.visites_prec) txt('Nous en parlons ensemble.');
     }
 
     if (r.note) { $('note-card').classList.remove('hidden'); $('note').textContent = r.note; $('note-who').textContent = '— ' + (nom || 'Votre conseiller') + (r.note_at ? ', le ' + fmtDate(r.note_at) : ''); }
 
     chart(r.courbe || []);
 
-    var fd = $('feed'); fd.textContent = '';
-    var acts = r.activite || [];
+    var fd = $('feed'), fd2 = $('feed2'); fd.textContent = ''; fd2.textContent = ''; $('feed-more').classList.add('hidden');
+    var acts = r.activite || [], shown = 0;
     if (!acts.length) fd.appendChild(el('li', null, "Aucune activité sur la fiche ces 30 derniers jours."));
     acts.forEach(function(a) {
       var when = fmtWhen(a.jour, a.moment), what;
@@ -281,32 +312,43 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       else if (a.type === 'rubrique' && tabLabel(a.detail)) what = 'a consulté « ' + tabLabel(a.detail) + ' » pendant ' + Math.max(1, Math.round((a.sec || 60) / 60)) + ' min';
       else return;
       var li = el('li'); li.appendChild(el('div', 'when', when));
-      var w = el('div', 'what'); w.appendChild(el('b', null, 'Acquéreur ' + a.lettre)); w.appendChild(document.createTextNode(' ' + what)); li.appendChild(w); fd.appendChild(li);
+      var w = el('div', 'what'); w.appendChild(el('b', null, 'Acquéreur ' + a.lettre)); w.appendChild(document.createTextNode(' ' + what)); li.appendChild(w);
+      if (shown < 5) fd.appendChild(li); else { fd2.appendChild(li); $('feed-more').classList.remove('hidden'); }
+      shown++;
     });
     var b = $('buyers'); b.textContent = '';
-    if (!(r.acquereurs || []).length) { b.appendChild(el('div', 'empty', "Aucun acquéreur identifié pour l'instant. Les visites anonymes sont comptées ci-dessus.")); b.style.display = 'block'; }
-    (r.acquereurs || []).forEach(function(a) {
-      var c = el('div', 'buyer'), top = el('div', 'top');
-      top.appendChild(el('div', 'nm', 'Acquéreur ' + a.lettre)); top.appendChild(el('span', 'badge ' + a.niveau, LEVELS[a.niveau] || ''));
-      c.appendChild(top);
-      var ul = el('ul');
-      ul.appendChild(el('li', null, plur(a.visites, 'visite', 'visites') + (a.minutes ? ' · ' + fmtMin(a.minutes) + ' de lecture' : '') + (a.derniere ? ' · dernière le ' + fmtDate(a.derniere) : '')));
-      var seen = (a.onglets || []).map(function(i) { return tabLabel(i); }).filter(Boolean);
-      if (seen.length) ul.appendChild(el('li', null, 'A consulté : ' + seen.join(', ')));
-      if (a.simulation) ul.appendChild(el('li', null, 'A simulé son financement'));
-      if (a.docs) ul.appendChild(el('li', null, 'A demandé ' + plur(a.docs, 'document', 'documents')));
-      if (a.questions) ul.appendChild(el('li', null, 'A posé ' + plur(a.questions, 'question', 'questions') + ' sur le bien'));
-      c.appendChild(ul); b.appendChild(c);
+    $('buyers-legend').textContent = '';
+    if (!(r.acquereurs || []).length) { b.appendChild(el('div', 'empty', "Aucun acquéreur identifié pour l'instant. Les visites anonymes sont comptées ci-dessus.")); }
+    else { ['▮▮▮ très intéressé', '▮▮▯ intéressé', '▮▯▯ curieux'].forEach(function(x) { $('buyers-legend').appendChild(el('span', null, x)); }); }
+    (r.acquereurs || []).forEach(function(a, i) {
+      var c = el('div', 'buyer' + (i === 0 ? ' first' : ''));
+      c.appendChild(el('div', 'letter', a.lettre));
+      var tx = el('div', 'tx');
+      tx.appendChild(el('span', 'tag ' + a.niveau, LEVELS[a.niveau] || ''));
+      tx.appendChild(el('b', null, plur(a.visites, 'visite', 'visites') + (a.minutes ? ' · ' + fmtMin(a.minutes) + ' de lecture' : '')));
+      if (a.derniere) tx.appendChild(el('span', null, 'Dernière visite le ' + fmtDate(a.derniere)));
+      var seen = (a.onglets || []).map(function(i2) { return tabLabel(i2); }).filter(Boolean);
+      if (seen.length) tx.appendChild(el('span', null, 'A regardé : ' + seen.join(', ')));
+      var more = [];
+      if (a.simulation) more.push('a simulé son financement');
+      if (a.docs) more.push('a demandé ' + plur(a.docs, 'document', 'documents'));
+      if (a.questions) more.push('a posé ' + plur(a.questions, 'question', 'questions'));
+      if (more.length) tx.appendChild(el('span', null, more.join(' · ')));
+      var heat = el('div', 'heat'); for (var h = 0; h < 3; h++) heat.appendChild(el('i', h < (HEAT[a.niveau] || 1) ? 'on' : null));
+      tx.appendChild(heat); c.appendChild(tx);
+      b.appendChild(c);
     });
 
     var tb = $('tabs'); tb.textContent = '';
     var tabs = (r.onglets || []).filter(function(o) { return tabLabel(o.id); });
     if (!tabs.length) tb.appendChild(el('div', 'empty', 'Pas encore assez de lectures pour établir un classement.'));
     tabs.forEach(function(o) {
-      var row = el('div', 'row'); row.appendChild(el('div', null, tabLabel(o.id)));
-      var tr = el('div', 'track'), fl = el('div', 'fill'); fl.style.width = '0%'; tr.appendChild(fl); row.appendChild(tr); row.appendChild(el('div', 'pct', o.pct + ' %')); tb.appendChild(row);
+      var row = el('div', 'hb'), top = el('div', 'top');
+      top.appendChild(el('span', null, (TAB_ICONS[o.id] || '') + ' ' + tabLabel(o.id))); top.appendChild(el('em', null, o.pct + ' %')); row.appendChild(top);
+      var tr = el('div', 'track'), fl = el('div', 'fill'); fl.style.width = '0%'; tr.appendChild(fl); row.appendChild(tr); tb.appendChild(row);
       setTimeout(function() { fl.style.width = Math.max(3, Math.min(100, o.pct)) + '%'; }, 60);
     });
+    if (tabs.length) tb.appendChild(el('div', 'hint', 'Part des acquéreurs qui ont ouvert chaque partie.'));
 
     var th = $('themes'); th.textContent = '';
     if (!(r.themes || []).length) th.appendChild(el('div', 'empty', "Aucune question posée pour l'instant."));
@@ -337,7 +379,9 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       var out = $('c-out'); out.textContent = '';
       var mois = v('c-credit') + v('c-charges') + v('c-taxe') / 12 + v('c-autres');
       if (!mois) { out.appendChild(el('div', null, 'Renseignez vos montants ci-dessus pour voir ce que coûte chaque mois d\u2019attente.')); return; }
-      var l1 = el('div'); l1.appendChild(document.createTextNode('Chaque mois sans vente vous coûte ')); l1.appendChild(el('b', null, eur(mois))); l1.appendChild(document.createTextNode('. Sur 3 mois : ' + eur(mois * 3) + ' ; sur 6 mois : ' + eur(mois * 6) + '.')); out.appendChild(l1);
+      var nm = el('div', 'nums');
+      [['🏠', eur(mois), 'par mois d\u2019attente'], ['📆', eur(mois * 3), 'pour 3 mois'], ['🗓️', eur(mois * 6), 'pour 6 mois']].forEach(function(x) { var n = el('div', 'num'); n.appendChild(el('div', 'ico', x[0])); n.appendChild(el('div', 'v', x[1])); n.appendChild(el('div', 't', x[2])); nm.appendChild(n); });
+      out.appendChild(nm);
       var prix = v('c-prix'), baisse = Math.min(v('c-baisse'), 30);
       if (prix && baisse) { var m = prix * baisse / 100, l2 = el('div', 'l2'); l2.appendChild(document.createTextNode('Une baisse de ' + String(baisse).replace('.', ',') + ' % représente ' + eur(m) + ', soit l\u2019équivalent de ')); l2.appendChild(el('b', null, (Math.round(m / mois * 10) / 10).toString().replace('.', ',') + ' mois')); l2.appendChild(document.createTextNode(' de frais d\u2019attente.')); out.appendChild(l2); }
     }
@@ -368,35 +412,43 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
       var o = $('m-out'); o.style.display = ''; o.textContent = '';
       if (!d || d.ok !== true) return msg(d && d.error === 'commune' ? "Nous n'avons pas pu identifier la commune de ce bien." : 'Analyse momentanément indisponible. Réessayez dans quelques instants.');
       var e = d.estimation || {}, b = d.bassin || {}, nom = (d.commune && d.commune.nom) || 'votre commune';
-      var l1 = el('div'); l1.appendChild(el('div', 'lbl', 'Estimation comparée'));
+      var l1 = el('div'); l1.appendChild(el('div', 'lbl', 'Ce que disent les ventes réelles'));
       if (!e.ok) l1.appendChild(document.createTextNode(e.raison === 'dvf_indisponible' ? 'Les ventes officielles (DVF) ne sont pas disponibles pour ' + nom + ' (certains départements, comme l\u2019Alsace-Moselle, ne sont pas couverts ; pour Paris, Lyon et Marseille, le code postal de l\u2019arrondissement est nécessaire).' : 'Trop peu de ventes comparables récentes à ' + nom + ' pour une estimation fiable.'));
       else {
         l1.appendChild(document.createTextNode('Les ventes comparables à ' + nom + ' valent ')); l1.appendChild(el('b', null, eur(e.ppm_median) + '/m²'));
         l1.appendChild(document.createTextNode(' en médiane, soit environ ')); l1.appendChild(el('b', null, eur(e.estimation)));
         l1.appendChild(document.createTextNode(' pour ' + surface + ' m² (la moitié des ventes comparables se sont faites entre ' + eur(e.fourchette_basse) + ' et ' + eur(e.fourchette_haute) + ').'));
         if (prix) {
-          var pos = el('div', 'l2'), s = e.ecart_pct > 0 ? '+' : '';
-          pos.appendChild(document.createTextNode('Votre prix de ' + eur(prix) + ' (' + eur(e.ppm_prix) + '/m²) se situe ')); pos.appendChild(el('b', null, s + String(e.ecart_pct).replace('.', ',') + ' %'));
+          var lo = Math.min(e.fourchette_basse, prix) * 0.97, hi = Math.max(e.fourchette_haute, prix) * 1.03, span = hi - lo;
+          function at(x) { return Math.max(4, Math.min(96, (x - lo) / span * 100)); }
+          var sc = el('div', 'scale'), pm = el('div', 'pin med'), py = el('div', 'pin you');
+          pm.style.left = at(e.estimation) + '%'; pm.appendChild(document.createTextNode('Prix courant')); pm.appendChild(document.createElement('br')); pm.appendChild(document.createTextNode(eur(e.estimation)));
+          py.style.left = at(prix) + '%'; py.appendChild(document.createTextNode('Votre bien')); py.appendChild(document.createElement('br')); py.appendChild(document.createTextNode(eur(prix)));
+          if (at(prix) <= at(e.estimation)) { py.style.transform = 'translateX(-100%)'; py.style.textAlign = 'right'; pm.style.transform = 'translateX(0)'; pm.style.textAlign = 'left'; } else { pm.style.transform = 'translateX(-100%)'; pm.style.textAlign = 'right'; py.style.transform = 'translateX(0)'; py.style.textAlign = 'left'; }
+          sc.appendChild(pm); sc.appendChild(py); l1.appendChild(sc);
+          var sl = el('div', 'sc-l'); sl.appendChild(el('span', null, eur(Math.round(lo / 1000) * 1000))); sl.appendChild(el('span', null, 'moins cher ← → plus cher')); sl.appendChild(el('span', null, eur(Math.round(hi / 1000) * 1000))); l1.appendChild(sl);
+          var pos = el('div', 'say'), s = e.ecart_pct > 0 ? '+' : '';
+          pos.appendChild(document.createTextNode('👉 Votre prix (' + eur(e.ppm_prix) + '/m²) se situe ')); pos.appendChild(el('b', null, s + String(e.ecart_pct).replace('.', ',') + ' %'));
           pos.appendChild(document.createTextNode(e.position === 'dans' ? ' par rapport à cette estimation : dans la moitié centrale des ventes comparables.' : e.position === 'au_dessus' ? ' par rapport à cette estimation : au-dessus de la moitié centrale des ventes comparables (environ un quart des ventes se sont faites plus haut).' : ' par rapport à cette estimation : sous la moitié centrale des ventes comparables (environ un quart des ventes se sont faites plus bas).'));
           pos.appendChild(el('div', 'mkt-note', 'Les ventes officielles sont des prix signés, hors frais d\u2019agence et après négociation : un prix affiché paraît donc un peu plus haut qu\u2019il ne l\u2019est réellement.'));
           l1.appendChild(pos);
         }
-        l1.appendChild(el('div', 'mkt-note', 'Fiabilité : ' + e.confiance + ' (' + e.n + ' ventes' + (e.ecart_surface ? ' de surface proche (± ' + e.ecart_surface + ' %)' : ', toutes surfaces confondues') + ', du ' + fmtDate(e.du) + ' au ' + fmtDate(e.au) + ').'));
+        var det = el('details', 'more'); det.appendChild(el('summary', null, 'Voir le détail des ventes comparables')); l1.appendChild(det);
+        det.appendChild(el('div', 'mkt-note', 'Fiabilité : ' + e.confiance + ' (' + e.n + ' ventes' + (e.ecart_surface ? ' de surface proche (± ' + e.ecart_surface + ' %)' : ', toutes surfaces confondues') + ', du ' + fmtDate(e.du) + ' au ' + fmtDate(e.au) + ').'));
         if ((e.ventes || []).length) {
           var wr = el('div', 'mkt-tbl-wrap'), t = el('table', 'mkt-tbl'), hr = el('tr');
           ['Vente', 'Surface', 'Prix', '€/m²'].forEach(function(h) { hr.appendChild(el('th', null, h)); }); t.appendChild(hr);
           e.ventes.forEach(function(v) { var r = el('tr'); r.appendChild(el('td', null, v.mois)); r.appendChild(el('td', null, v.surface + ' m²')); r.appendChild(el('td', null, eur(v.prix))); r.appendChild(el('td', null, eur(v.ppm))); t.appendChild(r); });
-          wr.appendChild(t); l1.appendChild(wr);
+          wr.appendChild(t); det.appendChild(wr);
         }
       }
       o.appendChild(l1);
       if (prix) {
-        var l2 = el('div'); l2.style.marginTop = '18px'; l2.appendChild(el('div', 'lbl', "Bassin d'acheteurs"));
+        var l2 = el('div'); l2.style.marginTop = '22px'; l2.appendChild(el('div', 'lbl', "Combien de foyers peuvent l'acheter"));
         if (!b.ok) l2.appendChild(document.createTextNode("Les revenus de cette commune ne sont pas publiés par l'Insee : nous ne pouvons pas estimer le bassin d'acheteurs."));
         else {
-          l2.appendChild(document.createTextNode('Pour acheter à ' + eur(prix) + ', un foyer doit disposer d\u2019environ ')); l2.appendChild(el('b', null, eur(b.revenu_mensuel) + '/mois'));
-          l2.appendChild(document.createTextNode(' nets (mensualité d\u2019environ ' + eur(b.mensualite) + '). À ' + nom + ', cela concerne environ ')); l2.appendChild(el('b', null, String(b.part_pct).replace('.', ',') + ' % des foyers'));
-          l2.appendChild(document.createTextNode(', soit près de ' + new Intl.NumberFormat('fr-FR').format(b.menages) + ' foyers sur ' + new Intl.NumberFormat('fr-FR').format(b.menages_total) + '.'));
+          l2.appendChild(document.createTextNode('Environ ')); l2.appendChild(el('b', null, String(b.part_pct).replace('.', ',') + ' % des foyers'));
+          l2.appendChild(document.createTextNode(' de ' + nom + ' ont les moyens de financer ce bien (soit près de ' + new Intl.NumberFormat('fr-FR').format(b.menages) + ' foyers sur ' + new Intl.NumberFormat('fr-FR').format(b.menages_total) + '). Il faut environ ' + eur(b.revenu_mensuel) + ' nets par mois, pour une mensualité d\u2019environ ' + eur(b.mensualite) + '.'));
           var h = b.hyp || {};
           l2.appendChild(el('div', 'mkt-note', 'Hypothèses : apport de ' + Math.round(h.apport * 100) + ' % du prix, frais de notaire ' + Math.round(h.notaire * 100) + ' %, crédit sur ' + h.annees + ' ans à ' + String(h.taux * 100).replace('.', ',') + ' % (assurance comprise), ' + Math.round(h.endettement * 100) + ' % d\u2019endettement maximum. Ce sont les foyers qui en ont les moyens, pas forcément des acquéreurs en recherche : le vivier réel est plus restreint.'));
         }
