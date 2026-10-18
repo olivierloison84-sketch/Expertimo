@@ -8,8 +8,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maison à Saint-Escobille · Espace acheteur privé</title>
-<meta name="pv-adr" content="2 Allée du Vivier Sud - 91410 Saint Escobille · Espace Acheteur Privé · Expertimo">
+<title>Maison à Saint Escobille · Espace acheteur privé</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500;1,600&amp;family=Work+Sans:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -158,29 +157,6 @@ body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);ov
 .sub-tabs button.active{color:var(--ink);border-bottom-color:var(--gold);font-weight:500;}
 .sub-panel{display:none;}
 .sub-panel.active{display:block;}
-/* SLIDERS */
-.srow{display:grid;grid-template-columns:150px 1fr 100px;align-items:center;gap:11px;margin-bottom:13px;}
-.slbl{font-size:12px;font-weight:300;}
-.slbl small{display:block;font-size:10px;color:var(--muted);margin-top:1px;}
-input[type=range]{-webkit-appearance:none;appearance:none;height:2px;background:var(--border);border-radius:2px;width:100%;outline:none;}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--ink);border:2px solid var(--gold);cursor:pointer;transition:transform .15s;}
-input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
-.sval{font-family:'IBM Plex Mono',monospace;font-size:12px;text-align:right;font-weight:500;}
-/* RENTA */
-.renta-box{border:2px solid var(--gold);border-radius:14px;padding:20px;margin-bottom:18px;background:linear-gradient(135deg,#fdf8f0,#faf6ee);}
-.renta-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:11px;flex-wrap:wrap;}
-.renta-big{font-family:'Playfair Display',serif;font-size:48px;line-height:1;transition:color .3s;}
-.renta-big.good{color:var(--vert);}.renta-big.ok{color:var(--gold);}.renta-big.bad{color:var(--rouge);}
-.formula{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);background:rgba(0,0,0,.03);padding:9px 12px;border-radius:7px;line-height:1.9;margin-bottom:10px;}
-.citation{font-size:11px;font-style:italic;color:var(--muted);border-left:2px solid var(--gold);padding-left:10px;line-height:1.8;}
-/* RESULT GRID */
-.rg{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px;}
-.rc{background:var(--card);padding:15px;}
-.rc.dk{background:var(--dark);}
-.rc.dk .rcl{color:var(--gold);}.rc.dk .rcv{color:white;}
-.rcl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
-.rcv{font-family:'Playfair Display',serif;font-size:20px;}
-.rcs{font-size:9px;color:var(--muted);margin-top:2px;}
 /* ALERTS */
 .alert{border-radius:11px;padding:14px;margin-bottom:11px;}
 .alert.rouge{background:#fde8e6;border:1px solid #e8bfbb;}
@@ -306,7 +282,6 @@ textarea.field{min-height:95px;resize:vertical;}
   .gallery img{height:200px;}
   .gallery.gcar{height:240px;}
   .kpi-grid{grid-template-columns:1fr 1fr;}
-  .rg{grid-template-columns:1fr 1fr;}
   .pts-grid,.f2{grid-template-columns:1fr;}
   .dg{grid-template-columns:1fr;}
 }
@@ -334,10 +309,8 @@ textarea.field{min-height:95px;resize:vertical;}
 @media(max-width:560px){
   .header{padding:16px 0 12px;}
   .container{padding:16px 12px 50px;}
-  .kpi-grid,.rg{grid-template-columns:1fr;}
+  .kpi-grid{grid-template-columns:1fr;}
   .nav{padding:0 8px;}
-  .srow{grid-template-columns:1fr;gap:4px;}
-  .sval{text-align:left;}
   .ptrack{gap:0;}
 }
 @media(max-width:960px){ .diag-grid{grid-template-columns:repeat(2,1fr);} }
@@ -391,7 +364,7 @@ html,body{overflow-x:hidden;}
 /* ═════════ BASE COMMUNE : surfaces claires (toutes maquettes) ═════════ */
 body.pv{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-family:var(--pv-font);}
 body.pv .rail button,body.pv .field,body.pv .tly,body.pv .tlt,body.pv .info-item,body.pv .sub-tabs button,body.pv .hsub,body.pv .ssub{font-family:var(--pv-font)!important;}
-body.pv .htitle,body.pv .stitle,body.pv .pamount,body.pv .kpi .kv,body.pv .rcv,body.pv .score-num,body.pv .cons-name,body.pv .renta-big,body.pv .pfooter h2,body.pv .hkpi .hv,body.pv .vr-title,body.pv .dp-title{font-family:var(--pv-display)!important;}
+body.pv .htitle,body.pv .stitle,body.pv .pamount,body.pv .kpi .kv,body.pv .score-num,body.pv .cons-name,body.pv .pfooter h2,body.pv .hkpi .hv,body.pv .vr-title,body.pv .dp-title{font-family:var(--pv-display)!important;}
 body.pv .header::before{display:none!important;}
 body.pv .hbadge{background:transparent!important;border:none!important;padding:0!important;color:var(--muted)!important;}
 body.pv .hbadge::before{background:var(--vert)!important;}
@@ -418,8 +391,6 @@ body.pv .sbar-fill{background:var(--gold)!important;}
 body.pv .card-dark{background:var(--cream)!important;color:var(--ink)!important;border:1px solid var(--border);}
 body.pv .card-dark div,body.pv .card-dark strong{color:var(--ink)!important;}
 body.pv .card-dark .lbl{color:var(--gold2)!important;}
-body.pv .rc.dk{background:var(--cream)!important;}
-body.pv .rc.dk .rcl{color:var(--gold2)!important;}body.pv .rc.dk .rcv{color:var(--ink)!important;}
 body.pv .pstep.curr .picon{background:var(--pv-cta)!important;}
 body.pv .pstep.curr .plbl{color:var(--gold2)!important;}
 body.pv .btndark{background:var(--pv-cta)!important;color:var(--pv-on)!important;}
@@ -502,7 +473,7 @@ body.pv4 .card{border-radius:22px!important;border:1px solid var(--border);box-s
 body.pv4 .stitle{font-weight:800;font-size:clamp(20px,2.3vw,27px)!important;letter-spacing:-.02em;}
 body.pv4 .lbl{color:var(--gold)!important;font-weight:600;}
 body.pv4 .kpi .kv{font-weight:800;}
-body.pv4 .pb,body.pv4 .alert,body.pv4 .bi,body.pv4 .dc,body.pv4 .diag-card,body.pv4 .score-box,body.pv4 .renta-box{border-radius:16px!important;}
+body.pv4 .pb,body.pv4 .alert,body.pv4 .bi,body.pv4 .dc,body.pv4 .diag-card,body.pv4 .score-box{border-radius:16px!important;}
 body.pv4 .cons-card{border-radius:22px!important;}
 body.pv4 .btn-rdv,body.pv4 .btn-offre,body.pv4 .btndark{border-radius:12px!important;}
 body.pv4 .gallery.gcar{height:clamp(260px,46vw,480px);border-radius:18px;}
@@ -696,7 +667,7 @@ body.pv4 #welcome-msg[style*="block"]{font-family:var(--pv-font)!important;font-
 body.pv4 #welcome-msg[style*="block"]::before{display:none!important;}
 body.pv4 .header>div[style*="position:absolute"] div{color:#6B717C!important;}body.pv4 .header>div[style*="position:absolute"] div .pv-cy{color:var(--pv-accent)!important;}
 
-/* ═════════ v11 : navigation légère, assistant discret, simulateur, deux dispositions ═════════ */
+/* ═════════ v11 : navigation légère, assistant discret, deux dispositions ═════════ */
 body.pv4.tone-x{--bg:#F6F8FB;--gold:#0F2747;--gold2:#091B33;--cream:#E8EDF4;--border:#D5DDE8;--pv-accent:#0F2747;--pv-accent2:#2C4A75;--pv-fill:linear-gradient(120deg,#C0583A,#DC7C55);--pv-cy:#C0583A;}
 body.pv4:is(.tone-x) :is(.pv-ico,#pv-bar .ico){color:#fff!important;}
 body.pv4.pv-home.tone-x .rail button.pv-seen .rail-dot,body.pv4.pv-home.tone-x .rail button.pv-seen::before{color:#fff!important;}
@@ -816,8 +787,7 @@ body.pv4 .pv-recap span{display:block;font:500 14px/1.3 var(--pv-font);color:var
 body.pv4 .pv-recap:empty{display:none;}
 body.pv4 #ai-modal>div:first-child .pv-aiico{color:#fff!important;}
 body.pv4 #ai-modal>div:first-child .pv-aiico svg{stroke:#fff!important;width:22px;height:22px;}
-</style>
-<style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}/* ═════════ CRUSH IMMOBILIER (onglet « Le test ») — téléphone d'abord, couleurs du thème ═════════ */
+/* ═════════ CRUSH IMMOBILIER (onglet « Le test ») — téléphone d'abord, couleurs du thème ═════════ */
 #crush .cr-wrap{max-width:640px;margin-top:6px;}
 #crush .cr-lead{font-weight:700;font-size:17px;line-height:1.35;color:var(--ink);margin:0 0 8px;}
 #crush .cr-home p{font-size:14px;line-height:1.55;color:var(--muted);margin:0 0 12px;}
@@ -951,10 +921,22 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
 #pv-share-sheet .pv-sh .pv-pico{width:24px;height:24px;color:var(--gold);}
 @media(min-width:701px){#pv-share-sheet{align-items:center;}#pv-share-sheet .pv-sheet{border-radius:22px;}}
 @media(max-width:700px){body.pv4 .header .pv-share-top{display:flex;margin:10px auto 6px;}}
-</style><script id="expertimo-data" type="application/json">{"type":"maison","copro":"non","etage":"","adresse":"2 Allée du Vivier Sud - 91410 Saint Escobille","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1996","description":"Maison 9 pièces de 157 m² · DPE C","surface":157,"surfCarrez":0,"pieces":"9","dpe":"C","prix":296200,"prixm2":1887,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":2000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1481,"score":"8.25","scorePrest":"8","scoreSecteur":"9","scoreQP":"8","scoreEtat":"8","fort1":"Maison lumineuse offrant une double exposition Sud et Ouest","fort2":"Beaux volumes : 202m² au sol dont garage de 45m²","fort3":"Terrain de 1073m²","vig1":"Située dans un village de moins de 500 habitants.","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","photo18":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","photo19":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","photo20":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Rue des Guigniers (à ~771 m)","surface":"100","prix":236000,"prixm2":2360},{"date":"10/2024","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":180000,"prixm2":1935},{"date":"02/2023","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":102000,"prixm2":1097},{"date":"12/2021","adresse":"Rue du Vivier (à ~338 m)","surface":"85","prix":245000,"prixm2":2882},{"date":"09/2021","adresse":"Rue de la Gare (à ~137 m)","surface":"99","prix":180000,"prixm2":1818},{"date":"06/2021","adresse":"Rue du Stade (à ~710 m)","surface":"90","prix":217000,"prixm2":2411}],"historiqueLibre":"1996 : Construction en brique rouge\n2000 : Aménagement des combles en 4 chambres + salle d'eau + WC\n2000 : Construction du garage de 45m²\n\nDiverse informations sur le bien :\nCheminée avec récupérateur de chaleur à l'étage\nTerrasse de 70m²exposée Sud / Ouest.\nPergola bioclimatique - Piscine hors sol (qui reste).\nVolets électriques. Fenêtres en double vitrage avec oscillo-battants 2021.\nBallon d'eau chaude installé en 2011.\nPlancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles.\nFibre optique. \nTerrain de 1073m².","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme"}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","caption":"","uploading":false}]}}</script>
-<script id="expertimo-data-en" type="application/json">{"type":"maison","copro":"non","etage":"","adresse":"2 Allée du Vivier Sud - 91410 Saint Escobille","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1996","description":"9-room house of 157 m² · DPE C","surface":157,"surfCarrez":0,"pieces":"9","dpe":"C","prix":296200,"prixm2":1887,"mediane":0,"tension":"Very high","delai":"21 days","loyer":2000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1481,"score":"8.25","scorePrest":"8","scoreSecteur":"9","scoreQP":"8","scoreEtat":"8","fort1":"Bright house offering dual South and West exposure","fort2":"Beautiful volumes: 202m² floor area including 45m² garage","fort3":"1073m² plot","vig1":"Located in a village of fewer than 500 inhabitants.","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","photo18":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","photo19":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","photo20":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Rue des Guigniers (à ~771 m)","surface":"100","prix":236000,"prixm2":2360},{"date":"10/2024","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":180000,"prixm2":1935},{"date":"02/2023","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":102000,"prixm2":1097},{"date":"12/2021","adresse":"Rue du Vivier (à ~338 m)","surface":"85","prix":245000,"prixm2":2882},{"date":"09/2021","adresse":"Rue de la Gare (à ~137 m)","surface":"99","prix":180000,"prixm2":1818},{"date":"06/2021","adresse":"Rue du Stade (à ~710 m)","surface":"90","prix":217000,"prixm2":2411}],"historiqueLibre":"1996: Construction in red brick\n2000: Conversion of attic space into 4 bedrooms + shower room + WC\n2000: Construction of 45m² garage\n\nVarious information about the property:\nFireplace with heat recovery system on the upper floor\n70m² terrace facing South/West.\nBioclimatic pergola - Above-ground swimming pool (remaining with the property).\nElectric shutters. Double-glazed windows with tilt-and-turn mechanism 2021.\nHot water tank installed in 2011.\nFirst floor flooring is wooden. An IPN beam installed throughout the house. No load-bearing walls, allowing for easy layout modifications.\nFibre optic.\n1073m² plot.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Within the scope of the assignment, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural decree."},{"icon":"⚡","name":"Électricité","status":"attention","result":"The internal electrical installation presents anomalies for which action is recommended in order to eliminate the dangers they present."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to the collective network compliant"}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","caption":"","uploading":false}]}}</script>
-<script id="expertimo-data-pt" type="application/json">{"fort1":"Casa luminosa com dupla exposição Sul e Oeste","fort2":"Amplas áreas: 202m² ao solo, incluindo garagem de 45m²","fort3":"Terreno de 1073m²","vig1":"Situada numa aldeia com menos de 500 habitantes.","vig2":"","vig3":"","historiqueLibre":"1996: Construção em tijolo vermelho\n2000: Conversão do sótão em 4 quartos + casa de banho + WC\n2000: Construção da garagem de 45m²\n\nDiversas informações sobre o imóvel:\nLareira com recuperador de calor no andar superior\nTerraço de 70m² exposto a Sul/Oeste.\nPérgola bioclimática - Piscina desmontável (que fica).\nEstores elétricos. Janelas com vidros duplos oscilobatentes 2021.\nCilindro de água quente instalado em 2011.\nPavimento do 1º andar é em madeira. Viga IPN instalada em toda a casa. Nenhuma parede estrutural, o que permite modificações de arranjo facilmente.\nFibra ótica.\nTerreno de 1073m².","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram detetados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito - edifício construído após 1 de janeiro de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a despacho prefeitoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"A instalação interior de eletricidade apresenta anomalias para as quais se recomenda agir a fim de eliminar os perigos que apresenta(m)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Não sujeito - Instalação com menos de 15 anos."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede coletiva conforme"}]}</script>
-<script id="expertimo-data-es" type="application/json">{"fort1":"Casa luminosa con doble orientación Sur y Oeste","fort2":"Excelentes volúmenes: 202m² en planta incluyendo garaje de 45m²","fort3":"Terreno de 1073m²","vig1":"Situada en un pueblo de menos de 500 habitantes.","vig2":"","vig3":"","historiqueLibre":"1996: Construcción en ladrillo rojo\n2000: Acondicionamiento de la buhardilla en 4 dormitorios + cuarto de ducha + WC\n2000: Construcción del garaje de 45m²\n\nDiversas informaciones sobre la propiedad:\nChimenea con recuperador de calor en la planta superior\nTerraza de 70m² orientada Sur/Oeste.\nPérgola bioclimática - Piscina desmontable (que permanece).\nPersianas eléctricas. Ventanas con doble acristalamiento oscilobatientes 2021.\nCalentador de agua instalado en 2011.\nSuelo de la primera planta en madera. Viga IPN instalada en toda la casa. Ningún muro de carga, lo que permite modificaciones de distribución fáciles.\nFibra óptica.\nTerreno de 1073m².","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la misión, no se han detectado materiales y productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sometido - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sometido a un decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"La instalación interior de electricidad presenta anomalías para las cuales se recomienda actuar con el fin de eliminar los peligros que presenta(n)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"No sometido - Instalación de menos de 15 años."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme"}]}</script>
+@media(max-width:360px){#pv-share-sheet .pv-sh-grid{grid-template-columns:repeat(2,1fr);}.pv-photos{grid-template-columns:repeat(3,minmax(0,1fr));}}
+</style>
+<style>
+/* Guide « Vivre à [ville] » (rubrique « Tout savoir sur ce bien ») */
+#guide-commune{margin-top:14px;}
+#guide-commune .gc-rub{margin-top:14px;}
+#guide-commune .gc-t{font-size:15px;font-weight:700;margin:0 0 4px;color:var(--ink);}
+#guide-commune .gc-x{font-size:14px;line-height:1.6;margin:0;color:var(--ink);}
+#guide-commune .gc-src{font-size:12px;color:var(--muted);margin:4px 0 0;}
+#guide-commune .gc-src a{color:inherit;text-decoration:underline;}
+#guide-commune .gc-evl{margin:4px 0 0;padding-left:18px;font-size:14px;line-height:1.6;color:var(--ink);}
+</style>
+<meta name="pv-adr" content="2 Allée du Vivier Sud - 91410 Saint Escobille · Espace Acheteur Privé · Expertimo"><style>.pts-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:18px;}.pb{border-radius:12px;padding:15px;}.pb.green{background:#f0f7f3;border:1px solid #c3dece;}.pb.amber{background:#fdf8f0;border:1px solid #e8d5a3;}.pb h4{font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:9px;}.pb.green h4{color:#2d6a4f;}.pb.amber h4{color:#8a6820;}.pb ul{list-style:none;}.pb ul li{font-size:11px;padding:3px 0;border-bottom:1px solid rgba(0,0,0,.06);}</style><script id="expertimo-data" type="application/json">{"type":"maison","copro":"non","etage":"","adresse":"2 Allée du Vivier Sud - 91410 Saint Escobille","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1996","description":"Maison 9 pièces de 157 m² · DPE C","surface":157,"surfCarrez":0,"pieces":"9","dpe":"C","prix":296200,"prixm2":1887,"mediane":0,"tension":"Très forte","delai":"21 jours","loyer":2000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1481,"score":"8.25","scorePrest":"8","scoreSecteur":"9","scoreQP":"8","scoreEtat":"8","fort1":"Maison lumineuse offrant une double exposition Sud et Ouest","fort2":"Beaux volumes : 202m² au sol dont garage de 45m²","fort3":"Terrain de 1073m²","vig1":"Située dans un village de moins de 500 habitants.","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","photo18":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","photo19":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","photo20":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Rue des Guigniers (à ~771 m)","surface":"100","prix":236000,"prixm2":2360},{"date":"10/2024","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":180000,"prixm2":1935},{"date":"02/2023","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":102000,"prixm2":1097},{"date":"12/2021","adresse":"Rue du Vivier (à ~338 m)","surface":"85","prix":245000,"prixm2":2882},{"date":"09/2021","adresse":"Rue de la Gare (à ~137 m)","surface":"99","prix":180000,"prixm2":1818},{"date":"06/2021","adresse":"Rue du Stade (à ~710 m)","surface":"90","prix":217000,"prixm2":2411}],"historiqueLibre":"1996 : Construction en brique rouge\n2000 : Aménagement des combles en 4 chambres + salle d'eau + WC\n2000 : Construction du garage de 45m²\n\nDiverse informations sur le bien :\nCheminée avec récupérateur de chaleur à l'étage\nTerrasse de 70m²exposée Sud / Ouest.\nPergola bioclimatique - Piscine hors sol (qui reste).\nVolets électriques. Fenêtres en double vitrage avec oscillo-battants 2021.\nBallon d'eau chaude installé en 2011.\nPlancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles.\nFibre optique. \nTerrain de 1073m².","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Non soumis - bâtiment construit après le 1er janvier 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Non soumis à un arrêté préfectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Non soumis - Installation de moins de 15 ans."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Raccordement au réseau collectif conforme"}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-en" type="application/json">{"type":"maison","copro":"non","etage":"","adresse":"2 Allée du Vivier Sud - 91410 Saint Escobille","quartier":"","acheteur_prenom":"","acheteur_nom":"","annee":"1996","description":"9-room house of 157 m² · DPE C","surface":157,"surfCarrez":0,"pieces":"9","dpe":"C","prix":296200,"prixm2":1887,"mediane":0,"tension":"Very high","delai":"21 days","loyer":2000,"chargesCopro":0,"chargesDetail":"","taxeFonciere":1481,"score":"8.25","scorePrest":"8","scoreSecteur":"9","scoreQP":"8","scoreEtat":"8","fort1":"Bright house with dual South and West exposure","fort2":"Generous living space: 202m² floor area including 45m² garage","fort3":"1,073m² plot","vig1":"Located in a village of fewer than 500 inhabitants.","vig2":"","vig3":"","photo1":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","photo2":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","photo3":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","photo4":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","photo5":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","photo6":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","photo7":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","photo8":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","photo9":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","photo10":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","photo11":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","photo12":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","photo13":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","photo14":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","photo15":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","photo16":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","photo17":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","photo18":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","photo19":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","photo20":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","video1":"","video2":"","video3":"","dvf":[{"date":"12/2025","adresse":"Rue des Guigniers (à ~771 m)","surface":"100","prix":236000,"prixm2":2360},{"date":"10/2024","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":180000,"prixm2":1935},{"date":"02/2023","adresse":"Rue des Guigniers (à ~771 m)","surface":"93","prix":102000,"prixm2":1097},{"date":"12/2021","adresse":"Rue du Vivier (à ~338 m)","surface":"85","prix":245000,"prixm2":2882},{"date":"09/2021","adresse":"Rue de la Gare (à ~137 m)","surface":"99","prix":180000,"prixm2":1818},{"date":"06/2021","adresse":"Rue du Stade (à ~710 m)","surface":"90","prix":217000,"prixm2":2411}],"historiqueLibre":"1996: Construction in red brick\n2000: Conversion of attic space into 4 bedrooms + shower room + WC\n2000: Construction of 45m² garage\n\nVarious information about the property:\nFireplace with heat recovery system upstairs\n70m² terrace facing South/West.\nBioclimatic pergola - Above-ground swimming pool (included).\nElectric shutters. Double-glazed tilt-and-turn windows installed in 2021.\nWater heater installed in 2011.\nFirst floor has wooden flooring. IPN beam installed across the entire house. No load-bearing walls, allowing for easy layout modifications.\nFibre optic broadband.\n1,073m² plot.","histVenteDate":"2025","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"Within the scope of the inspection, no materials or products likely to contain asbestos were identified."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Not subject - building constructed after 1st January 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Not subject to a prefectural order."},{"icon":"⚡","name":"Électricité","status":"attention","result":"The interior electrical installation contains anomalies for which action is recommended to eliminate the hazards they present."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Not subject - Installation less than 15 years old."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Connection to mains drainage compliant"}],"renovations":[],"agentNom":"Olivier Loison","agentTel":"0685684613","agentEmail":"olivier.loison@expertimo.com","agentRdvUrl":"(calendar.app.google/rA5ZAXbzTyvopKbQ7","agentSiteUrl":"https://www.reseau-expertimo.fr/1883-mandataire/1","agentReseau":"Expertimo","agentPrimary":"#141414","agentAccent":"#b8923a","agentPhoto":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1780932155/Olivier1_vvlbaw.jpg","_rawState":{"photos":[{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/toko9aakxr1iy1gvjn43.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652097/qhbrxl5h55j4otlvjpn0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/vnnc8gobf4e0tvpfp0qm.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/xwubb3p9fqvhtqb0h7pr.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/u95yk4jb6qld3unu6zju.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/ojnxmxdgx5zmggn2ra8h.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/wg8lz2m3ijvkhotum8ui.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dfyxy4pyonola175cxyt.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/i5jdtqutrn9sc4lopvrz.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/e2pooedbhukbmnt2kjyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652056/dypau2mauqlncyybzqyp.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/dzwghktbxcftvlk7hiic.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/ilegtl1epxgx7awh5c8o.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/vvkfpqtkij42cv3wtd0f.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652057/hx3kxcdowkgffqqn1rg0.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/xq0qyiz4xdlanzokowct.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/ogb9hz9hv9y1ci17qofq.jpg","caption":"","uploading":false},{"dataUrl":"https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652058/mwdrtklbkxjwkdcekzrb.jpg","caption":"","uploading":false}]}}</script>
+<script id="expertimo-data-pt" type="application/json">{"fort1":"Moradia luminosa com dupla exposição sul e oeste","fort2":"Áreas generosas: 202 m² ao solo, incluindo garagem de 45 m²","fort3":"Terreno de 1073 m²","vig1":"Situada numa aldeia com menos de 500 habitantes.","vig2":"","vig3":"","historiqueLibre":"1996: Construção em tijolo vermelho\n2000: Aproveitamento do sótão em 4 quartos + casa de banho + WC\n2000: Construção da garagem de 45 m²\n\nInformações diversas sobre o imóvel:\nLareira com recuperador de calor no piso superior\nTerraço de 70 m² com exposição sul/oeste.\nPérgola bioclimática - Piscina acima do solo (que permanece).\nEstores elétricos. Janelas em vidro duplo com abertura oscilo-batente de 2021.\nCilindro de água quente instalado em 2011.\nPavimento do 1.º piso é em madeira. Viga IPN instalada em toda a moradia. Nenhuma parede estrutural, o que permite modificações de arranjo com facilidade.\nFibra ótica.\nTerreno de 1073 m².","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"No âmbito da missão, não foram identificados materiais e produtos suscetíveis de conter amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"Não sujeito - edifício construído após 1 de janeiro de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"Não sujeito a decreto prefeitoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"A instalação interior de eletricidade apresenta anomalias para as quais se recomenda agir a fim de eliminar os perigos que apresenta(m)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"Não sujeito - Instalação com menos de 15 anos."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Ligação à rede coletiva conforme"}]}</script>
+<script id="expertimo-data-es" type="application/json">{"fort1":"Casa luminosa con doble orientación Sur y Oeste","fort2":"Hermosos volúmenes: 202m² en planta baja incluyendo garaje de 45m²","fort3":"Terreno de 1073m²","vig1":"Situada en un pueblo de menos de 500 habitantes.","vig2":"","vig3":"","historiqueLibre":"1996: Construcción en ladrillo rojo\n2000: Acondicionamiento de buhardillas en 4 dormitorios + cuarto de baño + WC\n2000: Construcción del garaje de 45m²\n\nDiversa información sobre la propiedad:\nChimenea con recuperador de calor en la planta superior\nTerraza de 70m² orientada Sur/Oeste.\nPérgola bioclimática - Piscina desmontable (que permanece).\nPersianas eléctricas. Ventanas de doble acristalamiento con sistema oscilobatiente 2021.\nCalentador de agua instalado en 2011.\nSuelo de la primera planta en madera. Viga IPN instalada en toda la casa. Sin muros de carga, lo que permite modificaciones de distribución fáciles.\nFibra óptica.\nTerreno de 1073m².","diags":[{"icon":"🧱","name":"Amiante","status":"favorable","result":"En el marco de la misión, no se han identificado materiales ni productos susceptibles de contener amianto."},{"icon":"🔬","name":"Plomb (CREP)","status":"non-soumis","result":"No sujeto - edificio construido después del 1 de enero de 1949."},{"icon":"🪲","name":"Termites","status":"non-soumis","result":"No sujeto a decreto prefectoral."},{"icon":"⚡","name":"Électricité","status":"attention","result":"La instalación interior de electricidad presenta anomalías para las cuales se recomienda actuar con el fin de eliminar los peligros que presenta(n)."},{"icon":"🔥","name":"Gaz","status":"non-soumis","result":"No sujeto - Instalación de menos de 15 años."},{"icon":"💧","name":"Assainissement","status":"favorable","result":"Conexión a la red colectiva conforme"}]}</script>
 </head>
 <body class="pv pv4 pv-home tone-b">
 
@@ -976,7 +958,7 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
         <div id="lang-toggle" style="display:none;" role="group" aria-label="Langue / Language"></div>
       </div>
       <h1 class="htitle">2 Allée du Vivier Sud - 91410 Saint Escobille<br><span style="color:var(--gold);font-style:italic;" data-fr-val="" data-en-val="" data-pt-val="" data-es-val=""></span></h1>
-      <p class="hsub" data-fr-val="Maison 9 pièces de 157 m² · DPE C" data-en-val="9-room house of 157 m² · DPE C" data-pt-val="Casa de 9 divisões com 157 m² · DPE C" data-es-val="Casa de 9 habitaciones de 157 m² · DPE C">Maison 9 pièces de 157 m² · DPE C</p>
+      <p class="hsub" data-fr-val="Maison 9 pièces de 157 m² · DPE C" data-en-val="9-room house of 157 m² · DPE C" data-pt-val="Moradia de 9 assoalhadas com 157 m² · DPE C" data-es-val="Casa de 9 habitaciones de 157 m² · DPE C">Maison 9 pièces de 157 m² · DPE C</p>
       <button type="button" id="pv-share-top" class="pv-share-top" onclick="pvOpenShare()">Partager</button>
     </div>
     <div class="price-card">
@@ -1014,7 +996,7 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
   <div class="card">
     <div class="lbl" data-i18n="lbl-le-bien">Le bien</div>
     <h2 class="stitle">2 Allée du Vivier Sud - 91410 Saint Escobille · 9 pièces</h2>
-    <p class="ssub" data-fr-val="Maison 9 pièces de 157 m² · DPE C" data-en-val="9-room house of 157 m² · DPE C" data-pt-val="Casa de 9 divisões com 157 m² · DPE C" data-es-val="Casa de 9 habitaciones de 157 m² · DPE C">Maison 9 pièces de 157 m² · DPE C</p>
+    <p class="ssub" data-fr-val="Maison 9 pièces de 157 m² · DPE C" data-en-val="9-room house of 157 m² · DPE C" data-pt-val="Moradia de 9 assoalhadas com 157 m² · DPE C" data-es-val="Casa de 9 habitaciones de 157 m² · DPE C">Maison 9 pièces de 157 m² · DPE C</p>
     <div class="gallery" id="gallery-grid">
     <img id="photo1" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/idq5jislb1tudkqx1vuq.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille - Vue principale" class="gm" onclick="openLightbox(this.src)">
     <img id="photo2" src="https://res.cloudinary.com/dif0ikaj1/image/upload/v1791652055/jrvum0gkdk5q3pvi2x9i.jpg" alt="2 Allée du Vivier Sud - 91410 Saint Escobille" onclick="openLightbox(this.src)">
@@ -1041,7 +1023,7 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
   <div id="video-links-section" style="display:none;margin-bottom:18px;">
     <div id="video-links-list"></div>
   </div>
-  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>Maison lumineuse offrant une double exposition Sud et Ouest</li><li>Beaux volumes : 202m² au sol dont garage de 45m²</li><li>Terrain de 1073m²</li></ul><ul id="pf-list-en" style="display:none;"><li>Bright house offering dual South and West exposure</li><li>Beautiful volumes: 202m² floor area including 45m² garage</li><li>1073m² plot</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>Située dans un village de moins de 500 habitants.</li></ul><ul id="vg-list-en" style="display:none;"><li>Located in a village of fewer than 500 inhabitants.</li></ul></div></div><div class="score-box">
+  <div class="pts-grid" id="pts-grid-section"><div class="pb green"><h4>✅ Points forts</h4><ul id="pf-list-fr"><li>Maison lumineuse offrant une double exposition Sud et Ouest</li><li>Beaux volumes : 202m² au sol dont garage de 45m²</li><li>Terrain de 1073m²</li></ul><ul id="pf-list-en" style="display:none;"><li>Bright house with dual South and West exposure</li><li>Generous living space: 202m² floor area including 45m² garage</li><li>1,073m² plot</li></ul></div><div class="pb amber"><h4>⚠️ Vigilances</h4><ul id="vg-list-fr"><li>Située dans un village de moins de 500 habitants.</li></ul><ul id="vg-list-en" style="display:none;"><li>Located in a village of fewer than 500 inhabitants.</li></ul></div></div><div class="score-box">
   <div class="lbl" style="color:#6a6358;" data-i18n="score-title">Score Qualité du Bien</div>
   <div class="score-num">8,25</div>
   <p style="font-size:12px;color:#8a8278;margin-bottom:14px;font-weight:300;margin-top:8px;" id="score-desc" data-fr-val="Score 8,25/10. DPE C. Prix à confirmer." data-en-val="Score 8,25/10. DPE C. Price to be confirmed." data-pt-val="Pontuação 8,25/10. DPE C. Preço a confirmar." data-es-val="Puntuación 8,25/10. DPE C. Precio por confirmar.">Score 8,25/10. DPE C. Prix à confirmer.</p>
@@ -1158,7 +1140,12 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
       <div class="lbl" data-i18n="lbl-infos-complementaires">Informations complémentaires</div>
       <h2 class="stitle" data-i18n="tab-historique">Tout savoir sur ce bien</h2>
       <ul class="info-list" style="margin-top:13px;" id="historique-timeline-fr"><li class="info-item">1996 : Construction en brique rouge</li><li class="info-item">2000 : Aménagement des combles en 4 chambres + salle d'eau + WC</li><li class="info-item">2000 : Construction du garage de 45m²</li><li class="info-item">Diverse informations sur le bien :</li><li class="info-item">Cheminée avec récupérateur de chaleur à l'étage</li><li class="info-item">Terrasse de 70m²exposée Sud / Ouest.</li><li class="info-item">Pergola bioclimatique - Piscine hors sol (qui reste).</li><li class="info-item">Volets électriques. Fenêtres en double vitrage avec oscillo-battants 2021.</li><li class="info-item">Ballon d'eau chaude installé en 2011.</li><li class="info-item">Plancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles.</li><li class="info-item">Fibre optique.</li><li class="info-item">Terrain de 1073m².</li></ul>
-      <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en"><li class="info-item">1996: Construction in red brick</li><li class="info-item">2000: Conversion of attic space into 4 bedrooms + shower room + WC</li><li class="info-item">2000: Construction of 45m² garage</li><li class="info-item">Various information about the property:</li><li class="info-item">Fireplace with heat recovery system on the upper floor</li><li class="info-item">70m² terrace facing South/West.</li><li class="info-item">Bioclimatic pergola - Above-ground swimming pool (remaining with the property).</li><li class="info-item">Electric shutters. Double-glazed windows with tilt-and-turn mechanism 2021.</li><li class="info-item">Hot water tank installed in 2011.</li><li class="info-item">First floor flooring is wooden. An IPN beam installed throughout the house. No load-bearing walls, allowing for easy layout modifications.</li><li class="info-item">Fibre optic.</li><li class="info-item">1073m² plot.</li></ul>
+      <ul class="info-list" style="margin-top:13px;display:none;" id="historique-timeline-en"><li class="info-item">1996: Construction in red brick</li><li class="info-item">2000: Conversion of attic space into 4 bedrooms + shower room + WC</li><li class="info-item">2000: Construction of 45m² garage</li><li class="info-item">Various information about the property:</li><li class="info-item">Fireplace with heat recovery system upstairs</li><li class="info-item">70m² terrace facing South/West.</li><li class="info-item">Bioclimatic pergola - Above-ground swimming pool (included).</li><li class="info-item">Electric shutters. Double-glazed tilt-and-turn windows installed in 2021.</li><li class="info-item">Water heater installed in 2011.</li><li class="info-item">First floor has wooden flooring. IPN beam installed across the entire house. No load-bearing walls, allowing for easy layout modifications.</li><li class="info-item">Fibre optic broadband.</li><li class="info-item">1,073m² plot.</li></ul>
+    </div>
+    <!-- Guide « Vivre à [ville] » : rempli à la génération (rubriques non vides et non masquées), sinon caché -->
+    <div class="card" id="guide-commune" style="">
+      <div class="lbl" id="guide-commune-titre" data-fr-val="Vivre à Saint-Escobille" data-en-val="Living in Saint-Escobille" data-pt-val="Viver em Saint-Escobille" data-es-val="Vivir en Saint-Escobille">Vivre à Saint-Escobille</div>
+      <div id="guide-commune-rubriques"><div class="gc-rub"><h3 class="gc-t" data-fr-val="La commune" data-en-val="The town" data-pt-val="O município" data-es-val="El municipio">La commune</h3><p class="gc-x" data-fr-val="Saint-Escobille est une commune française située à cinquante-cinq kilomètres au sud-ouest de Paris, dans le département de l'Essonne, en région Île-de-France." data-en-val="Saint-Escobille is a French commune located fifty-five kilometres south-west of Paris, in the Essonne department, in the Île-de-France region." data-pt-val="Saint-Escobille é uma comuna francesa situada a cinquenta e cinco quilómetros a sudoeste de Paris, no departamento de Essonne, na região da Île-de-France." data-es-val="Saint-Escobille es un municipio francés situado a cincuenta y cinco kilómetros al suroeste de París, en el departamento de Essonne, en la región de Isla de Francia.">Saint-Escobille est une commune française située à cinquante-cinq kilomètres au sud-ouest de Paris, dans le département de l'Essonne, en région Île-de-France.</p><p class="gc-src"><span data-fr-val="Source : " data-en-val="Source: " data-pt-val="Fonte: " data-es-val="Fuente: ">Source : </span><a href="https://fr.wikipedia.org/wiki/Saint-Escobille" target="_blank" rel="noopener">Wikipédia — Saint-Escobille</a> (CC BY-SA 4.0)</p></div><div class="gc-rub"><h3 class="gc-t" data-fr-val="Transports" data-en-val="Transport" data-pt-val="Transportes" data-es-val="Transporte">Transports</h3><p class="gc-x" data-fr-val="Le village est situé à 5 km de l'autoroute A10 et est traversé par la route départementale D838. Les lignes de bus Essonne Sud Ouest 306-04, 306-12 et 913-07 desservent l'arrêt du village. Une voie de chemin de fer traversait auparavant le village, mais le service voyageur a été interrompu en 1939." data-en-val="The village is situated 5 km from the A10 motorway and is crossed by the D838 departmental road. The Essonne Sud Ouest bus lines 306-04, 306-12 and 913-07 serve the village stop. A railway line previously crossed the village, but passenger service was discontinued in 1939." data-pt-val="A aldeia está situada a 5 km da autoestrada A10 e é atravessada pela estrada departamental D838. As linhas de autocarro Essonne Sud Ouest 306-04, 306-12 e 913-07 servem a paragem da aldeia. Uma linha ferroviária atravessava anteriormente a aldeia, mas o serviço de passageiros foi interrompido em 1939." data-es-val="El pueblo está situado a 5 km de la autopista A10 y está atravesado por la carretera departamental D838. Las líneas de autobús Essonne Sud Ouest 306-04, 306-12 y 913-07 dan servicio a la parada del pueblo. Una vía de ferrocarril atravesaba anteriormente el pueblo, pero el servicio de viajeros fue interrumpido en 1939.">Le village est situé à 5 km de l'autoroute A10 et est traversé par la route départementale D838. Les lignes de bus Essonne Sud Ouest 306-04, 306-12 et 913-07 desservent l'arrêt du village. Une voie de chemin de fer traversait auparavant le village, mais le service voyageur a été interrompu en 1939.</p><p class="gc-src"><span data-fr-val="Source : " data-en-val="Source: " data-pt-val="Fonte: " data-es-val="Fuente: ">Source : </span><a href="https://fr.wikipedia.org/wiki/Saint-Escobille" target="_blank" rel="noopener">Wikipédia — Saint-Escobille</a> (CC BY-SA 4.0)</p></div><div class="gc-rub"><h3 class="gc-t" data-fr-val="Écoles, commerces et équipements" data-en-val="Schools, shops and amenities" data-pt-val="Escolas, comércio e equipamentos" data-es-val="Escuelas, comercios y equipamientos">Écoles, commerces et équipements</h3><p class="gc-x" data-fr-val="La commune dispose sur son territoire d'une école élémentaire publique, qui comprend une classe de CE1 et une classe de CE2. La restauration scolaire se déroule à Authon-la-Plaine. La commune possède un terrain de football et une salle polyvalente." data-en-val="The commune has a public primary school on its territory, which includes a CE1 class and a CE2 class. School meals take place in Authon-la-Plaine. The commune has a football pitch and a multi-purpose hall." data-pt-val="A comuna dispõe no seu território de uma escola primária pública, que inclui uma turma de CE1 e uma turma de CE2. A restauração escolar decorre em Authon-la-Plaine. A comuna possui um campo de futebol e uma sala polivalente." data-es-val="El municipio dispone en su territorio de una escuela primaria pública, que comprende una clase de CE1 y una clase de CE2. La restauración escolar se realiza en Authon-la-Plaine. El municipio posee un campo de fútbol y una sala polivalente.">La commune dispose sur son territoire d'une école élémentaire publique, qui comprend une classe de CE1 et une classe de CE2. La restauration scolaire se déroule à Authon-la-Plaine. La commune possède un terrain de football et une salle polyvalente.</p><p class="gc-src"><span data-fr-val="Source : " data-en-val="Source: " data-pt-val="Fonte: " data-es-val="Fuente: ">Source : </span><a href="https://fr.wikipedia.org/wiki/Saint-Escobille" target="_blank" rel="noopener">Wikipédia — Saint-Escobille</a> (CC BY-SA 4.0)</p></div><div class="gc-rub"><h3 class="gc-t" data-fr-val="Parcs et espaces verts" data-en-val="Parks and green spaces" data-pt-val="Parques e espaços verdes" data-es-val="Parques y zonas verdes">Parcs et espaces verts</h3><p class="gc-x" data-fr-val="Les bosquets boisés répartis sur le territoire ont été recensés au titre des espaces naturels sensibles par le conseil général de l'Essonne." data-en-val="The wooded copses distributed across the territory have been listed as sensitive natural areas by the Essonne departmental council." data-pt-val="Os bosques arborizados distribuídos pelo território foram recenseados a título de espaços naturais sensíveis pelo conselho geral de Essonne." data-es-val="Los bosquetes arbolados repartidos en el territorio han sido registrados como espacios naturales sensibles por el consejo general de Essonne.">Les bosquets boisés répartis sur le territoire ont été recensés au titre des espaces naturels sensibles par le conseil général de l'Essonne.</p><p class="gc-src"><span data-fr-val="Source : " data-en-val="Source: " data-pt-val="Fonte: " data-es-val="Fuente: ">Source : </span><a href="https://fr.wikipedia.org/wiki/Saint-Escobille" target="_blank" rel="noopener">Wikipédia — Saint-Escobille</a> (CC BY-SA 4.0)</p></div><div class="gc-rub"><h3 class="gc-t" data-fr-val="Patrimoine" data-en-val="Heritage" data-pt-val="Património" data-es-val="Patrimonio">Patrimoine</h3><p class="gc-x" data-fr-val="L'église Saint-Denis, un édifice religieux, date du XIIe siècle. Un château, construit au XIVe siècle ou au XVe siècle, était présent au bout de l'actuelle Impasse du Château. Il a été détruit au XIXe siècle." data-en-val="The Saint-Denis church, a religious building, dates from the 12th century. A château, built in the 14th or 15th century, stood at the end of what is now Impasse du Château. It was demolished in the 19th century." data-pt-val="A igreja Saint-Denis, um edifício religioso, data do século XII. Um castelo, construído no século XIV ou no século XV, estava presente no final da atual Impasse do Château. Foi destruído no século XIX." data-es-val="La iglesia Saint-Denis, un edificio religioso, data del siglo XII. Un castillo, construido en el siglo XIV o en el siglo XV, estaba presente al final de la actual Impasse du Château. Fue destruido en el siglo XIX.">L'église Saint-Denis, un édifice religieux, date du XIIe siècle. Un château, construit au XIVe siècle ou au XVe siècle, était présent au bout de l'actuelle Impasse du Château. Il a été détruit au XIXe siècle.</p><p class="gc-src"><span data-fr-val="Source : " data-en-val="Source: " data-pt-val="Fonte: " data-es-val="Fuente: ">Source : </span><a href="https://fr.wikipedia.org/wiki/Saint-Escobille" target="_blank" rel="noopener">Wikipédia — Saint-Escobille</a> (CC BY-SA 4.0) · <a href="https://www.datatourisme.fr" target="_blank" rel="noopener">DATAtourisme</a></p></div><div class="gc-rub"><h3 class="gc-t" data-fr-val="Culture et loisirs" data-en-val="Culture and leisure" data-pt-val="Cultura e lazer" data-es-val="Cultura y ocio">Culture et loisirs</h3><p class="gc-x" data-fr-val="L'association locale SEHP (Saint-Escobille Histoire et Patrimoine) est chargée des recherches historiques sur le village. Elle organise des concerts, des expositions et des promenades. Parmi les sites culturels, on compte la Pompe à volant, le Monument aux morts, la Gare et l'Abreuvoir." data-en-val="The local association SEHP (Saint-Escobille Histoire et Patrimoine) is responsible for historical research on the village. It organises concerts, exhibitions and walks. Cultural sites include the Pompe à volant, the War Memorial, the Railway Station and the Watering Trough." data-pt-val="A associação local SEHP (Saint-Escobille Histoire et Patrimoine) é responsável pelas pesquisas históricas sobre a aldeia. Organiza concertos, exposições e passeios. Entre os sítios culturais, encontram-se a Bomba de volante, o Monumento aos mortos, a Estação e o Bebedouro." data-es-val="La asociación local SEHP (Saint-Escobille Histoire et Patrimoine) se encarga de las investigaciones históricas sobre el pueblo. Organiza conciertos, exposiciones y paseos. Entre los sitios culturales, se cuentan la Bomba de volante, el Monumento a los caídos, la Estación y el Abrevadero.">L'association locale SEHP (Saint-Escobille Histoire et Patrimoine) est chargée des recherches historiques sur le village. Elle organise des concerts, des expositions et des promenades. Parmi les sites culturels, on compte la Pompe à volant, le Monument aux morts, la Gare et l'Abreuvoir.</p><p class="gc-src"><span data-fr-val="Source : " data-en-val="Source: " data-pt-val="Fonte: " data-es-val="Fuente: ">Source : </span><a href="https://fr.wikipedia.org/wiki/Saint-Escobille" target="_blank" rel="noopener">Wikipédia — Saint-Escobille</a> (CC BY-SA 4.0) · <a href="https://www.datatourisme.fr" target="_blank" rel="noopener">DATAtourisme</a></p></div></div>
     </div>
   </div>
 </div>
@@ -1187,7 +1174,7 @@ html.pv-partage #welcome-msg#welcome-msg{display:none!important;}
       <h2 class="stitle" data-i18n="stitle-diagnostics">Diagnostics Techniques</h2>
       <p class="ssub" data-i18n="ssub-diagnostics">Résultats officiels des diagnostics réglementaires</p>
       <div class="diag-grid" id="diag-grid-fr"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Amiante</div><div class="diag-result">Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Plomb (CREP)</div><div class="diag-result">Non soumis - bâtiment construit après le 1er janvier 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Non soumis à un arrêté préfectoral.</div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Électricité</div><div class="diag-result">L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt).</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gaz</div><div class="diag-result">Non soumis - Installation de moins de 15 ans.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Assainissement</div><div class="diag-result">Raccordement au réseau collectif conforme</div></div></div>
-      <div class="diag-grid" id="diag-grid-en" style="display:none;"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Asbestos</div><div class="diag-result">Within the scope of the assignment, no materials or products likely to contain asbestos were identified.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Lead (CREP)</div><div class="diag-result">Not subject - building constructed after 1st January 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Not subject to a prefectural decree.</div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Electricity</div><div class="diag-result">The internal electrical installation presents anomalies for which action is recommended in order to eliminate the dangers they present.</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gas</div><div class="diag-result">Not subject - Installation less than 15 years old.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Sanitation</div><div class="diag-result">Connection to the collective network compliant</div></div></div>
+      <div class="diag-grid" id="diag-grid-en" style="display:none;"><div class="diag-card diag-ok"><div class="diag-icon">🧱</div><div class="diag-name">Asbestos</div><div class="diag-result">Within the scope of the inspection, no materials or products likely to contain asbestos were identified.</div></div><div class="diag-card diag-"><div class="diag-icon">🔬</div><div class="diag-name">Lead (CREP)</div><div class="diag-result">Not subject - building constructed after 1st January 1949.</div></div><div class="diag-card diag-"><div class="diag-icon">🪲</div><div class="diag-name">Termites</div><div class="diag-result">Not subject to a prefectural order.</div></div><div class="diag-card diag-attention"><div class="diag-icon">⚡</div><div class="diag-name">Electricity</div><div class="diag-result">The interior electrical installation contains anomalies for which action is recommended to eliminate the hazards they present.</div></div><div class="diag-card diag-"><div class="diag-icon">🔥</div><div class="diag-name">Gas</div><div class="diag-result">Not subject - Installation less than 15 years old.</div></div><div class="diag-card diag-ok"><div class="diag-icon">💧</div><div class="diag-name">Sanitation</div><div class="diag-result">Connection to mains drainage compliant</div></div></div>
     </div>
   </div>
 </div>
@@ -2506,8 +2493,7 @@ document.addEventListener('keydown', function(e) {
 // ═══ UTILS ═══
 function fmt(n) { return Math.round(n).toLocaleString('fr-FR') + ' €'; }
 function fmtPct(n) { return n.toFixed(2).replace('.', ',') + ' %'; }
-
-// ═══ CALCULATEUR RENTABILITÉ ═══
+// ═══ PROJECTION DE VALEUR ═══
 function calcProjection() {
   try {
     var prixEl = document.getElementById('prix');
@@ -2549,8 +2535,6 @@ function calcProjection() {
     if (barEl3) barEl3.style.height = '100%';
   } catch(e) { console.error('[calcProjection]', e); }
 }
-
-
 
 // ═══ OFFRE ═══
 function updateOffer() {
@@ -2658,15 +2642,14 @@ function unlockDocs() {
 
 // Loyer estimé (repli du contexte de l'assistant IA)
 var _sp_loyer = "2000";
-
 // ═══ CARTE QUARTIER ═══
 var _mapInit = false;
 function initMapQuartier() {
   if (_mapInit) return;
   _mapInit = true;
   var adresse = "2 Allée du Vivier Sud - 91410 Saint Escobille";
-  var latFallback = 48.7011;
-  var lngFallback = 2.289687;
+  var latFallback = 48.422082;
+  var lngFallback = 1.958469;
 
   function buildMap(lat, lng) {
     window._ficheCoords = {lat: lat, lng: lng};
@@ -2822,9 +2805,9 @@ var _sp_vigi1     = "Située dans un village de moins de 500 habitants.";
 var _sp_vigi2     = "";
 var _sp_agent     = "Olivier Loison";
 var _sp_tel       = "0685684613";
-var _sp_pf1_en = "Bright house offering dual South and West exposure";
-var _sp_pf2_en = "Beautiful volumes: 202m² floor area including 45m² garage";
-var _sp_pf3_en = "1073m² plot";
+var _sp_pf1_en = "Bright house with dual South and West exposure";
+var _sp_pf2_en = "Generous living space: 202m² floor area including 45m² garage";
+var _sp_pf3_en = "1,073m² plot";
 var _sp_vigi1_en = "Located in a village of fewer than 500 inhabitants.";
 var _sp_vigi2_en = "";
 var _sp_detail_en = "";
@@ -2832,8 +2815,8 @@ var _sp_detail_en = "";
 // jamais de données vendeur ni de notes internes). Vide → repli sur les variables _sp_* ci-dessus.
 var _chat_ctx = "## Le bien\n- Type de bien : Maison\n- Adresse : 2 Allée du Vivier Sud - 91410 Saint Escobille\n- Surface habitable (m²) : 157\n- Nombre total de pièces : 9\n- Chambres : 7\n- Salles de bains : 1\n- Salles d'eau : 1\n- WC séparés : 2\n- Bien en copropriété : Non\n- Année de construction : 1996\n\n## Prix, charges et fiscalité\n- Prix de mise en vente (€) : 296200\n- Taxe foncière (€/an) : 1481\n- Loyer potentiel estimé (€/mois) : 2000\n\n## Énergie et diagnostics\n- Classe DPE : C\n- Classe GES : A\n- Diagnostic amiante — statut : Favorable\n- Diagnostic amiante — résultat : Dans le cadre de la mission, il n'a pas été repéré de matériaux et produits susceptibles de contenir de l'amiante.\n- Diagnostic plomb (CREP) — statut : Non soumis\n- Diagnostic plomb (CREP) — résultat : Non soumis - bâtiment construit après le 1er janvier 1949.\n- Diagnostic termites — statut : Non soumis\n- Diagnostic termites — résultat : Non soumis à un arrêté préfectoral.\n- Diagnostic électricité — statut : Attention\n- Diagnostic électricité — résultat : L'installation intérieure d'électricité comporte des anomalies pour lesquelles il est recommandé d'agir afin d'éliminer les dangers qu'elle(s) présente(nt).\n- Diagnostic gaz — statut : Non soumis\n- Diagnostic gaz — résultat : Non soumis - Installation de moins de 15 ans.\n- Diagnostic assainissement — statut : Favorable\n- Diagnostic assainissement — résultat : Raccordement au réseau collectif conforme\n\n## Travaux et historique du bien\n- Informations complémentaires (copropriété, exposition, rénovations, équipements…) : 1996 : Construction en brique rouge 2000 : Aménagement des combles en 4 chambres + salle d'eau + WC 2000 : Construction du garage de 45m² Diverse informations sur le bien : Cheminée avec récupérateur de chaleur à l'étage Terrasse de 70m²exposée Sud / Ouest. Pergola bioclimatique - Piscine hors sol (qui reste). Volets électriques. Fenêtres en double vitrage avec oscillo-battants 2021. Ballon d'eau chaude installé en 2011. Plancher du 1er étage est en bois. Une poutre IPN installée sur toute la maison. Aucun mur porteur ce qui permet des modifications d'aménagements faciles. Fibre optique. Terrain de 1073m².\n\n## Construction, matériaux et chauffage\n- Toit — état : Soigné\n- Façade — état : Comme neuf\n- Sols — état : À rénover\n- État général : Soigné\n\n## Équipements, extérieur et annexes\n- Parking — places extérieures : 6\n- Parking — box fermés : 1\n\n## Localisation et environnement\n- Exposition sonore : Calme\n\n## Points forts et points de vigilance\n- Point fort 1 : Maison lumineuse offrant une double exposition Sud et Ouest\n- Point fort 2 : Beaux volumes : 202m² au sol dont garage de 45m²\n- Point fort 3 : Terrain de 1073m²\n- Point de vigilance 1 : Située dans un village de moins de 500 habitants.\n\n## Marché et analyse\n- Note globale du bien (/10) : 8.25\n- Tension locative : Très forte\n- Délai de vente moyen : 21 jours\n\n## Informations NON renseignées dans la fiche (à signaler comme telles, ne jamais deviner)\nQuartier / secteur ; Surface Carrez (m²) ; Surface du terrain (m²) ; WC ; Nombre d'étages ; Standing général ; Les + du bien ; Charges de copropriété (€/mois) ; Détail des charges ; Taxe d'habitation (€/an) ; Loyer mensuel estimé (€/mois) ; Consommation DPE (kWh/m²/an) ; Émissions GES (kgCO₂/m²/an) ; Servitudes ; Droits de superficie ; Travaux récents ; Volets roulants électriques ; Chauffage — année d'installation ; Plaque de cuisson ; Autres équipements ; Parking — places intérieures ; Services de proximité ; Voisinage ; Point de vigilance 2 ; Point de vigilance 3 ; Vigilances complémentaires ; Prix médian du secteur (€/m²)";
 // Coordonnées du bien (injectées à la génération) — utilisées pour les commodités du chatbot.
-var _fiche_lat = 48.7011;
-var _fiche_lng = 2.289687;
+var _fiche_lat = 48.422082;
+var _fiche_lng = 1.958469;
 
 function spv(base) {
   if (_currentLang === 'en' && window[base + '_en']) return window[base + '_en'];
@@ -3145,6 +3128,408 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
     } catch (e) {}
   };
 })();</script>
+<script>
+// Retour de visite en un clic : réponses d'une liste fermée (jamais de texte libre), transmises à l'agent.
+(function() {
+  var CODES = ['coup_coeur', 'prix', 'travaux', 'quartier', 'charges', 'agencement', 'financement', 'reflechir'];
+  var T = {
+    fr: {lbl: 'Votre retour de visite', title: 'Vous avez visité le bien ?', sub: "Dites-nous en un clic ce qui compte pour vous (4 réponses au maximum) : votre conseiller en tient compte.", send: 'Envoyer mon retour', done: 'Merci ! Votre conseiller a bien reçu votre retour.', max: '4 réponses au maximum.', none: 'Choisissez au moins une réponse.', err: "L'envoi a échoué. Réessayez dans un instant.", note: "Votre retour est transmis à votre conseiller et, sans votre nom, au propriétaire du bien. Aucun texte libre ni coordonnée n'est envoyé.",
+      c: {coup_coeur: '💛 Un coup de cœur', prix: '💶 Le prix', travaux: '🛠️ Les travaux à prévoir', quartier: '📍 Le quartier', charges: '🧾 Les charges', agencement: "📐 L'agencement", financement: '🏦 Mon financement', reflechir: "⏳ J'ai besoin d'y réfléchir"}},
+    en: {lbl: 'Your visit feedback', title: 'Have you visited the property?', sub: 'Tell us in one tap what matters to you (up to 4 answers): your advisor will take it into account.', send: 'Send my feedback', done: 'Thank you! Your advisor has received your feedback.', max: 'Up to 4 answers.', none: 'Please choose at least one answer.', err: 'Sending failed. Please try again in a moment.', note: 'Your feedback is sent to your advisor and, without your name, to the owner of the property. No free text or contact details are transmitted.',
+      c: {coup_coeur: '💛 Love at first sight', prix: '💶 The price', travaux: '🛠️ Works to plan for', quartier: '📍 The neighbourhood', charges: '🧾 The running costs', agencement: '📐 The layout', financement: '🏦 My financing', reflechir: '⏳ I need time to think'}},
+    pt: {lbl: 'O seu feedback da visita', title: 'Visitou o imóvel?', sub: 'Diga-nos com um toque o que é importante para si (até 4 respostas): o seu consultor tem-no em conta.', send: 'Enviar o meu feedback', done: 'Obrigado! O seu consultor recebeu o seu feedback.', max: 'No máximo 4 respostas.', none: 'Escolha pelo menos uma resposta.', err: 'O envio falhou. Tente novamente dentro de instantes.', note: 'O seu feedback é enviado ao seu consultor e, sem o seu nome, ao proprietário do imóvel. Não é transmitido texto livre nem contactos.',
+      c: {coup_coeur: '💛 Gostei muito', prix: '💶 O preço', travaux: '🛠️ As obras a prever', quartier: '📍 A zona', charges: '🧾 As despesas', agencement: '📐 A distribuição', financement: '🏦 O meu financiamento', reflechir: '⏳ Preciso de pensar'}},
+    es: {lbl: 'Su opinión tras la visita', title: '¿Ha visitado el inmueble?', sub: 'Díganos con un toque lo que le importa (hasta 4 respuestas): su asesor lo tendrá en cuenta.', send: 'Enviar mi opinión', done: '¡Gracias! Su asesor ha recibido su opinión.', max: 'Máximo 4 respuestas.', none: 'Elija al menos una respuesta.', err: 'El envío ha fallado. Inténtelo de nuevo en un momento.', note: 'Su opinión se envía a su asesor y, sin su nombre, al propietario del inmueble. No se transmite texto libre ni datos de contacto.',
+      c: {coup_coeur: '💛 Me ha enamorado', prix: '💶 El precio', travaux: '🛠️ Las obras previstas', quartier: '📍 El barrio', charges: '🧾 Los gastos', agencement: '📐 La distribución', financement: '🏦 Mi financiación', reflechir: '⏳ Necesito pensarlo'}}
+  };
+  var sel = [], sent = false;
+  function L() { var l = (typeof _currentLang !== 'undefined' && _currentLang) || document.documentElement.lang || 'fr'; return T[l] ? l : 'fr'; }
+  function $(id) { return document.getElementById(id); }
+  function msg(t, cls) { var m = $('vr-msg'); if (!m) return; m.textContent = t || ''; m.className = 'vr-msg' + (cls ? ' ' + cls : ''); }
+  function render() {
+    var box = $('vr-chips'); if (!box) return;
+    var U = T[L()];
+    $('vr-lbl').textContent = U.lbl; $('vr-title').textContent = U.title; $('vr-sub').textContent = U.sub; $('vr-note').textContent = U.note;
+    var b = $('vr-send'); b.textContent = U.send; b.style.display = sent ? 'none' : '';
+    box.textContent = '';
+    CODES.forEach(function(c) {
+      var x = document.createElement('button'); x.type = 'button'; x.className = 'vr-chip'; x.setAttribute('data-code', c);
+      x.setAttribute('aria-pressed', sel.indexOf(c) !== -1 ? 'true' : 'false'); x.textContent = U.c[c]; x.disabled = sent;
+      x.onclick = function() {
+        var i = sel.indexOf(c);
+        if (i !== -1) { sel.splice(i, 1); msg(''); }
+        else if (sel.length >= 4) { msg(T[L()].max, 'err'); return; }
+        else { sel.push(c); msg(''); }
+        render();
+      };
+      box.appendChild(x);
+    });
+    if (sent) msg(U.done, 'ok');
+  }
+  window.vrSend = function() {
+    if (sent) return;
+    var U = T[L()];
+    if (!sel.length) { msg(U.none, 'err'); return; }
+    var b = $('vr-send'); b.disabled = true;
+    var p = (window.privencyRetour ? window.privencyRetour(sel.slice(), L()) : Promise.reject(new Error('indisponible')));
+    p.then(function() {
+      sent = true; try { if (window.privencyTrack) window.privencyTrack('retour_visite'); } catch (e) {}
+      render();
+    }, function() { msg(T[L()].err, 'err'); }).then(function() { b.disabled = false; });
+  };
+  // Pré-sélection depuis le carnet de visite (coups de cœur partagés) : jamais au-delà de 4 réponses
+  window.vrPreselect = function(codes) {
+    if (sent) return;
+    (codes || []).forEach(function(c) { if (CODES.indexOf(c) !== -1 && sel.indexOf(c) === -1 && sel.length < 4) sel.push(c); });
+    render();
+  };
+  document.addEventListener('DOMContentLoaded', render);
+  try { new MutationObserver(function() { render(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']}); } catch (e) {}
+})();
+</script>
+<script>
+// ═══ DOCUMENTS SOUHAITÉS — liste adaptée au bien (copropriété / hors copropriété / terrain), 4 langues ═══
+// L'acquéreur coche ce qu'il veut recevoir ; la demande part par email à l'agent (libellés en français) et dans ses stats.
+var _DOC_UI = {
+  fr: {title: 'Quels documents souhaitez-vous recevoir ?', sub: 'Cochez ceux qui vous intéressent : votre conseiller vous les envoie en priorité. Certains documents n\'existent pas toujours selon le bien : votre conseiller vous le précisera.', all: 'Tout cocher', none: 'Tout décocher', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : ''); }, note: 'Précisions (facultatif) — pas de données sensibles', send: '📨 Envoyer ma demande', empty: 'Cochez au moins un document.', done: '✅ Merci ! Votre demande est transmise à votre conseiller.', fail: '⚠️ Envoi impossible pour le moment. Réessayez ou contactez directement votre conseiller.', kindCopro: 'Bien en copropriété', kindIndiv: 'Bien hors copropriété', kindTerrain: 'Terrain'},
+  en: {title: 'Which documents would you like to receive?', sub: 'Tick the ones you are interested in: your advisor will send them to you first. Some documents do not always exist depending on the property: your advisor will let you know.', all: 'Select all', none: 'Clear all', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' selected'; }, note: 'Additional details (optional) — no sensitive data', send: '📨 Send my request', empty: 'Please tick at least one document.', done: '✅ Thank you! Your request has been sent to your advisor.', fail: '⚠️ Could not send right now. Please try again or contact your advisor directly.', kindCopro: 'Condominium property', kindIndiv: 'Non-condominium property', kindTerrain: 'Land'},
+  pt: {title: 'Que documentos deseja receber?', sub: 'Assinale os que lhe interessam: o seu consultor envia-os com prioridade. Alguns documentos nem sempre existem, consoante o imóvel: o seu consultor informá-lo-á.', all: 'Selecionar tudo', none: 'Desmarcar tudo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' selecionado' + (n > 1 ? 's' : ''); }, note: 'Pormenores (facultativo) — sem dados sensíveis', send: '📨 Enviar o meu pedido', empty: 'Assinale pelo menos um documento.', done: '✅ Obrigado! O seu pedido foi transmitido ao seu consultor.', fail: '⚠️ Não foi possível enviar agora. Tente novamente ou contacte diretamente o seu consultor.', kindCopro: 'Imóvel em condomínio', kindIndiv: 'Imóvel fora de condomínio', kindTerrain: 'Terreno'},
+  es: {title: '¿Qué documentos desea recibir?', sub: 'Marque los que le interesan: su asesor se los enviará en primer lugar. Algunos documentos no siempre existen según el inmueble: su asesor se lo indicará.', all: 'Marcar todo', none: 'Desmarcar todo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' seleccionado' + (n > 1 ? 's' : ''); }, note: 'Detalles (opcional) — sin datos sensibles', send: '📨 Enviar mi solicitud', empty: 'Marque al menos un documento.', done: '✅ ¡Gracias! Su solicitud ha sido transmitida a su asesor.', fail: '⚠️ No se pudo enviar ahora. Inténtelo de nuevo o contacte directamente con su asesor.', kindCopro: 'Inmueble en comunidad de propietarios', kindIndiv: 'Inmueble fuera de comunidad', kindTerrain: 'Terreno'}
+};
+// where : 'all' = tous les biens ; 'bati' = maison + copropriété (pas terrain) ; 'copro' ; 'indiv' = hors copropriété bâti ; 'indivt' = hors copropriété bâti + terrain
+var _DOC_CAT = [
+  {id: 'bien', t: {fr: 'Le bien', en: 'The property', pt: 'O imóvel', es: 'El inmueble'}, items: [
+    {id: 'taxe', where: 'all', fr: 'Dernier avis de taxe foncière', en: 'Latest property tax notice (taxe foncière)', pt: 'Último aviso do imposto predial francês (taxe foncière)', es: 'Último recibo del impuesto sobre bienes inmuebles francés (taxe foncière)', hint: 'taxe'},
+    {id: 'plans_copro', where: 'copro', fr: 'Plans du lot et des annexes (cave, parking)', en: 'Plans of the unit and annexes (cellar, parking)', pt: 'Plantas da fração e anexos (cave, estacionamento)', es: 'Planos de la vivienda y anexos (trastero, garaje)'},
+    {id: 'plans_indiv', where: 'indivt', fr: 'Plans du bien et de la parcelle', en: 'Plans of the property and the plot', pt: 'Plantas do imóvel e do lote', es: 'Planos del inmueble y de la parcela'},
+    {id: 'travaux', where: 'bati', fr: 'Factures et devis de travaux', en: 'Renovation invoices and quotes', pt: 'Faturas e orçamentos de obras', es: 'Facturas y presupuestos de obras'},
+    {id: 'garanties', where: 'indiv', fr: 'Garanties décennale / dommage-ouvrage (travaux récents, si disponible)', en: 'Ten-year / structural damage warranties (recent works, if available)', pt: 'Garantias decenal / seguro de dano-obra (obras recentes, se disponível)', es: 'Garantías decenal / seguro de daños de obra (obras recientes, si disponible)'},
+    {id: 'energie', where: 'bati', fr: "Factures d'énergie (électricité, gaz, chauffage) des 12 derniers mois", en: 'Energy bills (electricity, gas, heating) for the last 12 months', pt: 'Faturas de energia (eletricidade, gás, aquecimento) dos últimos 12 meses', es: 'Facturas de energía (electricidad, gas, calefacción) de los últimos 12 meses'},
+    {id: 'entretien', where: 'bati', fr: "Contrats et attestations d'entretien (chaudière, ramonage, ventilation, si disponible)", en: 'Maintenance contracts and certificates (boiler, chimney sweep, ventilation, if available)', pt: 'Contratos e certificados de manutenção (caldeira, limpeza de chaminé, ventilação, se disponível)', es: 'Contratos y certificados de mantenimiento (caldera, deshollinado, ventilación, si disponible)'},
+    {id: 'bail', where: 'bati', fr: 'Bail en cours et dernières quittances (si le bien est loué)', en: 'Current lease and latest rent receipts (if the property is let)', pt: 'Contrato de arrendamento e últimos recibos (se o imóvel estiver arrendado)', es: 'Contrato de alquiler vigente y últimos recibos (si el inmueble está alquilado)'}
+  ]},
+  {id: 'urba', where: 'indivt', t: {fr: 'Terrain, urbanisme et travaux', en: 'Land, planning and works', pt: 'Terreno, urbanismo e obras', es: 'Terreno, urbanismo y obras'}, items: [
+    {id: 'permis', where: 'indiv', fr: 'Permis de construire, déclarations de travaux et attestation de conformité (si disponible)', en: 'Building permit, works declarations and compliance certificate (if available)', pt: 'Licença de construção, declarações de obras e certificado de conformidade (se disponível)', es: 'Licencia de obra, declaraciones de obras y certificado de conformidad (si disponible)'},
+    {id: 'urbanisme', where: 'indivt', fr: "Certificat / note d'urbanisme (PLU, servitudes)", en: 'Planning certificate / zoning note (local plan, easements)', pt: 'Certidão / nota de urbanismo (PDM, servidões)', es: 'Certificado / nota urbanística (plan urbanístico, servidumbres)'},
+    {id: 'lotissement', where: 'indivt', fr: 'Règlement de lotissement / cahier des charges (ASL, si disponible)', en: 'Subdivision rules / specifications (homeowners association, if available)', pt: 'Regulamento de loteamento / caderno de encargos (se disponível)', es: 'Reglamento de urbanización / pliego de condiciones (si disponible)'},
+    {id: 'viabilisation', where: 'terrain', fr: 'Viabilisation et raccordements (eau, électricité, assainissement)', en: 'Utilities and connections (water, electricity, sanitation)', pt: 'Infraestruturas e ligações (água, eletricidade, saneamento)', es: 'Urbanización y conexiones (agua, electricidad, saneamiento)'},
+    {id: 'geotech', where: 'indivt', fr: 'Étude de sol / géotechnique (zones à risque argile, si disponible)', en: 'Soil / geotechnical study (clay-shrinkage risk areas, if available)', pt: 'Estudo de solos / geotécnico (zonas de risco de argilas, se disponível)', es: 'Estudio de suelos / geotécnico (zonas con riesgo de arcillas, si disponible)'},
+    {id: 'bornage', where: 'indivt', fr: 'Plan de bornage et limites de propriété (si disponible)', en: 'Boundary survey and property lines (if available)', pt: 'Planta de demarcação e limites da propriedade (se disponível)', es: 'Plano de deslinde y límites de la propiedad (si disponible)'}
+  ]},
+  {id: 'diag', t: {fr: 'Diagnostics', en: 'Diagnostics', pt: 'Diagnósticos', es: 'Diagnósticos'}, n: {fr: 'Certains diagnostics ne concernent que certains biens (âge du bâtiment, zone à risque…).', en: 'Some diagnostics only apply to certain properties (age of the building, risk area…).', pt: 'Alguns diagnósticos só se aplicam a certos imóveis (idade do edifício, zona de risco…).', es: 'Algunos diagnósticos solo se aplican a ciertos inmuebles (antigüedad del edificio, zona de riesgo…).'}, items: [
+    {id: 'dpe', where: 'bati', fr: 'DPE (diagnostic de performance énergétique)', en: 'Energy performance certificate (EPC / DPE)', pt: 'Certificado energético (DPE)', es: 'Certificado de eficiencia energética (DPE)'},
+    {id: 'audit', where: 'indiv', fr: 'Audit énergétique (obligatoire pour une maison classée E, F ou G, si disponible)', en: 'Energy audit (mandatory for a house rated E, F or G, if available)', pt: 'Auditoria energética (obrigatória para moradias classe E, F ou G, se disponível)', es: 'Auditoría energética (obligatoria para viviendas clase E, F o G, si disponible)'},
+    {id: 'amiante', where: 'bati', fr: 'Diagnostic amiante', en: 'Asbestos survey', pt: 'Diagnóstico de amianto', es: 'Diagnóstico de amianto'},
+    {id: 'plomb', where: 'bati', fr: 'Diagnostic plomb (CREP)', en: 'Lead paint survey (CREP)', pt: 'Diagnóstico de chumbo (CREP)', es: 'Diagnóstico de plomo (CREP)'},
+    {id: 'termites', where: 'bati', fr: 'Diagnostic termites', en: 'Termite survey', pt: 'Diagnóstico de térmitas', es: 'Diagnóstico de termitas'},
+    {id: 'elec', where: 'bati', fr: "Diagnostic de l'installation électrique", en: 'Electrical installation survey', pt: 'Diagnóstico da instalação elétrica', es: 'Diagnóstico de la instalación eléctrica'},
+    {id: 'gaz', where: 'bati', fr: "Diagnostic de l'installation de gaz", en: 'Gas installation survey', pt: 'Diagnóstico da instalação de gás', es: 'Diagnóstico de la instalación de gas'},
+    {id: 'assainissement', where: 'indivt', fr: 'Assainissement (SPANC ou raccordement au tout-à-l\'égout)', en: 'Sanitation (septic tank inspection or mains sewer connection)', pt: 'Saneamento (fossa séptica ou ligação à rede de esgotos)', es: 'Saneamiento (fosa séptica o conexión a la red de alcantarillado)'},
+    {id: 'erp', where: 'all', fr: 'État des risques et pollutions (ERP)', en: 'Natural and technological risks statement (ERP)', pt: 'Estado de riscos e poluições (ERP)', es: 'Estado de riesgos y contaminación (ERP)'},
+    {id: 'dta', where: 'copro', fr: 'Diagnostic amiante des parties communes (DTA)', en: 'Asbestos survey of the common areas (DTA)', pt: 'Diagnóstico de amianto das partes comuns (DTA)', es: 'Diagnóstico de amianto de las zonas comunes (DTA)'},
+    {id: 'carrez', where: 'copro', fr: 'Mesurage loi Carrez', en: 'Carrez law floor-area measurement', pt: 'Medição da área (lei Carrez)', es: 'Medición de superficie (ley Carrez)'}
+  ]},
+  {id: 'copro', where: 'copro', t: {fr: 'Copropriété', en: 'Condominium', pt: 'Condomínio', es: 'Comunidad de propietarios'}, items: [
+    {id: 'rcp', where: 'copro', fr: 'Règlement de copropriété et état descriptif de division', en: 'Condominium rules and division description', pt: 'Regulamento do condomínio e descrição das frações', es: 'Reglamento de la comunidad y descripción de la división'},
+    {id: 'pv_ag', where: 'copro', fr: "Procès-verbaux des 3 dernières assemblées générales", en: 'Minutes of the last 3 general meetings', pt: 'Atas das últimas 3 assembleias gerais', es: 'Actas de las últimas 3 juntas generales'},
+    {id: 'appels', where: 'copro', fr: 'Appels de charges et relevé des charges', en: 'Service charge calls and statement', pt: 'Avisos de quotas e extrato de despesas', es: 'Cuotas de comunidad y extracto de gastos', hint: 'charges'},
+    {id: 'budget', where: 'copro', fr: 'Budget prévisionnel et comptes de la copropriété', en: 'Forecast budget and condominium accounts', pt: 'Orçamento previsional e contas do condomínio', es: 'Presupuesto previsto y cuentas de la comunidad'},
+    {id: 'travaux_copro', where: 'copro', fr: "Travaux votés ou à venir dans l'immeuble et fonds de travaux", en: 'Works voted or planned in the building and works fund', pt: 'Obras votadas ou previstas no edifício e fundo de obras', es: 'Obras aprobadas o previstas en el edificio y fondo de obras'},
+    {id: 'ppt', where: 'copro', fr: 'Plan pluriannuel de travaux (PPT) / diagnostic technique global (DTG)', en: 'Multi-year works plan (PPT) / global technical diagnosis (DTG)', pt: 'Plano plurianual de obras (PPT) / diagnóstico técnico global (DTG)', es: 'Plan plurianual de obras (PPT) / diagnóstico técnico global (DTG)'},
+    {id: 'carnet', where: 'copro', fr: "Carnet d'entretien de l'immeuble", en: 'Building maintenance logbook', pt: 'Livro de manutenção do edifício', es: 'Libro de mantenimiento del edificio'},
+    {id: 'fiche_synth', where: 'copro', fr: "Fiche synthétique de la copropriété (avec numéro d'immatriculation)", en: 'Condominium summary sheet (with registration number)', pt: 'Ficha síntese do condomínio (com número de registo)', es: 'Ficha resumen de la comunidad (con número de registro)'},
+    {id: 'procedures', where: 'copro', fr: 'Procédures en cours dans la copropriété (impayés, litiges)', en: 'Ongoing proceedings in the condominium (unpaid charges, disputes)', pt: 'Processos em curso no condomínio (dívidas, litígios)', es: 'Procedimientos en curso en la comunidad (impagos, litigios)'},
+    {id: 'pre_etat', where: 'copro', fr: 'Pré-état daté (situation financière du lot)', en: 'Pre-sale financial statement (pré-état daté) for the unit', pt: 'Pré-estado datado (situação financeira da fração)', es: 'Pre-estado datado (situación financiera de la vivienda)'},
+    {id: 'assurance', where: 'copro', fr: "Attestation d'assurance de l'immeuble", en: "Building insurance certificate", pt: 'Certificado de seguro do edifício', es: 'Certificado del seguro del edificio'}
+  ]}
+];
+function _docKind() {
+  var d = {}; try { d = JSON.parse(document.getElementById('expertimo-data').textContent) || {}; } catch (e) {}
+  var type = d.type || '';
+  var copro = d.copro || (type === 'maison' || type === 'terrain' ? 'non' : 'oui');
+  var kind = type === 'terrain' ? 'terrain' : (copro === 'oui' ? 'copro' : 'indiv');
+  return {kind: kind, data: d};
+}
+function _docApplies(where, kind) {
+  if (where === 'all') return true;
+  if (where === 'bati') return kind !== 'terrain';
+  if (where === 'copro') return kind === 'copro';
+  if (where === 'indiv') return kind === 'indiv';
+  if (where === 'indivt') return kind === 'indiv' || kind === 'terrain';
+  if (where === 'terrain') return kind === 'terrain';
+  return true;
+}
+function _docLang() { return (typeof _currentLang !== 'undefined' && _DOC_UI[_currentLang]) ? _currentLang : 'fr'; }
+function _docChecked() {
+  var ids = [];
+  document.querySelectorAll('#dp-groups input[type=checkbox]:checked').forEach(function(cb) { ids.push(cb.value); });
+  return ids;
+}
+function _docUpdateCount() {
+  var n = _docChecked().length, el = document.getElementById('dp-count');
+  if (el) el.textContent = n ? _DOC_UI[_docLang()].count(n) : '';
+}
+function renderDocPicker() {
+  var box = document.getElementById('dp-groups');
+  if (!box) return;
+  var L = _docLang(), U = _DOC_UI[L], k = _docKind(), keep = {};
+  _docChecked().forEach(function(id) { keep[id] = true; });
+  box.textContent = '';
+  var setText = function(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; };
+  setText('dp-title', U.title); setText('dp-sub', U.sub); setText('dp-all', U.all); setText('dp-none', U.none);
+  setText('dp-send', U.send);
+  var kindEl = document.getElementById('dp-kind');
+  if (kindEl) kindEl.textContent = k.kind === 'copro' ? U.kindCopro : (k.kind === 'terrain' ? U.kindTerrain : U.kindIndiv);
+  var noteEl = document.getElementById('dp-note'); if (noteEl) noteEl.placeholder = U.note;
+  _DOC_CAT.forEach(function(g) {
+    if (g.where && !_docApplies(g.where, k.kind)) return;
+    var items = g.items.filter(function(it) { return _docApplies(it.where, k.kind); });
+    if (!items.length) return;
+    var sec = document.createElement('div'); sec.className = 'dp-group';
+    var h = document.createElement('div'); h.className = 'dp-gt'; h.textContent = g.t[L]; sec.appendChild(h);
+    if (g.n) { var hn = document.createElement('div'); hn.className = 'dp-gn'; hn.textContent = g.n[L]; sec.appendChild(hn); }
+    var grid = document.createElement('div'); grid.className = 'dp-grid';
+    items.forEach(function(it) {
+      var lab = document.createElement('label'); lab.className = 'dp-item';
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = it.id; cb.checked = !!keep[it.id];
+      cb.addEventListener('change', _docUpdateCount);
+      var sp = document.createElement('span'); sp.textContent = it[L];
+      if (it.hint === 'taxe' && k.data.taxeFonciere > 0) { var s2 = document.createElement('small'); s2.textContent = ' · ' + Math.round(k.data.taxeFonciere) + ' € / ' + ({fr: 'an', en: 'year', pt: 'ano', es: 'año'})[L]; sp.appendChild(s2); }
+      if (it.hint === 'charges' && k.data.chargesCopro > 0) { var s3 = document.createElement('small'); s3.textContent = ' · ' + Math.round(k.data.chargesCopro) + ' € / ' + ({fr: 'mois', en: 'month', pt: 'mês', es: 'mes'})[L]; sp.appendChild(s3); }
+      lab.appendChild(cb); lab.appendChild(sp); grid.appendChild(lab);
+    });
+    sec.appendChild(grid); box.appendChild(sec);
+  });
+  _docUpdateCount();
+}
+function docPickerAll(on) {
+  document.querySelectorAll('#dp-groups input[type=checkbox]').forEach(function(cb) { cb.checked = on; });
+  _docUpdateCount();
+}
+function docPickerSend() {
+  var U = _DOC_UI[_docLang()], ids = _docChecked(), msg = document.getElementById('dp-msg'), btn = document.getElementById('dp-send');
+  var show = function(t, ok) { if (msg) { msg.textContent = t; msg.className = 'dp-msg ' + (ok ? 'ok' : 'err'); msg.style.display = 'block'; } };
+  if (!ids.length) { show(U.empty, false); return; }
+  var k = _docKind(), labels = [];
+  _DOC_CAT.forEach(function(g) { g.items.forEach(function(it) { if (ids.indexOf(it.id) !== -1) labels.push(it.fr); }); });
+  var note = (document.getElementById('dp-note') || {}).value || '';
+  var nomEl = document.getElementById('doc-nom'), emailEl = document.getElementById('doc-email');
+  var agentEmail = k.data.agentEmail || '', agentNom = k.data.agentNom || '';
+  if (btn) btn.disabled = true;
+  fetch('https://expertimo-phi.vercel.app/api/send-lead', {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({type: 'documents_liste', nom: nomEl ? nomEl.value : '', email: emailEl ? emailEl.value : '', bien: (typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title), documents: labels, message: note, agentEmail: agentEmail, agentNom: agentNom})
+  }).then(function(r) { return r.json().catch(function() { return {}; }).then(function(j) { if (!r.ok || j.ok === false) throw new Error('send'); try { if (window.privencyDocs) window.privencyDocs(labels, note); } catch (e) {} try { if (window.privencyTrack) window.privencyTrack('documents_demandes'); } catch (e) {} show(U.done, true); if (btn) btn.style.display = 'none'; }); })
+    .catch(function() { show(U.fail, false); if (btn) btn.disabled = false; });
+}
+document.addEventListener('DOMContentLoaded', function() { try { renderDocPicker(); } catch (e) {} });
+</script>
+<script>markVisited('bien'); updateRailUI();</script>
+<script>
+// ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══
+// Contenus libres traduits (points forts, vigilances, historique, diagnostics) : lus dans les blocs JSON
+// #expertimo-data-en / -pt / -es injectés par app.html. FR et EN utilisent leurs blocs -fr/-en existants ;
+// PT/ES sont rendus ici dans un bloc frère "-x" (même balise, mêmes classes). Repli sur le français si absent.
+var _LANG_BLOCKS = ['pf-list', 'vg-list', 'renov-list', 'diag-grid', 'historique-timeline'];
+var _langDataCache = {};
+function getLangData(lang) {
+  if (_langDataCache[lang] !== undefined) return _langDataCache[lang];
+  var el = document.getElementById('expertimo-data-' + lang), data = null;
+  if (el) { try { data = JSON.parse(el.textContent); } catch (e) { data = null; } }
+  return (_langDataCache[lang] = data);
+}
+var _DIAG_STATUS_CLASS = {favorable: 'diag-ok', attention: 'diag-attention', defavorable: 'diag-alerte', 'non-soumis': 'diag-'};
+var _DIAG_NAME_KEY = {'Amiante': 'amiante', 'Plomb (CREP)': 'plomb', 'Termites': 'termites', 'Électricité': 'electricite', 'Gaz': 'gaz', 'Assainissement': 'assainissement'};
+function _renderLangBlock(base, lang, data) {
+  var lis = function(arr) { return arr.filter(Boolean).map(function(t) { return '<li>' + escHtml(t) + '</li>'; }).join(''); };
+  if (base === 'pf-list') return lis([data.fort1, data.fort2, data.fort3]);
+  if (base === 'vg-list') return lis([data.vig1, data.vig2, data.vig3]);
+  if (base === 'historique-timeline') {
+    var html = '';
+    (data.historiqueLibre || '').split('\n').forEach(function(ligne) {
+      ligne = ligne.trim();
+      if (!ligne) return;
+      var i = ligne.indexOf('—');
+      html += '<li class="info-item">' + (i !== -1 ? '<b>' + escHtml(ligne.substring(0, i).trim()) + '</b> — ' + escHtml(ligne.substring(i + 1).trim()) : escHtml(ligne)) + '</li>';
+    });
+    return html;
+  }
+  if (base === 'diag-grid') {
+    return (data.diags || []).map(function(diag) {
+      var key = _DIAG_NAME_KEY[diag.name];
+      var nm = key ? tr('diag-name-' + key, null, lang) : diag.name;
+      var res = (diag.result && diag.result !== '—') ? escHtml(diag.result)
+        : '<span style="color:var(--muted);font-size:11px;" data-tr="diag-not-subject">ℹ️ ' + escHtml(tr('diag-not-subject', null, lang)) + '</span>';
+      return '<div class="diag-card ' + (_DIAG_STATUS_CLASS[diag.status] || 'diag-ok') + '"><div class="diag-icon">' + diag.icon + '</div>'
+        + '<div class="diag-name">' + escHtml(nm) + '</div><div class="diag-result">' + res + '</div></div>';
+    }).join('');
+  }
+  return '';
+}
+function applyTranslatedContent(lang) {
+  var data = (lang === 'pt' || lang === 'es') ? getLangData(lang) : null;
+  _LANG_BLOCKS.forEach(function(base) {
+    var fr = document.getElementById(base + '-fr') || document.getElementById(base);
+    if (!fr) return;
+    var en = document.getElementById(base + '-en');
+    var x = document.getElementById(base + '-x');
+    var show = fr;
+    if (lang === 'en' && en && en.children.length) show = en;
+    else if (data) {
+      var html = _renderLangBlock(base, lang, data);
+      if (html) {
+        if (!x) {
+          x = fr.cloneNode(false);
+          x.id = base + '-x';
+          (en || fr).parentNode.insertBefore(x, (en || fr).nextSibling);
+        }
+        x.innerHTML = html;
+        show = x;
+      }
+    }
+    [fr, en, x].forEach(function(el) { if (el) el.style.display = (el === show) ? (el.getAttribute('data-disp') || '') : 'none'; });
+  });
+}
+
+function updateLangToggle(lang) {
+  LANGS.forEach(function(code) {
+    var b = document.getElementById('lang-toggle-' + code);
+    if (!b) return;
+    var on = code === lang;
+    b.classList.toggle('active', on);
+    b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    b.style.background = on ? 'var(--gold)' : 'transparent';
+    b.style.color = on ? 'var(--dark)' : 'rgba(255,255,255,.5)';
+  });
+}
+
+function applyLang(lang) {
+  lang = (LANGS.indexOf(lang) !== -1) ? lang : LANG_DEFAULT;
+  var _prevLang = _currentLang;
+  _currentLang = lang;
+  try { if (typeof renderDocPicker === 'function') renderDocPicker(); } catch (e) {}
+  saveLang(lang);
+  document.documentElement.lang = lang;
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var v = uiText(el.dataset.i18n, lang);
+    if (v != null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var v = uiText(el.getAttribute('data-i18n-placeholder'), lang);
+    if (v != null) el.setAttribute('placeholder', v);
+  });
+  // Valeurs générées par fiche : data-<langue>-val, repli sur le français
+  document.querySelectorAll('[data-fr-val]').forEach(function(el) {
+    var v = lang === 'fr' ? null : el.getAttribute('data-' + lang + '-val');
+    if (v == null) v = el.getAttribute('data-fr-val');
+    if (v != null) el.textContent = v;
+  });
+  applyTranslatedContent(lang);
+  // Mentions générées côté JS (ex. « non soumis à obligation »)
+  document.querySelectorAll('[data-tr]').forEach(function(el) {
+    el.textContent = 'ℹ️ ' + tr(el.getAttribute('data-tr'), null, lang);
+  });
+
+  updateLangToggle(lang);
+
+  // Rafraîchit les blocs calculés dynamiquement (dépendent de _currentLang)
+  if (typeof renderDpeInfo === 'function') renderDpeInfo(lang);
+  if (typeof renderWelcomeParam === 'function') renderWelcomeParam(lang);
+  if (typeof renderCrush === 'function') renderCrush();
+  if (typeof renderParticipation === 'function') renderParticipation();
+  try { updateOffer(); } catch(e) {}
+
+  // L'assistant IA a déjà démarré une conversation dans l'ancienne langue :
+  // on la relance dans la nouvelle pour ne pas mélanger historique et consignes.
+  if (_aiInit && _prevLang !== lang) {
+    var aiMsgsEl = document.getElementById('ai-messages');
+    if (aiMsgsEl) aiMsgsEl.innerHTML = '';
+    _aiMessages = [];
+    var welcomeReset = aiT('welcome', {adresse: _pubAdr()}, lang);
+    addAIMsg(welcomeReset, 'assistant');
+    _aiMessages.push({role:'user',content:aiT('sessionStart', null, lang)});
+    _aiMessages.push({role:'assistant',content:welcomeReset});
+    var aiSuggestionsEl = document.getElementById('ai-suggestions');
+    if (aiSuggestionsEl) aiSuggestionsEl.style.display = '';
+  }
+
+  var aiSug = document.getElementById('ai-suggestions');
+  if (aiSug && aiSug.style.display !== 'none' && aiSug.children.length) {
+    try { renderAISuggestions(); } catch(e) {}
+  }
+}
+
+// Sélecteur de langue toujours visible (FR / EN / PT / ES). La langue choisie est mémorisée ;
+// les textes non traduits d'une fiche retombent sur le français.
+document.addEventListener('DOMContentLoaded', function() {
+  renderLangToggle();
+  var toggle = document.getElementById('lang-toggle');
+  if (toggle) toggle.style.display = 'block';
+  // Français (défaut) : le HTML généré fait foi, on ne le réécrit pas ; autre langue mémorisée : on l'applique.
+  var saved = getSavedLang();
+  if (saved !== LANG_DEFAULT) applyLang(saved); else updateLangToggle(saved);
+});
+</script>
+<script>
+// Indicateur doré glissant dans la nav (couche visuelle uniquement : suit le bouton .active posé par showTab)
+(function() {
+  var nav = document.getElementById('main-nav');
+  if (!nav) return;
+  var ind = document.createElement('span');
+  ind.className = 'rail-ind';
+  ind.setAttribute('aria-hidden', 'true');
+  nav.appendChild(ind);
+  var raf = 0, placed = false;
+  function place(instant) {
+    var b = nav.querySelector('button.active');
+    if (!b || !b.offsetHeight) return;
+    var h = Math.round(b.offsetHeight * 0.6);
+    var y = b.offsetTop + Math.round((b.offsetHeight - h) / 2);
+    if (instant || !placed) ind.classList.add('instant');
+    ind.style.height = h + 'px';
+    ind.style.transform = 'translateY(' + y + 'px)';
+    if (instant || !placed) { void ind.offsetWidth; ind.classList.remove('instant'); }
+    ind.classList.add('ready');
+    placed = true;
+  }
+  function schedule(instant) {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(function() { place(instant); });
+  }
+  new MutationObserver(function() { schedule(false); })
+    .observe(nav, {attributes: true, attributeFilter: ['class'], subtree: true});
+  window.addEventListener('resize', function() { schedule(true); });
+  window.addEventListener('load', function() { schedule(true); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function() { schedule(true); });
+  schedule(true);
+})();
+</script>
+<script>
+// Défilement automatique des filtres de la carte interactive (appelle filterMap ; s'arrête au premier clic utilisateur)
+(function() {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var cats = ['transport', 'vert', 'commerce', 'ecole'];
+  var tab = document.getElementById('quartier');
+  var btns = document.querySelectorAll('.map-filter-btn');
+  if (!tab || btns.length < cats.length) return;
+  var i = 0, nextAt = 0, timer = 0;
+  function stop() { clearInterval(timer); }
+  Array.prototype.forEach.call(btns, function(b) { b.addEventListener('click', stop); });
+  function ready() {
+    var m = window._mapMarkers;
+    return !!(m && window._mapInstance && cats.some(function(c) { return (m[c] || []).length; }));
+  }
+  timer = setInterval(function() {
+    if (!tab.classList.contains('active') || document.hidden || !ready()) { nextAt = 0; return; }
+    var now = Date.now();
+    if (now < nextAt) return;
+    filterMap(cats[i % cats.length], btns[i % cats.length]);
+    i++;
+    nextAt = now + 3000;
+  }, 250);
+})();
+</script>
 <script id="crush-data" type="application/json">{"type":"maison","surface":157,"terrain":null,"pieces":9,"chambres":7,"etage":null,"ext":{},"expo":[],"sonore":"Calme","transports":[],"parking":7,"annexes":[],"dpe":"C","chauffage":[],"equip":[],"scores":{"etat":8,"prest":8,"secteur":9},"vigilances":[],"dvf":{"n":6}}</script>
 <script id="crush-calc">
 // ═══ CRUSH IMMOBILIER : calcul du score (fonction pure, sans DOM ni réseau, testée par tests/crush.test.js) ═══
@@ -3918,7 +4303,7 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   } else render();
 })();
 </script>
-<script id="participation-data" type="application/json">{"points":[{"k":"electricite"},{"k":"vig","v":{"fr":"Située dans un village de moins de 500 habitants.","en":"Located in a village of fewer than 500 inhabitants.","pt":"Situada numa aldeia com menos de 500 habitantes.","es":"Situada en un pueblo de menos de 500 habitantes."}},{"k":"lumiere"},{"k":"rangements"},{"k":"etat_general"}],"chips":["lumiere","volumes","cuisine","salle_bain","calme","etat","quartier"],"mot":{"fr":[],"en":[],"pt":[],"es":[],"libre":""}}</script>
+<script id="participation-data" type="application/json">{"points":[{"k":"electricite"},{"k":"vig","v":{"fr":"Située dans un village de moins de 500 habitants.","en":"Located in a village of fewer than 500 inhabitants.","pt":"Situada numa aldeia com menos de 500 habitantes.","es":"Situada en un pueblo de menos de 500 habitantes."}},{"k":"lumiere"},{"k":"rangements"},{"k":"etat_general"}],"chips":["lumiere","volumes","cuisine","salle_bain","calme","etat","quartier"],"mot":{"fr":["Ce qui va le plus nous manquer : beaux volumes : 202m² au sol dont garage de 45m².","Notre petit plus préféré : terrain de 1073m²."],"en":["What we will miss the most: generous living space: 202m² floor area including 45m² garage.","Our favourite little extra: 1,073m² plot."],"pt":["O que mais vamos sentir falta: áreas generosas: 202 m² ao solo, incluindo garagem de 45 m².","O nosso pequeno extra preferido: terreno de 1073 m²."],"es":["Lo que más vamos a echar de menos: hermosos volúmenes: 202m² en planta baja incluyendo garaje de 45m².","Nuestro pequeño detalle favorito: terreno de 1073m²."],"libre":""}}</script>
 <script id="participation-js">
 // ═══ PARTICIPATION ACHETEUR : ma visite, carnet, partage, critère déterminant, mot du vendeur ═══
 // Chaque action enregistre un événement dans les statistiques existantes (fiche_views) ; aucune donnée personnelle demandée.
@@ -4276,408 +4661,6 @@ document.addEventListener('DOMContentLoaded', function() { renderWelcomeParam('f
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', renderAll); else renderAll();
 })();
 </script>
-<script>
-// Retour de visite en un clic : réponses d'une liste fermée (jamais de texte libre), transmises à l'agent.
-(function() {
-  var CODES = ['coup_coeur', 'prix', 'travaux', 'quartier', 'charges', 'agencement', 'financement', 'reflechir'];
-  var T = {
-    fr: {lbl: 'Votre retour de visite', title: 'Vous avez visité le bien ?', sub: "Dites-nous en un clic ce qui compte pour vous (4 réponses au maximum) : votre conseiller en tient compte.", send: 'Envoyer mon retour', done: 'Merci ! Votre conseiller a bien reçu votre retour.', max: '4 réponses au maximum.', none: 'Choisissez au moins une réponse.', err: "L'envoi a échoué. Réessayez dans un instant.", note: "Votre retour est transmis à votre conseiller et, sans votre nom, au propriétaire du bien. Aucun texte libre ni coordonnée n'est envoyé.",
-      c: {coup_coeur: '💛 Un coup de cœur', prix: '💶 Le prix', travaux: '🛠️ Les travaux à prévoir', quartier: '📍 Le quartier', charges: '🧾 Les charges', agencement: "📐 L'agencement", financement: '🏦 Mon financement', reflechir: "⏳ J'ai besoin d'y réfléchir"}},
-    en: {lbl: 'Your visit feedback', title: 'Have you visited the property?', sub: 'Tell us in one tap what matters to you (up to 4 answers): your advisor will take it into account.', send: 'Send my feedback', done: 'Thank you! Your advisor has received your feedback.', max: 'Up to 4 answers.', none: 'Please choose at least one answer.', err: 'Sending failed. Please try again in a moment.', note: 'Your feedback is sent to your advisor and, without your name, to the owner of the property. No free text or contact details are transmitted.',
-      c: {coup_coeur: '💛 Love at first sight', prix: '💶 The price', travaux: '🛠️ Works to plan for', quartier: '📍 The neighbourhood', charges: '🧾 The running costs', agencement: '📐 The layout', financement: '🏦 My financing', reflechir: '⏳ I need time to think'}},
-    pt: {lbl: 'O seu feedback da visita', title: 'Visitou o imóvel?', sub: 'Diga-nos com um toque o que é importante para si (até 4 respostas): o seu consultor tem-no em conta.', send: 'Enviar o meu feedback', done: 'Obrigado! O seu consultor recebeu o seu feedback.', max: 'No máximo 4 respostas.', none: 'Escolha pelo menos uma resposta.', err: 'O envio falhou. Tente novamente dentro de instantes.', note: 'O seu feedback é enviado ao seu consultor e, sem o seu nome, ao proprietário do imóvel. Não é transmitido texto livre nem contactos.',
-      c: {coup_coeur: '💛 Gostei muito', prix: '💶 O preço', travaux: '🛠️ As obras a prever', quartier: '📍 A zona', charges: '🧾 As despesas', agencement: '📐 A distribuição', financement: '🏦 O meu financiamento', reflechir: '⏳ Preciso de pensar'}},
-    es: {lbl: 'Su opinión tras la visita', title: '¿Ha visitado el inmueble?', sub: 'Díganos con un toque lo que le importa (hasta 4 respuestas): su asesor lo tendrá en cuenta.', send: 'Enviar mi opinión', done: '¡Gracias! Su asesor ha recibido su opinión.', max: 'Máximo 4 respuestas.', none: 'Elija al menos una respuesta.', err: 'El envío ha fallado. Inténtelo de nuevo en un momento.', note: 'Su opinión se envía a su asesor y, sin su nombre, al propietario del inmueble. No se transmite texto libre ni datos de contacto.',
-      c: {coup_coeur: '💛 Me ha enamorado', prix: '💶 El precio', travaux: '🛠️ Las obras previstas', quartier: '📍 El barrio', charges: '🧾 Los gastos', agencement: '📐 La distribución', financement: '🏦 Mi financiación', reflechir: '⏳ Necesito pensarlo'}}
-  };
-  var sel = [], sent = false;
-  function L() { var l = (typeof _currentLang !== 'undefined' && _currentLang) || document.documentElement.lang || 'fr'; return T[l] ? l : 'fr'; }
-  function $(id) { return document.getElementById(id); }
-  function msg(t, cls) { var m = $('vr-msg'); if (!m) return; m.textContent = t || ''; m.className = 'vr-msg' + (cls ? ' ' + cls : ''); }
-  function render() {
-    var box = $('vr-chips'); if (!box) return;
-    var U = T[L()];
-    $('vr-lbl').textContent = U.lbl; $('vr-title').textContent = U.title; $('vr-sub').textContent = U.sub; $('vr-note').textContent = U.note;
-    var b = $('vr-send'); b.textContent = U.send; b.style.display = sent ? 'none' : '';
-    box.textContent = '';
-    CODES.forEach(function(c) {
-      var x = document.createElement('button'); x.type = 'button'; x.className = 'vr-chip'; x.setAttribute('data-code', c);
-      x.setAttribute('aria-pressed', sel.indexOf(c) !== -1 ? 'true' : 'false'); x.textContent = U.c[c]; x.disabled = sent;
-      x.onclick = function() {
-        var i = sel.indexOf(c);
-        if (i !== -1) { sel.splice(i, 1); msg(''); }
-        else if (sel.length >= 4) { msg(T[L()].max, 'err'); return; }
-        else { sel.push(c); msg(''); }
-        render();
-      };
-      box.appendChild(x);
-    });
-    if (sent) msg(U.done, 'ok');
-  }
-  window.vrSend = function() {
-    if (sent) return;
-    var U = T[L()];
-    if (!sel.length) { msg(U.none, 'err'); return; }
-    var b = $('vr-send'); b.disabled = true;
-    var p = (window.privencyRetour ? window.privencyRetour(sel.slice(), L()) : Promise.reject(new Error('indisponible')));
-    p.then(function() {
-      sent = true; try { if (window.privencyTrack) window.privencyTrack('retour_visite'); } catch (e) {}
-      render();
-    }, function() { msg(T[L()].err, 'err'); }).then(function() { b.disabled = false; });
-  };
-  // Pré-sélection depuis le carnet de visite (coups de cœur partagés) : jamais au-delà de 4 réponses
-  window.vrPreselect = function(codes) {
-    if (sent) return;
-    (codes || []).forEach(function(c) { if (CODES.indexOf(c) !== -1 && sel.indexOf(c) === -1 && sel.length < 4) sel.push(c); });
-    render();
-  };
-  document.addEventListener('DOMContentLoaded', render);
-  try { new MutationObserver(function() { render(); }).observe(document.documentElement, {attributes: true, attributeFilter: ['lang']}); } catch (e) {}
-})();
-</script>
-<script>
-// ═══ DOCUMENTS SOUHAITÉS — liste adaptée au bien (copropriété / hors copropriété / terrain), 4 langues ═══
-// L'acquéreur coche ce qu'il veut recevoir ; la demande part par email à l'agent (libellés en français) et dans ses stats.
-var _DOC_UI = {
-  fr: {title: 'Quels documents souhaitez-vous recevoir ?', sub: 'Cochez ceux qui vous intéressent : votre conseiller vous les envoie en priorité. Certains documents n\'existent pas toujours selon le bien : votre conseiller vous le précisera.', all: 'Tout cocher', none: 'Tout décocher', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' sélectionné' + (n > 1 ? 's' : ''); }, note: 'Précisions (facultatif) — pas de données sensibles', send: '📨 Envoyer ma demande', empty: 'Cochez au moins un document.', done: '✅ Merci ! Votre demande est transmise à votre conseiller.', fail: '⚠️ Envoi impossible pour le moment. Réessayez ou contactez directement votre conseiller.', kindCopro: 'Bien en copropriété', kindIndiv: 'Bien hors copropriété', kindTerrain: 'Terrain'},
-  en: {title: 'Which documents would you like to receive?', sub: 'Tick the ones you are interested in: your advisor will send them to you first. Some documents do not always exist depending on the property: your advisor will let you know.', all: 'Select all', none: 'Clear all', count: function(n) { return n + ' document' + (n > 1 ? 's' : '') + ' selected'; }, note: 'Additional details (optional) — no sensitive data', send: '📨 Send my request', empty: 'Please tick at least one document.', done: '✅ Thank you! Your request has been sent to your advisor.', fail: '⚠️ Could not send right now. Please try again or contact your advisor directly.', kindCopro: 'Condominium property', kindIndiv: 'Non-condominium property', kindTerrain: 'Land'},
-  pt: {title: 'Que documentos deseja receber?', sub: 'Assinale os que lhe interessam: o seu consultor envia-os com prioridade. Alguns documentos nem sempre existem, consoante o imóvel: o seu consultor informá-lo-á.', all: 'Selecionar tudo', none: 'Desmarcar tudo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' selecionado' + (n > 1 ? 's' : ''); }, note: 'Pormenores (facultativo) — sem dados sensíveis', send: '📨 Enviar o meu pedido', empty: 'Assinale pelo menos um documento.', done: '✅ Obrigado! O seu pedido foi transmitido ao seu consultor.', fail: '⚠️ Não foi possível enviar agora. Tente novamente ou contacte diretamente o seu consultor.', kindCopro: 'Imóvel em condomínio', kindIndiv: 'Imóvel fora de condomínio', kindTerrain: 'Terreno'},
-  es: {title: '¿Qué documentos desea recibir?', sub: 'Marque los que le interesan: su asesor se los enviará en primer lugar. Algunos documentos no siempre existen según el inmueble: su asesor se lo indicará.', all: 'Marcar todo', none: 'Desmarcar todo', count: function(n) { return n + ' documento' + (n > 1 ? 's' : '') + ' seleccionado' + (n > 1 ? 's' : ''); }, note: 'Detalles (opcional) — sin datos sensibles', send: '📨 Enviar mi solicitud', empty: 'Marque al menos un documento.', done: '✅ ¡Gracias! Su solicitud ha sido transmitida a su asesor.', fail: '⚠️ No se pudo enviar ahora. Inténtelo de nuevo o contacte directamente con su asesor.', kindCopro: 'Inmueble en comunidad de propietarios', kindIndiv: 'Inmueble fuera de comunidad', kindTerrain: 'Terreno'}
-};
-// where : 'all' = tous les biens ; 'bati' = maison + copropriété (pas terrain) ; 'copro' ; 'indiv' = hors copropriété bâti ; 'indivt' = hors copropriété bâti + terrain
-var _DOC_CAT = [
-  {id: 'bien', t: {fr: 'Le bien', en: 'The property', pt: 'O imóvel', es: 'El inmueble'}, items: [
-    {id: 'taxe', where: 'all', fr: 'Dernier avis de taxe foncière', en: 'Latest property tax notice (taxe foncière)', pt: 'Último aviso do imposto predial francês (taxe foncière)', es: 'Último recibo del impuesto sobre bienes inmuebles francés (taxe foncière)', hint: 'taxe'},
-    {id: 'plans_copro', where: 'copro', fr: 'Plans du lot et des annexes (cave, parking)', en: 'Plans of the unit and annexes (cellar, parking)', pt: 'Plantas da fração e anexos (cave, estacionamento)', es: 'Planos de la vivienda y anexos (trastero, garaje)'},
-    {id: 'plans_indiv', where: 'indivt', fr: 'Plans du bien et de la parcelle', en: 'Plans of the property and the plot', pt: 'Plantas do imóvel e do lote', es: 'Planos del inmueble y de la parcela'},
-    {id: 'travaux', where: 'bati', fr: 'Factures et devis de travaux', en: 'Renovation invoices and quotes', pt: 'Faturas e orçamentos de obras', es: 'Facturas y presupuestos de obras'},
-    {id: 'garanties', where: 'indiv', fr: 'Garanties décennale / dommage-ouvrage (travaux récents, si disponible)', en: 'Ten-year / structural damage warranties (recent works, if available)', pt: 'Garantias decenal / seguro de dano-obra (obras recentes, se disponível)', es: 'Garantías decenal / seguro de daños de obra (obras recientes, si disponible)'},
-    {id: 'energie', where: 'bati', fr: "Factures d'énergie (électricité, gaz, chauffage) des 12 derniers mois", en: 'Energy bills (electricity, gas, heating) for the last 12 months', pt: 'Faturas de energia (eletricidade, gás, aquecimento) dos últimos 12 meses', es: 'Facturas de energía (electricidad, gas, calefacción) de los últimos 12 meses'},
-    {id: 'entretien', where: 'bati', fr: "Contrats et attestations d'entretien (chaudière, ramonage, ventilation, si disponible)", en: 'Maintenance contracts and certificates (boiler, chimney sweep, ventilation, if available)', pt: 'Contratos e certificados de manutenção (caldeira, limpeza de chaminé, ventilação, se disponível)', es: 'Contratos y certificados de mantenimiento (caldera, deshollinado, ventilación, si disponible)'},
-    {id: 'bail', where: 'bati', fr: 'Bail en cours et dernières quittances (si le bien est loué)', en: 'Current lease and latest rent receipts (if the property is let)', pt: 'Contrato de arrendamento e últimos recibos (se o imóvel estiver arrendado)', es: 'Contrato de alquiler vigente y últimos recibos (si el inmueble está alquilado)'}
-  ]},
-  {id: 'urba', where: 'indivt', t: {fr: 'Terrain, urbanisme et travaux', en: 'Land, planning and works', pt: 'Terreno, urbanismo e obras', es: 'Terreno, urbanismo y obras'}, items: [
-    {id: 'permis', where: 'indiv', fr: 'Permis de construire, déclarations de travaux et attestation de conformité (si disponible)', en: 'Building permit, works declarations and compliance certificate (if available)', pt: 'Licença de construção, declarações de obras e certificado de conformidade (se disponível)', es: 'Licencia de obra, declaraciones de obras y certificado de conformidad (si disponible)'},
-    {id: 'urbanisme', where: 'indivt', fr: "Certificat / note d'urbanisme (PLU, servitudes)", en: 'Planning certificate / zoning note (local plan, easements)', pt: 'Certidão / nota de urbanismo (PDM, servidões)', es: 'Certificado / nota urbanística (plan urbanístico, servidumbres)'},
-    {id: 'lotissement', where: 'indivt', fr: 'Règlement de lotissement / cahier des charges (ASL, si disponible)', en: 'Subdivision rules / specifications (homeowners association, if available)', pt: 'Regulamento de loteamento / caderno de encargos (se disponível)', es: 'Reglamento de urbanización / pliego de condiciones (si disponible)'},
-    {id: 'viabilisation', where: 'terrain', fr: 'Viabilisation et raccordements (eau, électricité, assainissement)', en: 'Utilities and connections (water, electricity, sanitation)', pt: 'Infraestruturas e ligações (água, eletricidade, saneamento)', es: 'Urbanización y conexiones (agua, electricidad, saneamiento)'},
-    {id: 'geotech', where: 'indivt', fr: 'Étude de sol / géotechnique (zones à risque argile, si disponible)', en: 'Soil / geotechnical study (clay-shrinkage risk areas, if available)', pt: 'Estudo de solos / geotécnico (zonas de risco de argilas, se disponível)', es: 'Estudio de suelos / geotécnico (zonas con riesgo de arcillas, si disponible)'},
-    {id: 'bornage', where: 'indivt', fr: 'Plan de bornage et limites de propriété (si disponible)', en: 'Boundary survey and property lines (if available)', pt: 'Planta de demarcação e limites da propriedade (se disponível)', es: 'Plano de deslinde y límites de la propiedad (si disponible)'}
-  ]},
-  {id: 'diag', t: {fr: 'Diagnostics', en: 'Diagnostics', pt: 'Diagnósticos', es: 'Diagnósticos'}, n: {fr: 'Certains diagnostics ne concernent que certains biens (âge du bâtiment, zone à risque…).', en: 'Some diagnostics only apply to certain properties (age of the building, risk area…).', pt: 'Alguns diagnósticos só se aplicam a certos imóveis (idade do edifício, zona de risco…).', es: 'Algunos diagnósticos solo se aplican a ciertos inmuebles (antigüedad del edificio, zona de riesgo…).'}, items: [
-    {id: 'dpe', where: 'bati', fr: 'DPE (diagnostic de performance énergétique)', en: 'Energy performance certificate (EPC / DPE)', pt: 'Certificado energético (DPE)', es: 'Certificado de eficiencia energética (DPE)'},
-    {id: 'audit', where: 'indiv', fr: 'Audit énergétique (obligatoire pour une maison classée E, F ou G, si disponible)', en: 'Energy audit (mandatory for a house rated E, F or G, if available)', pt: 'Auditoria energética (obrigatória para moradias classe E, F ou G, se disponível)', es: 'Auditoría energética (obligatoria para viviendas clase E, F o G, si disponible)'},
-    {id: 'amiante', where: 'bati', fr: 'Diagnostic amiante', en: 'Asbestos survey', pt: 'Diagnóstico de amianto', es: 'Diagnóstico de amianto'},
-    {id: 'plomb', where: 'bati', fr: 'Diagnostic plomb (CREP)', en: 'Lead paint survey (CREP)', pt: 'Diagnóstico de chumbo (CREP)', es: 'Diagnóstico de plomo (CREP)'},
-    {id: 'termites', where: 'bati', fr: 'Diagnostic termites', en: 'Termite survey', pt: 'Diagnóstico de térmitas', es: 'Diagnóstico de termitas'},
-    {id: 'elec', where: 'bati', fr: "Diagnostic de l'installation électrique", en: 'Electrical installation survey', pt: 'Diagnóstico da instalação elétrica', es: 'Diagnóstico de la instalación eléctrica'},
-    {id: 'gaz', where: 'bati', fr: "Diagnostic de l'installation de gaz", en: 'Gas installation survey', pt: 'Diagnóstico da instalação de gás', es: 'Diagnóstico de la instalación de gas'},
-    {id: 'assainissement', where: 'indivt', fr: 'Assainissement (SPANC ou raccordement au tout-à-l\'égout)', en: 'Sanitation (septic tank inspection or mains sewer connection)', pt: 'Saneamento (fossa séptica ou ligação à rede de esgotos)', es: 'Saneamiento (fosa séptica o conexión a la red de alcantarillado)'},
-    {id: 'erp', where: 'all', fr: 'État des risques et pollutions (ERP)', en: 'Natural and technological risks statement (ERP)', pt: 'Estado de riscos e poluições (ERP)', es: 'Estado de riesgos y contaminación (ERP)'},
-    {id: 'dta', where: 'copro', fr: 'Diagnostic amiante des parties communes (DTA)', en: 'Asbestos survey of the common areas (DTA)', pt: 'Diagnóstico de amianto das partes comuns (DTA)', es: 'Diagnóstico de amianto de las zonas comunes (DTA)'},
-    {id: 'carrez', where: 'copro', fr: 'Mesurage loi Carrez', en: 'Carrez law floor-area measurement', pt: 'Medição da área (lei Carrez)', es: 'Medición de superficie (ley Carrez)'}
-  ]},
-  {id: 'copro', where: 'copro', t: {fr: 'Copropriété', en: 'Condominium', pt: 'Condomínio', es: 'Comunidad de propietarios'}, items: [
-    {id: 'rcp', where: 'copro', fr: 'Règlement de copropriété et état descriptif de division', en: 'Condominium rules and division description', pt: 'Regulamento do condomínio e descrição das frações', es: 'Reglamento de la comunidad y descripción de la división'},
-    {id: 'pv_ag', where: 'copro', fr: "Procès-verbaux des 3 dernières assemblées générales", en: 'Minutes of the last 3 general meetings', pt: 'Atas das últimas 3 assembleias gerais', es: 'Actas de las últimas 3 juntas generales'},
-    {id: 'appels', where: 'copro', fr: 'Appels de charges et relevé des charges', en: 'Service charge calls and statement', pt: 'Avisos de quotas e extrato de despesas', es: 'Cuotas de comunidad y extracto de gastos', hint: 'charges'},
-    {id: 'budget', where: 'copro', fr: 'Budget prévisionnel et comptes de la copropriété', en: 'Forecast budget and condominium accounts', pt: 'Orçamento previsional e contas do condomínio', es: 'Presupuesto previsto y cuentas de la comunidad'},
-    {id: 'travaux_copro', where: 'copro', fr: "Travaux votés ou à venir dans l'immeuble et fonds de travaux", en: 'Works voted or planned in the building and works fund', pt: 'Obras votadas ou previstas no edifício e fundo de obras', es: 'Obras aprobadas o previstas en el edificio y fondo de obras'},
-    {id: 'ppt', where: 'copro', fr: 'Plan pluriannuel de travaux (PPT) / diagnostic technique global (DTG)', en: 'Multi-year works plan (PPT) / global technical diagnosis (DTG)', pt: 'Plano plurianual de obras (PPT) / diagnóstico técnico global (DTG)', es: 'Plan plurianual de obras (PPT) / diagnóstico técnico global (DTG)'},
-    {id: 'carnet', where: 'copro', fr: "Carnet d'entretien de l'immeuble", en: 'Building maintenance logbook', pt: 'Livro de manutenção do edifício', es: 'Libro de mantenimiento del edificio'},
-    {id: 'fiche_synth', where: 'copro', fr: "Fiche synthétique de la copropriété (avec numéro d'immatriculation)", en: 'Condominium summary sheet (with registration number)', pt: 'Ficha síntese do condomínio (com número de registo)', es: 'Ficha resumen de la comunidad (con número de registro)'},
-    {id: 'procedures', where: 'copro', fr: 'Procédures en cours dans la copropriété (impayés, litiges)', en: 'Ongoing proceedings in the condominium (unpaid charges, disputes)', pt: 'Processos em curso no condomínio (dívidas, litígios)', es: 'Procedimientos en curso en la comunidad (impagos, litigios)'},
-    {id: 'pre_etat', where: 'copro', fr: 'Pré-état daté (situation financière du lot)', en: 'Pre-sale financial statement (pré-état daté) for the unit', pt: 'Pré-estado datado (situação financeira da fração)', es: 'Pre-estado datado (situación financiera de la vivienda)'},
-    {id: 'assurance', where: 'copro', fr: "Attestation d'assurance de l'immeuble", en: "Building insurance certificate", pt: 'Certificado de seguro do edifício', es: 'Certificado del seguro del edificio'}
-  ]}
-];
-function _docKind() {
-  var d = {}; try { d = JSON.parse(document.getElementById('expertimo-data').textContent) || {}; } catch (e) {}
-  var type = d.type || '';
-  var copro = d.copro || (type === 'maison' || type === 'terrain' ? 'non' : 'oui');
-  var kind = type === 'terrain' ? 'terrain' : (copro === 'oui' ? 'copro' : 'indiv');
-  return {kind: kind, data: d};
-}
-function _docApplies(where, kind) {
-  if (where === 'all') return true;
-  if (where === 'bati') return kind !== 'terrain';
-  if (where === 'copro') return kind === 'copro';
-  if (where === 'indiv') return kind === 'indiv';
-  if (where === 'indivt') return kind === 'indiv' || kind === 'terrain';
-  if (where === 'terrain') return kind === 'terrain';
-  return true;
-}
-function _docLang() { return (typeof _currentLang !== 'undefined' && _DOC_UI[_currentLang]) ? _currentLang : 'fr'; }
-function _docChecked() {
-  var ids = [];
-  document.querySelectorAll('#dp-groups input[type=checkbox]:checked').forEach(function(cb) { ids.push(cb.value); });
-  return ids;
-}
-function _docUpdateCount() {
-  var n = _docChecked().length, el = document.getElementById('dp-count');
-  if (el) el.textContent = n ? _DOC_UI[_docLang()].count(n) : '';
-}
-function renderDocPicker() {
-  var box = document.getElementById('dp-groups');
-  if (!box) return;
-  var L = _docLang(), U = _DOC_UI[L], k = _docKind(), keep = {};
-  _docChecked().forEach(function(id) { keep[id] = true; });
-  box.textContent = '';
-  var setText = function(id, t) { var e = document.getElementById(id); if (e) e.textContent = t; };
-  setText('dp-title', U.title); setText('dp-sub', U.sub); setText('dp-all', U.all); setText('dp-none', U.none);
-  setText('dp-send', U.send);
-  var kindEl = document.getElementById('dp-kind');
-  if (kindEl) kindEl.textContent = k.kind === 'copro' ? U.kindCopro : (k.kind === 'terrain' ? U.kindTerrain : U.kindIndiv);
-  var noteEl = document.getElementById('dp-note'); if (noteEl) noteEl.placeholder = U.note;
-  _DOC_CAT.forEach(function(g) {
-    if (g.where && !_docApplies(g.where, k.kind)) return;
-    var items = g.items.filter(function(it) { return _docApplies(it.where, k.kind); });
-    if (!items.length) return;
-    var sec = document.createElement('div'); sec.className = 'dp-group';
-    var h = document.createElement('div'); h.className = 'dp-gt'; h.textContent = g.t[L]; sec.appendChild(h);
-    if (g.n) { var hn = document.createElement('div'); hn.className = 'dp-gn'; hn.textContent = g.n[L]; sec.appendChild(hn); }
-    var grid = document.createElement('div'); grid.className = 'dp-grid';
-    items.forEach(function(it) {
-      var lab = document.createElement('label'); lab.className = 'dp-item';
-      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = it.id; cb.checked = !!keep[it.id];
-      cb.addEventListener('change', _docUpdateCount);
-      var sp = document.createElement('span'); sp.textContent = it[L];
-      if (it.hint === 'taxe' && k.data.taxeFonciere > 0) { var s2 = document.createElement('small'); s2.textContent = ' · ' + Math.round(k.data.taxeFonciere) + ' € / ' + ({fr: 'an', en: 'year', pt: 'ano', es: 'año'})[L]; sp.appendChild(s2); }
-      if (it.hint === 'charges' && k.data.chargesCopro > 0) { var s3 = document.createElement('small'); s3.textContent = ' · ' + Math.round(k.data.chargesCopro) + ' € / ' + ({fr: 'mois', en: 'month', pt: 'mês', es: 'mes'})[L]; sp.appendChild(s3); }
-      lab.appendChild(cb); lab.appendChild(sp); grid.appendChild(lab);
-    });
-    sec.appendChild(grid); box.appendChild(sec);
-  });
-  _docUpdateCount();
-}
-function docPickerAll(on) {
-  document.querySelectorAll('#dp-groups input[type=checkbox]').forEach(function(cb) { cb.checked = on; });
-  _docUpdateCount();
-}
-function docPickerSend() {
-  var U = _DOC_UI[_docLang()], ids = _docChecked(), msg = document.getElementById('dp-msg'), btn = document.getElementById('dp-send');
-  var show = function(t, ok) { if (msg) { msg.textContent = t; msg.className = 'dp-msg ' + (ok ? 'ok' : 'err'); msg.style.display = 'block'; } };
-  if (!ids.length) { show(U.empty, false); return; }
-  var k = _docKind(), labels = [];
-  _DOC_CAT.forEach(function(g) { g.items.forEach(function(it) { if (ids.indexOf(it.id) !== -1) labels.push(it.fr); }); });
-  var note = (document.getElementById('dp-note') || {}).value || '';
-  var nomEl = document.getElementById('doc-nom'), emailEl = document.getElementById('doc-email');
-  var agentEmail = k.data.agentEmail || '', agentNom = k.data.agentNom || '';
-  if (btn) btn.disabled = true;
-  fetch('https://expertimo-phi.vercel.app/api/send-lead', {
-    method: 'POST', headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({type: 'documents_liste', nom: nomEl ? nomEl.value : '', email: emailEl ? emailEl.value : '', bien: (typeof _sp_adresse !== 'undefined' ? _sp_adresse : document.title), documents: labels, message: note, agentEmail: agentEmail, agentNom: agentNom})
-  }).then(function(r) { return r.json().catch(function() { return {}; }).then(function(j) { if (!r.ok || j.ok === false) throw new Error('send'); try { if (window.privencyDocs) window.privencyDocs(labels, note); } catch (e) {} try { if (window.privencyTrack) window.privencyTrack('documents_demandes'); } catch (e) {} show(U.done, true); if (btn) btn.style.display = 'none'; }); })
-    .catch(function() { show(U.fail, false); if (btn) btn.disabled = false; });
-}
-document.addEventListener('DOMContentLoaded', function() { try { renderDocPicker(); } catch (e) {} });
-</script>
-<script>markVisited('bien'); updateRailUI();</script>
-<script>
-// ═══ I18N — bascule de langue (FR / EN / PT / ES) — les textes sont dans I18N (haut de page) ═══
-// Contenus libres traduits (points forts, vigilances, historique, diagnostics) : lus dans les blocs JSON
-// #expertimo-data-en / -pt / -es injectés par app.html. FR et EN utilisent leurs blocs -fr/-en existants ;
-// PT/ES sont rendus ici dans un bloc frère "-x" (même balise, mêmes classes). Repli sur le français si absent.
-var _LANG_BLOCKS = ['pf-list', 'vg-list', 'renov-list', 'diag-grid', 'historique-timeline'];
-var _langDataCache = {};
-function getLangData(lang) {
-  if (_langDataCache[lang] !== undefined) return _langDataCache[lang];
-  var el = document.getElementById('expertimo-data-' + lang), data = null;
-  if (el) { try { data = JSON.parse(el.textContent); } catch (e) { data = null; } }
-  return (_langDataCache[lang] = data);
-}
-var _DIAG_STATUS_CLASS = {favorable: 'diag-ok', attention: 'diag-attention', defavorable: 'diag-alerte', 'non-soumis': 'diag-'};
-var _DIAG_NAME_KEY = {'Amiante': 'amiante', 'Plomb (CREP)': 'plomb', 'Termites': 'termites', 'Électricité': 'electricite', 'Gaz': 'gaz', 'Assainissement': 'assainissement'};
-function _renderLangBlock(base, lang, data) {
-  var lis = function(arr) { return arr.filter(Boolean).map(function(t) { return '<li>' + escHtml(t) + '</li>'; }).join(''); };
-  if (base === 'pf-list') return lis([data.fort1, data.fort2, data.fort3]);
-  if (base === 'vg-list') return lis([data.vig1, data.vig2, data.vig3]);
-  if (base === 'historique-timeline') {
-    var html = '';
-    (data.historiqueLibre || '').split('\n').forEach(function(ligne) {
-      ligne = ligne.trim();
-      if (!ligne) return;
-      var i = ligne.indexOf('—');
-      html += '<li class="info-item">' + (i !== -1 ? '<b>' + escHtml(ligne.substring(0, i).trim()) + '</b> — ' + escHtml(ligne.substring(i + 1).trim()) : escHtml(ligne)) + '</li>';
-    });
-    return html;
-  }
-  if (base === 'diag-grid') {
-    return (data.diags || []).map(function(diag) {
-      var key = _DIAG_NAME_KEY[diag.name];
-      var nm = key ? tr('diag-name-' + key, null, lang) : diag.name;
-      var res = (diag.result && diag.result !== '—') ? escHtml(diag.result)
-        : '<span style="color:var(--muted);font-size:11px;" data-tr="diag-not-subject">ℹ️ ' + escHtml(tr('diag-not-subject', null, lang)) + '</span>';
-      return '<div class="diag-card ' + (_DIAG_STATUS_CLASS[diag.status] || 'diag-ok') + '"><div class="diag-icon">' + diag.icon + '</div>'
-        + '<div class="diag-name">' + escHtml(nm) + '</div><div class="diag-result">' + res + '</div></div>';
-    }).join('');
-  }
-  return '';
-}
-function applyTranslatedContent(lang) {
-  var data = (lang === 'pt' || lang === 'es') ? getLangData(lang) : null;
-  _LANG_BLOCKS.forEach(function(base) {
-    var fr = document.getElementById(base + '-fr') || document.getElementById(base);
-    if (!fr) return;
-    var en = document.getElementById(base + '-en');
-    var x = document.getElementById(base + '-x');
-    var show = fr;
-    if (lang === 'en' && en && en.children.length) show = en;
-    else if (data) {
-      var html = _renderLangBlock(base, lang, data);
-      if (html) {
-        if (!x) {
-          x = fr.cloneNode(false);
-          x.id = base + '-x';
-          (en || fr).parentNode.insertBefore(x, (en || fr).nextSibling);
-        }
-        x.innerHTML = html;
-        show = x;
-      }
-    }
-    [fr, en, x].forEach(function(el) { if (el) el.style.display = (el === show) ? (el.getAttribute('data-disp') || '') : 'none'; });
-  });
-}
-
-function updateLangToggle(lang) {
-  LANGS.forEach(function(code) {
-    var b = document.getElementById('lang-toggle-' + code);
-    if (!b) return;
-    var on = code === lang;
-    b.classList.toggle('active', on);
-    b.setAttribute('aria-pressed', on ? 'true' : 'false');
-    b.style.background = on ? 'var(--gold)' : 'transparent';
-    b.style.color = on ? 'var(--dark)' : 'rgba(255,255,255,.5)';
-  });
-}
-
-function applyLang(lang) {
-  lang = (LANGS.indexOf(lang) !== -1) ? lang : LANG_DEFAULT;
-  var _prevLang = _currentLang;
-  _currentLang = lang;
-  try { if (typeof renderDocPicker === 'function') renderDocPicker(); } catch (e) {}
-  saveLang(lang);
-  document.documentElement.lang = lang;
-
-  document.querySelectorAll('[data-i18n]').forEach(function(el) {
-    var v = uiText(el.dataset.i18n, lang);
-    if (v != null) el.textContent = v;
-  });
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
-    var v = uiText(el.getAttribute('data-i18n-placeholder'), lang);
-    if (v != null) el.setAttribute('placeholder', v);
-  });
-  // Valeurs générées par fiche : data-<langue>-val, repli sur le français
-  document.querySelectorAll('[data-fr-val]').forEach(function(el) {
-    var v = lang === 'fr' ? null : el.getAttribute('data-' + lang + '-val');
-    if (v == null) v = el.getAttribute('data-fr-val');
-    if (v != null) el.textContent = v;
-  });
-  applyTranslatedContent(lang);
-  // Mentions générées côté JS (ex. « non soumis à obligation »)
-  document.querySelectorAll('[data-tr]').forEach(function(el) {
-    el.textContent = 'ℹ️ ' + tr(el.getAttribute('data-tr'), null, lang);
-  });
-
-  updateLangToggle(lang);
-
-  // Rafraîchit les blocs calculés dynamiquement (dépendent de _currentLang)
-  if (typeof renderDpeInfo === 'function') renderDpeInfo(lang);
-  if (typeof renderWelcomeParam === 'function') renderWelcomeParam(lang);
-  if (typeof renderCrush === 'function') renderCrush();
-  if (typeof renderParticipation === 'function') renderParticipation();
-  try { updateOffer(); } catch(e) {}
-
-  // L'assistant IA a déjà démarré une conversation dans l'ancienne langue :
-  // on la relance dans la nouvelle pour ne pas mélanger historique et consignes.
-  if (_aiInit && _prevLang !== lang) {
-    var aiMsgsEl = document.getElementById('ai-messages');
-    if (aiMsgsEl) aiMsgsEl.innerHTML = '';
-    _aiMessages = [];
-    var welcomeReset = aiT('welcome', {adresse: _pubAdr()}, lang);
-    addAIMsg(welcomeReset, 'assistant');
-    _aiMessages.push({role:'user',content:aiT('sessionStart', null, lang)});
-    _aiMessages.push({role:'assistant',content:welcomeReset});
-    var aiSuggestionsEl = document.getElementById('ai-suggestions');
-    if (aiSuggestionsEl) aiSuggestionsEl.style.display = '';
-  }
-
-  var aiSug = document.getElementById('ai-suggestions');
-  if (aiSug && aiSug.style.display !== 'none' && aiSug.children.length) {
-    try { renderAISuggestions(); } catch(e) {}
-  }
-}
-
-// Sélecteur de langue toujours visible (FR / EN / PT / ES). La langue choisie est mémorisée ;
-// les textes non traduits d'une fiche retombent sur le français.
-document.addEventListener('DOMContentLoaded', function() {
-  renderLangToggle();
-  var toggle = document.getElementById('lang-toggle');
-  if (toggle) toggle.style.display = 'block';
-  // Français (défaut) : le HTML généré fait foi, on ne le réécrit pas ; autre langue mémorisée : on l'applique.
-  var saved = getSavedLang();
-  if (saved !== LANG_DEFAULT) applyLang(saved); else updateLangToggle(saved);
-});
-</script>
-<script>
-// Indicateur doré glissant dans la nav (couche visuelle uniquement : suit le bouton .active posé par showTab)
-(function() {
-  var nav = document.getElementById('main-nav');
-  if (!nav) return;
-  var ind = document.createElement('span');
-  ind.className = 'rail-ind';
-  ind.setAttribute('aria-hidden', 'true');
-  nav.appendChild(ind);
-  var raf = 0, placed = false;
-  function place(instant) {
-    var b = nav.querySelector('button.active');
-    if (!b || !b.offsetHeight) return;
-    var h = Math.round(b.offsetHeight * 0.6);
-    var y = b.offsetTop + Math.round((b.offsetHeight - h) / 2);
-    if (instant || !placed) ind.classList.add('instant');
-    ind.style.height = h + 'px';
-    ind.style.transform = 'translateY(' + y + 'px)';
-    if (instant || !placed) { void ind.offsetWidth; ind.classList.remove('instant'); }
-    ind.classList.add('ready');
-    placed = true;
-  }
-  function schedule(instant) {
-    cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(function() { place(instant); });
-  }
-  new MutationObserver(function() { schedule(false); })
-    .observe(nav, {attributes: true, attributeFilter: ['class'], subtree: true});
-  window.addEventListener('resize', function() { schedule(true); });
-  window.addEventListener('load', function() { schedule(true); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function() { schedule(true); });
-  schedule(true);
-})();
-</script>
-<script>
-// Défilement automatique des filtres de la carte interactive (appelle filterMap ; s'arrête au premier clic utilisateur)
-(function() {
-  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  var cats = ['transport', 'vert', 'commerce', 'ecole'];
-  var tab = document.getElementById('quartier');
-  var btns = document.querySelectorAll('.map-filter-btn');
-  if (!tab || btns.length < cats.length) return;
-  var i = 0, nextAt = 0, timer = 0;
-  function stop() { clearInterval(timer); }
-  Array.prototype.forEach.call(btns, function(b) { b.addEventListener('click', stop); });
-  function ready() {
-    var m = window._mapMarkers;
-    return !!(m && window._mapInstance && cats.some(function(c) { return (m[c] || []).length; }));
-  }
-  timer = setInterval(function() {
-    if (!tab.classList.contains('active') || document.hidden || !ready()) { nextAt = 0; return; }
-    var now = Date.now();
-    if (now < nextAt) return;
-    filterMap(cats[i % cats.length], btns[i % cats.length]);
-    i++;
-    nextAt = now + 3000;
-  }, 250);
-})();
-</script>
 <script id="pv-skin-js">
 (function(){
   if(/[?&]classic=1/.test(location.search)){document.body.className=document.body.className.split(/\s+/).filter(function(c){return ['pv','pv4','pv-home','tone-b'].indexOf(c)<0;}).join(' ');return;}
@@ -4931,6 +4914,19 @@ document.addEventListener('DOMContentLoaded', function() {
   function sync(){var asked=!!m.querySelector('div[style*="flex-end"]');s.style.display=asked?'none':'flex';}
   new MutationObserver(sync).observe(m,{childList:true});
   sync();
+})();
+</script>
+<script>
+// Guide de la commune : les événements passés disparaissent d'eux-mêmes (et le bloc s'il n'en reste aucun)
+(function() {
+  function maj() {
+    var auj = new Date().toISOString().slice(0, 10);
+    [].forEach.call(document.querySelectorAll('#guide-commune .gc-ev'), function(li) { var f = li.getAttribute('data-fin'); if (f && f < auj) li.style.display = 'none'; });
+    [].forEach.call(document.querySelectorAll('#guide-commune .gc-evs'), function(b) { if (![].some.call(b.querySelectorAll('.gc-ev'), function(li) { return li.style.display !== 'none'; })) b.style.display = 'none'; });
+    var g = document.getElementById('guide-commune');
+    if (g && g.style.display !== 'none' && ![].some.call(g.querySelectorAll('.gc-rub'), function(b) { return b.style.display !== 'none'; })) g.style.display = 'none';
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', maj); else maj();
 })();
 </script>
 
