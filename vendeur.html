@@ -8,14 +8,14 @@
 <title>Compte rendu de commercialisation</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#F5FAF7;--card:#fff;--ink:#0F1A16;--gold:#0E9F6E;--gold2:#0A6F4D;--cream:#E9F9F1;--muted:#667085;--border:#E5E9EF;--vert:#0E9F6E;--rouge:#667085;--dark:#0A6F4D;--agent:#0E9F6E;--soft:#A6E3C6;--line:#E5E9EF;}
+:root{--bg:#F6F8FB;--card:#fff;--ink:#0B1626;--gold:#0F2747;--gold2:#091B33;--cream:#E8EDF4;--muted:#667085;--border:#D5DDE8;--vert:#0F2747;--rouge:#667085;--dark:#091B33;--agent:#0F2747;--soft:#AFC0D8;--line:#D5DDE8;}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Work Sans',sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-text-size-adjust:100%;}
 .wrap{max-width:920px;margin:0 auto;padding:0 20px;}
-header.top{background:linear-gradient(160deg,#064E3B 0%,#0A6F4D 100%);color:#fff;padding:34px 0 64px;position:relative;overflow:hidden;}
+header.top{background:linear-gradient(160deg,#091B33 0%,#1B3A66 100%);color:#fff;padding:34px 0 64px;position:relative;overflow:hidden;}
 header.top::before{content:'';position:absolute;width:420px;height:420px;background:radial-gradient(circle,rgba(166,227,198,.22),transparent 70%);top:-180px;right:-90px;border-radius:50%;}
 .agent{display:flex;align-items:center;gap:12px;position:relative;z-index:1;}
-.avatar{width:46px;height:46px;border-radius:50%;background:#fff;color:#0A6F4D;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;flex:none;object-fit:cover;}
+.avatar{width:46px;height:46px;border-radius:50%;background:#fff;color:#0F2747;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:600;flex:none;object-fit:cover;}
 .agent-name{font-weight:600;font-size:14px;}
 .agent-role{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.82);text-transform:uppercase;}
 .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#C8F0DC;margin:30px 0 8px;position:relative;z-index:1;}
@@ -56,7 +56,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
 .buyer .top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px;flex-wrap:wrap;}
 .buyer .nm{font-family:'Playfair Display',serif;font-size:18px;}
 .badge{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;padding:4px 10px;border-radius:99px;white-space:nowrap;}
-.badge.tres{background:#D4F3E4;color:#0A6F4D;}.badge.interesse{background:var(--cream);color:var(--gold2);}.badge.ecoute{background:#eee;color:#555;}
+.badge.tres{background:#D5DDE8;color:#0F2747;}.badge.interesse{background:var(--cream);color:var(--gold2);}.badge.ecoute{background:#eee;color:#555;}
 .buyer ul{list-style:none;font-size:13px;color:#333;}
 .buyer li{padding:3px 0;display:flex;gap:8px;}
 .buyer li::before{content:'•';color:var(--gold2);}
@@ -86,7 +86,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
 .mkt-tbl td{padding:6px 6px;border-bottom:1px solid var(--border);font-variant-numeric:tabular-nums;}
 .mkt-tbl-wrap{overflow-x:auto;}
 .mkt-note{font-size:11.5px;color:var(--muted);margin-top:10px;line-height:1.45;}
-@media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #0A6F4D;}header.top::before{display:none;}h1,.sub,.agent-name,.agent-role{color:#0F1A16;}.eyebrow{color:#0A6F4D;margin-top:14px;}main{margin-top:0;}.card,.kpi,.buyer,ul.feed li{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
+@media print{body{background:#fff;}header.top{background:#fff;color:#000;padding:8px 0 16px;border-bottom:2px solid #0F2747;}header.top::before{display:none;}h1,.sub,.agent-name,.agent-role{color:#0B1626;}.eyebrow{color:#0F2747;margin-top:14px;}main{margin-top:0;}.card,.kpi,.buyer,ul.feed li{box-shadow:none;break-inside:avoid;}.btn,#cost-card,#print-btn{display:none!important;}}
 @media(prefers-reduced-motion:no-preference){.fill{transition:width .8s cubic-bezier(.22,.61,.36,1);}}
 </style>
 </head>
@@ -217,7 +217,7 @@ svg.chart .val{fill:var(--ink);font-weight:500;}
     add('line', {x1: padL, x2: W - padL, y1: H - padB, y2: H - padB, stroke: '#E5E9EF'});
     courbe.forEach(function(c, i) {
       var h = Math.round((H - padB - padT) * c.visites / max), x = padL + i * (bw + gap), y = H - padB - h, cur = i === n - 1;
-      add('rect', {x: x, y: c.visites ? y : H - padB - 2, width: bw, height: c.visites ? h : 2, rx: 5, fill: cur ? '#0E9F6E' : '#A6E3C6'});
+      add('rect', {x: x, y: c.visites ? y : H - padB - 2, width: bw, height: c.visites ? h : 2, rx: 5, fill: cur ? '#0F2747' : '#AFC0D8'});
       add('text', {x: x + bw / 2, y: (c.visites ? y : H - padB) - 6, 'text-anchor': 'middle', 'class': 'val'}, String(c.visites));
       add('text', {x: x + bw / 2, y: H - padB + 16, 'text-anchor': 'middle'}, c.semaine.slice(8, 10) + '/' + c.semaine.slice(5, 7));
     });
